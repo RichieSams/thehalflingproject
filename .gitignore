@@ -11,3 +11,7 @@
 *.lai
 *.la
 *.a
+
+# Build files
+/build
+/obj

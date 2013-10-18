@@ -10,11 +10,9 @@
 #include "crate_demo/game_state_manager.h"
 
 
-namespace CrateDemo {
-
-int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
-	GraphicsManager graphicsManager;
-	GameStateManager gameStateManager;
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
+	CrateDemo::GraphicsManager graphicsManager;
+	CrateDemo::GameStateManager gameStateManager;
 	
 	Halfling::HalflingEngine engine(&graphicsManager, &gameStateManager);
 
@@ -22,6 +20,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	engine.Run();
 	
 	engine.Shutdown();
-}
 
-} // End of namespace CrateDemo
+	return 0;
+}

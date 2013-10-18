@@ -14,7 +14,7 @@ namespace Common {
 class IGraphicsManager
 {
 public:
-	virtual bool Initialize(int, int, HWND) = 0;
+	virtual bool Initialize(int screenWidth, int screenHeight, HWND hwnd) = 0;
 	virtual void Shutdown() = 0;
 	virtual bool DrawFrame() = 0;
 	virtual void OnResize() = 0;

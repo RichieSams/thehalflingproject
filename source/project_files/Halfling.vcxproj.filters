@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Core">
+      <UniqueIdentifier>{4fdf668e-69b9-4dcf-b10e-812c9a94be7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input">
+      <UniqueIdentifier>{be02aa71-c22b-43e1-a096-df070d231c8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{9b149d28-97e2-4b3b-ba12-b8bdff49bdef}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\common\timer.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\halfling\halfling_engine.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\common\halfling_sys.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\timer.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\typedefs.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\halfling\input.cpp">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\halfling\halfling_engine.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\game_state_manager_interface.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\graphics_manager_interface.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

@@ -15,3 +15,9 @@
 # Build files
 /build
 /obj
+
+# Project files
+*.sdf
+*.opensdf
+*.suo
+*.vcxproj.user

@@ -22,7 +22,7 @@ private:
 public:
 	bool Initialize(int screenWidth, int screenHeight, HWND hwnd);
 	void Shutdown();
-	bool DrawFrame();
+	void DrawFrame();
 	void OnResize();
 	void GamePaused();
 	void GameUnpaused();

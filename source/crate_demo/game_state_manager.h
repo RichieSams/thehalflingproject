@@ -1,0 +1,48 @@
+/* The Halfling Project - A Graphics Engine and Projects
+ *
+ * The Halfling Project is the legal property of Adrian Astley
+ * Copyright Adrian Astley 2013
+ */
+
+#ifndef CRATE_DEMO_GAME_STATE_MANAGER_H
+#define CRATE_DEMO_GAME_STATE_MANAGER_H
+
+#include "common/game_state_manager_interface.h"
+
+
+namespace CrateDemo {
+
+class GameStateManager : public Common::IGameStateManager {
+public:
+	GameStateManager();
+
+private:
+
+public:
+	bool Initialize();
+	void Shutdown();
+	/**
+	 * Return the wanted period of time between update() calls.
+	 *
+	 * IE: If you want update to be called 20 times a second, this
+	 * should return 50.
+	 *
+	 * NOTE: This should probably be inlined.
+	 * NOTE: This will only be called at the beginning of HalflingEngine::Run()
+	 * TODO: Contemplate the cost/benefit of calling this once per frame
+	 *
+	 * @return    The period in milliseconds
+	 */
+	double GetUpdatePeriod();
+	/**
+	 * Called every time the game logic should be updated. The frequency
+	 * of this being called is determined by getUpdatePeriod()
+	 */
+	void Update();
+	void GamePaused();
+	void GameUnpaused();
+};
+
+} // End of namespace CrateDemo
+
+#endif

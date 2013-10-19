@@ -118,6 +118,7 @@ void HalflingEngine::Run() {
 			accumulatedTime += deltaTime;
 
 			while (accumulatedTime >= updatePeriod) {
+				accumulatedTime -= updatePeriod;
 				m_gameStateManager->Update();
 			}
 			

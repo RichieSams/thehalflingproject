@@ -51,7 +51,7 @@ void Timer::Tick() {
 void Timer::Start() {
 	if (m_isStopped) {
 		int64 startTime;
-		QueryPerformanceCounter((LARGE_INTEGER *)startTime);
+		QueryPerformanceCounter((LARGE_INTEGER *)&startTime);
 
 		m_pausedTime += (startTime - m_stopTime);
 		m_prevTime = startTime;

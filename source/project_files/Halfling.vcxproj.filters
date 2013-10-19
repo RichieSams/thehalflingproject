@@ -44,6 +44,9 @@
     <ClInclude Include="..\common\graphics_manager_interface.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="..\common\d3d_util.h">
+      <Filter>Common</Filter>
+    </ClInclude>
     <ClInclude Include="..\common\dxerr.h">
       <Filter>Common</Filter>
     </ClInclude>

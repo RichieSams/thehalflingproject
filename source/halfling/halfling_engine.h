@@ -60,11 +60,11 @@ private:
 	void UnPauseGame();
 };
 
+} // End of namespace Halfling
+
 // This is used to forward Windows messages from a global window
 // procedure to our member function window procedure because we cannot
 // assign a member function to WNDCLASS::lpfnWndProc.
-static HalflingEngine *g_engine = NULL;
-
-} // End of namespace Halfling
+static Halfling::HalflingEngine *g_engine = NULL;
 
 #endif

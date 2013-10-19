@@ -18,6 +18,9 @@
     <ClCompile Include="..\halfling\halfling_engine.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="..\common\dxerr.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\common\halfling_sys.h">
@@ -39,6 +42,9 @@
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="..\common\graphics_manager_interface.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\dxerr.h">
       <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>

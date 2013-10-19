@@ -11,10 +11,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\common\dxerr.cpp" />
     <ClCompile Include="..\common\timer.cpp" />
     <ClCompile Include="..\halfling\halfling_engine.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\common\dxerr.h" />
     <ClInclude Include="..\common\game_state_manager_interface.h" />
     <ClInclude Include="..\common\graphics_manager_interface.h" />
     <ClInclude Include="..\common\halfling_sys.h" />

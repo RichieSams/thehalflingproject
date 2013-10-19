@@ -14,7 +14,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	CrateDemo::GraphicsManager graphicsManager;
 	CrateDemo::GameStateManager gameStateManager;
 	
-	Halfling::HalflingEngine engine(&graphicsManager, &gameStateManager);
+	Halfling::HalflingEngine engine(hInstance, &graphicsManager, &gameStateManager);
 
 	engine.Initialize(L"Crate Demo", 800, 600, false);
 	engine.Run();

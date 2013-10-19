@@ -224,7 +224,7 @@ LRESULT HalflingEngine::MsgProc(HWND hwnd, uint msg, WPARAM wParam, LPARAM lPara
 		return 0;
 	}
 
-	return 0;
+	return DefWindowProc(hwnd, msg, wParam, lParam);
 }
 
 void HalflingEngine::PauseGame() {

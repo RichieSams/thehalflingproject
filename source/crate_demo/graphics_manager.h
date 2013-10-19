@@ -20,7 +20,7 @@ private:
 
 
 public:
-	bool Initialize(int screenWidth, int screenHeight, HWND hwnd);
+	bool Initialize(int clientWidth, int clientHeight, HWND hwnd);
 	void Shutdown();
 	void DrawFrame();
 	void OnResize();

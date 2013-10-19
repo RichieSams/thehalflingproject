@@ -269,7 +269,7 @@ void HalflingEngine::CalculateFrameStats() {
 }
 
 void HalflingEngine::OnResize() {
-	m_graphicsManager->OnResize();
+	m_graphicsManager->OnResize(m_clientWidth, m_clientHeight);
 }
 
 void HalflingEngine::InitializeWindow() {

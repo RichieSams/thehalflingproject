@@ -23,7 +23,7 @@ public:
 	bool Initialize(int clientWidth, int clientHeight, HWND hwnd);
 	void Shutdown();
 	void DrawFrame();
-	void OnResize();
+	void OnResize(int newClientWidth, int newClientHeight);
 	void GamePaused();
 	void GameUnpaused();
 };

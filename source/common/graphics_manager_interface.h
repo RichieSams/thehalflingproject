@@ -17,7 +17,7 @@ public:
 	virtual bool Initialize(int clientWidth, int clientHeight, HWND hwnd) = 0;
 	virtual void Shutdown() = 0;
 	virtual void DrawFrame() = 0;
-	virtual void OnResize() = 0;
+	virtual void OnResize(int newClientWidth, int newClientHeight) = 0;
 	virtual void GamePaused() = 0;
 	virtual void GameUnpaused() = 0;
 };

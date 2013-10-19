@@ -32,8 +32,8 @@ private:
 	Common::Timer m_timer;
 
 	bool m_fullscreen;
-	uint32 m_screenWidth;
-	uint32 m_screenHeight;
+	uint32 m_clientWidth;
+	uint32 m_clientHeight;
 	bool m_appPaused;
 	bool m_isMinOrMaximized;
 	bool m_resizing;

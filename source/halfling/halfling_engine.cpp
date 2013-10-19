@@ -45,20 +45,20 @@ HWND HalflingEngine::MainWnd() const {
 }
 
 float HalflingEngine::AspectRatio() const {
-	return static_cast<float>(m_screenWidth) / m_screenHeight;
+	return static_cast<float>(m_clientWidth) / m_clientHeight;
 }
 
 bool HalflingEngine::Initialize(LPCTSTR mainWndCaption, uint32 screenWidth, uint32 screenHeight, bool fullscreen) {
 	m_mainWndCaption = mainWndCaption;
-	m_screenWidth = screenWidth;
-	m_screenHeight = screenHeight;
+	m_clientWidth = screenWidth;
+	m_clientHeight = screenHeight;
 	m_fullscreen = fullscreen;
 
 	// Initialize the window
 	InitializeWindow();
 
 	// Initialize the managers
-	if (!m_graphicsManager->Initialize(m_screenWidth, m_screenHeight, m_hwnd))
+	if (!m_graphicsManager->Initialize(m_clientWidth, m_clientHeight, m_hwnd))
 		return false;
 	if (!m_gameStateManager->Initialize())
 		return false;	
@@ -146,8 +146,8 @@ LRESULT HalflingEngine::MsgProc(HWND hwnd, uint msg, WPARAM wParam, LPARAM lPara
 		// WM_SIZE is sent when the user resizes the window.  
 	case WM_SIZE:
 		// Save the new client area dimensions.
-		m_screenWidth = LOWORD(lParam);
-		m_screenHeight = HIWORD(lParam);
+		m_clientWidth = LOWORD(lParam);
+		m_clientHeight = HIWORD(lParam);
 		if (wParam == SIZE_MINIMIZED) {
 			PauseGame();
 			m_isMinOrMaximized = true;

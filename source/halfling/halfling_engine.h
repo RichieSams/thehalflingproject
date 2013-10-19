@@ -19,7 +19,7 @@ namespace Halfling {
 
 class HalflingEngine {
 public:
-	HalflingEngine(Common::IGraphicsManager *graphicsManager, Common::IGameStateManager *gameStateManager);
+	HalflingEngine(HINSTANCE hinstance, Common::IGraphicsManager *graphicsManager, Common::IGameStateManager *gameStateManager);
 	~HalflingEngine();
 
 private:

@@ -18,8 +18,8 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 	return g_engine->MsgProc(hwnd, msg, wParam, lParam);
 }
 
-HalflingEngine::HalflingEngine(Common::IGraphicsManager *graphicsManager, Common::IGameStateManager *gameStateManager)
-		: m_graphicsManager(graphicsManager),
+HalflingEngine::HalflingEngine(HINSTANCE hinstance, Common::IGraphicsManager *graphicsManager, Common::IGameStateManager *gameStateManager)
+		: m_hinstance(hinstance),
 		  m_gameStateManager(gameStateManager),
 		  m_timer(Common::Timer()),
 		  m_appPaused(false),

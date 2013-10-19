@@ -276,70 +276,56 @@ void HalflingEngine::OnResize() {
 }
 
 void HalflingEngine::InitializeWindow() {
-	WNDCLASSEX wc;
-	DEVMODE dmScreenSettings;
-	int posX, posY;
-
-	// Get the instance of this application.
-	m_hinstance = GetModuleHandle(NULL);
-
-	// Setup the windows class with default settings.
-	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
+	WNDCLASS wc;
+	wc.style = CS_HREDRAW | CS_VREDRAW;
 	wc.lpfnWndProc = MainWndProc;
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
 	wc.hInstance = m_hinstance;
-	wc.hIcon = LoadIcon(NULL, IDI_WINLOGO);
-	wc.hIconSm = wc.hIcon;
-	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-	wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
-	wc.lpszMenuName = NULL;
-	wc.lpszClassName = L"HalflingEngineWindow";
-	wc.cbSize = sizeof(WNDCLASSEX);
+	wc.hIcon = LoadIcon(0, IDI_APPLICATION);
+	wc.hCursor = LoadCursor(0, IDC_ARROW);
+	wc.hbrBackground = (HBRUSH)GetStockObject(NULL_BRUSH);
+	wc.lpszMenuName = 0;
+	wc.lpszClassName = WINDOW_CLASS_NAME;
 
-	// Register the window class.
-	RegisterClassEx(&wc);
-
-	// Setup the screen settings depending on whether it is running in full screen or in windowed mode.
-	if (m_fullscreen) {
-		// If full screen set the screen to maximum size of the users desktop and 32bit.
-		memset(&dmScreenSettings, 0, sizeof(dmScreenSettings));
-
-		dmScreenSettings.dmSize       = sizeof(dmScreenSettings);
-		dmScreenSettings.dmPelsWidth  = (unsigned long)m_screenWidth;
-		dmScreenSettings.dmPelsHeight = (unsigned long)m_screenHeight;
-		dmScreenSettings.dmBitsPerPel = 32;			
-		dmScreenSettings.dmFields     = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
-
-		// Change the display settings to full screen.
-		ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN);
-
-		// Set the position of the window to the top left corner.
-		posX = posY = 0;
-	} else {
-		// Place the window in the middle of the screen.
-		posX = (GetSystemMetrics(SM_CXSCREEN) - m_screenWidth)  / 2;
-		posY = (GetSystemMetrics(SM_CYSCREEN) - m_screenHeight) / 2;
+	if (!RegisterClass(&wc)) {
+		MessageBox(0, L"RegisterClass Failed.", 0, 0);
+		return;
 	}
 
-	// Create the window with the screen settings and get the handle to it.
-	m_hwnd = CreateWindowEx(WS_EX_APPWINDOW, 
-	                        L"HalflingEngineWindow", 
-	                        m_mainWndCaption, 
-	                        WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP,
-	                        posX, posY, 
-	                        m_screenWidth, m_screenHeight, 
-	                        NULL, NULL, 
-	                        m_hinstance, 
-	                        NULL);
+	// Compute window rectangle dimensions based on requested client area dimensions.
+	RECT rect = {0, 0, m_clientWidth, m_clientHeight};
+	AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, false);
+	int width = rect.right - rect.left;
+	int height = rect.bottom - rect.top;
 
-	// Bring the window up on the screen and set it as main focus.
+	m_hwnd = CreateWindow(WINDOW_CLASS_NAME, m_mainWndCaption, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, width, height, 0, 0, m_hinstance, 0);
+	if (!m_hwnd) {
+		LPVOID lpMsgBuf;
+		LPVOID lpDisplayBuf;
+		DWORD dw = GetLastError();
+
+		FormatMessage(
+			FORMAT_MESSAGE_ALLOCATE_BUFFER |
+			FORMAT_MESSAGE_FROM_SYSTEM |
+			FORMAT_MESSAGE_IGNORE_INSERTS,
+			NULL,
+			dw,
+			MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+			(LPTSTR)&lpMsgBuf,
+			0, NULL);
+
+		// Display the error message and exit the process
+
+		lpDisplayBuf = (LPVOID)LocalAlloc(LMEM_ZEROINIT,
+										  (lstrlen((LPCTSTR)lpMsgBuf) + 40) * sizeof(TCHAR));
+		MessageBox(NULL, (LPCTSTR)lpDisplayBuf, TEXT("Error"), MB_OK);
+		MessageBox(0, L"CreateWindow Failed.", 0, 0);
+		return;
+	}
+
 	ShowWindow(m_hwnd, SW_SHOW);
-	SetForegroundWindow(m_hwnd);
-	SetFocus(m_hwnd);
-
-	// Hide the mouse cursor.
-	//ShowCursor(false);
+	UpdateWindow(m_hwnd);
 
 	return;
 }

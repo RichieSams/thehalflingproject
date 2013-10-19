@@ -33,7 +33,7 @@ public:
 	 *
 	 * @return    The period in milliseconds
 	 */
-	double GetUpdatePeriod();
+	inline double GetUpdatePeriod() { return 30.0; }
 	/**
 	 * Called every time the game logic should be updated. The frequency
 	 * of this being called is determined by getUpdatePeriod()

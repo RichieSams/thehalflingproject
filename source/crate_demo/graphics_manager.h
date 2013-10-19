@@ -9,6 +9,7 @@
 
 #include "common/graphics_manager_interface.h"
 
+#include <d3d11.h>
 
 namespace CrateDemo {
 
@@ -17,7 +18,23 @@ public:
 	GraphicsManager();
 
 private:
+	ID3D11Device *m_d3dDevice;
+	ID3D11DeviceContext *m_d3dImmediateContext;
+	IDXGISwapChain *m_swapChain;
+	ID3D11Texture2D *m_depthStencilBuffer;
+	ID3D11RenderTargetView *m_renderTargetView;
+	ID3D11DepthStencilView *m_depthStencilView;
+	D3D11_VIEWPORT m_screenViewport;
 
+	// Screen dimensions
+	int m_clientWidth;
+	int m_clientHeight;
+
+	// MSAA
+	bool m_enable4xMSAA;
+	uint m_4xMSAAQuality;
+
+	bool m_d3dInitialized;
 
 public:
 	bool Initialize(int clientWidth, int clientHeight, HWND hwnd);

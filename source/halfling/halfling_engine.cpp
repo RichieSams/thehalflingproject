@@ -20,8 +20,10 @@ namespace Halfling {
 
 HalflingEngine::HalflingEngine(HINSTANCE hinstance, Common::IGraphicsManager *graphicsManager, Common::IGameStateManager *gameStateManager)
 		: m_hinstance(hinstance),
+		  m_graphicsManager(graphicsManager),
 		  m_gameStateManager(gameStateManager),
 		  m_timer(Common::Timer()),
+		  m_mainWndCaption(WINDOW_CLASS_NAME),
 		  m_appPaused(false),
 		  m_isMinOrMaximized(false),
 		  m_resizing(false) {

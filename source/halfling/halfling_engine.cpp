@@ -10,13 +10,13 @@
 #include <windowsx.h>
 
 
-namespace Halfling {
-
-#define WINDOW_CLASS_NAME = L"HalflingEngineWindow";
-
 LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	return g_engine->MsgProc(hwnd, msg, wParam, lParam);
 }
+
+namespace Halfling {
+
+#define WINDOW_CLASS_NAME L"HalflingEngineWindow"
 
 HalflingEngine::HalflingEngine(HINSTANCE hinstance, Common::IGraphicsManager *graphicsManager, Common::IGameStateManager *gameStateManager)
 		: m_hinstance(hinstance),

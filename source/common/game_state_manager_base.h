@@ -10,7 +10,7 @@
 
 namespace Common {
 
-class IGameStateManager
+class GameStateManagerBase
 {
 public:
 	virtual bool Initialize() = 0;

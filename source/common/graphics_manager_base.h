@@ -9,17 +9,24 @@
 
 #include "common/halfling_sys.h"
 
+#include "d3d11.h"
+#include "DirectXMath.h"
+
+
 namespace Common {
 
-class IGraphicsManager
+class GraphicsManagerBase
 {
 public:
-	virtual bool Initialize(int clientWidth, int clientHeight, HWND hwnd) = 0;
-	virtual void Shutdown() = 0;
+	GraphicsManagerBase();
+
+	virtual bool Initialize(int clientWidth, int clientHeight, HWND hwnd);
+	virtual void Shutdown();
 	virtual void DrawFrame() = 0;
-	virtual void OnResize(int newClientWidth, int newClientHeight) = 0;
-	virtual void GamePaused() = 0;
-	virtual void GameUnpaused() = 0;
+	virtual void OnResize(int newClientWidth, int newClientHeight);
+	virtual void GamePaused() {}
+	virtual void GameUnpaused() {}
+
 };
 
 } // End of namespace Halfling

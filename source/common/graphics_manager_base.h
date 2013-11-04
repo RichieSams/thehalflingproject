@@ -27,6 +27,23 @@ public:
 	virtual void GamePaused() {}
 	virtual void GameUnpaused() {}
 
+protected:
+	ID3D11Device *m_device;
+	ID3D11DeviceContext *m_immediateContext;
+	IDXGISwapChain *m_swapChain;
+	ID3D11Texture2D *m_depthStencilBuffer;
+	ID3D11DepthStencilView *m_depthStencilView;
+	D3D11_VIEWPORT m_screenViewport;
+
+	bool m_d3dInitialized;
+
+	// Screen dimensions
+	int m_clientWidth;
+	int m_clientHeight;
+
+	// MSAA
+	bool m_enable4xMSAA;
+	uint m_4xMSAAQuality;
 };
 
 } // End of namespace Halfling

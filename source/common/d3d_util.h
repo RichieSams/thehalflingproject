@@ -39,6 +39,15 @@
 
 #define ReleaseCOM(x) { if(x){ x->Release(); x = nullptr; } }
 
+
+namespace Common {
+
+HRESULT LoadVertexShader(const char *fileName, ID3D11Device *device, D3D11_INPUT_ELEMENT_DESC *vertexDesc, uint numElements, ID3D11VertexShader **vertexShader, ID3D11InputLayout **inputLayout);
+
+HRESULT LoadPixelShader(const char *fileName, ID3D11Device *device, ID3D11PixelShader **pixelShader);
+
+} // End of namespace Common
+
 namespace Colors {
 
 XMGLOBALCONST DirectX::XMFLOAT4 White = {1.0f, 1.0f, 1.0f, 1.0f};

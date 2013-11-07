@@ -10,10 +10,17 @@
 #include "common/graphics_manager_base.h"
 
 #include <d3d11.h>
+#include "DirectXMath.h"
 
 namespace CrateDemo {
 
 class GameStateManager;
+
+struct Vertex {
+	DirectX::XMFLOAT3 pos;
+	DirectX::XMFLOAT4 color;
+};
+
 class GraphicsManager : public Common::GraphicsManagerBase {
 public:
 	GraphicsManager(GameStateManager *gameStateManager);

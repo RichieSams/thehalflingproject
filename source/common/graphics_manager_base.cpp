@@ -75,6 +75,8 @@ bool GraphicsManagerBase::Initialize(int clientWidth, int clientHeight, HWND hwn
 		return false;
 	}
 
+	m_d3dInitialized = true;
+
 	// The remaining steps that need to be carried out for d3d creation
 	// also need to be executed every time the window is resized.  So
 	// just call the OnResize method here to avoid code duplication.

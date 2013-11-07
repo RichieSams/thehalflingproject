@@ -11,15 +11,17 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\common\d3d_util.cpp" />
     <ClCompile Include="..\common\dxerr.cpp" />
+    <ClCompile Include="..\common\graphics_manager_base.cpp" />
     <ClCompile Include="..\common\timer.cpp" />
     <ClCompile Include="..\halfling\halfling_engine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\common\d3d_util.h" />
     <ClInclude Include="..\common\dxerr.h" />
-    <ClInclude Include="..\common\game_state_manager_interface.h" />
-    <ClInclude Include="..\common\graphics_manager_interface.h" />
+    <ClInclude Include="..\common\game_state_manager_base.h" />
+    <ClInclude Include="..\common\graphics_manager_base.h" />
     <ClInclude Include="..\common\halfling_sys.h" />
     <ClInclude Include="..\common\timer.h" />
     <ClInclude Include="..\common\typedefs.h" />

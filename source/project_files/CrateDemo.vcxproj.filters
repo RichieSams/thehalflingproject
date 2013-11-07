@@ -7,6 +7,9 @@
     <Filter Include="Core">
       <UniqueIdentifier>{20aad2e7-8514-4c9b-b42b-44b69411a99b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{3258877a-fab4-4251-b6af-e4913befc46b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\crate_demo\main.cpp">
@@ -26,5 +29,18 @@
     <ClInclude Include="..\crate_demo\game_state_manager.h">
       <Filter>Graphics</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\crate_demo\pixel_shader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\crate_demo\vertex_shader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\crate_demo\types.hlsli">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

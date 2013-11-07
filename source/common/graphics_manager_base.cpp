@@ -81,6 +81,8 @@ bool GraphicsManagerBase::Initialize(int clientWidth, int clientHeight, HWND hwn
 	// also need to be executed every time the window is resized.  So
 	// just call the OnResize method here to avoid code duplication.
 	OnResize(clientWidth, clientHeight);
+
+	return true;
 }
 
 void GraphicsManagerBase::Shutdown() {

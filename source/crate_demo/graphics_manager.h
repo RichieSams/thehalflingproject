@@ -38,6 +38,7 @@ private:
 
 
 
+	MatrixBufferType m_worldViewProj;
 
 public:
 	bool Initialize(int clientWidth, int clientHeight, HWND hwnd);

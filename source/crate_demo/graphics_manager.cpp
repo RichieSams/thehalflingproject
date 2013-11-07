@@ -22,6 +22,11 @@ bool CrateDemo::GraphicsManager::Initialize(int clientWidth, int clientHeight, H
 	if (!Common::GraphicsManagerBase::Initialize(clientWidth, clientHeight, hwnd))
 		return false;
 
+	// Set the view matrices to identity
+	DirectX::XMMATRIX identity = DirectX::XMMatrixIdentity();
+	m_worldViewProj.world = identity;
+	m_worldViewProj.view = identity;
+	m_worldViewProj.view = identity;
 
 	return true;
 }

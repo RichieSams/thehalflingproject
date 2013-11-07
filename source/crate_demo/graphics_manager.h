@@ -35,11 +35,15 @@ private:
 	GameStateManager *m_gameStateManager;
 
 	ID3D11RenderTargetView *m_renderTargetView;
+	ID3D11InputLayout *m_inputLayout;
 
 	// Shaders
 	ID3D11VertexShader *m_vertexShader;
 	ID3D11PixelShader *m_pixelShader;
 
+	// Vertex and Index buffers
+	ID3D11Buffer *m_vertexBuffer;
+	ID3D11Buffer *m_indexBuffer;
 
 	MatrixBufferType m_worldViewProj;
 
@@ -51,6 +55,7 @@ public:
 
 private:
 	void LoadShaders();
+	void BuildGeometryBuffers();
 };
 
 } // End of namespace CrateDemo

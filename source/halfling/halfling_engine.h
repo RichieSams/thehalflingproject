@@ -9,8 +9,8 @@
 
 #include "common/halfling_sys.h"
 
-#include "common/graphics_manager_interface.h"
-#include "common/game_state_manager_interface.h"
+#include "common/graphics_manager_base.h"
+#include "common/game_state_manager_base.h"
 
 #include "common/timer.h"
 
@@ -19,7 +19,7 @@ namespace Halfling {
 
 class HalflingEngine {
 public:
-	HalflingEngine(HINSTANCE hinstance, Common::IGraphicsManager *graphicsManager, Common::IGameStateManager *gameStateManager);
+	HalflingEngine(HINSTANCE hinstance, Common::GraphicsManagerBase *graphicsManager, Common::GameStateManagerBase *gameStateManager);
 	~HalflingEngine();
 
 private:
@@ -27,8 +27,8 @@ private:
 	HINSTANCE m_hinstance;
 	HWND m_hwnd;
 
-	Common::IGraphicsManager *m_graphicsManager;
-	Common::IGameStateManager *m_gameStateManager;
+	Common::GraphicsManagerBase *m_graphicsManager;
+	Common::GameStateManagerBase *m_gameStateManager;
 	Common::Timer m_timer;
 
 	bool m_fullscreen;

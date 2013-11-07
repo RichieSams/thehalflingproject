@@ -18,7 +18,7 @@ namespace Halfling {
 
 #define WINDOW_CLASS_NAME L"HalflingEngineWindow"
 
-HalflingEngine::HalflingEngine(HINSTANCE hinstance, Common::IGraphicsManager *graphicsManager, Common::IGameStateManager *gameStateManager)
+HalflingEngine::HalflingEngine(HINSTANCE hinstance, Common::GraphicsManagerBase *graphicsManager, Common::GameStateManagerBase *gameStateManager)
 		: m_hinstance(hinstance),
 		  m_graphicsManager(graphicsManager),
 		  m_gameStateManager(gameStateManager),

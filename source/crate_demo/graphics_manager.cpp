@@ -60,11 +60,7 @@ void GraphicsManager::OnResize(int newClientWidth, int newClientHeight) {
 
 }
 
-void GraphicsManager::GamePaused() {
-
 }
-
-void GraphicsManager::GameUnpaused() {
 
 }
 

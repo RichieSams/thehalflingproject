@@ -45,8 +45,6 @@ public:
 	void Shutdown();
 	void DrawFrame();
 	void OnResize(int newClientWidth, int newClientHeight);
-	void GamePaused();
-	void GameUnpaused();
 };
 
 } // End of namespace CrateDemo

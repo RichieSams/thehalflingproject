@@ -40,7 +40,16 @@ bool CrateDemo::GraphicsManager::Initialize(int clientWidth, int clientHeight, H
 }
 
 void GraphicsManager::Shutdown() {
+	// Release in the opposite order we initialized in
+	ReleaseCOM(m_matrixBuffer);
+	ReleaseCOM(m_vertexBuffer);
+	ReleaseCOM(m_indexBuffer);
+	ReleaseCOM(m_vertexShader);
+	ReleaseCOM(m_pixelShader);
+	ReleaseCOM(m_inputLayout);
+	ReleaseCOM(m_renderTargetView);
 
+	Common::GraphicsManagerBase::Shutdown();
 }
 
 void GraphicsManager::DrawFrame() {

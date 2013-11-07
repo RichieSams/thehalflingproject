@@ -59,6 +59,8 @@ void GraphicsManager::OnResize(int newClientWidth, int newClientHeight) {
 	// Bind the render target view and depth/stencil view to the pipeline.
 	m_immediateContext->OMSetRenderTargets(1, &m_renderTargetView, m_depthStencilView);
 
+	// Update the aspect ratio and the projection matrix
+	m_worldViewProj.projection = DirectX::XMMatrixPerspectiveFovLH(0.25f * DirectX::XM_PI, float(newClientWidth) / newClientHeight, 1.0f, 1000.0f);
 }
 
 void GraphicsManager::LoadShaders() {

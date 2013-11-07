@@ -36,6 +36,9 @@ private:
 
 	ID3D11RenderTargetView *m_renderTargetView;
 
+	// Shaders
+	ID3D11VertexShader *m_vertexShader;
+	ID3D11PixelShader *m_pixelShader;
 
 
 	MatrixBufferType m_worldViewProj;
@@ -45,6 +48,9 @@ public:
 	void Shutdown();
 	void DrawFrame();
 	void OnResize(int newClientWidth, int newClientHeight);
+
+private:
+	void LoadShaders();
 };
 
 } // End of namespace CrateDemo

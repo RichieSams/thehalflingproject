@@ -22,6 +22,7 @@ bool CrateDemo::GraphicsManager::Initialize(int clientWidth, int clientHeight, H
 	if (!Common::GraphicsManagerBase::Initialize(clientWidth, clientHeight, hwnd))
 		return false;
 
+	LoadShaders();
 	// Set the view matrices to identity
 	DirectX::XMMATRIX identity = DirectX::XMMatrixIdentity();
 	m_worldViewProj.world = identity;
@@ -60,6 +61,25 @@ void GraphicsManager::OnResize(int newClientWidth, int newClientHeight) {
 
 }
 
+void GraphicsManager::LoadShaders() {
+	D3D11_INPUT_ELEMENT_DESC vertexDesc[] = {
+		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0}
+	};
+
+	Common::LoadVertexShader("vertex_shader.cso", m_device, vertexDesc, 2, &m_vertexShader, &m_inputLayout);
+	Common::LoadPixelShader("pixel_shader.cso", m_device, &m_pixelShader);
+
+	D3D11_BUFFER_DESC matrixBufferDesc;
+	matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	matrixBufferDesc.ByteWidth = sizeof(MatrixBufferType);
+	matrixBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	matrixBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	matrixBufferDesc.MiscFlags = 0;
+	matrixBufferDesc.StructureByteStride = 0;
+
+	// Create the constant buffer pointer so we can access the vertex shader constant buffer
+	m_device->CreateBuffer(&matrixBufferDesc, NULL, &m_matrixBuffer);
 }
 
 }

@@ -7,12 +7,12 @@
 #ifndef CRATE_DEMO_GAME_STATE_MANAGER_H
 #define CRATE_DEMO_GAME_STATE_MANAGER_H
 
-#include "common/game_state_manager_interface.h"
+#include "common/game_state_manager_base.h"
 
 
 namespace CrateDemo {
 
-class GameStateManager : public Common::IGameStateManager {
+class GameStateManager : public Common::GameStateManagerBase {
 public:
 	GameStateManager();
 

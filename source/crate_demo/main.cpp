@@ -11,8 +11,8 @@
 
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
-	CrateDemo::GraphicsManager graphicsManager;
 	CrateDemo::GameStateManager gameStateManager;
+	CrateDemo::GraphicsManager graphicsManager(&gameStateManager);
 	
 	Halfling::HalflingEngine engine(hInstance, &graphicsManager, &gameStateManager);
 

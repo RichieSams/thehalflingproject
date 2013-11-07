@@ -99,10 +99,6 @@ void GraphicsManagerBase::Shutdown() {
 }
 
 void GraphicsManagerBase::OnResize(int newClientWidth, int newClientHeight) {
-	if (!m_d3dInitialized) {
-		return;
-	}
-
 	m_clientWidth = newClientWidth;
 	m_clientHeight = newClientHeight;
 

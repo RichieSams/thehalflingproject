@@ -16,6 +16,11 @@ GraphicsManager::GraphicsManager(GameStateManager *gameStateManager)
 	: Common::GraphicsManagerBase(),
 	  m_gameStateManager(gameStateManager),
 	  m_renderTargetView(nullptr),
+	  m_inputLayout(nullptr),
+	  m_vertexBuffer(nullptr),
+	  m_indexBuffer(nullptr),
+	  m_vertexShader(nullptr),
+	  m_pixelShader(nullptr) {
 }
 
 bool CrateDemo::GraphicsManager::Initialize(int clientWidth, int clientHeight, HWND hwnd) {

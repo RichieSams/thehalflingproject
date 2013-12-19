@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Halfling", "Halfling.vcxpro
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CrateDemo", "CrateDemo.vcxproj", "{4B06784E-8E60-4C21-A407-60D02683014B}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LightingDemo", "LightingDemo.vcxproj", "{104329AE-9CD7-4AD5-BCC1-9A449974AB0D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -21,6 +23,10 @@ Global
 		{4B06784E-8E60-4C21-A407-60D02683014B}.Debug|Win32.Build.0 = Debug|Win32
 		{4B06784E-8E60-4C21-A407-60D02683014B}.Release|Win32.ActiveCfg = Release|Win32
 		{4B06784E-8E60-4C21-A407-60D02683014B}.Release|Win32.Build.0 = Release|Win32
+		{104329AE-9CD7-4AD5-BCC1-9A449974AB0D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{104329AE-9CD7-4AD5-BCC1-9A449974AB0D}.Debug|Win32.Build.0 = Debug|Win32
+		{104329AE-9CD7-4AD5-BCC1-9A449974AB0D}.Release|Win32.ActiveCfg = Release|Win32
+		{104329AE-9CD7-4AD5-BCC1-9A449974AB0D}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

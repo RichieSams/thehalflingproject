@@ -59,6 +59,9 @@
     <ClInclude Include="..\common\graphics_manager_base.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="..\common\vector.h">
+      <Filter>Common</Filter>
+    </ClInclude>
     <ClInclude Include="..\common\camera.h">
       <Filter>Common</Filter>
     </ClInclude>

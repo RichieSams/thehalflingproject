@@ -14,6 +14,9 @@ namespace Common {
 
 class GameStateManagerBase
 {
+public:
+	GameStateManagerBase() : m_hwnd(nullptr) {}
+
 protected:
 	HWND m_hwnd;
 

@@ -10,6 +10,8 @@
 #include "common/game_state_manager_base.h"
 
 #include "common/halfling_sys.h"
+#include "common/vector.h"
+#include "common/camera.h"
 
 #include "DirectXMath.h"
 
@@ -27,11 +29,14 @@ public:
 	GameStateManager();
 
 private:
+	Common::Vector2 m_mouseLastPos;
+	Common::Camera m_camera;
 
 public:
-	bool Initialize();
 	MatrixBufferType WorldViewProj;
 
+public:
+	bool Initialize(HWND hwnd);
 	void Shutdown();
 	/**
 	 * Return the wanted period of time between update() calls.
@@ -56,6 +61,11 @@ public:
 
 	void GamePaused();
 	void GameUnpaused();
+
+	void MouseDown(WPARAM buttonState, int x, int y);
+	void MouseUp(WPARAM buttonState, int x, int y);
+	void MouseMove(WPARAM buttonState, int x, int y);
+	void MouseWheel(int zDelta);
 };
 
 } // End of namespace CrateDemo

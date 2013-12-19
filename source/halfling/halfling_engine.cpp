@@ -213,16 +213,18 @@ LRESULT HalflingEngine::MsgProc(HWND hwnd, uint msg, WPARAM wParam, LPARAM lPara
 	case WM_LBUTTONDOWN:
 	case WM_MBUTTONDOWN:
 	case WM_RBUTTONDOWN:
-		//m_input->MouseDown(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+		m_gameStateManager->MouseDown(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 		return 0;
 	case WM_LBUTTONUP:
 	case WM_MBUTTONUP:
 	case WM_RBUTTONUP:
-		//m_input->MouseUp(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+		m_gameStateManager->MouseUp(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 		return 0;
 	case WM_MOUSEMOVE:
-		//m_input->MouseMove(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+		m_gameStateManager->MouseMove(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 		return 0;
+	case WM_MOUSEWHEEL:
+		m_gameStateManager->MouseWheel(GET_WHEEL_DELTA_WPARAM(wParam));
 	}
 
 	return DefWindowProc(hwnd, msg, wParam, lParam);
@@ -273,6 +275,7 @@ void HalflingEngine::CalculateFrameStats() {
 
 void HalflingEngine::OnResize() {
 	m_graphicsManager->OnResize(m_clientWidth, m_clientHeight);
+	m_gameStateManager->OnResize(m_clientWidth, m_clientHeight);
 }
 
 void HalflingEngine::InitializeWindow() {

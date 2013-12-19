@@ -17,7 +17,8 @@ GraphicsManagerBase::GraphicsManagerBase()
 	  m_swapChain(nullptr),
 	  m_depthStencilBuffer(nullptr),
 	  m_depthStencilView(nullptr),
-	  m_d3dInitialized(false) {
+	  m_d3dInitialized(false),
+	  m_enable4xMSAA(true) {
 }
 
 bool GraphicsManagerBase::Initialize(int clientWidth, int clientHeight, HWND hwnd) {
@@ -29,6 +30,19 @@ bool GraphicsManagerBase::Initialize(int clientWidth, int clientHeight, HWND hwn
 	#if defined(DEBUG) || defined(_DEBUG)  
 		createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 	#endif
+	
+	D3D_FEATURE_LEVEL featureLevel;
+	HRESULT hr = D3D11CreateDevice(NULL,
+								   D3D_DRIVER_TYPE_HARDWARE,
+								   NULL,
+								   createDeviceFlags,
+								   NULL, 0,
+								   D3D11_SDK_VERSION,
+								   &m_device,
+								   &featureLevel,
+								   &m_immediateContext);
+
+	
 
 	// Describe the swap chain
 	DXGI_SWAP_CHAIN_DESC sd;
@@ -40,14 +54,22 @@ bool GraphicsManagerBase::Initialize(int clientWidth, int clientHeight, HWND hwn
 	sd.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
 	sd.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 
+	if (FAILED(hr)) {
+		DXTRACE_ERR_MSGBOX(L"D3D11CreateDevice Failed.", hr);
+		return false;
+	}
+
+	HR(m_device->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 4, &m_4xMSAAQuality));
+	assert(m_4xMSAAQuality > 0);
+
 	// Use 4X MSAA? 
-	//if (m_enable4xMSAA) {
-	//	sd.SampleDesc.Count = 4;
-	//	sd.SampleDesc.Quality = m_4xMSAAQuality - 1;
-	//} else {
-	sd.SampleDesc.Count = 1;
-	sd.SampleDesc.Quality = 0;
-	//}
+	if (m_enable4xMSAA) {
+		sd.SampleDesc.Count = 4;
+		sd.SampleDesc.Quality = m_4xMSAAQuality - 1;
+	} else {
+		sd.SampleDesc.Count = 1;
+		sd.SampleDesc.Quality = 0;
+	}
 
 	sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	sd.BufferCount = 1;
@@ -56,24 +78,22 @@ bool GraphicsManagerBase::Initialize(int clientWidth, int clientHeight, HWND hwn
 	sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 	sd.Flags = 0;
 
-	D3D_FEATURE_LEVEL featureLevel;
-	HRESULT result = D3D11CreateDeviceAndSwapChain(
-		NULL,
-		D3D_DRIVER_TYPE_HARDWARE,
-		NULL,
-		createDeviceFlags,
-		NULL, 0,
-		D3D11_SDK_VERSION,
-		&sd,
-		&m_swapChain,
-		&m_device,
-		&featureLevel,
-		&m_immediateContext);
+	
+	IDXGIDevice* dxgiDevice;
+	HR(m_device->QueryInterface(__uuidof(IDXGIDevice), (void**)&dxgiDevice));
 
-	if (FAILED(result)) {
-		MessageBox(0, L"D3D11CreateDevice Failed.", 0, 0);
-		return false;
-	}
+	IDXGIAdapter* dxgiAdapter;
+	HR(dxgiDevice->GetParent(__uuidof(IDXGIAdapter), (void**) &dxgiAdapter));
+
+	IDXGIFactory* dxgiFactory;
+	HR(dxgiAdapter->GetParent(__uuidof(IDXGIFactory), (void**)&dxgiFactory));
+
+	HR(dxgiFactory->CreateSwapChain((IUnknown *)m_device, &sd, &m_swapChain));
+	
+	// Cleanup
+	ReleaseCOM(dxgiFactory);
+	ReleaseCOM(dxgiAdapter);
+	ReleaseCOM(dxgiDevice);
 
 	m_d3dInitialized = true;
 
@@ -119,14 +139,14 @@ void GraphicsManagerBase::OnResize(int newClientWidth, int newClientHeight) {
 	depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
 	// Use 4X MSAA? --must match swap chain MSAA values.
-	//if (m_enable4xMSAA) {
-	//	depthStencilDesc.SampleDesc.Count = 4;
-	//	depthStencilDesc.SampleDesc.Quality = m_4xMSAAQuality - 1;
-	//} else {
+	if (m_enable4xMSAA) {
+		depthStencilDesc.SampleDesc.Count = 4;
+		depthStencilDesc.SampleDesc.Quality = m_4xMSAAQuality - 1;
+	} else {
 	// No MSAA
-	depthStencilDesc.SampleDesc.Count = 1;
-	depthStencilDesc.SampleDesc.Quality = 0;
-	//}
+		depthStencilDesc.SampleDesc.Count = 1;
+		depthStencilDesc.SampleDesc.Quality = 0;
+	}
 
 	depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
 	depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;

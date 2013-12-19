@@ -36,7 +36,7 @@ HRESULT LoadVertexShader(const char *fileName, ID3D11Device *device, D3D11_INPUT
 		return result;
 	}
 
-	return S_FALSE;
+	return -1;
 }
 
 HRESULT LoadPixelShader(const char *fileName, ID3D11Device *device, ID3D11PixelShader **pixelShader) {
@@ -58,7 +58,7 @@ HRESULT LoadPixelShader(const char *fileName, ID3D11Device *device, ID3D11PixelS
 		return result;
 	}
 
-	return S_FALSE;
+	return -1;
 }
 
 } // End of namespace Common

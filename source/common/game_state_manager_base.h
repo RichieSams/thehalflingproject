@@ -33,8 +33,16 @@ public:
 	 * of this being called is determined by getUpdatePeriod()
 	 */
 	virtual void Update() = 0;
+
+	virtual void OnResize(int newClientWidth, int newClientHeight) = 0;
+
 	virtual void GamePaused() = 0;
 	virtual void GameUnpaused() = 0;
+
+	virtual void MouseDown(WPARAM buttonState, int x, int y) = 0;
+	virtual void MouseUp(WPARAM buttonState, int x, int y) = 0;
+	virtual void MouseMove(WPARAM buttonState, int x, int y) = 0;
+	virtual void MouseWheel(int zDelta) = 0;
 };
 
 } // End of namespace Common

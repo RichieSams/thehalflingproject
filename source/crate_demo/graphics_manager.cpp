@@ -8,6 +8,8 @@
 
 #include "common/d3d_util.h"
 
+#include "game_state_manager.h"
+
 #include "assert.h"
 
 namespace CrateDemo {
@@ -29,12 +31,6 @@ bool CrateDemo::GraphicsManager::Initialize(int clientWidth, int clientHeight, H
 
 	LoadShaders();
 	BuildGeometryBuffers();
-
-	// Set the view matrices to identity
-	DirectX::XMMATRIX identity = DirectX::XMMatrixIdentity();
-	m_worldViewProj.world = identity;
-	m_worldViewProj.view = identity;
-	m_worldViewProj.view = identity;
 
 	return true;
 }
@@ -74,9 +70,6 @@ void GraphicsManager::OnResize(int newClientWidth, int newClientHeight) {
 
 	// Bind the render target view and depth/stencil view to the pipeline.
 	m_immediateContext->OMSetRenderTargets(1, &m_renderTargetView, m_depthStencilView);
-
-	// Update the aspect ratio and the projection matrix
-	m_worldViewProj.projection = DirectX::XMMatrixPerspectiveFovLH(0.25f * DirectX::XM_PI, float(newClientWidth) / newClientHeight, 1.0f, 1000.0f);
 }
 
 void GraphicsManager::LoadShaders() {

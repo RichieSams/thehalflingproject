@@ -9,8 +9,18 @@
 
 #include "common/game_state_manager_base.h"
 
+#include "common/halfling_sys.h"
+
+#include "DirectXMath.h"
+
 
 namespace CrateDemo {
+
+struct MatrixBufferType {
+	DirectX::XMMATRIX world;
+	DirectX::XMMATRIX view;
+	DirectX::XMMATRIX projection;
+};
 
 class GameStateManager : public Common::GameStateManagerBase {
 public:
@@ -20,6 +30,8 @@ private:
 
 public:
 	bool Initialize();
+	MatrixBufferType WorldViewProj;
+
 	void Shutdown();
 	/**
 	 * Return the wanted period of time between update() calls.
@@ -39,6 +51,9 @@ public:
 	 * of this being called is determined by getUpdatePeriod()
 	 */
 	void Update();
+
+	void OnResize(int newClientWidth, int newClientHeight);
+
 	void GamePaused();
 	void GameUnpaused();
 };

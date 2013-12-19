@@ -21,12 +21,6 @@ struct Vertex {
 	DirectX::XMFLOAT4 color;
 };
 
-struct MatrixBufferType {
-	DirectX::XMMATRIX world;
-	DirectX::XMMATRIX view;
-	DirectX::XMMATRIX projection;
-};
-
 class GraphicsManager : public Common::GraphicsManagerBase {
 public:
 	GraphicsManager(GameStateManager *gameStateManager);
@@ -45,7 +39,6 @@ private:
 	ID3D11Buffer *m_vertexBuffer;
 	ID3D11Buffer *m_indexBuffer;
 
-	MatrixBufferType m_worldViewProj;
 
 public:
 	bool Initialize(int clientWidth, int clientHeight, HWND hwnd);

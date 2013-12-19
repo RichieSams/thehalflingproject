@@ -60,7 +60,7 @@ bool HalflingEngine::Initialize(LPCTSTR mainWndCaption, uint32 screenWidth, uint
 	// Initialize the managers
 	if (!m_graphicsManager->Initialize(m_clientWidth, m_clientHeight, m_hwnd))
 		return false;
-	if (!m_gameStateManager->Initialize())
+	if (!m_gameStateManager->Initialize(m_hwnd))
 		return false;	
 
 	return true;

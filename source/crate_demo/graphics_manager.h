@@ -39,6 +39,7 @@ private:
 	ID3D11Buffer *m_vertexBuffer;
 	ID3D11Buffer *m_indexBuffer;
 
+	ID3D11Buffer *m_matrixBuffer;
 
 public:
 	bool Initialize(int clientWidth, int clientHeight, HWND hwnd);

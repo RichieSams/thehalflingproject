@@ -49,7 +49,55 @@ void GraphicsManager::Shutdown() {
 }
 
 void GraphicsManager::DrawFrame() {
+	m_immediateContext->ClearRenderTargetView(m_renderTargetView, reinterpret_cast<const float*>(&Colors::Blue));
+	m_immediateContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
+	// Write the wold, view, projection matrices to the constant shader buffer
+	D3D11_MAPPED_SUBRESOURCE mappedResource;
+	MatrixBufferType* dataPtr;
+	unsigned int bufferNumber;
+
+	// Transpose the matrices to prepare them for the shader.
+	DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranspose(m_gameStateManager->WorldViewProj.world);
+	DirectX::XMMATRIX viewMatrix = DirectX::XMMatrixTranspose(m_gameStateManager->WorldViewProj.view);
+	DirectX::XMMATRIX projectionMatrix = DirectX::XMMatrixTranspose(m_gameStateManager->WorldViewProj.projection);
+
+	// Lock the constant buffer so it can be written to.
+	HR(m_immediateContext->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
+
+	// Get a pointer to the data in the constant buffer.
+	dataPtr = (MatrixBufferType*)mappedResource.pData;
+
+	// Copy the matrices into the constant buffer.
+	dataPtr->world = worldMatrix;
+	dataPtr->view = viewMatrix;
+	dataPtr->projection = projectionMatrix;
+
+	// Unlock the constant buffer.
+	m_immediateContext->Unmap(m_matrixBuffer, 0);
+
+	// Set the position of the constant buffer in the vertex shader.
+	bufferNumber = 0;
+
+	// Finally, set the constant buffer in the vertex shader with the updated values.
+	m_immediateContext->VSSetConstantBuffers(bufferNumber, 1, &m_matrixBuffer);
+
+	m_immediateContext->IASetInputLayout(m_inputLayout);
+	m_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	uint stride = sizeof(Vertex);
+	uint offset = 0;
+	m_immediateContext->IASetVertexBuffers(0, 1, &m_vertexBuffer, &stride, &offset);
+	m_immediateContext->IASetIndexBuffer(m_indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+
+	// Set the vertex and pixel shaders that will be used to render this triangle.
+	m_immediateContext->VSSetShader(m_vertexShader, NULL, 0);
+	m_immediateContext->PSSetShader(m_pixelShader, NULL, 0);
+
+	// Render the triangle.
+	m_immediateContext->DrawIndexed(36, 0, 0);
+
+	m_swapChain->Present(0, 0);
 }
 
 void GraphicsManager::OnResize(int newClientWidth, int newClientHeight) {

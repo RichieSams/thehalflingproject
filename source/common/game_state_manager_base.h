@@ -7,13 +7,18 @@
 #ifndef GAME_STATE_MANAGER_H
 #define GAME_STATE_MANAGER_H
 
+#include "common/halfling_sys.h"
+
 
 namespace Common {
 
 class GameStateManagerBase
 {
+protected:
+	HWND m_hwnd;
+
 public:
-	virtual bool Initialize() = 0;
+	virtual bool Initialize(HWND hwnd) = 0;
 	virtual void Shutdown() = 0;
 	/**
 	 * Return the wanted period of time between update() calls.

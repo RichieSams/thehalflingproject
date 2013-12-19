@@ -62,5 +62,8 @@
     <ClInclude Include="..\common\camera.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="..\common\math.h">
+      <Filter>Common</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

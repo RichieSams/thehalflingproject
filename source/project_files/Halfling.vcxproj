@@ -25,12 +25,16 @@
     <ClInclude Include="..\common\game_state_manager_base.h" />
     <ClInclude Include="..\common\graphics_manager_base.h" />
     <ClInclude Include="..\common\halfling_sys.h" />
+    <ClInclude Include="..\common\lights.h" />
     <ClInclude Include="..\common\math.h" />
     <ClInclude Include="..\common\timer.h" />
     <ClInclude Include="..\common\typedefs.h" />
     <ClInclude Include="..\common\vector.h" />
     <ClInclude Include="..\halfling\halfling_engine.h" />
     <ClInclude Include="..\halfling\input.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\common\shaders\lights.hlsli" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{E126E907-E152-410A-B81B-D206B709BA48}</ProjectGuid>

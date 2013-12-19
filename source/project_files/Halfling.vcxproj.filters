@@ -10,6 +10,9 @@
     <Filter Include="Common">
       <UniqueIdentifier>{9b149d28-97e2-4b3b-ba12-b8bdff49bdef}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Common\Shaders">
+      <UniqueIdentifier>{92ce2470-b55b-422e-a7dd-9c54340e2989}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\common\timer.cpp">
@@ -68,5 +71,13 @@
     <ClInclude Include="..\common\math.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="..\common\lights.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\common\shaders\lights.hlsli">
+      <Filter>Common\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

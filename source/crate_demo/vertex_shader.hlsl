@@ -6,7 +6,7 @@
 
 #include "types.hlsli"
 
-cbuffer matrixBuffer
+cbuffer MatrixBuffer
 {
     matrix worldMatrix;
     matrix viewMatrix;

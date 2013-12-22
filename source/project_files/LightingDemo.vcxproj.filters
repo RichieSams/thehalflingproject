@@ -4,22 +4,22 @@
     <ClCompile Include="..\lighting_demo\main.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\lighting_demo\game_state_manager.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="..\lighting_demo\graphics_manager.cpp">
       <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lighting_demo\game_state_manager.cpp">
+      <Filter>Simulation Logic</Filter>
     </ClCompile>
     <ClCompile Include="..\lighting_demo\wave_simulator.cpp">
       <Filter>Simulation Logic</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\lighting_demo\game_state_manager.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="..\lighting_demo\graphics_manager.h">
       <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lighting_demo\game_state_manager.h">
+      <Filter>Simulation Logic</Filter>
     </ClInclude>
     <ClInclude Include="..\lighting_demo\wave_simulator.h">
       <Filter>Simulation Logic</Filter>
@@ -42,6 +42,9 @@
     </Filter>
     <Filter Include="Shaders">
       <UniqueIdentifier>{1d951f97-c5f5-4c77-a201-ac6b88888732}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Simulation Logic">
+      <UniqueIdentifier>{bdfc2bf6-dad8-4c02-8d5b-922903186b1e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

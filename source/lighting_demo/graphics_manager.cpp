@@ -30,6 +30,8 @@ bool GraphicsManager::Initialize(int clientWidth, int clientHeight, HWND hwnd, b
 
 	LoadShaders();
 
+	if (!m_gameStateManager->ModelManager.Initialize(&m_device))
+		return false;
 	if (!m_gameStateManager->Initialize(hwnd, &m_device, &m_immediateContext))
 		return false;
 	return true;

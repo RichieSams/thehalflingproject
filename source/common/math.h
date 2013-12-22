@@ -7,6 +7,8 @@
 #ifndef MATH_H
 #define MATH_H
 
+#include "common/halfling_sys.h"
+
 
 namespace Common {
 
@@ -28,6 +30,16 @@ inline T Lerp(const T& a, const T& b, float t) {
 template<typename T>
 inline T Clamp(const T& x, const T& low, const T& high) {
 	return x < low ? low : (x > high ? high : x);
+}
+
+// Returns random float in [0, 1).
+static float RandF() {
+	return (float)(rand()) / (float)RAND_MAX;
+}
+
+// Returns random float in [a, b).
+static float RandF(float a, float b) {
+	return a + RandF()*(b - a);
 }
 
 } // End of namespace Common

@@ -36,7 +36,7 @@ public:
 	MatrixBufferType WorldViewProj;
 
 public:
-	bool Initialize(HWND hwnd);
+	bool Initialize(HWND hwnd, ID3D11Device **graphicsDevice, ID3D11DeviceContext **immediateContext);
 	void Shutdown();
 	/**
 	 * Return the wanted period of time between update() calls.

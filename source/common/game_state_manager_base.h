@@ -9,6 +9,8 @@
 
 #include "common/halfling_sys.h"
 
+#include <d3d11.h>
+
 
 namespace Common {
 
@@ -19,9 +21,11 @@ public:
 
 protected:
 	HWND m_hwnd;
+	ID3D11Device **m_device;
+	ID3D11DeviceContext **m_immediateContext;
 
 public:
-	virtual bool Initialize(HWND hwnd) = 0;
+	virtual bool Initialize(HWND hwnd, ID3D11Device **graphicsDevice, ID3D11DeviceContext **immediateContext) = 0;
 	virtual void Shutdown() = 0;
 	/**
 	 * Return the wanted period of time between update() calls.

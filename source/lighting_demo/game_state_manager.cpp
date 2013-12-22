@@ -17,8 +17,10 @@ GameStateManager::GameStateManager()
 	  m_camera(1.5f * DirectX::XM_PI, 0.25f * DirectX::XM_PI, 5.0f) {
 }
 
-bool GameStateManager::Initialize(HWND hwnd) {
+bool GameStateManager::Initialize(HWND hwnd, ID3D11Device **graphicsDevice, ID3D11DeviceContext **immediateContext) {
 	m_hwnd = hwnd;
+	m_device = graphicsDevice;
+	m_immediateContext = immediateContext;
 
 	// Set the view matrices to identity
 	DirectX::XMMATRIX identity = DirectX::XMMatrixIdentity();

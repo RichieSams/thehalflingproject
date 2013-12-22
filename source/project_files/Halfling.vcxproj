@@ -14,6 +14,7 @@
     <ClCompile Include="..\common\camera.cpp" />
     <ClCompile Include="..\common\d3d_util.cpp" />
     <ClCompile Include="..\common\dxerr.cpp" />
+    <ClCompile Include="..\common\geometry_generator.cpp" />
     <ClCompile Include="..\common\graphics_manager_base.cpp" />
     <ClCompile Include="..\common\timer.cpp" />
     <ClCompile Include="..\halfling\halfling_engine.cpp" />
@@ -23,10 +24,12 @@
     <ClInclude Include="..\common\d3d_util.h" />
     <ClInclude Include="..\common\dxerr.h" />
     <ClInclude Include="..\common\game_state_manager_base.h" />
+    <ClInclude Include="..\common\geometry_generator.h" />
     <ClInclude Include="..\common\graphics_manager_base.h" />
     <ClInclude Include="..\common\halfling_sys.h" />
     <ClInclude Include="..\common\lights.h" />
     <ClInclude Include="..\common\math.h" />
+    <ClInclude Include="..\common\model_manager.h" />
     <ClInclude Include="..\common\timer.h" />
     <ClInclude Include="..\common\typedefs.h" />
     <ClInclude Include="..\common\vector.h" />

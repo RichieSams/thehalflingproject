@@ -20,7 +20,7 @@ class GraphicsManagerBase
 public:
 	GraphicsManagerBase();
 
-	virtual bool Initialize(int clientWidth, int clientHeight, HWND hwnd);
+	virtual bool Initialize(int clientWidth, int clientHeight, HWND hwnd, bool fullscreen);
 	virtual void Shutdown();
 	virtual void DrawFrame() = 0;
 	virtual void OnResize(int newClientWidth, int newClientHeight);

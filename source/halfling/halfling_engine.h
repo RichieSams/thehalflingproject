@@ -53,7 +53,7 @@ private:
 	void CalculateFrameStats();
 	void OnResize();
 
-	void InitializeWindow();
+	void InitializeWindow(bool fullscreen);
 	void ShutdownWindow();
 
 	void PauseGame();

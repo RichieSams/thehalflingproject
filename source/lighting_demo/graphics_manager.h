@@ -42,7 +42,7 @@ private:
 	ID3D11Buffer *m_matrixBuffer;
 
 public:
-	bool Initialize(int clientWidth, int clientHeight, HWND hwnd);
+	bool Initialize(int clientWidth, int clientHeight, HWND hwnd, bool fullscreen);
 	void Shutdown();
 	void DrawFrame();
 	void OnResize(int newClientWidth, int newClientHeight);

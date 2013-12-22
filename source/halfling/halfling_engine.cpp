@@ -55,10 +55,10 @@ bool HalflingEngine::Initialize(LPCTSTR mainWndCaption, uint32 screenWidth, uint
 	m_fullscreen = fullscreen;
 
 	// Initialize the window
-	InitializeWindow();
+	InitializeWindow(fullscreen);
 
 	// Initialize the managers
-	if (!m_graphicsManager->Initialize(m_clientWidth, m_clientHeight, m_hwnd))
+	if (!m_graphicsManager->Initialize(m_clientWidth, m_clientHeight, m_hwnd, fullscreen))
 		return false;
 	if (!m_gameStateManager->Initialize(m_hwnd))
 		return false;	
@@ -278,7 +278,7 @@ void HalflingEngine::OnResize() {
 	m_gameStateManager->OnResize(m_clientWidth, m_clientHeight);
 }
 
-void HalflingEngine::InitializeWindow() {
+void HalflingEngine::InitializeWindow(bool fullscreen) {
 	WNDCLASS wc;
 	wc.style = CS_HREDRAW | CS_VREDRAW;
 	wc.lpfnWndProc = MainWndProc;
@@ -302,7 +302,14 @@ void HalflingEngine::InitializeWindow() {
 	int width = rect.right - rect.left;
 	int height = rect.bottom - rect.top;
 
-	m_hwnd = CreateWindow(WINDOW_CLASS_NAME, m_mainWndCaption, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, width, height, 0, 0, m_hinstance, 0);
+	DWORD windowType;
+	if (fullscreen) {
+		windowType = WS_EX_TOPMOST | WS_POPUP;
+	} else {
+		windowType = WS_OVERLAPPEDWINDOW;
+	}
+
+	m_hwnd = CreateWindow(WINDOW_CLASS_NAME, m_mainWndCaption, windowType, CW_USEDEFAULT, CW_USEDEFAULT, width, height, 0, 0, m_hinstance, 0);
 	if (!m_hwnd) {
 		LPVOID lpMsgBuf;
 		LPVOID lpDisplayBuf;

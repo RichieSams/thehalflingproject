@@ -25,8 +25,8 @@ GraphicsManager::GraphicsManager(GameStateManager *gameStateManager)
 	  m_pixelShader(nullptr) {
 }
 
-bool GraphicsManager::Initialize(int clientWidth, int clientHeight, HWND hwnd) {
-	if (!Common::GraphicsManagerBase::Initialize(clientWidth, clientHeight, hwnd))
+bool GraphicsManager::Initialize(int clientWidth, int clientHeight, HWND hwnd, bool fullscreen) {
+	if (!Common::GraphicsManagerBase::Initialize(clientWidth, clientHeight, hwnd, fullscreen))
 		return false;
 
 	LoadShaders();

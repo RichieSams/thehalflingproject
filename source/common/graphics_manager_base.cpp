@@ -21,7 +21,7 @@ GraphicsManagerBase::GraphicsManagerBase()
 	  m_enable4xMSAA(true) {
 }
 
-bool GraphicsManagerBase::Initialize(int clientWidth, int clientHeight, HWND hwnd) {
+bool GraphicsManagerBase::Initialize(int clientWidth, int clientHeight, HWND hwnd, bool fullscreen) {
 	m_clientWidth = clientWidth;
 	m_clientHeight = clientHeight;
 
@@ -74,7 +74,7 @@ bool GraphicsManagerBase::Initialize(int clientWidth, int clientHeight, HWND hwn
 	sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	sd.BufferCount = 1;
 	sd.OutputWindow = hwnd;
-	sd.Windowed = true;
+	sd.Windowed = !fullscreen;
 	sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 	sd.Flags = 0;
 

@@ -9,6 +9,8 @@
 
 #include "common/game_state_manager_base.h"
 
+#include "lighting_demo/wave_simulator.h"
+
 #include "common/halfling_sys.h"
 #include "common/vector.h"
 #include "common/camera.h"
@@ -31,6 +33,9 @@ public:
 private:
 	Common::Vector2 m_mouseLastPos;
 	Common::Camera m_camera;
+
+	WaveSimulator m_waveSimulator;
+	double m_accumulatedWaveSimTime;
 
 public:
 	MatrixBufferType WorldViewProj;

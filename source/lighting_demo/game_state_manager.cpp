@@ -8,19 +8,23 @@
 
 #include "common/math.h"
 #include "common/camera.h"
+#include "common/d3d_util.h"
 
 
 namespace LightingDemo {
 
 GameStateManager::GameStateManager() 
 	: GameStateManagerBase(),
-	  m_camera(1.5f * DirectX::XM_PI, 0.25f * DirectX::XM_PI, 5.0f) {
+	  m_camera(1.5f * DirectX::XM_PI, 0.25f * DirectX::XM_PI, 5.0f),
+	  m_accumulatedWaveSimTime(0) {
 }
 
 bool GameStateManager::Initialize(HWND hwnd, ID3D11Device **graphicsDevice, ID3D11DeviceContext **immediateContext) {
 	m_hwnd = hwnd;
 	m_device = graphicsDevice;
 	m_immediateContext = immediateContext;
+
+	m_waveSimulator.Init(100, 100, 0.8f, 0.03f, 3.25f, 1.0f);
 
 	// Set the view matrices to identity
 	DirectX::XMMATRIX identity = DirectX::XMMatrixIdentity();
@@ -37,6 +41,21 @@ void GameStateManager::Shutdown() {
 
 void GameStateManager::Update() {
 	WorldViewProj.view = m_camera.CreateViewMatrix(DirectX::XMVectorZero());
+
+	m_accumulatedWaveSimTime += kUpdatePeriod;
+	if ((m_accumulatedWaveSimTime) >= 250.0f) {
+		m_accumulatedWaveSimTime -= 250.0f;
+
+		uint i = 5 + rand() % 90;
+		uint j = 5 + rand() % 90;
+
+		float r = Common::RandF(-1.0f, -2.0f);
+
+		m_waveSimulator.Disturb(i, j, r);
+	}
+
+	m_waveSimulator.Update(kUpdatePeriod);
+
 }
 
 void GameStateManager::OnResize(int newClientWidth, int newClientHeight) {

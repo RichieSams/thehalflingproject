@@ -31,6 +31,8 @@ public:
 	GameStateManager();
 
 private:
+	const double kUpdatePeriod = 30.0f;
+
 	Common::Vector2 m_mouseLastPos;
 	Common::Camera m_camera;
 
@@ -55,7 +57,7 @@ public:
 	 *
 	 * @return    The period in milliseconds
 	 */
-	inline double GetUpdatePeriod() { return 30.0; }
+	inline double GetUpdatePeriod() { return kUpdatePeriod; }
 	/**
 	 * Called every time the game logic should be updated. The frequency
 	 * of this being called is determined by getUpdatePeriod()

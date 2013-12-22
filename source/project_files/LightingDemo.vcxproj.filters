@@ -10,6 +10,9 @@
     <ClCompile Include="..\lighting_demo\graphics_manager.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="..\lighting_demo\wave_simulator.cpp">
+      <Filter>Simulation Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\lighting_demo\game_state_manager.h">
@@ -17,6 +20,9 @@
     </ClInclude>
     <ClInclude Include="..\lighting_demo\graphics_manager.h">
       <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lighting_demo\wave_simulator.h">
+      <Filter>Simulation Logic</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

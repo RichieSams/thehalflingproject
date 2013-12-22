@@ -88,10 +88,12 @@
     <ClCompile Include="..\lighting_demo\game_state_manager.cpp" />
     <ClCompile Include="..\lighting_demo\graphics_manager.cpp" />
     <ClCompile Include="..\lighting_demo\main.cpp" />
+    <ClCompile Include="..\lighting_demo\wave_simulator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\lighting_demo\game_state_manager.h" />
     <ClInclude Include="..\lighting_demo\graphics_manager.h" />
+    <ClInclude Include="..\lighting_demo\wave_simulator.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\lighting_demo\pixel_shader.hlsl">

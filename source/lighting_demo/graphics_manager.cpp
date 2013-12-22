@@ -64,6 +64,8 @@ void GraphicsManager::DrawFrame() {
 	m_immediateContext->ClearRenderTargetView(m_renderTargetView, reinterpret_cast<const float*>(&Colors::Blue));
 	m_immediateContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
+	SetWorldViewProj();
+
 	// Set the vertex and pixel shaders that will be used to render this triangle.
 	m_immediateContext->VSSetShader(m_vertexShader, NULL, 0);
 	m_immediateContext->PSSetShader(m_pixelShader, NULL, 0);
@@ -75,6 +77,7 @@ void GraphicsManager::DrawFrame() {
 	m_swapChain->Present(0, 0);
 }
 
+void GraphicsManager::SetWorldViewProj() {
 	// Write the wold, view, projection matrices to the constant shader buffer
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 	MatrixBufferType* dataPtr;

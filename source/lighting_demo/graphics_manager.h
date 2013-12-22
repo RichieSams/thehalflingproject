@@ -38,6 +38,7 @@ public:
 	bool Initialize(int clientWidth, int clientHeight, HWND hwnd, bool fullscreen);
 	void Shutdown();
 	void DrawFrame();
+	void SetWorldViewProj();
 	void OnResize(int newClientWidth, int newClientHeight);
 
 private:

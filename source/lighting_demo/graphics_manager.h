@@ -32,6 +32,8 @@ private:
 
 	ID3D11Buffer *m_matrixBuffer;
 
+	ID3D11RasterizerState *m_wireframeRS;
+
 public:
 	bool Initialize(int clientWidth, int clientHeight, HWND hwnd, bool fullscreen);
 	void Shutdown();

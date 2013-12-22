@@ -22,6 +22,7 @@ GraphicsManager::GraphicsManager(GameStateManager *gameStateManager)
 	  m_matrixBuffer(nullptr),
 	  m_vertexShader(nullptr),
 	  m_pixelShader(nullptr),
+	  m_wireframeRS(nullptr) {
 }
 
 bool GraphicsManager::Initialize(int clientWidth, int clientHeight, HWND hwnd, bool fullscreen) {
@@ -34,12 +35,23 @@ bool GraphicsManager::Initialize(int clientWidth, int clientHeight, HWND hwnd, b
 		return false;
 	if (!m_gameStateManager->Initialize(hwnd, &m_device, &m_immediateContext))
 		return false;
+	
+	D3D11_RASTERIZER_DESC wireframeDesc;
+	ZeroMemory(&wireframeDesc, sizeof(D3D11_RASTERIZER_DESC));
+	wireframeDesc.FillMode = D3D11_FILL_WIREFRAME;
+	wireframeDesc.CullMode = D3D11_CULL_BACK;
+	wireframeDesc.FrontCounterClockwise = false;
+	wireframeDesc.DepthClipEnable = true;
+
+	HR(m_device->CreateRasterizerState(&wireframeDesc, &m_wireframeRS));
+
 	return true;
 }
 
 void GraphicsManager::Shutdown() {
 	// Release in the opposite order we initialized in
 	ReleaseCOM(m_matrixBuffer);
+	ReleaseCOM(m_wireframeRS);
 	ReleaseCOM(m_vertexShader);
 	ReleaseCOM(m_pixelShader);
 	ReleaseCOM(m_inputLayout);

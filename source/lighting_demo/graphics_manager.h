@@ -16,11 +16,6 @@ namespace LightingDemo {
 
 class GameStateManager;
 
-struct Vertex {
-	DirectX::XMFLOAT3 pos;
-	DirectX::XMFLOAT4 color;
-};
-
 class GraphicsManager : public Common::GraphicsManagerBase {
 public:
 	GraphicsManager(GameStateManager *gameStateManager);
@@ -35,10 +30,6 @@ private:
 	ID3D11VertexShader *m_vertexShader;
 	ID3D11PixelShader *m_pixelShader;
 
-	// Vertex and Index buffers
-	ID3D11Buffer *m_vertexBuffer;
-	ID3D11Buffer *m_indexBuffer;
-
 	ID3D11Buffer *m_matrixBuffer;
 
 public:
@@ -49,7 +40,6 @@ public:
 
 private:
 	void LoadShaders();
-	void BuildGeometryBuffers();
 };
 
 } // End of namespace CrateDemo

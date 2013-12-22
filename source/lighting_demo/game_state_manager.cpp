@@ -26,6 +26,8 @@ bool GameStateManager::Initialize(HWND hwnd, ID3D11Device **graphicsDevice, ID3D
 
 	m_waveSimulator.Init(100, 100, 0.8f, 0.03f, 3.25f, 1.0f);
 
+	BuildGeometryBuffers();
+
 	// Set the view matrices to identity
 	DirectX::XMMATRIX identity = DirectX::XMMatrixIdentity();
 	WorldViewProj.world = identity;
@@ -56,6 +58,16 @@ void GameStateManager::Update() {
 
 	m_waveSimulator.Update(kUpdatePeriod);
 
+	D3D11_MAPPED_SUBRESOURCE mappedData;
+	ModelManager.MapDynamicVertexBuffer(0, *m_immediateContext, &mappedData);
+
+	Vertex* v = reinterpret_cast<Vertex*>(mappedData.pData);
+	for (UINT i = 0; i < m_waveSimulator.VertexCount(); ++i) {
+		v[i].pos = m_waveSimulator[i];
+		v[i].color = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
+	}
+
+	ModelManager.UnMapDynamicVertexBuffer(0, *m_immediateContext);
 }
 
 void GameStateManager::OnResize(int newClientWidth, int newClientHeight) {
@@ -99,6 +111,35 @@ void GameStateManager::MouseMove(WPARAM buttonState, int x, int y) {
 void GameStateManager::MouseWheel(int zDelta) {
 	// Make each wheel dedent correspond to 0.05 units
 	m_camera.MoveCamera(0.0f, 0.0f, -0.005f * (float)zDelta);
+}
+
+void GameStateManager::BuildGeometryBuffers() {
+	Common::Model<Vertex> model;
+
+	// Iterate over each quad.
+	uint m = m_waveSimulator.RowCount();
+	uint n = m_waveSimulator.ColumnCount();
+
+	model.Indices.resize(3 * m_waveSimulator.TriangleCount());
+
+	int k = 0;
+	for (uint i = 0; i < m - 1; ++i) {
+		for (uint j = 0; j < n - 1; ++j) {
+			model.Indices[k] = (i * n) + j;
+			model.Indices[k + 1] = (i * n) + j + 1;
+			model.Indices[k + 2] = ((i + 1) * n) + j;
+
+			model.Indices[k + 3] = ((i + 1) * n) + j;
+			model.Indices[k + 4] = (i * n) + j + 1;
+			model.Indices[k + 5] = ((i + 1) * n) + j + 1;
+
+			k += 6; // next quad
+		}
+	}
+
+	ModelManager.AddModel(model, m_waveSimulator.VertexCount(), model.Indices.size(), false);
+
+	ModelManager.InitStaticBuffers();
 }
 
 } // End of namespace CrateDemo

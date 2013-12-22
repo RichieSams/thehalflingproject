@@ -14,11 +14,18 @@
 #include "common/halfling_sys.h"
 #include "common/vector.h"
 #include "common/camera.h"
+#include "common/model_manager.h"
 
 #include "DirectXMath.h"
+#include <d3d11.h>
 
 
 namespace LightingDemo {
+
+struct Vertex {
+	DirectX::XMFLOAT3 pos;
+	DirectX::XMFLOAT4 color;
+};
 
 struct MatrixBufferType {
 	DirectX::XMMATRIX world;
@@ -41,6 +48,7 @@ private:
 
 public:
 	MatrixBufferType WorldViewProj;
+	Common::ModelManager<Vertex> ModelManager;
 
 public:
 	bool Initialize(HWND hwnd, ID3D11Device **graphicsDevice, ID3D11DeviceContext **immediateContext);
@@ -73,6 +81,8 @@ public:
 	void MouseUp(WPARAM buttonState, int x, int y);
 	void MouseMove(WPARAM buttonState, int x, int y);
 	void MouseWheel(int zDelta);
+
+	void BuildGeometryBuffers();
 };
 
 } // End of namespace CrateDemo

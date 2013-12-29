@@ -30,6 +30,7 @@
     <ClInclude Include="..\common\lights.h" />
     <ClInclude Include="..\common\math.h" />
     <ClInclude Include="..\common\model_manager.h" />
+    <ClInclude Include="..\common\structured_buffer.h" />
     <ClInclude Include="..\common\timer.h" />
     <ClInclude Include="..\common\typedefs.h" />
     <ClInclude Include="..\common\vector.h" />

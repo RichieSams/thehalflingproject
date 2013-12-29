@@ -83,6 +83,9 @@
     <ClInclude Include="..\common\model_manager.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="..\common\structured_buffer.h">
+      <Filter>Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\common\shaders\lights.hlsli">

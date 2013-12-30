@@ -7,8 +7,7 @@
 #ifndef LIGHTS_SHADER_H
 #define LIGHTS_SHADER_H
 
-struct DirectionalLight
-{
+struct DirectionalLight {
 	float4 Ambient;
 	float4 Diffuse;
 	float4 Specular;
@@ -16,8 +15,7 @@ struct DirectionalLight
 	float pad;
 };
 
-struct PointLight
-{ 
+struct PointLight { 
 	float4 Ambient;
 	float4 Diffuse;
 	float4 Specular;
@@ -29,8 +27,7 @@ struct PointLight
 	float pad;
 };
 
-struct SpotLight
-{
+struct SpotLight {
 	float4 Ambient;
 	float4 Diffuse;
 	float4 Specular;

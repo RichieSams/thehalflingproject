@@ -4,17 +4,18 @@
  * Copyright Adrian Astley 2013
  */
 
-#ifndef CRATE_DEMO_TYPES_H
-#define CRATE_DEMO_TYPES_H
+#ifndef LIGHTING_DEMO_TYPES_H
+#define LIGHTING_DEMO_TYPES_H
 
 struct VertexIn {
-	float4 position		: POSITION;
-	float4 color		: COLOR;
+	float3 position  : POSITION;
+	float3 normal    : NORMAL;
 };
 
-struct VertexOut {
-	float4 position		: SV_POSITION;
-	float4 color		: COLOR;
+struct PixelIn {
+	float4 positionClip   : SV_POSITION;
+	float3 positionView   : POSITION_WORLD;
+	float3 normalView     : NORMAL;
 };
 
 #endif

@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\common\shaders\lights.hlsli" />
+    <None Include="..\common\shaders\materials.hlsli" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{E126E907-E152-410A-B81B-D206B709BA48}</ProjectGuid>

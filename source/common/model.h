@@ -31,7 +31,7 @@ public:
 		  m_indexBuffer(nullptr),
 		  m_vertexStride(0),
 		  m_vertices(nullptr),
-		  m_indicies(nullptr),
+		  m_indices(nullptr),
 		  m_subsets(nullptr),
 		  m_vertexCount(0),
 		  m_indexCount(0),
@@ -47,7 +47,7 @@ public:
 		if (m_disposeVertices == DisposeAfterUse::YES)
 			delete[] m_vertices;
 		if (m_disposeIndices == DisposeAfterUse::YES)
-			delete[] m_indicies;
+			delete[] m_indices;
 		if (m_disposeSubsetArray)
 			delete[] m_subsets;
 	}
@@ -60,7 +60,7 @@ private:
 
 	// Local copy of vertices and indices
 	Vertex *m_vertices;
-	uint *m_indicies;
+	uint *m_indices;
 	ModelSubset *m_subsets;
 
 	uint m_vertexCount;

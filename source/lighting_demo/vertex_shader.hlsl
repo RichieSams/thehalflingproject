@@ -6,25 +6,23 @@
 
 #include "types.hlsli"
 
-cbuffer MatrixBuffer
-{
-    matrix worldMatrix;
-    matrix viewMatrix;
-    matrix projectionMatrix;
+cbuffer cbPerFrame : register(b0) {
+    float4x4 gViewProjMatrix;
+    float4x4 gProjMatrix;
 };
 
-VertexOut VS(VertexIn vin) {
-	VertexOut vout;
+cbuffer cbPerObject : register(b1) {
+	float4x4 gWorldViewProjMatrix;
+    float4x4 gWorldViewMatrix;
+};
 
-	// Change the position vector to be 4 units for proper matrix calculations.
-    vin.position.w = 1.0f;
 
-    // Transform to homogeneous clip space.
-    vout.position = mul(vin.position, worldMatrix);
-    vout.position = mul(vout.position, viewMatrix);
-    vout.position = mul(vout.position, projectionMatrix);
+PixelIn VS(VertexIn input) {
+	PixelIn output;
 
-	vout.color = vin.color;
-
-	return vout;
+	output.positionClip = mul(float4(input.position, 1.0f), gWorldViewProjMatrix);
+    output.positionView = mul(float4(input.position, 1.0f), gWorldViewMatrix).xyz;
+    output.normalView   = mul(float4(input.normal, 0.0f), gWorldViewMatrix).xyz;
+	
+	return output;
 }

@@ -23,7 +23,7 @@ namespace LightingDemo {
 
 struct Vertex {
 	DirectX::XMFLOAT3 pos;
-	DirectX::XMFLOAT4 color;
+	DirectX::XMFLOAT3 normal;
 };
 
 struct MatrixBufferType {

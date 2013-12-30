@@ -31,9 +31,7 @@ bool GraphicsManager::Initialize(int clientWidth, int clientHeight, HWND hwnd, b
 
 	LoadShaders();
 
-	if (!m_gameStateManager->ModelManager.Initialize(&m_device))
-		return false;
-	if (!m_gameStateManager->Initialize(hwnd, &m_device, &m_immediateContext))
+	if (!m_gameStateManager->Initialize(hwnd, &m_device))
 		return false;
 	
 	D3D11_RASTERIZER_DESC wireframeDesc;
@@ -70,9 +68,6 @@ void GraphicsManager::DrawFrame() {
 	m_immediateContext->VSSetShader(m_vertexShader, NULL, 0);
 	m_immediateContext->PSSetShader(m_pixelShader, NULL, 0);
 
-	m_immediateContext->RSSetState(m_wireframeRS);
-
-	m_gameStateManager->ModelManager.RenderDynamicModel(0, m_immediateContext, m_inputLayout);
 
 	m_swapChain->Present(0, 0);
 }

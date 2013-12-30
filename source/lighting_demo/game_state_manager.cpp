@@ -15,11 +15,9 @@ namespace LightingDemo {
 
 GameStateManager::GameStateManager() 
 	: GameStateManagerBase(),
-	  m_camera(1.5f * DirectX::XM_PI, 0.25f * DirectX::XM_PI, 5.0f),
-	  m_accumulatedWaveSimTime(0) {
+	  m_camera(1.5f * DirectX::XM_PI, 0.25f * DirectX::XM_PI, 5.0f) {
 }
 
-	m_waveSimulator.Init(100, 100, 0.8f, 0.03f, 3.25f, 1.0f);
 bool GameStateManager::Initialize(HWND hwnd, ID3D11Device **device) {
 	GameStateManagerBase::Initialize(hwnd, device);
 
@@ -35,36 +33,10 @@ bool GameStateManager::Initialize(HWND hwnd, ID3D11Device **device) {
 }
 
 void GameStateManager::Shutdown() {
-
 }
 
 void GameStateManager::Update() {
 	WorldViewProj.view = m_camera.CreateViewMatrix(DirectX::XMVectorZero());
-
-	m_accumulatedWaveSimTime += kUpdatePeriod;
-	if ((m_accumulatedWaveSimTime) >= 250.0f) {
-		m_accumulatedWaveSimTime -= 250.0f;
-
-		uint i = 5 + rand() % 90;
-		uint j = 5 + rand() % 90;
-
-		float r = Common::RandF(-1.0f, -2.0f);
-
-		m_waveSimulator.Disturb(i, j, r);
-	}
-
-	m_waveSimulator.Update(kUpdatePeriod);
-
-	D3D11_MAPPED_SUBRESOURCE mappedData;
-	ModelManager.MapDynamicVertexBuffer(0, *m_immediateContext, &mappedData);
-
-	Vertex* v = reinterpret_cast<Vertex*>(mappedData.pData);
-	for (UINT i = 0; i < m_waveSimulator.VertexCount(); ++i) {
-		v[i].pos = m_waveSimulator[i];
-		v[i].color = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
-	}
-
-	ModelManager.UnMapDynamicVertexBuffer(0, *m_immediateContext);
 }
 
 void GameStateManager::OnResize(int newClientWidth, int newClientHeight) {
@@ -111,32 +83,6 @@ void GameStateManager::MouseWheel(int zDelta) {
 }
 
 void GameStateManager::BuildGeometryBuffers() {
-	Common::Model<Vertex> model;
-
-	// Iterate over each quad.
-	uint m = m_waveSimulator.RowCount();
-	uint n = m_waveSimulator.ColumnCount();
-
-	model.Indices.resize(3 * m_waveSimulator.TriangleCount());
-
-	int k = 0;
-	for (uint i = 0; i < m - 1; ++i) {
-		for (uint j = 0; j < n - 1; ++j) {
-			model.Indices[k] = (i * n) + j;
-			model.Indices[k + 1] = (i * n) + j + 1;
-			model.Indices[k + 2] = ((i + 1) * n) + j;
-
-			model.Indices[k + 3] = ((i + 1) * n) + j;
-			model.Indices[k + 4] = (i * n) + j + 1;
-			model.Indices[k + 5] = ((i + 1) * n) + j + 1;
-
-			k += 6; // next quad
-		}
-	}
-
-	ModelManager.AddModel(model, m_waveSimulator.VertexCount(), model.Indices.size(), false);
-
-	ModelManager.InitStaticBuffers();
 }
 
 } // End of namespace CrateDemo

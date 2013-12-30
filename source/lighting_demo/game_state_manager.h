@@ -14,7 +14,6 @@
 #include "common/halfling_sys.h"
 #include "common/vector.h"
 #include "common/camera.h"
-#include "common/model_manager.h"
 
 #include "DirectXMath.h"
 #include <d3d11.h>
@@ -43,15 +42,11 @@ private:
 	Common::Vector2 m_mouseLastPos;
 	Common::Camera m_camera;
 
-	WaveSimulator m_waveSimulator;
-	double m_accumulatedWaveSimTime;
-
 public:
 	MatrixBufferType WorldViewProj;
-	Common::ModelManager<Vertex> ModelManager;
 
 public:
-	bool Initialize(HWND hwnd, ID3D11Device **graphicsDevice, ID3D11DeviceContext **immediateContext);
+	bool Initialize(HWND hwnd, ID3D11Device **device);
 	void Shutdown();
 	/**
 	 * Return the wanted period of time between update() calls.

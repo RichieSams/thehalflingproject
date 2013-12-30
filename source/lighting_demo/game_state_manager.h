@@ -14,9 +14,11 @@
 #include "common/halfling_sys.h"
 #include "common/vector.h"
 #include "common/camera.h"
+#include "common/model.h"
 
 #include "DirectXMath.h"
 #include <d3d11.h>
+#include <vector>
 
 
 namespace LightingDemo {
@@ -44,6 +46,7 @@ private:
 
 public:
 	MatrixBufferType WorldViewProj;
+	std::vector<Common::Model<Vertex> > Models;
 
 public:
 	bool Initialize(HWND hwnd, ID3D11Device **device);

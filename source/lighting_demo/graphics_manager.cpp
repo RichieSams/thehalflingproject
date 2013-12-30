@@ -68,6 +68,7 @@ void GraphicsManager::DrawFrame() {
 	m_immediateContext->VSSetShader(m_vertexShader, NULL, 0);
 	m_immediateContext->PSSetShader(m_pixelShader, NULL, 0);
 
+	m_gameStateManager->Models[0].DrawSubset(m_immediateContext);
 
 	m_swapChain->Present(0, 0);
 }

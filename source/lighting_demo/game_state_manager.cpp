@@ -83,6 +83,65 @@ void GameStateManager::MouseWheel(int zDelta) {
 }
 
 void GameStateManager::BuildGeometryBuffers() {
+	Models.push_back(Common::Model<Vertex>());
+	Common::Model<Vertex> *model = &Models.back();
+
+	Vertex *verticies = new Vertex[24] {
+		// Left face
+		{DirectX::XMFLOAT3(-1.0f, -1.0f, -1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, +1.0f)}, // 0
+		{DirectX::XMFLOAT3(-1.0f, +1.0f, -1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, +1.0f)}, // 1
+		{DirectX::XMFLOAT3(+1.0f, +1.0f, -1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, +1.0f)}, // 2
+		{DirectX::XMFLOAT3(+1.0f, -1.0f, -1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, +1.0f)}, // 3
+		// Back face
+		{DirectX::XMFLOAT3(-1.0f, -1.0f, +1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f)}, // 4
+		{DirectX::XMFLOAT3(-1.0f, +1.0f, +1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f)}, // 5
+		{DirectX::XMFLOAT3(+1.0f, +1.0f, +1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f)}, // 6
+		{DirectX::XMFLOAT3(+1.0f, -1.0f, +1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f)}, // 7
+		// Left face
+		{DirectX::XMFLOAT3(-1.0f, -1.0f, +1.0f), DirectX::XMFLOAT3(-1.0f, 0.0f, 0.0f)}, // 4
+		{DirectX::XMFLOAT3(-1.0f, +1.0f, +1.0f), DirectX::XMFLOAT3(-1.0f, 0.0f, 0.0f)}, // 5
+		{DirectX::XMFLOAT3(-1.0f, +1.0f, -1.0f), DirectX::XMFLOAT3(-1.0f, 0.0f, 0.0f)}, // 1
+		{DirectX::XMFLOAT3(-1.0f, -1.0f, -1.0f), DirectX::XMFLOAT3(-1.0f, 0.0f, 0.0f)}, // 0
+		// Right face
+		{DirectX::XMFLOAT3(+1.0f, +1.0f, -1.0f), DirectX::XMFLOAT3(+1.0f, 0.0f, 0.0f)}, // 2
+		{DirectX::XMFLOAT3(+1.0f, -1.0f, -1.0f), DirectX::XMFLOAT3(+1.0f, 0.0f, 0.0f)}, // 3
+		{DirectX::XMFLOAT3(+1.0f, +1.0f, +1.0f), DirectX::XMFLOAT3(+1.0f, 0.0f, 0.0f)}, // 6
+		{DirectX::XMFLOAT3(+1.0f, -1.0f, +1.0f), DirectX::XMFLOAT3(+1.0f, 0.0f, 0.0f)}, // 7
+		// Top face
+		{DirectX::XMFLOAT3(-1.0f, +1.0f, -1.0f), DirectX::XMFLOAT3(0.0f, +1.0f, 0.0f)}, // 1
+		{DirectX::XMFLOAT3(+1.0f, +1.0f, -1.0f), DirectX::XMFLOAT3(0.0f, +1.0f, 0.0f)}, // 2
+		{DirectX::XMFLOAT3(-1.0f, +1.0f, +1.0f), DirectX::XMFLOAT3(0.0f, +1.0f, 0.0f)}, // 5
+		{DirectX::XMFLOAT3(+1.0f, +1.0f, +1.0f), DirectX::XMFLOAT3(0.0f, +1.0f, 0.0f)}, // 6
+		// Bottom face
+		{DirectX::XMFLOAT3(-1.0f, -1.0f, -1.0f), DirectX::XMFLOAT3(0.0f, -1.0f, 0.0f)}, // 0
+		{DirectX::XMFLOAT3(+1.0f, -1.0f, -1.0f), DirectX::XMFLOAT3(0.0f, -1.0f, 0.0f)}, // 3
+		{DirectX::XMFLOAT3(-1.0f, -1.0f, +1.0f), DirectX::XMFLOAT3(0.0f, -1.0f, 0.0f)}, // 4
+		{DirectX::XMFLOAT3(+1.0f, -1.0f, +1.0f), DirectX::XMFLOAT3(0.0f, -1.0f, 0.0f)}, // 7
+	};
+	model->SetVertices(*m_device, verticies, 24);
+
+	// Create the index buffer
+	uint *indicies = new uint[36] {
+		// Front face
+		0, 1, 2,
+		0, 2, 3,
+		// Back face
+		4, 6, 5,
+		4, 7, 6,
+		// Left face
+		8, 9, 10,
+		8, 10, 11,
+		// Right face
+		13, 12, 14,
+		13, 14, 15,
+		// Top face
+		16, 18, 19,
+		16, 19, 17,
+		// Bottom face
+		22, 20, 21,
+		22, 21, 23
+	};
+	model->SetIndices(*m_device, indicies, 36);
 }
 
 } // End of namespace CrateDemo

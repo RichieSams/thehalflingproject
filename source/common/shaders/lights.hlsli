@@ -23,7 +23,7 @@ struct PointLight {
 	float3 PositionView;
 	float Range;
 
-	float3 Att;
+	float3 Attenuation;
 	float pad;
 };
 
@@ -38,7 +38,7 @@ struct SpotLight {
 	float3 DirectionView;
 	float Spot;
 
-	float3 Att;
+	float3 Attenuation;
 	float pad;
 };
 

@@ -12,7 +12,7 @@ struct DirectionalLight
 	float4 Ambient;
 	float4 Diffuse;
 	float4 Specular;
-	float3 Direction;
+	float3 DirectionView;
 	float pad;
 };
 
@@ -22,7 +22,7 @@ struct PointLight
 	float4 Diffuse;
 	float4 Specular;
 
-	float3 Position;
+	float3 PositionView;
 	float Range;
 
 	float3 Att;
@@ -35,10 +35,10 @@ struct SpotLight
 	float4 Diffuse;
 	float4 Specular;
 
-	float3 Position;
+	float3 PositionView;
 	float Range;
 
-	float3 Direction;
+	float3 DirectionView;
 	float Spot;
 
 	float3 Att;

@@ -97,5 +97,8 @@
     <None Include="..\common\shaders\materials.hlsli">
       <Filter>Common\Shaders</Filter>
     </None>
+    <None Include="..\common\shaders\light_functions.hlsli">
+      <Filter>Common\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

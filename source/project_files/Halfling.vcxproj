@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\common\shaders\lights.hlsli" />
+    <None Include="..\common\shaders\light_functions.hlsli" />
     <None Include="..\common\shaders\materials.hlsli" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -19,12 +19,9 @@ GameStateManager::GameStateManager()
 	  m_accumulatedWaveSimTime(0) {
 }
 
-bool GameStateManager::Initialize(HWND hwnd, ID3D11Device **graphicsDevice, ID3D11DeviceContext **immediateContext) {
-	m_hwnd = hwnd;
-	m_device = graphicsDevice;
-	m_immediateContext = immediateContext;
-
 	m_waveSimulator.Init(100, 100, 0.8f, 0.03f, 3.25f, 1.0f);
+bool GameStateManager::Initialize(HWND hwnd, ID3D11Device **device) {
+	GameStateManagerBase::Initialize(hwnd, device);
 
 	BuildGeometryBuffers();
 

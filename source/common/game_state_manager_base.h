@@ -21,11 +21,16 @@ public:
 
 protected:
 	HWND m_hwnd;
+	// Pointer to pointer so it can survive device re-creation
 	ID3D11Device **m_device;
-	ID3D11DeviceContext **m_immediateContext;
 
 public:
-	virtual bool Initialize(HWND hwnd, ID3D11Device **graphicsDevice, ID3D11DeviceContext **immediateContext) = 0;
+	virtual bool Initialize(HWND hwnd, ID3D11Device **device) { 
+		m_hwnd = hwnd; 
+		m_device = device;
+
+		return true;
+	}
 	virtual void Shutdown() = 0;
 	/**
 	 * Return the wanted period of time between update() calls.

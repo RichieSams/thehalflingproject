@@ -4,8 +4,8 @@
  * Copyright Adrian Astley 2013
  */
 
-#ifndef CAMERA_H
-#define CAMERA_H
+#ifndef COMMON_CAMERA_H
+#define COMMON_CAMERA_H
 
 #include "DirectXMath.h"
 

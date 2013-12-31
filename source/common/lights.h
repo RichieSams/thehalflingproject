@@ -4,8 +4,8 @@
  * Copyright Adrian Astley 2013
  */
 
-#ifndef CAMERA_H
-#define CAMERA_H
+#ifndef COMMON_LIGHTS_H
+#define COMMON_LIGHTS_H
 
 #include "common/halfling_sys.h"
 

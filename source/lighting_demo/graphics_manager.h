@@ -16,6 +16,28 @@ namespace LightingDemo {
 
 class GameStateManager;
 
+struct Material {
+	DirectX::XMFLOAT4 Ambient;
+	DirectX::XMFLOAT4 Diffuse;
+	DirectX::XMFLOAT4 Specular; // w = SpecPower
+	DirectX::XMFLOAT4 Reflect;
+};
+
+struct VertexShaderFrameConstants {
+	DirectX::XMMATRIX viewProj;
+	DirectX::XMMATRIX proj;
+};
+
+struct VertexShaderObjectConstants {
+	DirectX::XMMATRIX worldViewProj;
+	DirectX::XMMATRIX worldView;
+};
+
+struct PixelShaderObjectConstants {
+	Common::DirectionalLight directionalLight;
+	Material material;
+};
+
 class GraphicsManager : public Common::GraphicsManagerBase {
 public:
 	GraphicsManager(GameStateManager *gameStateManager);
@@ -30,7 +52,13 @@ private:
 	ID3D11VertexShader *m_vertexShader;
 	ID3D11PixelShader *m_pixelShader;
 
-	ID3D11Buffer *m_matrixBuffer;
+	ID3D11Buffer *m_vertexShaderFrameConstantsBuffer;
+	ID3D11Buffer *m_vertexShaderObjectConstantsBuffer;
+	ID3D11Buffer *m_pixelShaderObjectConstantsBuffer;
+
+	// We assume there is only one directional light. Therefore, it is stored in a cbuffer
+	Common::StructuredBuffer<Common::PointLight> *m_pointLightBuffer;
+	Common::StructuredBuffer<Common::SpotLight> *m_spotLightBuffer;
 
 	ID3D11RasterizerState *m_wireframeRS;
 
@@ -38,7 +66,8 @@ public:
 	bool Initialize(int clientWidth, int clientHeight, HWND hwnd, bool fullscreen);
 	void Shutdown();
 	void DrawFrame();
-	void SetWorldViewProj();
+	void SetFrameConstants(DirectX::XMMATRIX &projMatrix, DirectX::XMMATRIX &viewProjMatrix);
+	void SetObjectConstants(DirectX::XMMATRIX &worldViewMatrix, DirectX::XMMATRIX &worldViewProjMatrix, Material &material);
 	void OnResize(int newClientWidth, int newClientHeight);
 
 private:

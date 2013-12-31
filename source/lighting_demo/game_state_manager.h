@@ -28,7 +28,7 @@ struct Vertex {
 	DirectX::XMFLOAT3 normal;
 };
 
-struct MatrixBufferType {
+struct WorldViewProjection {
 	DirectX::XMMATRIX world;
 	DirectX::XMMATRIX view;
 	DirectX::XMMATRIX projection;
@@ -45,7 +45,7 @@ private:
 	Common::Camera m_camera;
 
 public:
-	MatrixBufferType WorldViewProj;
+	WorldViewProjection WorldViewProj;
 	std::vector<Common::Model<Vertex> > Models;
 
 public:

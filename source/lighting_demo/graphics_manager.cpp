@@ -19,7 +19,11 @@ GraphicsManager::GraphicsManager(GameStateManager *gameStateManager)
 	  m_gameStateManager(gameStateManager),
 	  m_renderTargetView(nullptr),
 	  m_inputLayout(nullptr),
-	  m_matrixBuffer(nullptr),
+	  m_vertexShaderFrameConstantsBuffer(nullptr),
+	  m_vertexShaderObjectConstantsBuffer(nullptr),
+	  m_pixelShaderObjectConstantsBuffer(nullptr),
+	  m_pointLightBuffer(nullptr),
+	  m_spotLightBuffer(nullptr),
 	  m_vertexShader(nullptr),
 	  m_pixelShader(nullptr),
 	  m_wireframeRS(nullptr) {
@@ -48,7 +52,11 @@ bool GraphicsManager::Initialize(int clientWidth, int clientHeight, HWND hwnd, b
 
 void GraphicsManager::Shutdown() {
 	// Release in the opposite order we initialized in
-	ReleaseCOM(m_matrixBuffer);
+	ReleaseCOM(m_vertexShaderFrameConstantsBuffer);
+	ReleaseCOM(m_vertexShaderObjectConstantsBuffer);
+	ReleaseCOM(m_pixelShaderObjectConstantsBuffer);
+	delete m_pointLightBuffer;
+	delete m_spotLightBuffer;
 	ReleaseCOM(m_wireframeRS);
 	ReleaseCOM(m_vertexShader);
 	ReleaseCOM(m_pixelShader);
@@ -62,7 +70,17 @@ void GraphicsManager::DrawFrame() {
 	m_immediateContext->ClearRenderTargetView(m_renderTargetView, reinterpret_cast<const float*>(&Colors::Blue));
 	m_immediateContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-	SetWorldViewProj();
+	// Transpose the matrices to prepare them for the shader.
+	DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranspose(m_gameStateManager->WorldViewProj.world);
+	DirectX::XMMATRIX viewMatrix = DirectX::XMMatrixTranspose(m_gameStateManager->WorldViewProj.view);
+	DirectX::XMMATRIX projectionMatrix = DirectX::XMMatrixTranspose(m_gameStateManager->WorldViewProj.projection);
+
+	// Cache the matrix multiplications
+	DirectX::XMMATRIX viewProj = viewMatrix * projectionMatrix;
+	DirectX::XMMATRIX worldView = worldMatrix * viewMatrix;
+	DirectX::XMMATRIX worldViewProjection = worldView * projectionMatrix;
+
+	SetFrameConstants(projectionMatrix, viewProj);
 
 	// Set the vertex and pixel shaders that will be used to render this triangle.
 	m_immediateContext->VSSetShader(m_vertexShader, NULL, 0);
@@ -73,36 +91,45 @@ void GraphicsManager::DrawFrame() {
 	m_swapChain->Present(0, 0);
 }
 
-void GraphicsManager::SetWorldViewProj() {
-	// Write the wold, view, projection matrices to the constant shader buffer
+void GraphicsManager::SetFrameConstants(DirectX::XMMATRIX &projMatrix, DirectX::XMMATRIX &viewProjMatrix) {
+	// Fill in frame constants
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
-	MatrixBufferType* dataPtr;
-	unsigned int bufferNumber;
-
-	// Transpose the matrices to prepare them for the shader.
-	DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranspose(m_gameStateManager->WorldViewProj.world);
-	DirectX::XMMATRIX viewMatrix = DirectX::XMMatrixTranspose(m_gameStateManager->WorldViewProj.view);
-	DirectX::XMMATRIX projectionMatrix = DirectX::XMMatrixTranspose(m_gameStateManager->WorldViewProj.projection);
 
 	// Lock the constant buffer so it can be written to.
-	HR(m_immediateContext->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
+	HR(m_immediateContext->Map(m_vertexShaderFrameConstantsBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
+	
+	VertexShaderFrameConstants *vertexShaderFrameConstants = static_cast<VertexShaderFrameConstants *>(mappedResource.pData);
+	vertexShaderFrameConstants->proj = projMatrix;
+	vertexShaderFrameConstants->viewProj = viewProjMatrix;
 
-	// Get a pointer to the data in the constant buffer.
-	dataPtr = (MatrixBufferType*)mappedResource.pData;
-
-	// Copy the matrices into the constant buffer.
-	dataPtr->world = worldMatrix;
-	dataPtr->view = viewMatrix;
-	dataPtr->projection = projectionMatrix;
-
-	// Unlock the constant buffer.
-	m_immediateContext->Unmap(m_matrixBuffer, 0);
-
-	// Set the position of the constant buffer in the vertex shader.
-	bufferNumber = 0;
+	m_immediateContext->Unmap(m_vertexShaderFrameConstantsBuffer, 0);
 
 	// Finally, set the constant buffer in the vertex shader with the updated values.
-	m_immediateContext->VSSetConstantBuffers(bufferNumber, 1, &m_matrixBuffer);
+	m_immediateContext->VSSetConstantBuffers(0, 1, &m_vertexShaderFrameConstantsBuffer);
+}
+
+void GraphicsManager::SetObjectConstants(DirectX::XMMATRIX &worldViewMatrix, DirectX::XMMATRIX &worldViewProjMatrix, Material &material) {
+	// Fill in object constants
+	D3D11_MAPPED_SUBRESOURCE mappedResource;
+
+	// Lock the constant buffer so it can be written to.
+	HR(m_immediateContext->Map(m_vertexShaderObjectConstantsBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
+
+	VertexShaderObjectConstants *vertexShaderObjectConstants = static_cast<VertexShaderObjectConstants *>(mappedResource.pData);
+	vertexShaderObjectConstants->worldView = worldViewMatrix;
+	vertexShaderObjectConstants->worldViewProj = worldViewProjMatrix;
+
+	m_immediateContext->Unmap(m_vertexShaderObjectConstantsBuffer, 0);
+	m_immediateContext->VSSetConstantBuffers(1, 1, &m_vertexShaderObjectConstantsBuffer);
+
+	// Lock the constant buffer so it can be written to.
+	HR(m_immediateContext->Map(m_pixelShaderObjectConstantsBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
+
+	PixelShaderObjectConstants *pixelShaderObjectConstants = static_cast<PixelShaderObjectConstants *>(mappedResource.pData);
+	pixelShaderObjectConstants->material = material;
+
+	m_immediateContext->Unmap(m_pixelShaderObjectConstantsBuffer, 0);
+	m_immediateContext->PSSetConstantBuffers(2, 1, &m_pixelShaderObjectConstantsBuffer);
 }
 
 void GraphicsManager::OnResize(int newClientWidth, int newClientHeight) {
@@ -134,16 +161,36 @@ void GraphicsManager::LoadShaders() {
 	HR(Common::LoadVertexShader("vertex_shader.cso", m_device, vertexDesc, 2, &m_vertexShader, &m_inputLayout));
 	HR(Common::LoadPixelShader("pixel_shader.cso", m_device, &m_pixelShader));
 
-	D3D11_BUFFER_DESC matrixBufferDesc;
-	matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	matrixBufferDesc.ByteWidth = sizeof(MatrixBufferType);
-	matrixBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	matrixBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	matrixBufferDesc.MiscFlags = 0;
-	matrixBufferDesc.StructureByteStride = 0;
+	// Create the constant shader buffers
+	D3D11_BUFFER_DESC vertexShaderFrameBufferDesc;
+	vertexShaderFrameBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	vertexShaderFrameBufferDesc.ByteWidth = sizeof(VertexShaderFrameConstants);
+	vertexShaderFrameBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	vertexShaderFrameBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	vertexShaderFrameBufferDesc.MiscFlags = 0;
+	vertexShaderFrameBufferDesc.StructureByteStride = 0;
+	
+	m_device->CreateBuffer(&vertexShaderFrameBufferDesc, NULL, &m_vertexShaderFrameConstantsBuffer);
 
-	// Create the constant buffer pointer so we can access the vertex shader constant buffer
-	m_device->CreateBuffer(&matrixBufferDesc, NULL, &m_matrixBuffer);
+	D3D11_BUFFER_DESC vertexShaderObjectBufferDesc;
+	vertexShaderObjectBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	vertexShaderObjectBufferDesc.ByteWidth = sizeof(VertexShaderObjectConstants);
+	vertexShaderObjectBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	vertexShaderObjectBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	vertexShaderObjectBufferDesc.MiscFlags = 0;
+	vertexShaderObjectBufferDesc.StructureByteStride = 0;
+
+	m_device->CreateBuffer(&vertexShaderObjectBufferDesc, NULL, &m_vertexShaderObjectConstantsBuffer);
+
+	D3D11_BUFFER_DESC pixelShaderObjectBufferDesc;
+	pixelShaderObjectBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	pixelShaderObjectBufferDesc.ByteWidth = sizeof(PixelShaderObjectConstants);
+	pixelShaderObjectBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	pixelShaderObjectBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	pixelShaderObjectBufferDesc.MiscFlags = 0;
+	pixelShaderObjectBufferDesc.StructureByteStride = 0;
+
+	m_device->CreateBuffer(&pixelShaderObjectBufferDesc, NULL, &m_pixelShaderObjectConstantsBuffer);
 }
 
 } // End of namespace CrateDemo

@@ -8,6 +8,8 @@
 #define LIGHTING_DEMO_GRAPHICS_MANAGER_H
 
 #include "common/graphics_manager_base.h"
+#include "common/structured_buffer.h"
+#include "common/lights.h"
 
 #include <d3d11.h>
 #include "DirectXMath.h"

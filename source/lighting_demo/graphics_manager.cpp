@@ -191,6 +191,9 @@ void GraphicsManager::LoadShaders() {
 	pixelShaderObjectBufferDesc.StructureByteStride = 0;
 
 	m_device->CreateBuffer(&pixelShaderObjectBufferDesc, NULL, &m_pixelShaderObjectConstantsBuffer);
+
+	m_pointLightBuffer = new Common::StructuredBuffer<Common::PointLight>(m_device, 1, D3D11_BIND_SHADER_RESOURCE, true);
+	m_spotLightBuffer = new Common::StructuredBuffer<Common::SpotLight>(m_device, 1, D3D11_BIND_SHADER_RESOURCE, true);
 }
 
 } // End of namespace CrateDemo

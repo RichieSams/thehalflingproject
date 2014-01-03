@@ -50,7 +50,6 @@ public:
 	LRESULT MsgProc(HWND hwnd, uint msg, WPARAM wParam, LPARAM lParam);
 
 private:
-	void CalculateFrameStats();
 	void OnResize();
 
 	void InitializeWindow(bool fullscreen);

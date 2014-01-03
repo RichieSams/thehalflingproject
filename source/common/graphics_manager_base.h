@@ -28,6 +28,9 @@ public:
 	virtual void GameUnpaused() {}
 
 protected:
+	uint m_fps;
+	float m_frameTime;
+
 	ID3D11Device *m_device;
 	ID3D11DeviceContext *m_immediateContext;
 	IDXGISwapChain *m_swapChain;
@@ -44,6 +47,9 @@ protected:
 	// MSAA
 	bool m_enable4xMSAA;
 	uint m_4xMSAAQuality;
+
+protected:
+	void CalculateFrameStats(float deltaTime);
 };
 
 } // End of namespace Halfling

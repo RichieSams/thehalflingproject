@@ -122,8 +122,6 @@ void HalflingEngine::Run() {
 			}
 			
 			m_graphicsManager->DrawFrame();
-
-			CalculateFrameStats();
 		}
 	}
 
@@ -245,35 +243,6 @@ void HalflingEngine::UnPauseGame() {
 	m_timer.Start();
 	m_graphicsManager->GameUnpaused();
 	m_gameStateManager->GameUnpaused();
-}
-
-void HalflingEngine::CalculateFrameStats() {
-	// Code computes the average frames per second, and also the 
-	// average time it takes to render one frame.  These stats 
-	// are appended to the window caption bar.
-
-	static int frameCnt = 0;
-	static double timeElapsed = 0.0;
-
-	frameCnt++;
-	timeElapsed += m_timer.DeltaTime();
-
-	// Compute averages over one second period.
-	if (timeElapsed >= 1000.0f) {
-		float fps = (float)frameCnt; // fps = frameCnt / 1
-		float mspf = 1000.0f / fps;
-
-		std::wostringstream outs;   
-		outs.precision(6);
-		outs << m_mainWndCaption << L"    "
-		     << L"FPS: " << fps << L"    " 
-		     << L"Frame Time: " << mspf << L" (ms)";
-		SetWindowText(m_hwnd, outs.str().c_str());
-
-		// Reset for next average.
-		frameCnt = 0;
-		timeElapsed = 0;
-	}
 }
 
 void HalflingEngine::OnResize() {

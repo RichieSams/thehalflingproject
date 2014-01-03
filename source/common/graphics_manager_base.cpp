@@ -167,4 +167,26 @@ void GraphicsManagerBase::OnResize(int newClientWidth, int newClientHeight) {
 	m_immediateContext->RSSetViewports(1, &m_screenViewport);
 }
 
+void GraphicsManagerBase::CalculateFrameStats(float deltaTime) {
+	// Code computes the average frames per second, and also the 
+	// average time it takes to render one frame.  These stats 
+	// are appended to the window caption bar.
+
+	static uint frameCount = 0;
+	static float timeElapsed = 0.0;
+
+	frameCount++;
+	timeElapsed += deltaTime;
+
+	// Compute averages over one second period.
+	if (timeElapsed >= 1000.0f) {
+		m_fps = frameCount; // fps = frameCount / 1
+		m_frameTime = 1000.0f / m_fps;
+
+		// Reset for next average.
+		frameCount = 0;
+		timeElapsed = 0;
+	}
+}
+
 } // End of namespace Common

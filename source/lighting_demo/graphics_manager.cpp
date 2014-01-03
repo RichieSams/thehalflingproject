@@ -86,6 +86,9 @@ void GraphicsManager::DrawFrame() {
 	SetObjectConstants(DirectX::XMMatrixTranspose(worldMatrix), worldViewProjection, m_gameStateManager->Models[0].GetSubsetMaterial(0));
 	SetLightBuffers(viewMatrix);
 
+	m_immediateContext->IASetInputLayout(m_inputLayout);
+	m_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
 	// Set the vertex and pixel shaders that will be used to render this triangle.
 	m_immediateContext->VSSetShader(m_vertexShader, NULL, 0);
 	m_immediateContext->PSSetShader(m_pixelShader, NULL, 0);

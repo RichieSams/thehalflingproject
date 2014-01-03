@@ -8,7 +8,7 @@
 
 #include "common/d3d_util.h"
 
-#include "game_state_manager.h"
+#include "lighting_demo/game_state_manager.h"
 
 #include "assert.h"
 #include <AntTweakBar.h>

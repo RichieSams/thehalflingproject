@@ -18,6 +18,7 @@ namespace LightingDemo {
 GraphicsManager::GraphicsManager(GameStateManager *gameStateManager)
 	: Common::GraphicsManagerBase(),
 	  m_gameStateManager(gameStateManager),
+	  m_vsync(false),
 	  m_renderTargetView(nullptr),
 	  m_inputLayout(nullptr),
 	  m_vertexShaderFrameConstantsBuffer(nullptr),
@@ -102,6 +103,10 @@ void GraphicsManager::DrawFrame() {
 
 	TwDraw();
 
+	if (m_vsync)
+		m_swapChain->Present(1, 0);
+	else
+		m_swapChain->Present(0, 0);
 }
 
 void GraphicsManager::SetFrameConstants(DirectX::XMMATRIX &projMatrix, DirectX::XMMATRIX &viewProjMatrix) {
@@ -187,6 +192,9 @@ void GraphicsManager::OnResize(int newClientWidth, int newClientHeight) {
 void GraphicsManager::InitTweakBar() {
 	int success = TwInit(TW_DIRECT3D11, m_device);
 
+	m_tweakBar = TwNewBar("RootMenu");
+	TwAddVarRW(m_tweakBar, "V-Sync", TwType::TW_TYPE_BOOLCPP, &m_vsync, "");
+	TwDefine(" RootMenu movable=false resizable=false fontresizable=false contained=true ");
 }
 
 void GraphicsManager::LoadShaders() {

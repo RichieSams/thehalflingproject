@@ -47,6 +47,8 @@ public:
 private:
 	GameStateManager *m_gameStateManager;
 
+	bool m_vsync;
+
 	ID3D11RenderTargetView *m_renderTargetView;
 	ID3D11InputLayout *m_inputLayout;
 

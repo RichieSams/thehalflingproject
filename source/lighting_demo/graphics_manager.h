@@ -26,12 +26,17 @@ struct VertexShaderFrameConstants {
 
 struct VertexShaderObjectConstants {
 	DirectX::XMMATRIX worldViewProj;
-	DirectX::XMMATRIX worldView;
+	DirectX::XMMATRIX world;
+};
+
+struct PixelShaderFrameConstants {
+	Common::DirectionalLight directionalLight;
+	DirectX::XMFLOAT3 eyePosition;
+	float pad;
 };
 
 struct PixelShaderObjectConstants {
-	Common::DirectionalLight directionalLight;
-	Material material;
+	Common::Material material;
 };
 
 class GraphicsManager : public Common::GraphicsManagerBase {
@@ -50,6 +55,7 @@ private:
 
 	ID3D11Buffer *m_vertexShaderFrameConstantsBuffer;
 	ID3D11Buffer *m_vertexShaderObjectConstantsBuffer;
+	ID3D11Buffer *m_pixelShaderFrameConstantsBuffer;
 	ID3D11Buffer *m_pixelShaderObjectConstantsBuffer;
 
 	// We assume there is only one directional light. Therefore, it is stored in a cbuffer
@@ -63,7 +69,7 @@ public:
 	void Shutdown();
 	void DrawFrame();
 	void SetFrameConstants(DirectX::XMMATRIX &projMatrix, DirectX::XMMATRIX &viewProjMatrix);
-	void SetObjectConstants(DirectX::XMMATRIX &worldViewMatrix, DirectX::XMMATRIX &worldViewProjMatrix, Material &material);
+	void SetObjectConstants(DirectX::XMMATRIX &worldMatrix, DirectX::XMMATRIX &worldViewProjMatrix, const Common::Material &material);
 	void SetLightBuffers(DirectX::XMMATRIX &viewMatrix);
 	void OnResize(int newClientWidth, int newClientHeight);
 

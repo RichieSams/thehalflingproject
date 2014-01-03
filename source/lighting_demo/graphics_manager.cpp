@@ -73,16 +73,18 @@ void GraphicsManager::DrawFrame() {
 	m_immediateContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 	// Transpose the matrices to prepare them for the shader.
-	DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranspose(m_gameStateManager->WorldViewProj.world);
-	DirectX::XMMATRIX viewMatrix = DirectX::XMMatrixTranspose(m_gameStateManager->WorldViewProj.view);
-	DirectX::XMMATRIX projectionMatrix = DirectX::XMMatrixTranspose(m_gameStateManager->WorldViewProj.projection);
+	DirectX::XMMATRIX worldMatrix = m_gameStateManager->WorldViewProj.world;
+	DirectX::XMMATRIX viewMatrix = m_gameStateManager->WorldViewProj.view;
+	DirectX::XMMATRIX projectionMatrix = m_gameStateManager->WorldViewProj.projection;
 
 	// Cache the matrix multiplications
-	DirectX::XMMATRIX viewProj = viewMatrix * projectionMatrix;
-	DirectX::XMMATRIX worldView = worldMatrix * viewMatrix;
-	DirectX::XMMATRIX worldViewProjection = worldView * projectionMatrix;
+	DirectX::XMMATRIX viewProj = DirectX::XMMatrixTranspose(viewMatrix * projectionMatrix);
+	DirectX::XMMATRIX worldViewProjection = DirectX::XMMatrixTranspose(worldMatrix * viewMatrix * projectionMatrix);
 
-	SetFrameConstants(projectionMatrix, viewProj);
+	SetFrameConstants(DirectX::XMMatrixTranspose(projectionMatrix), viewProj);
+
+	SetObjectConstants(DirectX::XMMatrixTranspose(worldMatrix), worldViewProjection, m_gameStateManager->Models[0].GetSubsetMaterial(0));
+	SetLightBuffers(viewMatrix);
 
 	// Set the vertex and pixel shaders that will be used to render this triangle.
 	m_immediateContext->VSSetShader(m_vertexShader, NULL, 0);
@@ -105,12 +107,10 @@ void GraphicsManager::SetFrameConstants(DirectX::XMMATRIX &projMatrix, DirectX::
 	vertexShaderFrameConstants->viewProj = viewProjMatrix;
 
 	m_immediateContext->Unmap(m_vertexShaderFrameConstantsBuffer, 0);
-
-	// Finally, set the constant buffer in the vertex shader with the updated values.
 	m_immediateContext->VSSetConstantBuffers(0, 1, &m_vertexShaderFrameConstantsBuffer);
 }
 
-void GraphicsManager::SetObjectConstants(DirectX::XMMATRIX &worldViewMatrix, DirectX::XMMATRIX &worldViewProjMatrix, Material &material) {
+void GraphicsManager::SetObjectConstants(DirectX::XMMATRIX &worldMatrix, DirectX::XMMATRIX &worldViewProjMatrix, const Common::Material &material) {
 	// Fill in object constants
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 
@@ -118,7 +118,7 @@ void GraphicsManager::SetObjectConstants(DirectX::XMMATRIX &worldViewMatrix, Dir
 	HR(m_immediateContext->Map(m_vertexShaderObjectConstantsBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
 
 	VertexShaderObjectConstants *vertexShaderObjectConstants = static_cast<VertexShaderObjectConstants *>(mappedResource.pData);
-	vertexShaderObjectConstants->worldView = worldViewMatrix;
+	vertexShaderObjectConstants->world = worldMatrix;
 	vertexShaderObjectConstants->worldViewProj = worldViewProjMatrix;
 
 	m_immediateContext->Unmap(m_vertexShaderObjectConstantsBuffer, 0);
@@ -139,6 +139,7 @@ void GraphicsManager::SetObjectConstants(DirectX::XMMATRIX &worldViewMatrix, Dir
 
 	PixelShaderFrameConstants *pixelShaderFrameConstants = static_cast<PixelShaderFrameConstants *>(mappedResource.pData);
 	pixelShaderFrameConstants->directionalLight = *(m_gameStateManager->LightManager.GetDirectionalLight());
+	pixelShaderFrameConstants->eyePosition = m_gameStateManager->GetCameraPosition();
 
 	m_immediateContext->Unmap(m_pixelShaderFrameConstantsBuffer, 0);
 	m_immediateContext->PSSetConstantBuffers(2, 1, &m_pixelShaderFrameConstantsBuffer);

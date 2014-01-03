@@ -121,7 +121,7 @@ void HalflingEngine::Run() {
 				m_gameStateManager->Update();
 			}
 			
-			m_graphicsManager->DrawFrame();
+			m_graphicsManager->DrawFrame(deltaTime);
 		}
 	}
 

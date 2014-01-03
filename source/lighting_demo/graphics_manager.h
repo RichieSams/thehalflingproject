@@ -72,7 +72,7 @@ private:
 public:
 	bool Initialize(int clientWidth, int clientHeight, HWND hwnd, bool fullscreen);
 	void Shutdown();
-	void DrawFrame();
+	void DrawFrame(float deltaTime);
 	void SetFrameConstants(DirectX::XMMATRIX &projMatrix, DirectX::XMMATRIX &viewProjMatrix);
 	void SetObjectConstants(DirectX::XMMATRIX &worldMatrix, DirectX::XMMATRIX &worldViewProjMatrix, const Common::Material &material);
 	void SetLightBuffers(DirectX::XMMATRIX &viewMatrix);

@@ -22,7 +22,7 @@ public:
 
 	virtual bool Initialize(int clientWidth, int clientHeight, HWND hwnd, bool fullscreen);
 	virtual void Shutdown();
-	virtual void DrawFrame() = 0;
+	virtual void DrawFrame(float deltaTime) = 0;
 	virtual void OnResize(int newClientWidth, int newClientHeight);
 	virtual void GamePaused() {}
 	virtual void GameUnpaused() {}

@@ -16,7 +16,7 @@ namespace LightingDemo {
 
 GameStateManager::GameStateManager() 
 	: GameStateManagerBase(),
-	  m_camera(1.5f * DirectX::XM_PI, 0.25f * DirectX::XM_PI, 5.0f) {
+	  m_camera(1.5f * DirectX::XM_PI, 0.25f * DirectX::XM_PI, 50.0f) {
 }
 
 bool GameStateManager::Initialize(HWND hwnd, ID3D11Device **device) {

@@ -9,27 +9,25 @@
 
 #include "common/shaders/lights.hlsli"
 
-void AccumulateDirectionalLight(Material mat, DirectionalLight light, float3 posView, float3 normalView, inout float4 ambient, inout float4 diffuse, inout float4 spec) {
-	// The vector from the surface to the light
-	float3 lightVector = -light.DirectionView;
-
+void AccumulateDirectionalLight(Material mat, DirectionalLight light, float3 normal, float3 toEye, inout float4 ambient, inout float4 diffuse, inout float4 spec) {
 	ambient = mat.Ambient * light.Ambient;
 
-	float diffuseFactor = saturate(dot(lightVector, normalView));
+	float diffuseFactor = dot(-light.Direction, normal);
 
 	[flatten]
 	if (diffuseFactor > 0.0f) {
-		float3 v = reflect(-lightVector, normalView);
-		float specFactor = pow(saturate(dot(v, -posView)), mat.Specular.w);
+		float3 v = reflect(light.Direction, normal);
+		float w = dot(v, toEye);
+		float specFactor = pow(max(w, 0.0f), mat.Specular.w);
 		
 		diffuse = diffuseFactor * mat.Diffuse * light.Diffuse;
 		spec = specFactor * mat.Specular * light.Specular;
 	}
 }
 
-void AccumulatePointLight(Material mat, PointLight light, float3 posView, float3 normalView, inout float4 ambient, inout float4 diffuse, inout float4 spec) {
+void AccumulatePointLight(Material mat, PointLight light, float3 position, float3 normal, float3 toEye, inout float4 ambient, inout float4 diffuse, inout float4 spec) {
 	// The vector from the surface to the light
-	float3 lightVector = light.PositionView - posView;
+	float3 lightVector = light.Position - position;
 	float distance = length(lightVector);
 
 	if (distance > light.Range)
@@ -41,12 +39,12 @@ void AccumulatePointLight(Material mat, PointLight light, float3 posView, float3
 	// Ambient
 	ambient = mat.Ambient * light.Ambient;
 
-	float diffuseFactor = saturate(dot(lightVector, normalView));
+	float diffuseFactor = dot(lightVector, normal);
 
 	[flatten]
 	if (diffuseFactor > 0.0f) {
-		float3 v = reflect(-lightVector, normalView);
-		float specFactor = pow(saturate(dot(v, -posView)), mat.Specular.w);
+		float3 v = reflect(-lightVector, normal);
+		float specFactor = pow(max(dot(v, toEye), 0.0f), mat.Specular.w);
 		
 		diffuse = diffuseFactor * mat.Diffuse * light.Diffuse;
 		spec = specFactor * mat.Specular * light.Specular;
@@ -59,9 +57,9 @@ void AccumulatePointLight(Material mat, PointLight light, float3 posView, float3
 	spec *= attenuation;
 }
 
-void AccumulateSpotLight(Material mat, SpotLight light, float3 posView, float3 normalView, inout float4 ambient, inout float4 diffuse, inout float4 spec) {
+void AccumulateSpotLight(Material mat, SpotLight light, float3 position, float3 normal, float3 toEye, inout float4 ambient, inout float4 diffuse, inout float4 spec) {
 	// The vector from the surface to the light
-	float3 lightVector = light.PositionView - posView;
+	float3 lightVector = light.Position - position;
 	float distance = length(lightVector);
 
 	if (distance > light.Range)
@@ -73,19 +71,19 @@ void AccumulateSpotLight(Material mat, SpotLight light, float3 posView, float3 n
 	// Ambient
 	ambient = mat.Ambient * light.Ambient;
 
-	float diffuseFactor = saturate(dot(lightVector, normalView));
+	float diffuseFactor = dot(lightVector, normal);
 
 	[flatten]
 	if (diffuseFactor > 0.0f) {
-		float3 v = reflect(-lightVector, normalView);
-		float specFactor = pow(saturate(dot(v, -posView)), mat.Specular.w);
+		float3 v = reflect(-lightVector, normal);
+		float specFactor = pow(max(dot(v, toEye), 0.0f), mat.Specular.w);
 		
 		diffuse = diffuseFactor * mat.Diffuse * light.Diffuse;
 		spec = specFactor * mat.Specular * light.Specular;
 	}
 
 	// Scale by spotlight factor and attenuate
-	float spot = pow(max(dot(-lightVector, light.DirectionView), 0.0f), light.Spot);
+	float spot = pow(max(dot(-lightVector, light.Direction), 0.0f), light.Spot);
 
 	float attenuation = spot / dot(light.Attenuation, float3(1.0f, distance, distance * distance));
 

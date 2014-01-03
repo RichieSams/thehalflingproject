@@ -79,13 +79,15 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>..\..\build\$(ConfigurationName)\$(ProjectName)\</OutDir>
     <IntDir>..\..\obj\$(ConfigurationName)\$(ProjectName)\</IntDir>
-    <IncludePath>../;$(IncludePath)</IncludePath>
+    <IncludePath>../;../libs/AntTweakBar/include;$(IncludePath)</IncludePath>
+    <LibraryPath>../libs/AntTweakBar/lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>..\..\build\$(ConfigurationName)\$(ProjectName)\</OutDir>
     <IntDir>..\..\obj\$(ConfigurationName)\$(ProjectName)\</IntDir>
-    <IncludePath>../;$(IncludePath)</IncludePath>
+    <IncludePath>../;../libs/AntTweakBar/include;$(IncludePath)</IncludePath>
+    <LibraryPath>../libs/AntTweakBar/lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -100,6 +102,9 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <OutputFile>$(OutDir)$(TargetName)d$(TargetExt)</OutputFile>
     </Link>
+    <Lib>
+      <AdditionalDependencies>AntTweakBar.lib</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>

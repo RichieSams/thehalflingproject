@@ -8,6 +8,7 @@
 
 #include <sstream>
 #include <windowsx.h>
+#include <AntTweakBar.h>
 
 
 LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
@@ -130,6 +131,10 @@ void HalflingEngine::Run() {
 }
 
 LRESULT HalflingEngine::MsgProc(HWND hwnd, uint msg, WPARAM wParam, LPARAM lParam) {
+	// Send event message to AntTweakBar
+	if (TwEventWin(hwnd, msg, wParam, lParam))
+		return 0; // Event has been handled by AntTweakBar
+
 	switch (msg) {
 		// WM_ACTIVATE is sent when the window is activated or deactivated.  
 		// We pause the game when the window is deactivated and unpause it 

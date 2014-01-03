@@ -14,8 +14,8 @@ struct VertexIn {
 
 struct PixelIn {
 	float4 positionClip   : SV_POSITION;
-	float3 positionView   : POSITION_WORLD;
-	float3 normalView     : NORMAL;
+	float3 positionWorld  : POSITION_WORLD;
+	float3 normal         : NORMAL;
 };
 
 #endif

@@ -19,10 +19,14 @@ VertexOut VS(VertexIn vin) {
 	// Change the position vector to be 4 units for proper matrix calculations.
     vin.position.w = 1.0f;
 
-    // Transform to homogeneous clip space.
-    vout.position = mul(vin.position, worldMatrix);
-    vout.position = mul(vout.position, viewMatrix);
-    vout.position = mul(vout.position, projectionMatrix);
+	matrix worldViewProj = mul(worldMatrix, viewMatrix);
+	worldViewProj = mul(worldViewProj, projectionMatrix);
+	vout.position = mul(vin.position, worldViewProj);
+
+    //// Transform to homogeneous clip space.
+    //vout.position = mul(vin.position, worldMatrix);
+    //vout.position = mul(vout.position, viewMatrix);
+    //vout.position = mul(vout.position, projectionMatrix);
 
 	vout.color = vin.color;
 

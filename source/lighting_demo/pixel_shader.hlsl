@@ -12,6 +12,7 @@
 
 cbuffer cbPerFrame : register(b2) {
 	DirectionalLight gDirectionalLight;
+	float3 gEyePosition;
 }
 
 cbuffer cbPerObject : register(b3) {
@@ -24,8 +25,10 @@ StructuredBuffer<SpotLight> gSpotLights : register(t5);
 
 float4 PS(PixelIn input) : SV_TARGET {
 	// Interpolating can unnormalize
-	input.normalView = normalize(input.normalView);
-	input.positionView = normalize(input.positionView);
+	input.normal = normalize(input.normal);
+	input.positionWorld = normalize(input.positionWorld);
+
+	float3 toEye = normalize(gEyePosition - input.positionWorld);
 
 	// Initialize
 	float4 ambient = float4(0.0f, 0.0f, 0.0f, 0.0f);
@@ -36,17 +39,18 @@ float4 PS(PixelIn input) : SV_TARGET {
 
 	uint numLights, dummy, lightIndex;
 
+	AccumulateDirectionalLight(gMaterial, gDirectionalLight, input.normal, toEye, ambient, diffuse, spec);
 
 	gPointLights.GetDimensions(numLights, dummy);
 	for (lightIndex = 0; lightIndex < numLights; ++lightIndex) {
         PointLight light = gPointLights[lightIndex];
-		AccumulatePointLight(gMaterial, light, input.positionView, input.normalView, ambient, diffuse, spec);
+		AccumulatePointLight(gMaterial, light, input.positionWorld, input.normal, toEye, ambient, diffuse, spec);
     }
 
 	gSpotLights.GetDimensions(numLights, dummy);
 	for (lightIndex = 0; lightIndex < numLights; ++lightIndex) {
         SpotLight light = gSpotLights[lightIndex];
-		AccumulateSpotLight(gMaterial, light, input.positionView, input.normalView, ambient, diffuse, spec);
+		AccumulateSpotLight(gMaterial, light, input.positionWorld, input.normal, toEye, ambient, diffuse, spec);
     }
 
 	float4 litColor = ambient + diffuse + spec;

@@ -13,7 +13,7 @@ cbuffer cbPerFrame : register(b0) {
 
 cbuffer cbPerObject : register(b1) {
 	float4x4 gWorldViewProjMatrix;
-    float4x4 gWorldViewMatrix;
+    float4x4 gWorldMatrix;
 };
 
 
@@ -21,8 +21,8 @@ PixelIn VS(VertexIn input) {
 	PixelIn output;
 
 	output.positionClip = mul(float4(input.position, 1.0f), gWorldViewProjMatrix);
-    output.positionView = mul(float4(input.position, 1.0f), gWorldViewMatrix).xyz;
-    output.normalView   = mul(float4(input.normal, 0.0f), gWorldViewMatrix).xyz;
+    output.positionWorld = mul(float4(input.position, 1.0f), gWorldMatrix).xyz;
+    output.normal   = mul(float4(input.normal, 0.0f), gWorldMatrix).xyz;
 	
 	return output;
 }

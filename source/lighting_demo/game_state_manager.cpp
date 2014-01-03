@@ -89,7 +89,7 @@ void GameStateManager::BuildGeometryBuffers() {
 	Common::Model<Vertex> *model = &Models.back();
 
 	Common::GeometryGenerator::MeshData meshData;
-	Common::GeometryGenerator::CreateBox(1.0f, 1.0f, 1.0f, &meshData);
+	Common::GeometryGenerator::CreateGrid(160.0f, 160.0f, 50, 50, &meshData);
 
 	uint vertexCount = meshData.Vertices.size();
 	uint indexCount = meshData.Indices.size();
@@ -97,7 +97,8 @@ void GameStateManager::BuildGeometryBuffers() {
 	Vertex *vertices = new Vertex[vertexCount];
 	for (uint i = 0; i < vertexCount; ++i) {
 		vertices[i].pos = meshData.Vertices[i].Position;
-		vertices[i].normal = meshData.Vertices[i].Normal;
+		vertices[i].pos.y = GetHillHeight(vertices[i].pos.x, vertices[i].pos.z);
+		vertices[i].normal = GetHillNormal(vertices[i].pos.x, vertices[i].pos.z);
 	}
 	model->SetVertices(*m_device, vertices, vertexCount);
 

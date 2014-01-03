@@ -14,8 +14,6 @@
 namespace Common {
 
 struct ModelSubset {
-	uint Id;
-
 	uint VertexStart;
 	uint VertexCount;
 

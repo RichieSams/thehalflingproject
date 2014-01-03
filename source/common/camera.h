@@ -25,15 +25,24 @@ private:
 
 public:
 	void MoveCamera(float dTheta, float dPhi, float dRadius);
-	inline DirectX::XMMATRIX Camera::CreateViewMatrix(DirectX::XMVECTOR target) const {
+	inline DirectX::XMMATRIX CreateViewMatrix(DirectX::XMVECTOR target) const {
 		DirectX::XMVECTOR pos = ToCartesianVector();
 		DirectX::XMVECTOR up = DirectX::XMVectorSet(0.0f, m_up, 0.0f, 0.0f);
 
 		return DirectX::XMMatrixLookAtLH(pos, target, up);
 	}
+	inline DirectX::XMFLOAT3 GetCameraPosition() { return ToCartesianFloat3(); }
 
 private:
-	inline DirectX::XMVECTOR Camera::ToCartesianVector() const {
+	inline DirectX::XMFLOAT3 ToCartesianFloat3() const {
+		float x = m_radius * sinf(m_phi) * sinf(m_theta);
+		float y = m_radius * cosf(m_phi);
+		float z = m_radius * sinf(m_phi) * cosf(m_theta);
+
+		return DirectX::XMFLOAT3(x, y, z);
+	}
+
+	inline DirectX::XMVECTOR ToCartesianVector() const {
 		float x = m_radius * sinf(m_phi) * sinf(m_theta);
 		float y = m_radius * cosf(m_phi);
 		float z = m_radius * sinf(m_phi) * cosf(m_theta);

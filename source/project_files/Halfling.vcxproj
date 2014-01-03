@@ -16,6 +16,7 @@
     <ClCompile Include="..\common\dxerr.cpp" />
     <ClCompile Include="..\common\geometry_generator.cpp" />
     <ClCompile Include="..\common\graphics_manager_base.cpp" />
+    <ClCompile Include="..\common\light_manager.cpp" />
     <ClCompile Include="..\common\timer.cpp" />
     <ClCompile Include="..\halfling\halfling_engine.cpp" />
   </ItemGroup>
@@ -27,6 +28,7 @@
     <ClInclude Include="..\common\geometry_generator.h" />
     <ClInclude Include="..\common\graphics_manager_base.h" />
     <ClInclude Include="..\common\halfling_sys.h" />
+    <ClInclude Include="..\common\light_manager.h" />
     <ClInclude Include="..\common\lights.h" />
     <ClInclude Include="..\common\math.h" />
     <ClInclude Include="..\common\model.h" />

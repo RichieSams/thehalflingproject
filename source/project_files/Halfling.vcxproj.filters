@@ -36,6 +36,9 @@
     <ClCompile Include="..\common\geometry_generator.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="..\common\light_manager.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\common\halfling_sys.h">
@@ -87,6 +90,9 @@
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="..\common\model.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\light_manager.h">
       <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>

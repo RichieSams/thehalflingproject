@@ -10,6 +10,7 @@
 #include "common/graphics_manager_base.h"
 #include "common/structured_buffer.h"
 #include "common/lights.h"
+#include "common/materials.h"
 
 #include <d3d11.h>
 #include "DirectXMath.h"
@@ -17,13 +18,6 @@
 namespace LightingDemo {
 
 class GameStateManager;
-
-struct Material {
-	DirectX::XMFLOAT4 Ambient;
-	DirectX::XMFLOAT4 Diffuse;
-	DirectX::XMFLOAT4 Specular; // w = SpecPower
-	DirectX::XMFLOAT4 Reflect;
-};
 
 struct VertexShaderFrameConstants {
 	DirectX::XMMATRIX viewProj;

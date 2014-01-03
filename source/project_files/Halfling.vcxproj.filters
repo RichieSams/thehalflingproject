@@ -92,6 +92,9 @@
     <ClInclude Include="..\common\model.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="..\common\materials.h">
+      <Filter>Common</Filter>
+    </ClInclude>
     <ClInclude Include="..\common\light_manager.h">
       <Filter>Common</Filter>
     </ClInclude>

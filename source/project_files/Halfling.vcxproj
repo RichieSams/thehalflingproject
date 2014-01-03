@@ -30,6 +30,7 @@
     <ClInclude Include="..\common\halfling_sys.h" />
     <ClInclude Include="..\common\light_manager.h" />
     <ClInclude Include="..\common\lights.h" />
+    <ClInclude Include="..\common\materials.h" />
     <ClInclude Include="..\common\math.h" />
     <ClInclude Include="..\common\model.h" />
     <ClInclude Include="..\common\model_manager.h" />

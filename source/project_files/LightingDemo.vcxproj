@@ -43,13 +43,15 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>..\..\build\$(ConfigurationName)\$(ProjectName)\</OutDir>
     <IntDir>..\..\obj\$(ConfigurationName)\$(ProjectName)\</IntDir>
-    <IncludePath>../;$(IncludePath)</IncludePath>
+    <IncludePath>../;../libs/AntTweakBar/include;$(IncludePath)</IncludePath>
+    <LibraryPath>../libs/AntTweakBar/lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>..\..\build\$(ConfigurationName)\$(ProjectName)\</OutDir>
     <IntDir>..\..\obj\$(ConfigurationName)\$(ProjectName)\</IntDir>
-    <IncludePath>../;$(IncludePath)</IncludePath>
+    <IncludePath>../;../libs/AntTweakBar/include;$(IncludePath)</IncludePath>
+    <LibraryPath>../libs/AntTweakBar/lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -63,11 +65,14 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;AntTweakBar.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <FxCompile>
       <AdditionalIncludeDirectories>../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </FxCompile>
+    <PostBuildEvent>
+      <Command>XCOPY "$(SolutionDir)..\libs\AntTweakBar\lib\AntTweakBar.dll" "$(OutDir)" /D /K /Y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -89,6 +94,9 @@
     <FxCompile>
       <AdditionalIncludeDirectories>../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </FxCompile>
+    <PostBuildEvent>
+      <Command>XCOPY "$(SolutionDir)..\libs\AntTweakBar\lib\AntTweakBar.dll" "$(OutDir)" /D /K /Y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\lighting_demo\game_state_manager.cpp" />

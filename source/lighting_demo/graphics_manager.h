@@ -14,6 +14,7 @@
 
 #include <d3d11.h>
 #include "DirectXMath.h"
+#include <AntTweakBar.h>
 
 namespace LightingDemo {
 
@@ -49,6 +50,8 @@ private:
 	ID3D11RenderTargetView *m_renderTargetView;
 	ID3D11InputLayout *m_inputLayout;
 
+	TwBar *m_tweakBar;
+
 	// Shaders
 	ID3D11VertexShader *m_vertexShader;
 	ID3D11PixelShader *m_pixelShader;
@@ -74,6 +77,7 @@ public:
 	void OnResize(int newClientWidth, int newClientHeight);
 
 private:
+	void InitTweakBar();
 	void LoadShaders();
 };
 

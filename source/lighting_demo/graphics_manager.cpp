@@ -11,6 +11,7 @@
 #include "game_state_manager.h"
 
 #include "assert.h"
+#include <AntTweakBar.h>
 
 namespace LightingDemo {
 
@@ -33,6 +34,8 @@ GraphicsManager::GraphicsManager(GameStateManager *gameStateManager)
 bool GraphicsManager::Initialize(int clientWidth, int clientHeight, HWND hwnd, bool fullscreen) {
 	if (!Common::GraphicsManagerBase::Initialize(clientWidth, clientHeight, hwnd, fullscreen))
 		return false;
+
+	InitTweakBar();
 
 	if (!m_gameStateManager->Initialize(hwnd, &m_device))
 		return false;
@@ -65,6 +68,8 @@ void GraphicsManager::Shutdown() {
 	ReleaseCOM(m_inputLayout);
 	ReleaseCOM(m_renderTargetView);
 
+	TwTerminate();
+
 	Common::GraphicsManagerBase::Shutdown();
 }
 
@@ -95,7 +100,8 @@ void GraphicsManager::DrawFrame() {
 
 	m_gameStateManager->Models[0].DrawSubset(m_immediateContext);
 
-	m_swapChain->Present(0, 0);
+	TwDraw();
+
 }
 
 void GraphicsManager::SetFrameConstants(DirectX::XMMATRIX &projMatrix, DirectX::XMMATRIX &viewProjMatrix) {
@@ -176,6 +182,11 @@ void GraphicsManager::OnResize(int newClientWidth, int newClientHeight) {
 
 	// Bind the render target view and depth/stencil view to the pipeline.
 	m_immediateContext->OMSetRenderTargets(1, &m_renderTargetView, m_depthStencilView);
+}
+
+void GraphicsManager::InitTweakBar() {
+	int success = TwInit(TW_DIRECT3D11, m_device);
+
 }
 
 void GraphicsManager::LoadShaders() {

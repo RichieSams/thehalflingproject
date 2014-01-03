@@ -19,6 +19,7 @@ GraphicsManager::GraphicsManager(GameStateManager *gameStateManager)
 	: Common::GraphicsManagerBase(),
 	  m_gameStateManager(gameStateManager),
 	  m_vsync(false),
+	  m_wireframe(false),
 	  m_renderTargetView(nullptr),
 	  m_inputLayout(nullptr),
 	  m_vertexShaderFrameConstantsBuffer(nullptr),
@@ -29,7 +30,8 @@ GraphicsManager::GraphicsManager(GameStateManager *gameStateManager)
 	  m_spotLightBuffer(nullptr),
 	  m_vertexShader(nullptr),
 	  m_pixelShader(nullptr),
-	  m_wireframeRS(nullptr) {
+	  m_wireframeRS(nullptr),
+	  m_solidRS(nullptr) {
 }
 
 bool GraphicsManager::Initialize(int clientWidth, int clientHeight, HWND hwnd, bool fullscreen) {
@@ -52,6 +54,15 @@ bool GraphicsManager::Initialize(int clientWidth, int clientHeight, HWND hwnd, b
 
 	HR(m_device->CreateRasterizerState(&wireframeDesc, &m_wireframeRS));
 
+	D3D11_RASTERIZER_DESC solidDesc;
+	ZeroMemory(&solidDesc, sizeof(D3D11_RASTERIZER_DESC));
+	solidDesc.FillMode = D3D11_FILL_SOLID;
+	solidDesc.CullMode = D3D11_CULL_BACK;
+	solidDesc.FrontCounterClockwise = false;
+	solidDesc.DepthClipEnable = true;
+
+	HR(m_device->CreateRasterizerState(&solidDesc, &m_solidRS));
+
 	return true;
 }
 
@@ -64,6 +75,7 @@ void GraphicsManager::Shutdown() {
 	delete m_pointLightBuffer;
 	delete m_spotLightBuffer;
 	ReleaseCOM(m_wireframeRS);
+	ReleaseCOM(m_solidRS);
 	ReleaseCOM(m_vertexShader);
 	ReleaseCOM(m_pixelShader);
 	ReleaseCOM(m_inputLayout);
@@ -199,6 +211,7 @@ void GraphicsManager::InitTweakBar() {
 	TwAddVarRO(m_tweakBar, "Frame Time (ms)", TwType::TW_TYPE_FLOAT, &m_frameTime, "");
 	TwAddVarRW(m_tweakBar, "V-Sync", TwType::TW_TYPE_BOOLCPP, &m_vsync, "");
 	TwDefine(" RootMenu movable=false resizable=false fontresizable=false contained=true ");
+	TwAddVarCB(m_tweakBar, "Wireframe", TwType::TW_TYPE_BOOLCPP, GraphicsManager::SetWireframeRSCallback, GraphicsManager::GetWireframeTSCallback, this, "");
 }
 
 void GraphicsManager::LoadShaders() {
@@ -253,6 +266,21 @@ void GraphicsManager::LoadShaders() {
 
 	m_pointLightBuffer = new Common::StructuredBuffer<Common::PointLight>(m_device, 1, D3D11_BIND_SHADER_RESOURCE, true);
 	m_spotLightBuffer = new Common::StructuredBuffer<Common::SpotLight>(m_device, 1, D3D11_BIND_SHADER_RESOURCE, true);
+}
+
+void TW_CALL GraphicsManager::SetWireframeRSCallback(const void *value, void *clientData) {
+	GraphicsManager *graphicsManager = ((GraphicsManager *)clientData);
+	graphicsManager->m_wireframe = *((bool *)value);
+
+	if (graphicsManager->m_wireframe) {
+		graphicsManager->m_immediateContext->RSSetState(graphicsManager->m_wireframeRS);
+	} else {
+		graphicsManager->m_immediateContext->RSSetState(graphicsManager->m_solidRS);
+	}
+}
+
+void TW_CALL GraphicsManager::GetWireframeTSCallback(void *value, void *clientData) {
+	*((bool *)value) = ((GraphicsManager *)clientData)->m_wireframe;
 }
 
 } // End of namespace CrateDemo

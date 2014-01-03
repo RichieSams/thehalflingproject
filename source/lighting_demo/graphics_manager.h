@@ -48,6 +48,7 @@ private:
 	GameStateManager *m_gameStateManager;
 
 	bool m_vsync;
+	bool m_wireframe;
 
 	ID3D11RenderTargetView *m_renderTargetView;
 	ID3D11InputLayout *m_inputLayout;
@@ -68,6 +69,7 @@ private:
 	Common::StructuredBuffer<Common::SpotLight> *m_spotLightBuffer;
 
 	ID3D11RasterizerState *m_wireframeRS;
+	ID3D11RasterizerState *m_solidRS;
 
 public:
 	bool Initialize(int clientWidth, int clientHeight, HWND hwnd, bool fullscreen);
@@ -77,6 +79,9 @@ public:
 	void SetObjectConstants(DirectX::XMMATRIX &worldMatrix, DirectX::XMMATRIX &worldViewProjMatrix, const Common::Material &material);
 	void SetLightBuffers(DirectX::XMMATRIX &viewMatrix);
 	void OnResize(int newClientWidth, int newClientHeight);
+
+	static void TW_CALL SetWireframeRSCallback(const void *value, void *clientData);
+	static void TW_CALL GetWireframeTSCallback(void *value, void *clientData);
 
 private:
 	void InitTweakBar();

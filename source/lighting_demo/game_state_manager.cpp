@@ -80,8 +80,8 @@ void GameStateManager::MouseMove(WPARAM buttonState, int x, int y) {
 }
 
 void GameStateManager::MouseWheel(int zDelta) {
-	// Make each wheel dedent correspond to 0.05 units
-	m_camera.MoveCamera(0.0f, 0.0f, -0.005f * (float)zDelta);
+	// Make each wheel dedent correspond to 0.01 units
+	m_camera.MoveCamera(0.0f, 0.0f, -0.01f * (float)zDelta);
 }
 
 void GameStateManager::BuildGeometryBuffers() {

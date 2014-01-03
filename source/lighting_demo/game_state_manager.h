@@ -15,6 +15,7 @@
 #include "common/vector.h"
 #include "common/camera.h"
 #include "common/model.h"
+#include "common/light_manager.h"
 
 #include "DirectXMath.h"
 #include <d3d11.h>
@@ -47,6 +48,7 @@ private:
 public:
 	WorldViewProjection WorldViewProj;
 	std::vector<Common::Model<Vertex> > Models;
+	Common::LightManager LightManager;
 
 public:
 	bool Initialize(HWND hwnd, ID3D11Device **device);
@@ -80,7 +82,11 @@ public:
 	void MouseMove(WPARAM buttonState, int x, int y);
 	void MouseWheel(int zDelta);
 
+	inline DirectX::XMFLOAT3 GetCameraPosition() { return m_camera.GetCameraPosition(); }
+
+private:
 	void BuildGeometryBuffers();
+	void CreateLights();
 };
 
 } // End of namespace CrateDemo

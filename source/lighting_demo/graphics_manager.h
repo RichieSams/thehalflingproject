@@ -70,6 +70,7 @@ public:
 	void DrawFrame();
 	void SetFrameConstants(DirectX::XMMATRIX &projMatrix, DirectX::XMMATRIX &viewProjMatrix);
 	void SetObjectConstants(DirectX::XMMATRIX &worldViewMatrix, DirectX::XMMATRIX &worldViewProjMatrix, Material &material);
+	void SetLightBuffers(DirectX::XMMATRIX &viewMatrix);
 	void OnResize(int newClientWidth, int newClientHeight);
 
 private:

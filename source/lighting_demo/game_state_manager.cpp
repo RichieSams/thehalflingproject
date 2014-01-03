@@ -22,6 +22,7 @@ bool GameStateManager::Initialize(HWND hwnd, ID3D11Device **device) {
 	GameStateManagerBase::Initialize(hwnd, device);
 
 	BuildGeometryBuffers();
+	CreateLights();
 
 	// Set the view matrices to identity
 	DirectX::XMMATRIX identity = DirectX::XMMatrixIdentity();

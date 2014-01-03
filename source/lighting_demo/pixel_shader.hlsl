@@ -10,13 +10,16 @@
 #include "common/shaders/light_functions.hlsli"
 
 
-cbuffer cbPerObject : register(b2) {
+cbuffer cbPerFrame : register(b2) {
+	DirectionalLight gDirectionalLight;
+}
+
+cbuffer cbPerObject : register(b3) {
 	Material gMaterial;
 };
 
-StructuredBuffer<DirectionalLight> gDirectionalLights : register(t4);
-StructuredBuffer<PointLight> gPointLights : register(t5);
-StructuredBuffer<SpotLight> gSpotLights : register(t6);
+StructuredBuffer<PointLight> gPointLights : register(t4);
+StructuredBuffer<SpotLight> gSpotLights : register(t5);
 
 
 float4 PS(PixelIn input) : SV_TARGET {
@@ -33,11 +36,6 @@ float4 PS(PixelIn input) : SV_TARGET {
 
 	uint numLights, dummy, lightIndex;
 
-	gDirectionalLights.GetDimensions(numLights, dummy);
-	for (lightIndex = 0; lightIndex < numLights; ++lightIndex) {
-        DirectionalLight light = gDirectionalLights[lightIndex];
-		AccumulateDirectionalLight(gMaterial, light, input.positionView, input.normalView, ambient, diffuse, spec);
-    }
 
 	gPointLights.GetDimensions(numLights, dummy);
 	for (lightIndex = 0; lightIndex < numLights; ++lightIndex) {

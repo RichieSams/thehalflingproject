@@ -21,6 +21,7 @@ GraphicsManager::GraphicsManager(GameStateManager *gameStateManager)
 	  m_inputLayout(nullptr),
 	  m_vertexShaderFrameConstantsBuffer(nullptr),
 	  m_vertexShaderObjectConstantsBuffer(nullptr),
+	  m_pixelShaderFrameConstantsBuffer(nullptr),
 	  m_pixelShaderObjectConstantsBuffer(nullptr),
 	  m_pointLightBuffer(nullptr),
 	  m_spotLightBuffer(nullptr),
@@ -54,6 +55,7 @@ void GraphicsManager::Shutdown() {
 	// Release in the opposite order we initialized in
 	ReleaseCOM(m_vertexShaderFrameConstantsBuffer);
 	ReleaseCOM(m_vertexShaderObjectConstantsBuffer);
+	ReleaseCOM(m_pixelShaderFrameConstantsBuffer);
 	ReleaseCOM(m_pixelShaderObjectConstantsBuffer);
 	delete m_pointLightBuffer;
 	delete m_spotLightBuffer;
@@ -129,7 +131,27 @@ void GraphicsManager::SetObjectConstants(DirectX::XMMATRIX &worldViewMatrix, Dir
 	pixelShaderObjectConstants->material = material;
 
 	m_immediateContext->Unmap(m_pixelShaderObjectConstantsBuffer, 0);
-	m_immediateContext->PSSetConstantBuffers(2, 1, &m_pixelShaderObjectConstantsBuffer);
+	m_immediateContext->PSSetConstantBuffers(3, 1, &m_pixelShaderObjectConstantsBuffer);
+
+
+	// Lock the constant buffer so it can be written to.
+	HR(m_immediateContext->Map(m_pixelShaderFrameConstantsBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
+
+	PixelShaderFrameConstants *pixelShaderFrameConstants = static_cast<PixelShaderFrameConstants *>(mappedResource.pData);
+	pixelShaderFrameConstants->directionalLight = *(m_gameStateManager->LightManager.GetDirectionalLight());
+
+	m_immediateContext->Unmap(m_pixelShaderFrameConstantsBuffer, 0);
+	m_immediateContext->PSSetConstantBuffers(2, 1, &m_pixelShaderFrameConstantsBuffer);
+}
+
+void GraphicsManager::SetLightBuffers(DirectX::XMMATRIX &viewMatrix) {
+	//{
+	//	Common::PointLight* light = m_pointLightBuffer->MapDiscard(m_immediateContext);
+	//	for (unsigned int i = 0; i < mActiveLights; ++i) {
+	//		light[i] = mPointLightParameters[i];
+	//	}
+	//	mLightBuffer->Unmap(d3dDeviceContext);
+	//}
 }
 
 void GraphicsManager::OnResize(int newClientWidth, int newClientHeight) {
@@ -181,6 +203,16 @@ void GraphicsManager::LoadShaders() {
 	vertexShaderObjectBufferDesc.StructureByteStride = 0;
 
 	m_device->CreateBuffer(&vertexShaderObjectBufferDesc, NULL, &m_vertexShaderObjectConstantsBuffer);
+
+	D3D11_BUFFER_DESC pixelShaderFrameBufferDesc;
+	pixelShaderFrameBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	pixelShaderFrameBufferDesc.ByteWidth = sizeof(PixelShaderFrameConstants);
+	pixelShaderFrameBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	pixelShaderFrameBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	pixelShaderFrameBufferDesc.MiscFlags = 0;
+	pixelShaderFrameBufferDesc.StructureByteStride = 0;
+
+	m_device->CreateBuffer(&pixelShaderFrameBufferDesc, NULL, &m_pixelShaderFrameConstantsBuffer);
 
 	D3D11_BUFFER_DESC pixelShaderObjectBufferDesc;
 	pixelShaderObjectBufferDesc.Usage = D3D11_USAGE_DYNAMIC;

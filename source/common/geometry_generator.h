@@ -37,8 +37,8 @@ public:
 		std::vector<uint> Indices;
 	};
 
-	static void CreateBox(float width, float height, float depth, MeshData* meshData) {}
-	static void CreateSphere(float radius, uint sliceCount, uint stackCount, MeshData* meshData) {}
+	static void CreateBox(float width, float height, float depth, MeshData* meshData);
+	static void CreateSphere(float radius, uint sliceCount, uint stackCount, MeshData* meshData);
 	static void CreateGeosphere(float radius, uint numSubdivisions, MeshData* meshData) {}
 	static void CreateCylinder(float bottomRadius, float topRadius, float height, uint sliceCount, uint stackCount, MeshData* meshData) {}
 	static void CreateGrid(float width, float depth, uint m, uint n, MeshData* meshData);

@@ -125,4 +125,20 @@ void GameStateManager::CreateLights() {
 	directionalLight->Direction = DirectX::XMFLOAT3(0.57735f, -0.57735f, 0.57735f);
 }
 
+float GameStateManager::GetHillHeight(float x, float z) const {
+	return 0.3f * ((z * sinf(0.1f * x)) + (x * cosf(0.1f * z)));
+}
+
+DirectX::XMFLOAT3 GameStateManager::GetHillNormal(float x, float z) const {
+	DirectX::XMFLOAT3 normal(
+		-0.03f * z * cosf(0.1f * x) - 0.3f * cosf(0.1f * z),
+		1.0f,
+		0.3f * sinf(0.1f * x) + 0.03f * x * sinf(0.1f * z));
+
+	DirectX::XMVECTOR unitNormal = DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&normal));
+	DirectX::XMStoreFloat3(&normal, unitNormal);
+
+	return normal;
+}
+
 } // End of namespace CrateDemo

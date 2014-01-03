@@ -86,6 +86,8 @@ public:
 
 private:
 	void BuildGeometryBuffers();
+	inline float GetHillHeight(float x, float z) const;
+	inline DirectX::XMFLOAT3 GetHillNormal(float x, float z) const;
 	void CreateLights();
 };
 

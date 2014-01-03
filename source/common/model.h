@@ -135,7 +135,7 @@ template <typename Vertex>
 void Common::Model<Vertex>::SetSubsets(ModelSubset *subsetArray, uint subsetCount, DisposeAfterUse::Flag disposeAfterUse) {
 	m_subsets = subsetArray;
 	m_subsetCount = subsetCount;
-	m_disposeSubsets = disposeAfterUse;
+	m_disposeSubsetArray = disposeAfterUse;
 }
 
 template <typename Vertex>

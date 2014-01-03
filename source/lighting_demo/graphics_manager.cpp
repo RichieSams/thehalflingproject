@@ -75,6 +75,8 @@ void GraphicsManager::Shutdown() {
 }
 
 void GraphicsManager::DrawFrame(float deltaTime) {
+	CalculateFrameStats(deltaTime);
+
 	m_immediateContext->ClearRenderTargetView(m_renderTargetView, reinterpret_cast<const float*>(&Colors::Blue));
 	m_immediateContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 

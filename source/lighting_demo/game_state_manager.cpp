@@ -9,6 +9,7 @@
 #include "common/math.h"
 #include "common/camera.h"
 #include "common/d3d_util.h"
+#include "common/geometry_generator.h"
 
 
 namespace LightingDemo {
@@ -87,62 +88,41 @@ void GameStateManager::BuildGeometryBuffers() {
 	Models.push_back(Common::Model<Vertex>());
 	Common::Model<Vertex> *model = &Models.back();
 
-	Vertex *verticies = new Vertex[24] {
-		// Left face
-		{DirectX::XMFLOAT3(-1.0f, -1.0f, -1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, +1.0f)}, // 0
-		{DirectX::XMFLOAT3(-1.0f, +1.0f, -1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, +1.0f)}, // 1
-		{DirectX::XMFLOAT3(+1.0f, +1.0f, -1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, +1.0f)}, // 2
-		{DirectX::XMFLOAT3(+1.0f, -1.0f, -1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, +1.0f)}, // 3
-		// Back face
-		{DirectX::XMFLOAT3(-1.0f, -1.0f, +1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f)}, // 4
-		{DirectX::XMFLOAT3(-1.0f, +1.0f, +1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f)}, // 5
-		{DirectX::XMFLOAT3(+1.0f, +1.0f, +1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f)}, // 6
-		{DirectX::XMFLOAT3(+1.0f, -1.0f, +1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f)}, // 7
-		// Left face
-		{DirectX::XMFLOAT3(-1.0f, -1.0f, +1.0f), DirectX::XMFLOAT3(-1.0f, 0.0f, 0.0f)}, // 4
-		{DirectX::XMFLOAT3(-1.0f, +1.0f, +1.0f), DirectX::XMFLOAT3(-1.0f, 0.0f, 0.0f)}, // 5
-		{DirectX::XMFLOAT3(-1.0f, +1.0f, -1.0f), DirectX::XMFLOAT3(-1.0f, 0.0f, 0.0f)}, // 1
-		{DirectX::XMFLOAT3(-1.0f, -1.0f, -1.0f), DirectX::XMFLOAT3(-1.0f, 0.0f, 0.0f)}, // 0
-		// Right face
-		{DirectX::XMFLOAT3(+1.0f, +1.0f, -1.0f), DirectX::XMFLOAT3(+1.0f, 0.0f, 0.0f)}, // 2
-		{DirectX::XMFLOAT3(+1.0f, -1.0f, -1.0f), DirectX::XMFLOAT3(+1.0f, 0.0f, 0.0f)}, // 3
-		{DirectX::XMFLOAT3(+1.0f, +1.0f, +1.0f), DirectX::XMFLOAT3(+1.0f, 0.0f, 0.0f)}, // 6
-		{DirectX::XMFLOAT3(+1.0f, -1.0f, +1.0f), DirectX::XMFLOAT3(+1.0f, 0.0f, 0.0f)}, // 7
-		// Top face
-		{DirectX::XMFLOAT3(-1.0f, +1.0f, -1.0f), DirectX::XMFLOAT3(0.0f, +1.0f, 0.0f)}, // 1
-		{DirectX::XMFLOAT3(+1.0f, +1.0f, -1.0f), DirectX::XMFLOAT3(0.0f, +1.0f, 0.0f)}, // 2
-		{DirectX::XMFLOAT3(-1.0f, +1.0f, +1.0f), DirectX::XMFLOAT3(0.0f, +1.0f, 0.0f)}, // 5
-		{DirectX::XMFLOAT3(+1.0f, +1.0f, +1.0f), DirectX::XMFLOAT3(0.0f, +1.0f, 0.0f)}, // 6
-		// Bottom face
-		{DirectX::XMFLOAT3(-1.0f, -1.0f, -1.0f), DirectX::XMFLOAT3(0.0f, -1.0f, 0.0f)}, // 0
-		{DirectX::XMFLOAT3(+1.0f, -1.0f, -1.0f), DirectX::XMFLOAT3(0.0f, -1.0f, 0.0f)}, // 3
-		{DirectX::XMFLOAT3(-1.0f, -1.0f, +1.0f), DirectX::XMFLOAT3(0.0f, -1.0f, 0.0f)}, // 4
-		{DirectX::XMFLOAT3(+1.0f, -1.0f, +1.0f), DirectX::XMFLOAT3(0.0f, -1.0f, 0.0f)}, // 7
-	};
-	model->SetVertices(*m_device, verticies, 24);
+	Common::GeometryGenerator::MeshData meshData;
+	Common::GeometryGenerator::CreateBox(1.0f, 1.0f, 1.0f, &meshData);
 
-	// Create the index buffer
-	uint *indicies = new uint[36] {
-		// Front face
-		0, 1, 2,
-		0, 2, 3,
-		// Back face
-		4, 6, 5,
-		4, 7, 6,
-		// Left face
-		8, 9, 10,
-		8, 10, 11,
-		// Right face
-		13, 12, 14,
-		13, 14, 15,
-		// Top face
-		16, 18, 19,
-		16, 19, 17,
-		// Bottom face
-		22, 20, 21,
-		22, 21, 23
+	uint vertexCount = meshData.Vertices.size();
+	uint indexCount = meshData.Indices.size();
+
+	Vertex *vertices = new Vertex[vertexCount];
+	for (uint i = 0; i < vertexCount; ++i) {
+		vertices[i].pos = meshData.Vertices[i].Position;
+		vertices[i].normal = meshData.Vertices[i].Normal;
+	}
+	model->SetVertices(*m_device, vertices, vertexCount);
+
+	uint *indices = new uint[indexCount];
+	for (uint i = 0; i < indexCount; ++i) {
+		indices[i] = meshData.Indices[i];
+	}
+	model->SetIndices(*m_device, indices, indexCount);
+
+	// Create subsets
+	Common::ModelSubset *subsets = new Common::ModelSubset[1] {
+		{0, vertexCount, 0, indexCount / 3, {DirectX::XMFLOAT4(0.48f, 0.77f, 0.46f, 1.0f),
+		                                     DirectX::XMFLOAT4(0.48f, 0.77f, 0.46f, 1.0f),
+		                                     DirectX::XMFLOAT4(0.2f, 0.2f, 0.2f, 96.0f)}
+		}
 	};
-	model->SetIndices(*m_device, indicies, 36);
+	model->SetSubsets(subsets, 1);
+}
+
+void GameStateManager::CreateLights() {
+	Common::DirectionalLight *directionalLight = LightManager.GetDirectionalLight();
+	directionalLight->Ambient = DirectX::XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
+	directionalLight->Diffuse = DirectX::XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+	directionalLight->Specular = DirectX::XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+	directionalLight->Direction = DirectX::XMFLOAT3(0.57735f, -0.57735f, 0.57735f);
 }
 
 } // End of namespace CrateDemo

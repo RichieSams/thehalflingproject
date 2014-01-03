@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CrateDemo", "CrateDemo.vcxp
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LightingDemo", "LightingDemo.vcxproj", "{104329AE-9CD7-4AD5-BCC1-9A449974AB0D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DeferredShadingDemo", "DeferredShadingDemo.vcxproj", "{C07D054E-0202-492B-9B2A-F595F6E21CF0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -27,6 +29,10 @@ Global
 		{104329AE-9CD7-4AD5-BCC1-9A449974AB0D}.Debug|Win32.Build.0 = Debug|Win32
 		{104329AE-9CD7-4AD5-BCC1-9A449974AB0D}.Release|Win32.ActiveCfg = Release|Win32
 		{104329AE-9CD7-4AD5-BCC1-9A449974AB0D}.Release|Win32.Build.0 = Release|Win32
+		{C07D054E-0202-492B-9B2A-F595F6E21CF0}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C07D054E-0202-492B-9B2A-F595F6E21CF0}.Debug|Win32.Build.0 = Debug|Win32
+		{C07D054E-0202-492B-9B2A-F595F6E21CF0}.Release|Win32.ActiveCfg = Release|Win32
+		{C07D054E-0202-492B-9B2A-F595F6E21CF0}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

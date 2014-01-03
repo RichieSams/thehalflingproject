@@ -9,6 +9,7 @@
 
 #include "common/typedefs.h"
 #include "common/d3d_util.h"
+#include "common/materials.h"
 
 
 namespace Common {
@@ -19,6 +20,8 @@ struct ModelSubset {
 
 	uint FaceStart;
 	uint FaceCount;
+
+	Common::Material Material;
 };
 
 template <typename Vertex>
@@ -70,12 +73,21 @@ private:
 	DisposeAfterUse::Flag m_disposeSubsetArray;
 
 public:
+	const Common::Material &GetSubsetMaterial(uint subsetIndex) const;
 	void SetVertices(ID3D11Device *device, Vertex *vertices, uint vertexCount, DisposeAfterUse::Flag disposeAfterUse = DisposeAfterUse::YES);
 	void SetIndices(ID3D11Device *device, uint *indices, uint indexCount, DisposeAfterUse::Flag disposeAfterUse = DisposeAfterUse::YES);
 	void SetSubsets(ModelSubset *subsetArray, uint subsetCount, DisposeAfterUse::Flag disposeAfterUse = DisposeAfterUse::YES);
 
 	void DrawSubset(ID3D11DeviceContext *deviceContext, int subsetId = -1);
 };
+
+template <typename Vertex>
+const Common::Material &Model<Vertex>::GetSubsetMaterial(uint subsetIndex) const {
+	if (subsetIndex < m_subsetCount)
+		return m_subsets[subsetIndex].Material;
+	
+	throw std::out_of_range("subsetIndex out of range");
+}
 
 template <typename Vertex>
 void Common::Model<Vertex>::SetVertices(ID3D11Device *device, Vertex *vertices, uint vertexCount, DisposeAfterUse::Flag disposeAfterUse) {

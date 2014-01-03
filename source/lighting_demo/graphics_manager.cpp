@@ -206,12 +206,16 @@ void GraphicsManager::OnResize(int newClientWidth, int newClientHeight) {
 void GraphicsManager::InitTweakBar() {
 	int success = TwInit(TW_DIRECT3D11, m_device);
 
-	m_tweakBar = TwNewBar("RootMenu");
-	TwAddVarRO(m_tweakBar, "FPS", TwType::TW_TYPE_UINT32, &m_fps, "");
-	TwAddVarRO(m_tweakBar, "Frame Time (ms)", TwType::TW_TYPE_FLOAT, &m_frameTime, "");
-	TwAddVarRW(m_tweakBar, "V-Sync", TwType::TW_TYPE_BOOLCPP, &m_vsync, "");
-	TwDefine(" RootMenu movable=false resizable=false fontresizable=false contained=true ");
-	TwAddVarCB(m_tweakBar, "Wireframe", TwType::TW_TYPE_BOOLCPP, GraphicsManager::SetWireframeRSCallback, GraphicsManager::GetWireframeTSCallback, this, "");
+	m_frameStatsBar = TwNewBar("frameStats");
+	TwDefine(" frameStats label='Frame Stats' size='225 70' movable=false resizable=false fontresizable=false contained=true ");
+	m_settingsBar = TwNewBar("settings");
+	TwDefine(" settings label='Settings' size='200 300' movable=true resizable=false fontresizable=false contained=true iconified=true ");
+
+	TwAddVarRO(m_frameStatsBar, "FPS", TwType::TW_TYPE_UINT32, &m_fps, "");
+	TwAddVarRO(m_frameStatsBar, "Frame Time (ms)", TwType::TW_TYPE_FLOAT, &m_frameTime, "");
+
+	TwAddVarRW(m_settingsBar, "V-Sync", TwType::TW_TYPE_BOOLCPP, &m_vsync, "");
+	TwAddVarCB(m_settingsBar, "Wireframe", TwType::TW_TYPE_BOOLCPP, GraphicsManager::SetWireframeRSCallback, GraphicsManager::GetWireframeTSCallback, this, "");
 }
 
 void GraphicsManager::LoadShaders() {

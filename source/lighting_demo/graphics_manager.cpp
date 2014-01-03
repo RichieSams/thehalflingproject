@@ -34,10 +34,10 @@ bool GraphicsManager::Initialize(int clientWidth, int clientHeight, HWND hwnd, b
 	if (!Common::GraphicsManagerBase::Initialize(clientWidth, clientHeight, hwnd, fullscreen))
 		return false;
 
-	LoadShaders();
-
 	if (!m_gameStateManager->Initialize(hwnd, &m_device))
 		return false;
+
+	LoadShaders();
 	
 	D3D11_RASTERIZER_DESC wireframeDesc;
 	ZeroMemory(&wireframeDesc, sizeof(D3D11_RASTERIZER_DESC));

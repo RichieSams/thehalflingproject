@@ -39,6 +39,9 @@
     <ClCompile Include="..\common\light_manager.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="..\common\texture2d.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\common\halfling_sys.h">
@@ -96,6 +99,9 @@
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="..\common\light_manager.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\texture2d.h">
       <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>

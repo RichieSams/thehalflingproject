@@ -20,26 +20,6 @@ namespace DeferredShadingDemo {
 
 class GameStateManager;
 
-struct VertexShaderFrameConstants {
-	DirectX::XMMATRIX viewProj;
-	DirectX::XMMATRIX proj;
-};
-
-struct VertexShaderObjectConstants {
-	DirectX::XMMATRIX worldViewProj;
-	DirectX::XMMATRIX world;
-};
-
-struct PixelShaderFrameConstants {
-	Common::DirectionalLight directionalLight;
-	DirectX::XMFLOAT3 eyePosition;
-	float pad;
-};
-
-struct PixelShaderObjectConstants {
-	Common::Material material;
-};
-
 class GraphicsManager : public Common::GraphicsManagerBase {
 public:
 	GraphicsManager(GameStateManager *gameStateManager);

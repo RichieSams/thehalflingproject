@@ -18,13 +18,16 @@
     <ClInclude Include="..\deferred_shading_demo\graphics_manager.h">
       <Filter>Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="..\deferred_shading_demo\shader_constants.h">
+      <Filter>Shader Logic</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\deferred_shading_demo\pixel_shader.hlsl">
-      <Filter>Shaders</Filter>
+      <Filter>Shader Logic</Filter>
     </FxCompile>
     <FxCompile Include="..\deferred_shading_demo\vertex_shader.hlsl">
-      <Filter>Shaders</Filter>
+      <Filter>Shader Logic</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
@@ -34,16 +37,16 @@
     <Filter Include="Graphics">
       <UniqueIdentifier>{95e2ae54-5118-4fda-b5f0-57cd7db53d03}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shaders">
-      <UniqueIdentifier>{7fc27e5e-8d56-4dda-8fd4-d1e839a58407}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Simulation Logic">
       <UniqueIdentifier>{ccb0a496-8573-488e-914f-dd9d5cb29de8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader Logic">
+      <UniqueIdentifier>{7fc27e5e-8d56-4dda-8fd4-d1e839a58407}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\deferred_shading_demo\types.hlsli">
-      <Filter>Shaders</Filter>
+      <Filter>Shader Logic</Filter>
     </None>
   </ItemGroup>
 </Project>

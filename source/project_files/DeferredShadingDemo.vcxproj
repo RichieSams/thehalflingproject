@@ -107,6 +107,7 @@
   <ItemGroup>
     <ClInclude Include="..\deferred_shading_demo\game_state_manager.h" />
     <ClInclude Include="..\deferred_shading_demo\graphics_manager.h" />
+    <ClInclude Include="..\deferred_shading_demo\shader_constants.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\deferred_shading_demo\pixel_shader.hlsl">

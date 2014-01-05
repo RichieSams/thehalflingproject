@@ -9,13 +9,13 @@
 
 #include "common/game_state_manager_base.h"
 
+#include "deferred_shading_demo/shader_constants.h"
+
 #include "common/halfling_sys.h"
 #include "common/vector.h"
 #include "common/camera.h"
 #include "common/model.h"
-#include "common/light_manager.h"
 
-#include "DirectXMath.h"
 #include <d3d11.h>
 #include <vector>
 

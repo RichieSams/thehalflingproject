@@ -43,15 +43,15 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>..\..\build\$(ConfigurationName)\$(ProjectName)\</OutDir>
     <IntDir>..\..\obj\$(ConfigurationName)\$(ProjectName)\</IntDir>
-    <IncludePath>../;../libs/AntTweakBar/include;$(IncludePath)</IncludePath>
-    <LibraryPath>../libs/AntTweakBar/lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>../;../libs/AntTweakBar/include;../libs/DirectXTK/include;$(IncludePath)</IncludePath>
+    <LibraryPath>../libs/AntTweakBar/lib;../libs/DirectXTK/lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>..\..\build\$(ConfigurationName)\$(ProjectName)\</OutDir>
     <IntDir>..\..\obj\$(ConfigurationName)\$(ProjectName)\</IntDir>
-    <IncludePath>../;../libs/AntTweakBar/include;$(IncludePath)</IncludePath>
-    <LibraryPath>../libs/AntTweakBar/lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>../;../libs/AntTweakBar/include;../libs/DirectXTK/include;$(IncludePath)</IncludePath>
+    <LibraryPath>../libs/AntTweakBar/lib;../libs/DirectXTK/lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -65,7 +65,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;AntTweakBar.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;AntTweakBar.lib;DirectXTK.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <FxCompile>
       <AdditionalIncludeDirectories>../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -90,6 +90,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>d3d11.lib;AntTweakBar.lib;DirectXTK.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <FxCompile>
       <AdditionalIncludeDirectories>../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>

@@ -35,7 +35,6 @@ private:
 	ID3D11RenderTargetView *m_renderTargetView;
 	ID3D11InputLayout *m_inputLayout;
 
-	TwBar *m_frameStatsBar;
 	TwBar *m_settingsBar;
 
 	// Shaders

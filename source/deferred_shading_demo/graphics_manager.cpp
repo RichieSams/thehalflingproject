@@ -120,6 +120,12 @@ void GraphicsManager::DrawFrame(float deltaTime) {
 
 	m_gameStateManager->Models[0].DrawSubset(m_immediateContext);
 
+	m_spriteBatcher->Begin();
+	wchar_t buffer[100];
+	swprintf(buffer, 100, L"FPS: %u\nFrame Time: %f (ms)", m_fps, m_frameTime);
+	m_timesNewRoman10Font->DrawString(m_spriteBatcher, buffer, DirectX::XMFLOAT2(10, 10), DirectX::Colors::Yellow);
+	m_spriteBatcher->End();
+
 	TwDraw();
 
 	if (m_vsync)
@@ -211,13 +217,8 @@ void GraphicsManager::OnResize(int newClientWidth, int newClientHeight) {
 void GraphicsManager::InitTweakBar() {
 	int success = TwInit(TW_DIRECT3D11, m_device);
 
-	m_frameStatsBar = TwNewBar("frameStats");
-	TwDefine(" frameStats label='Frame Stats' size='225 70' movable=false resizable=false fontresizable=false contained=true ");
 	m_settingsBar = TwNewBar("settings");
 	TwDefine(" settings label='Settings' size='200 300' movable=true resizable=false fontresizable=false contained=true iconified=true ");
-
-	TwAddVarRO(m_frameStatsBar, "FPS", TwType::TW_TYPE_UINT32, &m_fps, "");
-	TwAddVarRO(m_frameStatsBar, "Frame Time (ms)", TwType::TW_TYPE_FLOAT, &m_frameTime, "");
 
 	TwAddVarRW(m_settingsBar, "V-Sync", TwType::TW_TYPE_BOOLCPP, &m_vsync, "");
 	TwAddVarCB(m_settingsBar, "Wireframe", TwType::TW_TYPE_BOOLCPP, GraphicsManager::SetWireframeRSCallback, GraphicsManager::GetWireframeTSCallback, this, "");

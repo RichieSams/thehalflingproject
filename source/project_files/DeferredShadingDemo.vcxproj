@@ -44,14 +44,14 @@
     <OutDir>..\..\build\$(ConfigurationName)\$(ProjectName)\</OutDir>
     <IntDir>..\..\obj\$(ConfigurationName)\$(ProjectName)\</IntDir>
     <IncludePath>../;../libs/AntTweakBar/include;../libs/DirectXTK/include;$(IncludePath)</IncludePath>
-    <LibraryPath>../libs/AntTweakBar/lib;../libs/DirectXTK/lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>../libs/AntTweakBar/lib;../libs/DirectXTK/lib/Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>..\..\build\$(ConfigurationName)\$(ProjectName)\</OutDir>
     <IntDir>..\..\obj\$(ConfigurationName)\$(ProjectName)\</IntDir>
     <IncludePath>../;../libs/AntTweakBar/include;../libs/DirectXTK/include;$(IncludePath)</IncludePath>
-    <LibraryPath>../libs/AntTweakBar/lib;../libs/DirectXTK/lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>../libs/AntTweakBar/lib;../libs/DirectXTK/lib/Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -71,7 +71,8 @@
       <AdditionalIncludeDirectories>../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </FxCompile>
     <PostBuildEvent>
-      <Command>XCOPY "$(SolutionDir)..\libs\AntTweakBar\lib\AntTweakBar.dll" "$(OutDir)" /D /K /Y</Command>
+      <Command>XCOPY "$(SolutionDir)..\libs\AntTweakBar\lib\AntTweakBar.dll" "$(OutDir)" /D /K /Y
+XCOPY "$(SolutionDir)..\deferred_shading_demo\resources\*" "$(OutDir)" /D /K /Y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -96,7 +97,8 @@
       <AdditionalIncludeDirectories>../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </FxCompile>
     <PostBuildEvent>
-      <Command>XCOPY "$(SolutionDir)..\libs\AntTweakBar\lib\AntTweakBar.dll" "$(OutDir)" /D /K /Y</Command>
+      <Command>XCOPY "$(SolutionDir)..\libs\AntTweakBar\lib\AntTweakBar.dll" "$(OutDir)" /D /K /Y
+XCOPY "$(SolutionDir)..\deferred_shading_demo\resources\*" "$(OutDir)" /D /K /Y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

@@ -22,6 +22,8 @@ struct ModelSubset {
 	uint FaceCount;
 
 	Common::Material Material;
+
+	ID3D11ShaderResourceView *SRV;
 };
 
 template <typename Vertex>
@@ -150,6 +152,7 @@ void Common::Model<Vertex>::DrawSubset(ID3D11DeviceContext *deviceContext, int s
 
 	if (subsetId == -1) {
 		for (uint i = 0; i < m_subsetCount; ++i) {
+			deviceContext->PSSetShaderResources(0, 1, &m_subsets[i].SRV);
 			deviceContext->DrawIndexed(m_subsets[i].FaceCount * 3, m_subsets[i].FaceStart * 3, 0);
 		}
 	} else {

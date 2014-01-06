@@ -23,6 +23,7 @@ PixelIn VS(VertexIn input) {
 	output.positionClip = mul(float4(input.position, 1.0f), gWorldViewProjMatrix);
     output.positionWorld = mul(float4(input.position, 1.0f), gWorldMatrix).xyz;
     output.normal   = mul(float4(input.normal, 0.0f), gWorldMatrix).xyz;
+	output.texCoord = input.texCoord;
 	
 	return output;
 }

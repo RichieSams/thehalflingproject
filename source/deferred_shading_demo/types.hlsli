@@ -10,12 +10,14 @@
 struct VertexIn {
 	float3 position  : POSITION;
 	float3 normal    : NORMAL;
+	float2 texCoord  : TEXCOORD;
 };
 
 struct PixelIn {
 	float4 positionClip   : SV_POSITION;
 	float3 positionWorld  : POSITION_WORLD;
 	float3 normal         : NORMAL;
+	float2 texCoord       : TEXCOORD;
 };
 
 #endif

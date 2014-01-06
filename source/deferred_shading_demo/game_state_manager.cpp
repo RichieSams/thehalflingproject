@@ -99,6 +99,7 @@ void GameStateManager::BuildGeometryBuffers() {
 		vertices[i].pos = meshData.Vertices[i].Position;
 		vertices[i].pos.y = GetHillHeight(vertices[i].pos.x, vertices[i].pos.z);
 		vertices[i].normal = GetHillNormal(vertices[i].pos.x, vertices[i].pos.z);
+		vertices[i].texCoord = meshData.Vertices[i].TexCoord;
 	}
 	model->SetVertices(*m_device, vertices, vertexCount);
 

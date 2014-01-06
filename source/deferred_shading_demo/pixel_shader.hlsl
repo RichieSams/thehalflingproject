@@ -19,6 +19,14 @@ cbuffer cbPerObject : register(b3) {
 	Material gMaterial;
 };
 
+Texture2D gDiffuseTexture : register(t0);
+SamplerState gDiffuseSampler {
+	Filter = ANISOTROPIC;
+	MaxAnisotropy = 4;
+	AddressU = WRAP;
+	AddressV = WRAP;
+};
+
 StructuredBuffer<PointLight> gPointLights : register(t4);
 StructuredBuffer<SpotLight> gSpotLights : register(t5);
 
@@ -35,8 +43,10 @@ float4 PS(PixelIn input) : SV_TARGET {
 	float4 diffuse = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	float4 spec = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
-	// Sum the contribution from each source
+	// Sample the texture
+	float4 textureColor = gDiffuseTexture.Sample(gDiffuseSampler, input.texCoord);
 
+	// Sum the contribution from each light source
 	uint numLights, dummy, lightIndex;
 
 	AccumulateDirectionalLight(gMaterial, gDirectionalLight, input.normal, toEye, ambient, diffuse, spec);
@@ -53,10 +63,11 @@ float4 PS(PixelIn input) : SV_TARGET {
 		AccumulateSpotLight(gMaterial, light, input.positionWorld, input.normal, toEye, ambient, diffuse, spec);
     }
 
-	float4 litColor = ambient + diffuse + spec;
+	// Combine
+	float4 litColor = textureColor * (ambient + diffuse) + spec;
 
-	// Take alpha from diffuse material
-	litColor.a = gMaterial.Diffuse.a;
+	// Take alpha from diffuse material and texture
+	litColor.a = gMaterial.Diffuse.a * textureColor.a;
 
 	return litColor;
 }

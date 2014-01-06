@@ -18,6 +18,7 @@
     <ClCompile Include="..\common\graphics_manager_base.cpp" />
     <ClCompile Include="..\common\light_manager.cpp" />
     <ClCompile Include="..\common\texture2d.cpp" />
+    <ClCompile Include="..\common\texture_manager.cpp" />
     <ClCompile Include="..\common\timer.cpp" />
     <ClCompile Include="..\halfling\halfling_engine.cpp" />
   </ItemGroup>
@@ -37,6 +38,7 @@
     <ClInclude Include="..\common\model_manager.h" />
     <ClInclude Include="..\common\structured_buffer.h" />
     <ClInclude Include="..\common\texture2d.h" />
+    <ClInclude Include="..\common\texture_manager.h" />
     <ClInclude Include="..\common\timer.h" />
     <ClInclude Include="..\common\typedefs.h" />
     <ClInclude Include="..\common\vector.h" />

@@ -12,6 +12,7 @@
 
 #include "assert.h"
 #include <AntTweakBar.h>
+#include <DirectXColors.h>
 
 
 namespace DeferredShadingDemo {
@@ -90,7 +91,7 @@ void GraphicsManager::Shutdown() {
 void GraphicsManager::DrawFrame(float deltaTime) {
 	CalculateFrameStats(deltaTime);
 
-	m_immediateContext->ClearRenderTargetView(m_renderTargetView, reinterpret_cast<const float*>(&Colors::Blue));
+	m_immediateContext->ClearRenderTargetView(m_renderTargetView, DirectX::Colors::LightGray);
 	m_immediateContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 	// Transpose the matrices to prepare them for the shader.

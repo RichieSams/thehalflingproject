@@ -8,7 +8,7 @@
 #define MATERIALS_SHADER_H
 
 struct Material {
-	float4 Ambient;
+	float4 Ambient; // w = UseSpecular
 	float4 Diffuse;
 	float4 Specular; // w = SpecPower
 	float4 Reflect;

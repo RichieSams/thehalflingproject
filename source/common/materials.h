@@ -13,7 +13,7 @@
 namespace Common {
 
 struct Material {
-	DirectX::XMFLOAT4 Ambient;
+	DirectX::XMFLOAT4 Ambient; // w = UseSpecular
 	DirectX::XMFLOAT4 Diffuse;
 	DirectX::XMFLOAT4 Specular; // w = SpecPower
 	DirectX::XMFLOAT4 Reflect;

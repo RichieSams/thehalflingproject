@@ -15,6 +15,8 @@
 #include <d3d11.h>
 #include "DirectXMath.h"
 #include <AntTweakBar.h>
+#include <SpriteBatch.h>
+#include <SpriteFont.h>
 
 namespace DeferredShadingDemo {
 
@@ -51,6 +53,9 @@ private:
 
 	ID3D11RasterizerState *m_wireframeRS;
 	ID3D11RasterizerState *m_solidRS;
+
+	DirectX::SpriteBatch *m_spriteBatcher;
+	DirectX::SpriteFont *m_timesNewRoman10Font;
 
 public:
 	bool Initialize(int clientWidth, int clientHeight, HWND hwnd, bool fullscreen);

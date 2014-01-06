@@ -47,6 +47,9 @@ bool GraphicsManager::Initialize(int clientWidth, int clientHeight, HWND hwnd, b
 
 	LoadShaders();
 	
+	m_spriteBatcher = new DirectX::SpriteBatch(m_immediateContext);
+	m_timesNewRoman10Font = new DirectX::SpriteFont(m_device, L"timesNewRoman10.spritefont");
+
 	D3D11_RASTERIZER_DESC wireframeDesc;
 	ZeroMemory(&wireframeDesc, sizeof(D3D11_RASTERIZER_DESC));
 	wireframeDesc.FillMode = D3D11_FILL_WIREFRAME;

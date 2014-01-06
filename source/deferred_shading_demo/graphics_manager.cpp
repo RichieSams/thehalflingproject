@@ -142,10 +142,8 @@ void GraphicsManager::DrawFrame(float deltaTime) {
 
 	TwDraw();
 
-	if (m_vsync)
-		m_swapChain->Present(1, 0);
-	else
-		m_swapChain->Present(0, 0);
+	uint syncInterval = m_vsync ? 1 : 0;
+	m_swapChain->Present(syncInterval, 0);
 }
 
 void GraphicsManager::SetFrameConstants(DirectX::XMMATRIX &projMatrix, DirectX::XMMATRIX &viewProjMatrix) {

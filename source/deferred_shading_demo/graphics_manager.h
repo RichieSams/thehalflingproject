@@ -53,6 +53,8 @@ private:
 	ID3D11RasterizerState *m_wireframeRS;
 	ID3D11RasterizerState *m_solidRS;
 
+	ID3D11BlendState *m_blendState;
+
 	DirectX::SpriteBatch *m_spriteBatcher;
 	DirectX::SpriteFont *m_timesNewRoman10Font;
 

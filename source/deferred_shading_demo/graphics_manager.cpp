@@ -33,6 +33,7 @@ GraphicsManager::GraphicsManager(GameStateManager *gameStateManager)
 	  m_vertexShader(nullptr),
 	  m_pixelShader(nullptr),
 	  m_wireframeRS(nullptr),
+	  m_blendState(nullptr),
 	  m_solidRS(nullptr) {
 }
 
@@ -68,6 +69,18 @@ bool GraphicsManager::Initialize(int clientWidth, int clientHeight, HWND hwnd, b
 
 	HR(m_device->CreateRasterizerState(&solidDesc, &m_solidRS));
 
+	D3D11_BLEND_DESC blendStateDesc;
+	ZeroMemory(&blendStateDesc, sizeof(blendStateDesc));
+	blendStateDesc.RenderTarget[0].BlendEnable = TRUE;
+	blendStateDesc.RenderTarget[0].SrcBlend = blendStateDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+	blendStateDesc.RenderTarget[0].DestBlend = blendStateDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
+	blendStateDesc.RenderTarget[0].BlendOp = blendStateDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	blendStateDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+	HR(m_device->CreateBlendState(&blendStateDesc, &m_blendState));
+
+	m_immediateContext->OMSetBlendState(m_blendState, nullptr, 0xFFFFFFFF);
+
 	return true;
 }
 
@@ -81,6 +94,7 @@ void GraphicsManager::Shutdown() {
 	delete m_spotLightBuffer;
 	ReleaseCOM(m_wireframeRS);
 	ReleaseCOM(m_solidRS);
+	ReleaseCOM(m_blendState);
 	ReleaseCOM(m_vertexShader);
 	ReleaseCOM(m_pixelShader);
 	ReleaseCOM(m_inputLayout);

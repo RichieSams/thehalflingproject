@@ -213,10 +213,18 @@ void GraphicsManager::OnResize(int newClientWidth, int newClientHeight) {
 		return;
 	}
 
+	m_clientWidth = newClientWidth;
+	m_clientHeight = newClientHeight;
+
 	// Release the render target view
 	ReleaseCOM(m_renderTargetView);
 
-	Common::GraphicsManagerBase::OnResize(newClientWidth, newClientHeight);
+	// Release the old views and the old depth/stencil buffer.
+	ReleaseCOM(m_depthStencilView);
+	ReleaseCOM(m_depthStencilBuffer);
+
+	// Resize the swap chain and recreate the render target view.
+	HR(m_swapChain->ResizeBuffers(1, m_clientWidth, m_clientHeight, DXGI_FORMAT_R8G8B8A8_UNORM, 0));
 
 	// Recreate the render target view.
 	ID3D11Texture2D* backBuffer;
@@ -224,8 +232,45 @@ void GraphicsManager::OnResize(int newClientWidth, int newClientHeight) {
 	HR(m_device->CreateRenderTargetView(backBuffer, 0, &m_renderTargetView));
 	ReleaseCOM(backBuffer);
 
+	// Create the depth/stencil buffer and view.
+	D3D11_TEXTURE2D_DESC depthStencilDesc;
+
+	depthStencilDesc.Width = m_clientWidth;
+	depthStencilDesc.Height = m_clientHeight;
+	depthStencilDesc.MipLevels = 1;
+	depthStencilDesc.ArraySize = 1;
+	depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+
+	// Use 4X MSAA? --must match swap chain MSAA values.
+	if (m_enable4xMSAA) {
+		depthStencilDesc.SampleDesc.Count = 4;
+		depthStencilDesc.SampleDesc.Quality = m_4xMSAAQuality - 1;
+	} else {
+		// No MSAA
+		depthStencilDesc.SampleDesc.Count = 1;
+		depthStencilDesc.SampleDesc.Quality = 0;
+	}
+
+	depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
+	depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	depthStencilDesc.CPUAccessFlags = 0;
+	depthStencilDesc.MiscFlags = 0;
+
+	HR(m_device->CreateTexture2D(&depthStencilDesc, 0, &m_depthStencilBuffer));
+	HR(m_device->CreateDepthStencilView(m_depthStencilBuffer, 0, &m_depthStencilView));
+
 	// Bind the render target view and depth/stencil view to the pipeline.
 	m_immediateContext->OMSetRenderTargets(1, &m_renderTargetView, m_depthStencilView);
+
+	// Set the viewport transform.
+	m_screenViewport.TopLeftX = 0;
+	m_screenViewport.TopLeftY = 0;
+	m_screenViewport.Width = static_cast<float>(m_clientWidth);
+	m_screenViewport.Height = static_cast<float>(m_clientHeight);
+	m_screenViewport.MinDepth = 0.0f;
+	m_screenViewport.MaxDepth = 1.0f;
+
+	m_immediateContext->RSSetViewports(1, &m_screenViewport);
 }
 
 void GraphicsManager::InitTweakBar() {

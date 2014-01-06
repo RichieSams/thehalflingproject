@@ -37,11 +37,63 @@ public:
 		std::vector<uint> Indices;
 	};
 
+	/**
+	 * Creates a rectangular prism with 6 quads
+	 * (All quads are triangulated)
+	 * 
+	 * @param width       The width of the box
+	 * @param height      The height of the box
+	 * @param depth       The depth of the box
+	 * @param meshData    Pointer to the MeshData object that will be filled with the box data
+	 */
 	static void CreateBox(float width, float height, float depth, MeshData* meshData);
+	/**
+	 * Creates a sphere by dividing it into radial slices and vertical stacks to form quads
+	 * (All quads are triangulated)
+	 * 
+	 * @param radius        Radius of the sphere
+	 * @param sliceCount    Number of slices to divide the sphere into
+	 * @param stackCount    Number of stacks to divide the sphere into
+	 * @param meshData      Pointer to the MeshData object that will be filled with the box data
+	 */
 	static void CreateSphere(float radius, uint sliceCount, uint stackCount, MeshData* meshData);
+	/**
+	 * Creates a sphere by repeatedly subdividing the triangles making up the mesh and re-projecting them onto the sphere
+	 * 
+	 * @param radius             Radius of the sphere
+	 * @param numSubdivisions    The number of subdivisions to perform
+	 * @param meshData           Pointer to the MeshData object that will be filled with the box data
+	 */
 	static void CreateGeosphere(float radius, uint numSubdivisions, MeshData* meshData) {}
+	/**
+	 * Creates a cylinder by dividing it into radial slices and vertical stacks to form quads and triangles
+	 * (All quads are triangulated)
+	 * 
+	 * @param bottomRadius    Radius of the bottom cap of the cylinder
+	 * @param topRadius       Radius of the top cap of the cylinder
+	 * @param height          Height of the cylinder
+	 * @param sliceCount      Number of slices to divide the sphere into
+	 * @param stackCount      Number of stacks to divide the sphere into
+	 * @param meshData        Pointer to the MeshData object that will be filled with the box data
+	 */
 	static void CreateCylinder(float bottomRadius, float topRadius, float height, uint sliceCount, uint stackCount, MeshData* meshData) {}
+	/**
+	 * Creates a grid of quads
+	 * 
+	 * @param width             The width of the grid
+	 * @param depth             The depth of the grid
+	 * @param m                 The number of grid subdivisions in the x direction
+	 * @param n                 The number of grid subdivisions in the z direction
+	 * @param meshData          Pointer to the MeshData object that will be filled with the grid data
+	 * @param textureTilingX    How much to tile the texture coordinates in the U direction. 1.0 means the texture will be stretched across the entire grid, 2.0 means the texture will be tiled twice, etc.
+	 * @param textureTilingY    How much to tile the texture coordinates in the V direction. 1.0 means the texture will be stretched across the entire grid, 2.0 means the texture will be tiled twice, etc.
+	 */
 	static void CreateGrid(float width, float depth, uint m, uint n, MeshData* meshData, float textureTilingX = 1.0f, float textureTilingY = 1.0f);
+	/**
+	 * Create a triangulated quad the size of the screen
+	 * 
+	 * @param meshData    Pointer to the MeshData object that will be filled with the box data
+	 */
 	static void CreateFullscreenQuad(MeshData& meshData) {}
 };
 

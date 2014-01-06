@@ -14,6 +14,7 @@
 #include "common/halfling_sys.h"
 #include "common/vector.h"
 #include "common/camera.h"
+#include "common/texture_manager.h"
 #include "common/model.h"
 
 #include <d3d11.h>
@@ -42,6 +43,7 @@ private:
 
 	Common::Vector2 m_mouseLastPos;
 	Common::Camera m_camera;
+	Common::TextureManager m_textureManager;
 
 public:
 	WorldViewProjection WorldViewProj;

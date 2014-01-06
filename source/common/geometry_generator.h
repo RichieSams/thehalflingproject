@@ -41,7 +41,7 @@ public:
 	static void CreateSphere(float radius, uint sliceCount, uint stackCount, MeshData* meshData);
 	static void CreateGeosphere(float radius, uint numSubdivisions, MeshData* meshData) {}
 	static void CreateCylinder(float bottomRadius, float topRadius, float height, uint sliceCount, uint stackCount, MeshData* meshData) {}
-	static void CreateGrid(float width, float depth, uint m, uint n, MeshData* meshData);
+	static void CreateGrid(float width, float depth, uint m, uint n, MeshData* meshData, float textureTilingX = 1.0f, float textureTilingY = 1.0f);
 	static void CreateFullscreenQuad(MeshData& meshData) {}
 };
 

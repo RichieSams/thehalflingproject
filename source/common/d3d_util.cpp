@@ -11,7 +11,7 @@
 
 namespace Common {
 
-HRESULT LoadVertexShader(const char *fileName, ID3D11Device *device, D3D11_INPUT_ELEMENT_DESC *vertexDesc, uint numElements, ID3D11VertexShader **vertexShader, ID3D11InputLayout **inputLayout) {
+HRESULT LoadVertexShader(const char *fileName, ID3D11Device *device, ID3D11VertexShader **vertexShader, ID3D11InputLayout **inputLayout, D3D11_INPUT_ELEMENT_DESC *vertexDesc, uint numElements) {
 	std::ifstream fin(fileName, std::ios::in | std::ios::binary | std::ios::ate);
 
 	if (fin.is_open()) {
@@ -29,8 +29,10 @@ HRESULT LoadVertexShader(const char *fileName, ID3D11Device *device, D3D11_INPUT
 			return result;
 		}
 
-		// Create the vertex input layout.
-		result = device->CreateInputLayout(vertexDesc, numElements, buffer, size, inputLayout);
+		if (numElements != 0) {
+			// Create the vertex input layout.
+			result = device->CreateInputLayout(vertexDesc, numElements, buffer, size, inputLayout);
+		}
 
 		delete[] buffer;
 		return result;

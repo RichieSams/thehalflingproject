@@ -42,7 +42,7 @@
 
 namespace Common {
 
-HRESULT LoadVertexShader(const char *fileName, ID3D11Device *device, D3D11_INPUT_ELEMENT_DESC *vertexDesc, uint numElements, ID3D11VertexShader **vertexShader, ID3D11InputLayout **inputLayout);
+HRESULT LoadVertexShader(const char *fileName, ID3D11Device *device, ID3D11VertexShader **vertexShader, ID3D11InputLayout **inputLayout, D3D11_INPUT_ELEMENT_DESC *vertexDesc = nullptr, uint numElements = 0);
 
 HRESULT LoadPixelShader(const char *fileName, ID3D11Device *device, ID3D11PixelShader **pixelShader);
 

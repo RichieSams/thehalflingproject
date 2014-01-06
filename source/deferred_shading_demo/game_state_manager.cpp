@@ -123,7 +123,7 @@ void GameStateManager::BuildGeometryBuffers() {
 void GameStateManager::CreateLights() {
 	Common::DirectionalLight *directionalLight = LightManager.GetDirectionalLight();
 	directionalLight->Ambient = DirectX::XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
-	directionalLight->Diffuse = DirectX::XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+	directionalLight->Diffuse = DirectX::XMFLOAT4(0.7f, 0.7f, 0.7f, 1.0f);
 	directionalLight->Specular = DirectX::XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
 	directionalLight->Direction = DirectX::XMFLOAT3(0.57735f, -0.57735f, 0.57735f);
 }

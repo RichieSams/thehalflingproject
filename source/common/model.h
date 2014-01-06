@@ -140,6 +140,8 @@ void Common::Model<Vertex>::SetSubsets(ModelSubset *subsetArray, uint subsetCoun
 
 template <typename Vertex>
 void Common::Model<Vertex>::DrawSubset(ID3D11DeviceContext *deviceContext, int subsetId) {
+	assert(subsetId >= -1 && subsetId < (int)m_subsetCount);
+
 	uint stride = sizeof(Vertex);
 	uint offset = 0;
 
@@ -150,12 +152,9 @@ void Common::Model<Vertex>::DrawSubset(ID3D11DeviceContext *deviceContext, int s
 		for (uint i = 0; i < m_subsetCount; ++i) {
 			deviceContext->DrawIndexed(m_subsets[i].FaceCount * 3, m_subsets[i].FaceStart * 3, 0);
 		}
-	} else if (subsetId > 0 && (uint)subsetId < m_subsetCount) {
-		deviceContext->DrawIndexed(m_subsets[subsetId].FaceCount * 3, m_subsets[subsetId].FaceStart * 3, 0);
 	} else {
-		// Invalid subsetId
-		// TODO: Add actual error handling
-		return;
+		deviceContext->PSSetShaderResources(0, 1, &m_subsets[subsetId].SRV);
+		deviceContext->DrawIndexed(m_subsets[subsetId].FaceCount * 3, m_subsets[subsetId].FaceStart * 3, 0);
 	}
 }
 

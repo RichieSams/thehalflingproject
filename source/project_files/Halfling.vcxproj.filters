@@ -45,6 +45,12 @@
     <ClCompile Include="..\common\texture_manager.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="..\common\sprite_renderer.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\sprite_font.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\common\halfling_sys.h">
@@ -110,6 +116,12 @@
     <ClInclude Include="..\common\texture_manager.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="..\common\sprite_renderer.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\sprite_font.h">
+      <Filter>Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\common\shaders\lights.hlsli">
@@ -121,5 +133,19 @@
     <None Include="..\common\shaders\light_functions.hlsli">
       <Filter>Common\Shaders</Filter>
     </None>
+    <None Include="..\common\shaders\sprite_header.hlsli">
+      <Filter>Common\Shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\common\shaders\sprite_vertex_shader.hlsl">
+      <Filter>Common\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\common\shaders\sprite_pixel_shader.hlsl">
+      <Filter>Common\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\common\shaders\sprite_instanced_vertex_shader.hlsl">
+      <Filter>Common\Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

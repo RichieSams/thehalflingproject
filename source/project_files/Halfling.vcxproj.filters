@@ -51,6 +51,9 @@
     <ClCompile Include="..\common\sprite_font.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="..\common\device_states.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\common\halfling_sys.h">
@@ -120,6 +123,9 @@
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="..\common\sprite_font.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\device_states.h">
       <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>

@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClCompile Include="..\common\camera.cpp" />
     <ClCompile Include="..\common\d3d_util.cpp" />
+    <ClCompile Include="..\common\device_states.cpp" />
     <ClCompile Include="..\common\dxerr.cpp" />
     <ClCompile Include="..\common\geometry_generator.cpp" />
     <ClCompile Include="..\common\graphics_manager_base.cpp" />
@@ -27,6 +28,7 @@
   <ItemGroup>
     <ClInclude Include="..\common\camera.h" />
     <ClInclude Include="..\common\d3d_util.h" />
+    <ClInclude Include="..\common\device_states.h" />
     <ClInclude Include="..\common\dxerr.h" />
     <ClInclude Include="..\common\game_state_manager_base.h" />
     <ClInclude Include="..\common\geometry_generator.h" />

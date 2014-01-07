@@ -72,7 +72,10 @@
     </FxCompile>
     <PostBuildEvent>
       <Command>XCOPY "$(SolutionDir)..\libs\AntTweakBar\lib\AntTweakBar.dll" "$(OutDir)" /D /K /Y
-XCOPY "$(SolutionDir)..\deferred_shading_demo\resources\*" "$(OutDir)" /D /K /Y</Command>
+XCOPY "$(SolutionDir)..\deferred_shading_demo\resources\*" "$(OutDir)" /D /K /Y
+XCOPY "$(OutDir)..\Halfling\sprite_vertex_shader.cso" "$(OutDir)" /D /K /Y
+XCOPY "$(OutDir)..\Halfling\sprite_instanced_vertex_shader.cso" "$(OutDir)" /D /K /Y
+XCOPY "$(OutDir)..\Halfling\sprite_pixel_shader.cso" "$(OutDir)" /D /K /Y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -98,7 +101,10 @@ XCOPY "$(SolutionDir)..\deferred_shading_demo\resources\*" "$(OutDir)" /D /K /Y<
     </FxCompile>
     <PostBuildEvent>
       <Command>XCOPY "$(SolutionDir)..\libs\AntTweakBar\lib\AntTweakBar.dll" "$(OutDir)" /D /K /Y
-XCOPY "$(SolutionDir)..\deferred_shading_demo\resources\*" "$(OutDir)" /D /K /Y</Command>
+XCOPY "$(SolutionDir)..\deferred_shading_demo\resources\*" "$(OutDir)" /D /K /Y
+XCOPY "$(OutDir)..\Halfling\sprite_vertex_shader.cso" "$(OutDir)" /D /K /Y
+XCOPY "$(OutDir)..\Halfling\sprite_instanced_vertex_shader.cso" "$(OutDir)" /D /K /Y
+XCOPY "$(OutDir)..\Halfling\sprite_pixel_shader.cso" "$(OutDir)" /D /K /Y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

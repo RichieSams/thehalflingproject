@@ -12,5 +12,9 @@
 // Only include the base windows libraries
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <comip.h>
+
+// GDI+
+#include <gdiplus.h>
 
 #endif

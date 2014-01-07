@@ -17,4 +17,12 @@
 // GDI+
 #include <gdiplus.h>
 
+// Un-define min and max from the windows headers
+#ifdef min
+	#undef min
+#endif
+
+#ifdef max
+	#undef max
+#endif
 #endif

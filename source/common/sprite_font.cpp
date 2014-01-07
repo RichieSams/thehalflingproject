@@ -200,7 +200,8 @@ void SpriteFont::Initialize(const wchar *fontName, float fontSize, UINT fontStyl
 	HR(device->CreateShaderResourceView(m_texture, &srDesc, &m_SRV));
 
 	// Shutdown GDI+
-	Gdiplus::GdiplusShutdown(token);
+	//Gdiplus::GdiplusShutdown(token);
+	// TODO: Figure out why this throws exceptions
 }
 
 ID3D11ShaderResourceView *SpriteFont::SRView() const {

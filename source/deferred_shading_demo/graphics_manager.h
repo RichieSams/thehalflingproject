@@ -11,12 +11,12 @@
 #include "common/structured_buffer.h"
 #include "common/lights.h"
 #include "common/materials.h"
+#include "common/sprite_renderer.h"
+#include "common/sprite_font.h"
 
 #include <d3d11.h>
 #include "DirectXMath.h"
 #include <AntTweakBar.h>
-#include <SpriteBatch.h>
-#include <SpriteFont.h>
 
 namespace DeferredShadingDemo {
 
@@ -57,8 +57,8 @@ private:
 
 	ID3D11BlendState *m_blendState;
 
-	DirectX::SpriteBatch *m_spriteBatcher;
-	DirectX::SpriteFont *m_timesNewRoman10Font;
+	Common::SpriteRenderer m_spriteRenderer;
+	Common::SpriteFont m_timesNewRoman12Font;
 
 public:
 	bool Initialize(int clientWidth, int clientHeight, HWND hwnd, bool fullscreen);

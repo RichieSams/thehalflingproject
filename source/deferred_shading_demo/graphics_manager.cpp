@@ -13,6 +13,7 @@
 #include "assert.h"
 #include <AntTweakBar.h>
 #include <DirectXColors.h>
+#include <sstream>
 
 
 namespace DeferredShadingDemo {
@@ -49,8 +50,8 @@ bool GraphicsManager::Initialize(int clientWidth, int clientHeight, HWND hwnd, b
 
 	LoadShaders();
 	
-	m_spriteBatcher = new DirectX::SpriteBatch(m_immediateContext);
-	m_timesNewRoman10Font = new DirectX::SpriteFont(m_device, L"timesNewRoman10.spritefont");
+	m_spriteRenderer.Initialize(m_device);
+	m_timesNewRoman12Font.Initialize(L"Times New Roman", 12, Common::SpriteFont::Regular, true, m_device);
 
 	D3D11_RASTERIZER_DESC wireframeDesc;
 	ZeroMemory(&wireframeDesc, sizeof(D3D11_RASTERIZER_DESC));
@@ -139,11 +140,16 @@ void GraphicsManager::DrawFrame(float deltaTime) {
 
 	m_gameStateManager->Models[0].DrawSubset(m_immediateContext);
 
-	m_spriteBatcher->Begin();
-	wchar_t buffer[100];
-	swprintf(buffer, 100, L"FPS: %u\nFrame Time: %f (ms)", m_fps, m_frameTime);
-	m_timesNewRoman10Font->DrawString(m_spriteBatcher, buffer, DirectX::XMFLOAT2(10, 10), DirectX::Colors::Yellow);
-	m_spriteBatcher->End();
+	m_spriteRenderer.Begin(m_immediateContext, Common::SpriteRenderer::Point);
+	std::wostringstream stream;
+	stream << L"FPS: " << m_fps << L"\nFrame Time: " << m_frameTime << L" (ms)";
+
+	DirectX::XMFLOAT4X4 transform{1,  0,  0, 0,
+	                              0,  1,  0, 0,
+	                              0,  0,  1, 0,
+	                              25, 25, 0, 1};
+	m_spriteRenderer.RenderText(m_timesNewRoman12Font, stream.str().c_str(), transform, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) /* Yellow */);
+	m_spriteRenderer.End();
 
 	TwDraw();
 

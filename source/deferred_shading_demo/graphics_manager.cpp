@@ -35,7 +35,6 @@ GraphicsManager::GraphicsManager(GameStateManager *gameStateManager)
 	  m_pixelShader(nullptr),
 	  m_diffuseSampleState(nullptr),
 	  m_wireframeRS(nullptr),
-	  m_blendState(nullptr),
 	  m_solidRS(nullptr) {
 }
 
@@ -53,35 +52,10 @@ bool GraphicsManager::Initialize(int clientWidth, int clientHeight, HWND hwnd, b
 	m_spriteRenderer.Initialize(m_device);
 	m_timesNewRoman12Font.Initialize(L"Times New Roman", 12, Common::SpriteFont::Regular, true, m_device);
 
-	D3D11_RASTERIZER_DESC wireframeDesc;
-	ZeroMemory(&wireframeDesc, sizeof(D3D11_RASTERIZER_DESC));
-	wireframeDesc.FillMode = D3D11_FILL_WIREFRAME;
-	wireframeDesc.CullMode = D3D11_CULL_BACK;
-	wireframeDesc.FrontCounterClockwise = false;
-	wireframeDesc.DepthClipEnable = true;
-
-	HR(m_device->CreateRasterizerState(&wireframeDesc, &m_wireframeRS));
-
-	D3D11_RASTERIZER_DESC solidDesc;
-	ZeroMemory(&solidDesc, sizeof(D3D11_RASTERIZER_DESC));
-	solidDesc.FillMode = D3D11_FILL_SOLID;
-	solidDesc.CullMode = D3D11_CULL_BACK;
-	solidDesc.FrontCounterClockwise = false;
-	solidDesc.DepthClipEnable = true;
-
-	HR(m_device->CreateRasterizerState(&solidDesc, &m_solidRS));
-
-	D3D11_BLEND_DESC blendStateDesc;
-	ZeroMemory(&blendStateDesc, sizeof(blendStateDesc));
-	blendStateDesc.RenderTarget[0].BlendEnable = TRUE;
-	blendStateDesc.RenderTarget[0].SrcBlend = blendStateDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-	blendStateDesc.RenderTarget[0].DestBlend = blendStateDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
-	blendStateDesc.RenderTarget[0].BlendOp = blendStateDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-	blendStateDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-
-	HR(m_device->CreateBlendState(&blendStateDesc, &m_blendState));
-
-	m_immediateContext->OMSetBlendState(m_blendState, nullptr, 0xFFFFFFFF);
+	m_blendStates.Initialize(m_device);
+	m_depthStencilStates.Initialize(m_device);
+	m_rasterizerStates.Initialize(m_device);
+	m_samplerStates.Initialize(m_device);
 
 	return true;
 }
@@ -97,7 +71,6 @@ void GraphicsManager::Shutdown() {
 	ReleaseCOM(m_diffuseSampleState);
 	ReleaseCOM(m_wireframeRS);
 	ReleaseCOM(m_solidRS);
-	ReleaseCOM(m_blendState);
 	ReleaseCOM(m_vertexShader);
 	ReleaseCOM(m_pixelShader);
 	ReleaseCOM(m_inputLayout);
@@ -124,6 +97,11 @@ void GraphicsManager::RenderMainPass() {
 
 	// Set States
 	m_immediateContext->PSSetSamplers(0, 1, &m_diffuseSampleState);
+	float blendFactor[4] = {1.0f, 1.0f, 1.0f, 1.0f};
+	m_immediateContext->OMSetBlendState(m_blendStates.BlendDisabled(), blendFactor, 0xFFFFFFFF);
+	m_immediateContext->OMSetDepthStencilState(m_depthStencilStates.StencilTestEnabled(), 0);
+	m_immediateContext->RSSetState(m_rasterizerStates.BackFaceCull());
+	
 
 	// Transpose the matrices to prepare them for the shader.
 	DirectX::XMMATRIX worldMatrix = m_gameStateManager->WorldViewProj.world;

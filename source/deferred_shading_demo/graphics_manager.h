@@ -13,6 +13,7 @@
 #include "common/materials.h"
 #include "common/sprite_renderer.h"
 #include "common/sprite_font.h"
+#include "common/device_states.h"
 
 #include <d3d11.h>
 #include "DirectXMath.h"
@@ -55,7 +56,10 @@ private:
 	ID3D11RasterizerState *m_wireframeRS;
 	ID3D11RasterizerState *m_solidRS;
 
-	ID3D11BlendState *m_blendState;
+	Common::BlendStates m_blendStates;
+	Common::DepthStencilStates m_depthStencilStates;
+	Common::RasterizerStates m_rasterizerStates;
+	Common::SamplerStates m_samplerStates;
 
 	Common::SpriteRenderer m_spriteRenderer;
 	Common::SpriteFont m_timesNewRoman12Font;

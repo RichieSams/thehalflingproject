@@ -111,6 +111,14 @@ void GraphicsManager::Shutdown() {
 void GraphicsManager::DrawFrame(float deltaTime) {
 	CalculateFrameStats(deltaTime);
 
+	RenderMainPass();
+	RenderHUD();
+
+	uint syncInterval = m_vsync ? 1 : 0;
+	m_swapChain->Present(syncInterval, 0);
+}
+
+void GraphicsManager::RenderMainPass() {
 	m_immediateContext->ClearRenderTargetView(m_renderTargetView, DirectX::Colors::LightGray);
 	m_immediateContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
@@ -139,22 +147,21 @@ void GraphicsManager::DrawFrame(float deltaTime) {
 	m_immediateContext->PSSetShader(m_pixelShader, NULL, 0);
 
 	m_gameStateManager->Models[0].DrawSubset(m_immediateContext);
+}
 
+void GraphicsManager::RenderHUD() {
 	m_spriteRenderer.Begin(m_immediateContext, Common::SpriteRenderer::Point);
 	std::wostringstream stream;
 	stream << L"FPS: " << m_fps << L"\nFrame Time: " << m_frameTime << L" (ms)";
 
-	DirectX::XMFLOAT4X4 transform{1,  0,  0, 0,
-	                              0,  1,  0, 0,
-	                              0,  0,  1, 0,
-	                              25, 25, 0, 1};
+	DirectX::XMFLOAT4X4 transform{1, 0, 0, 0,
+		0, 1, 0, 0,
+		0, 0, 1, 0,
+		25, 25, 0, 1};
 	m_spriteRenderer.RenderText(m_timesNewRoman12Font, stream.str().c_str(), transform, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) /* Yellow */);
 	m_spriteRenderer.End();
 
 	TwDraw();
-
-	uint syncInterval = m_vsync ? 1 : 0;
-	m_swapChain->Present(syncInterval, 0);
 }
 
 void GraphicsManager::SetFrameConstants(DirectX::XMMATRIX &projMatrix, DirectX::XMMATRIX &viewProjMatrix) {

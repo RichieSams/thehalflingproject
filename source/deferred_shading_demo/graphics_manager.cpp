@@ -32,6 +32,7 @@ GraphicsManager::GraphicsManager(GameStateManager *gameStateManager)
 	  m_spotLightBuffer(nullptr),
 	  m_vertexShader(nullptr),
 	  m_pixelShader(nullptr),
+	  m_diffuseSampleState(nullptr),
 	  m_wireframeRS(nullptr),
 	  m_blendState(nullptr),
 	  m_solidRS(nullptr) {
@@ -92,6 +93,7 @@ void GraphicsManager::Shutdown() {
 	ReleaseCOM(m_pixelShaderObjectConstantsBuffer);
 	delete m_pointLightBuffer;
 	delete m_spotLightBuffer;
+	ReleaseCOM(m_diffuseSampleState);
 	ReleaseCOM(m_wireframeRS);
 	ReleaseCOM(m_solidRS);
 	ReleaseCOM(m_blendState);
@@ -110,6 +112,9 @@ void GraphicsManager::DrawFrame(float deltaTime) {
 
 	m_immediateContext->ClearRenderTargetView(m_renderTargetView, DirectX::Colors::LightGray);
 	m_immediateContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+
+	// Set States
+	m_immediateContext->PSSetSamplers(0, 1, &m_diffuseSampleState);
 
 	// Transpose the matrices to prepare them for the shader.
 	DirectX::XMMATRIX worldMatrix = m_gameStateManager->WorldViewProj.world;
@@ -334,6 +339,16 @@ void GraphicsManager::LoadShaders() {
 
 	m_pointLightBuffer = new Common::StructuredBuffer<Common::PointLight>(m_device, 1, D3D11_BIND_SHADER_RESOURCE, true);
 	m_spotLightBuffer = new Common::StructuredBuffer<Common::SpotLight>(m_device, 1, D3D11_BIND_SHADER_RESOURCE, true);
+
+	D3D11_SAMPLER_DESC diffuseSamplerDesc;
+	memset(&diffuseSamplerDesc, 0, sizeof(D3D11_SAMPLER_DESC));
+	diffuseSamplerDesc.Filter = D3D11_FILTER_ANISOTROPIC;
+	diffuseSamplerDesc.MaxAnisotropy = 4;
+	diffuseSamplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	diffuseSamplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	diffuseSamplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+
+	HR(m_device->CreateSamplerState(&diffuseSamplerDesc, &m_diffuseSampleState));
 }
 
 void TW_CALL GraphicsManager::SetWireframeRSCallback(const void *value, void *clientData) {

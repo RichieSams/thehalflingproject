@@ -50,6 +50,8 @@ private:
 	Common::StructuredBuffer<Common::PointLight> *m_pointLightBuffer;
 	Common::StructuredBuffer<Common::SpotLight> *m_spotLightBuffer;
 
+	ID3D11SamplerState *m_diffuseSampleState;
+
 	ID3D11RasterizerState *m_wireframeRS;
 	ID3D11RasterizerState *m_solidRS;
 

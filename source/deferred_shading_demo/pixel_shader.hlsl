@@ -20,12 +20,7 @@ cbuffer cbPerObject : register(b3) {
 };
 
 Texture2D gDiffuseTexture : register(t0);
-SamplerState gDiffuseSampler {
-	Filter = ANISOTROPIC;
-	MaxAnisotropy = 4;
-	AddressU = WRAP;
-	AddressV = WRAP;
-};
+SamplerState gDiffuseSampler : register(s0);
 
 StructuredBuffer<PointLight> gPointLights : register(t4);
 StructuredBuffer<SpotLight> gSpotLights : register(t5);

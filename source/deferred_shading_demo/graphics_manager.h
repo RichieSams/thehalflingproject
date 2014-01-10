@@ -14,6 +14,7 @@
 #include "common/sprite_renderer.h"
 #include "common/sprite_font.h"
 #include "common/device_states.h"
+#include "common/texture2d.h"
 
 #include <d3d11.h>
 #include "DirectXMath.h"
@@ -38,6 +39,10 @@ private:
 
 	Common::Depth2D *m_depthStencilBuffer;
 	D3D11_VIEWPORT m_screenViewport;
+
+	std::vector<Common::Texture2D *> m_gBuffers;
+	std::vector<ID3D11ShaderResourceView *> m_gBufferSRVs;
+	std::vector<ID3D11RenderTargetView *> m_gBufferRTVs;
 
 	TwBar *m_settingsBar;
 

@@ -94,8 +94,14 @@ void GraphicsManager::DrawFrame(float deltaTime) {
 }
 
 void GraphicsManager::RenderMainPass() {
+	// Bind the gbufferRTVs and depth/stencil view to the pipeline.
+	m_immediateContext->OMSetRenderTargets(2, &m_gBufferRTVs[0], m_depthStencilBuffer->GetDepthStencil());
+
 	m_immediateContext->ClearRenderTargetView(m_renderTargetView, DirectX::Colors::LightGray);
-	m_immediateContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	for (auto gbufferRTV : m_gBufferRTVs) {
+		m_immediateContext->ClearRenderTargetView(gbufferRTV, DirectX::Colors::Black);
+	}
+	m_immediateContext->ClearDepthStencilView(m_depthStencilBuffer->GetDepthStencil(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 
 	// Set States
 	m_immediateContext->PSSetSamplers(0, 1, &m_diffuseSampleState);
@@ -212,12 +218,16 @@ void GraphicsManager::OnResize(int newClientWidth, int newClientHeight) {
 	m_clientWidth = newClientWidth;
 	m_clientHeight = newClientHeight;
 
-	// Release the render target view
-	ReleaseCOM(m_renderTargetView);
+	// Release the gBuffers
+	for (auto gbuffer : m_gBuffers) {
+		delete gbuffer;
+	}
+	m_gBuffers.clear();
+	m_gBufferRTVs.clear();
+	m_gBufferSRVs.clear();
 
 	// Release the old views and the old depth/stencil buffer.
-	ReleaseCOM(m_depthStencilView);
-	ReleaseCOM(m_depthStencilBuffer);
+	delete m_depthStencilBuffer;
 
 	// Resize the swap chain and recreate the render target view.
 	HR(m_swapChain->ResizeBuffers(1, m_clientWidth, m_clientHeight, DXGI_FORMAT_R8G8B8A8_UNORM, 0));
@@ -229,34 +239,46 @@ void GraphicsManager::OnResize(int newClientWidth, int newClientHeight) {
 	ReleaseCOM(backBuffer);
 
 	// Create the depth/stencil buffer and view.
-	D3D11_TEXTURE2D_DESC depthStencilDesc;
-
-	depthStencilDesc.Width = m_clientWidth;
-	depthStencilDesc.Height = m_clientHeight;
-	depthStencilDesc.MipLevels = 1;
-	depthStencilDesc.ArraySize = 1;
-	depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	DXGI_SAMPLE_DESC sampleDesc;
 
 	// Use 4X MSAA? --must match swap chain MSAA values.
 	if (m_enable4xMSAA) {
-		depthStencilDesc.SampleDesc.Count = 4;
-		depthStencilDesc.SampleDesc.Quality = m_4xMSAAQuality - 1;
+		sampleDesc.Count = 4;
+		sampleDesc.Quality = m_4xMSAAQuality - 1;
 	} else {
 		// No MSAA
-		depthStencilDesc.SampleDesc.Count = 1;
-		depthStencilDesc.SampleDesc.Quality = 0;
+		sampleDesc.Count = 1;
+		sampleDesc.Quality = 0;
 	}
 
-	depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
-	depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-	depthStencilDesc.CPUAccessFlags = 0;
-	depthStencilDesc.MiscFlags = 0;
+	m_depthStencilBuffer = new Common::Depth2D(m_device, newClientWidth, newClientHeight,
+	                                           D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE, 
+											   sampleDesc, m_enable4xMSAA);
 
-	HR(m_device->CreateTexture2D(&depthStencilDesc, 0, &m_depthStencilBuffer));
-	HR(m_device->CreateDepthStencilView(m_depthStencilBuffer, 0, &m_depthStencilView));
+	// Albedo and Specular Power
+	m_gBuffers.push_back(new Common::Texture2D(m_device, newClientWidth, newClientHeight,
+		DXGI_FORMAT_R8G8B8A8_UNORM,
+		D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE,
+		sampleDesc));
 
-	// Bind the render target view and depth/stencil view to the pipeline.
-	m_immediateContext->OMSetRenderTargets(1, &m_renderTargetView, m_depthStencilView);
+	// Create the gBuffers
+	// Normal and Specular Intensity
+	m_gBuffers.push_back(new Common::Texture2D(m_device, newClientWidth, newClientHeight, 
+	                                           DXGI_FORMAT_R11G11B10_FLOAT,
+	                                           D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE,
+	                                           sampleDesc));
+
+	// Set up GBuffer resource list
+	size_t size = m_gBuffers.size();
+	m_gBufferRTVs.resize(size, 0);
+	m_gBufferSRVs.resize(size + 1, 0);
+	for (std::size_t i = 0; i < size; ++i) {
+		m_gBufferRTVs[i] = m_gBuffers[i]->GetRenderTarget();
+		m_gBufferSRVs[i] = m_gBuffers[i]->GetShaderResource();
+	}
+
+	// Add the depth buffer as a SRV for the Compute Shader
+	m_gBufferSRVs.back() = m_depthStencilBuffer->GetShaderResource();
 
 	// Set the viewport transform.
 	m_screenViewport.TopLeftX = 0;

@@ -39,6 +39,8 @@ GraphicsManager::GraphicsManager(GameStateManager *gameStateManager)
 }
 
 bool GraphicsManager::Initialize(int clientWidth, int clientHeight, HWND hwnd, bool fullscreen) {
+	m_enable4xMSAA = false;
+	
 	if (!Common::GraphicsManagerBase::Initialize(clientWidth, clientHeight, hwnd, fullscreen))
 		return false;
 

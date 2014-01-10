@@ -16,7 +16,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	
 	Halfling::HalflingEngine engine(hInstance, &graphicsManager, &gameStateManager);
 
-	engine.Initialize(L"Lighting Demo", 800, 600, false);
+	engine.Initialize(L"Deferred Shading Demo", 800, 600, false);
 	engine.Run();
 	
 	engine.Shutdown();

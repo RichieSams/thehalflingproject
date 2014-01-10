@@ -36,6 +36,9 @@ private:
 	ID3D11RenderTargetView *m_renderTargetView;
 	ID3D11InputLayout *m_inputLayout;
 
+	Common::Depth2D *m_depthStencilBuffer;
+	D3D11_VIEWPORT m_screenViewport;
+
 	TwBar *m_settingsBar;
 
 	// Shaders

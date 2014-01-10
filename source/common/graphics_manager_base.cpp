@@ -15,8 +15,6 @@ GraphicsManagerBase::GraphicsManagerBase()
 	: m_device(nullptr),
 	  m_immediateContext(nullptr),
 	  m_swapChain(nullptr),
-	  m_depthStencilBuffer(nullptr),
-	  m_depthStencilView(nullptr),
 	  m_d3dInitialized(false),
 	  m_enable4xMSAA(true) {
 }
@@ -106,9 +104,7 @@ bool GraphicsManagerBase::Initialize(int clientWidth, int clientHeight, HWND hwn
 }
 
 void GraphicsManagerBase::Shutdown() {
-	ReleaseCOM(m_depthStencilView);
 	ReleaseCOM(m_swapChain);
-	ReleaseCOM(m_depthStencilBuffer);
 
 	// Restore all default settings.
 	if (m_immediateContext)

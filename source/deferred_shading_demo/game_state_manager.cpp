@@ -113,7 +113,7 @@ void GameStateManager::BuildGeometryBuffers() {
 	Common::ModelSubset *subsets = new Common::ModelSubset[1] {
 		{0, vertexCount, 0, indexCount / 3, {DirectX::XMFLOAT4(0.48f, 0.77f, 0.46f, 0.0f),
 		                                     DirectX::XMFLOAT4(0.48f, 0.77f, 0.46f, 1.0f),
-		                                     DirectX::XMFLOAT4(0.2f, 0.2f, 0.2f, 0.0f)},
+		                                     DirectX::XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f)},
 											 m_textureManager.GetSRVFromDDSFile(*m_device, "grass.dds", D3D11_USAGE_IMMUTABLE)
 		}
 	};

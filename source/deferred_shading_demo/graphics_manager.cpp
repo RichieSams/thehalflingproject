@@ -309,7 +309,7 @@ void GraphicsManager::LoadShaders() {
 	};
 
 	HR(Common::LoadVertexShader("vertex_shader.cso", m_device, &m_vertexShader, &m_inputLayout, vertexDesc, 3));
-	HR(Common::LoadPixelShader("pixel_shader.cso", m_device, &m_pixelShader));
+	HR(Common::LoadPixelShader("deferred_pixel_shader.cso", m_device, &m_pixelShader));
 
 	// Create the constant shader buffers
 	D3D11_BUFFER_DESC vertexShaderFrameBufferDesc;

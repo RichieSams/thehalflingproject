@@ -133,6 +133,24 @@ void GraphicsManager::RenderMainPass() {
 	m_immediateContext->PSSetShader(m_pixelShader, NULL, 0);
 
 	m_gameStateManager->Models[0].DrawSubset(m_immediateContext);
+
+
+	m_immediateContext->OMSetRenderTargets(1, &m_renderTargetView, nullptr);
+
+	// Draw the gbuffers to the frame
+	m_spriteRenderer.Begin(m_immediateContext, Common::SpriteRenderer::Point);
+	DirectX::XMFLOAT4X4 transform{0.5, 0, 0, 0,
+	                              0, 0.5, 0, 0,
+	                              0, 0, 0.5, 0,
+	                              0, 0, 0, 1};
+	m_spriteRenderer.Render(m_gBufferSRVs[0], transform);
+	transform._41 = 0;
+	transform._42 = 300;
+	m_spriteRenderer.Render(m_gBufferSRVs[1], transform);
+	transform._41 = 400;
+	transform._42 = 0;
+	m_spriteRenderer.Render(m_gBufferSRVs[2], transform);
+	m_spriteRenderer.End();
 }
 
 void GraphicsManager::RenderHUD() {

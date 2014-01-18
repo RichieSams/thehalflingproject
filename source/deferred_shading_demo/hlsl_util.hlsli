@@ -30,5 +30,20 @@ float3 SphericalToCartesian(float2 spherical) {
 	return float3(sinCosTheta.y * sinCosPhi.x, sinCosTheta.x * sinCosPhi.x, sinCosPhi.y);
 }
 
+// Converts a z-buffer depth to linear depth
+float LinearDepth(in float zw, in float4x4 projectionMatrix) {
+    return projectionMatrix._43 / (zw - projectionMatrix._33);
+}
+
+// Calculates position from a depth value + pixel coordinate
+float3 PositionFromDepth(in float zw, in uint2 pixelCoord, in float2 displaySize, in float4x4 invViewProjection) {
+    float2 cpos = (pixelCoord + 0.5f) / displaySize;
+    cpos *= 2.0f;
+    cpos -= 1.0f;
+    cpos.y *= -1.0f;
+    float4 positionWS = mul(float4(cpos, zw, 1.0f), invViewProjection);
+    return positionWS.xyz / positionWS.w;
+}
+
 
 #endif

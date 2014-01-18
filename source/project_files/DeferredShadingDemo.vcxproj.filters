@@ -51,5 +51,8 @@
     <None Include="..\deferred_shading_demo\types.hlsli">
       <Filter>Shader Logic</Filter>
     </None>
+    <None Include="..\deferred_shading_demo\hlsl_util.hlsli">
+      <Filter>Shader Logic</Filter>
+    </None>
   </ItemGroup>
 </Project>

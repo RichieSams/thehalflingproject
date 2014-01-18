@@ -144,6 +144,7 @@ XCOPY "$(OutDir)..\Halfling\sprite_pixel_shader.cso" "$(OutDir)" /D /K /Y</Comma
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\deferred_shading_demo\hlsl_util.hlsli" />
     <None Include="..\deferred_shading_demo\types.hlsli" />
   </ItemGroup>
   <ItemGroup>

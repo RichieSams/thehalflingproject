@@ -21,3 +21,6 @@
 *.opensdf
 *.suo
 *.vcxproj.user
+
+# Media files
+/raw_media

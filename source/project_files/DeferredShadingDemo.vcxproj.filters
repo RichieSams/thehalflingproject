@@ -4,22 +4,25 @@
     <ClCompile Include="..\deferred_shading_demo\main.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\deferred_shading_demo\game_state_manager.cpp">
-      <Filter>Simulation Logic</Filter>
+    <ClCompile Include="..\deferred_shading_demo\deferred_shading_demo.cpp">
+      <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\deferred_shading_demo\graphics_manager.cpp">
-      <Filter>Graphics</Filter>
+    <ClCompile Include="..\deferred_shading_demo\deferred_shading_demo_update.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\deferred_shading_demo\deferred_shading_demo_init.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\deferred_shading_demo\deferred_shading_demo_draw.cpp">
+      <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\deferred_shading_demo\game_state_manager.h">
-      <Filter>Simulation Logic</Filter>
-    </ClInclude>
-    <ClInclude Include="..\deferred_shading_demo\graphics_manager.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="..\deferred_shading_demo\shader_constants.h">
       <Filter>Shader Logic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\deferred_shading_demo\deferred_shading_demo.h">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -36,12 +39,6 @@
   <ItemGroup>
     <Filter Include="Core">
       <UniqueIdentifier>{00a7c036-e9dc-4f8a-a86d-e66ce769d920}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Graphics">
-      <UniqueIdentifier>{95e2ae54-5118-4fda-b5f0-57cd7db53d03}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Simulation Logic">
-      <UniqueIdentifier>{ccb0a496-8573-488e-914f-dd9d5cb29de8}</UniqueIdentifier>
     </Filter>
     <Filter Include="Shader Logic">
       <UniqueIdentifier>{7fc27e5e-8d56-4dda-8fd4-d1e839a58407}</UniqueIdentifier>

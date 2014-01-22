@@ -108,14 +108,16 @@ XCOPY "$(OutDir)..\Halfling\sprite_pixel_shader.cso" "$(OutDir)" /D /K /Y</Comma
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\deferred_shading_demo\game_state_manager.cpp" />
-    <ClCompile Include="..\deferred_shading_demo\graphics_manager.cpp" />
+    <ClCompile Include="..\deferred_shading_demo\deferred_shading_demo.cpp" />
+    <ClCompile Include="..\deferred_shading_demo\deferred_shading_demo_draw.cpp" />
+    <ClCompile Include="..\deferred_shading_demo\deferred_shading_demo_init.cpp" />
+    <ClCompile Include="..\deferred_shading_demo\deferred_shading_demo_update.cpp" />
     <ClCompile Include="..\deferred_shading_demo\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\deferred_shading_demo\game_state_manager.h" />
-    <ClInclude Include="..\deferred_shading_demo\graphics_manager.h" />
+    <ClInclude Include="..\deferred_shading_demo\deferred_shading_demo.h" />
     <ClInclude Include="..\deferred_shading_demo\shader_constants.h" />
+    <ClInclude Include="..\deferred_shading_demo\shader_defines.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\deferred_shading_demo\deferred_pixel_shader.hlsl">

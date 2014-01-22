@@ -4,22 +4,16 @@
  * Copyright Adrian Astley 2013
  */
 
-#include "halfling/halfling_engine.h"
-
-#include "deferred_shading_demo/graphics_manager.h"
-#include "deferred_shading_demo/game_state_manager.h"
+#include "deferred_shading_demo/deferred_shading_demo.h"
 
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
-	DeferredShadingDemo::GameStateManager gameStateManager;
-	DeferredShadingDemo::GraphicsManager graphicsManager(&gameStateManager);
-	
-	Halfling::HalflingEngine engine(hInstance, &graphicsManager, &gameStateManager);
+	DeferredShadingDemo::DeferredShadingDemo app(hInstance);
 
-	engine.Initialize(L"Deferred Shading Demo", 800, 600, false);
-	engine.Run();
+	app.Initialize(L"Deferred Shading Demo", 800, 600, false);
+	app.Run();
 	
-	engine.Shutdown();
+	app.Shutdown();
 
 	return 0;
 }

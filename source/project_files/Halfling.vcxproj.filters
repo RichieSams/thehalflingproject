@@ -24,9 +24,6 @@
     <ClCompile Include="..\common\dxerr.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\common\graphics_manager_base.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
     <ClCompile Include="..\common\d3d_util.cpp">
       <Filter>Common</Filter>
     </ClCompile>
@@ -72,12 +69,6 @@
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="..\common\dxerr.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\common\game_state_manager_base.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\common\graphics_manager_base.h">
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="..\common\vector.h">

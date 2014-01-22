@@ -16,6 +16,10 @@
     <ClCompile Include="..\common\device_states.cpp" />
     <ClCompile Include="..\common\dxerr.cpp" />
     <ClCompile Include="..\common\geometry_generator.cpp" />
+<<<<<<< HEAD
+=======
+    <ClCompile Include="..\common\light_manager.cpp" />
+>>>>>>> cc04bf4... HALFLING: Convert RenderManager/GameStateManager system to a single inheritance
     <ClCompile Include="..\common\sprite_font.cpp" />
     <ClCompile Include="..\common\sprite_renderer.cpp" />
     <ClCompile Include="..\common\texture2d.cpp" />
@@ -28,9 +32,7 @@
     <ClInclude Include="..\common\d3d_util.h" />
     <ClInclude Include="..\common\device_states.h" />
     <ClInclude Include="..\common\dxerr.h" />
-    <ClInclude Include="..\common\game_state_manager_base.h" />
     <ClInclude Include="..\common\geometry_generator.h" />
-    <ClInclude Include="..\common\graphics_manager_base.h" />
     <ClInclude Include="..\common\halfling_sys.h" />
     <ClInclude Include="..\common\lights.h" />
     <ClInclude Include="..\common\materials.h" />

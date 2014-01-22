@@ -6,9 +6,7 @@
 
 #include "halfling_engine.h"
 
-#include <sstream>
-#include <windowsx.h>
-#include <AntTweakBar.h>
+#include "common/d3d_util.h"
 
 
 LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
@@ -19,15 +17,23 @@ namespace Halfling {
 
 #define WINDOW_CLASS_NAME L"HalflingEngineWindow"
 
-HalflingEngine::HalflingEngine(HINSTANCE hinstance, Common::GraphicsManagerBase *graphicsManager, Common::GameStateManagerBase *gameStateManager)
+HalflingEngine::HalflingEngine(HINSTANCE hinstance)
 		: m_hinstance(hinstance),
-		  m_graphicsManager(graphicsManager),
-		  m_gameStateManager(gameStateManager),
 		  m_timer(Common::Timer()),
+		  m_updatePeriod(30.0),
+		  m_fps(0.0f),
+		  m_frameTime(0.0f),
 		  m_mainWndCaption(WINDOW_CLASS_NAME),
 		  m_appPaused(false),
 		  m_isMinOrMaximized(false),
-		  m_resizing(false) {
+		  m_fullscreen(false),
+		  m_resizing(false),
+		  m_device(nullptr),
+		  m_immediateContext(nullptr),
+		  m_swapChain(nullptr),
+		  m_d3dInitialized(false),
+		  m_msaaCount(1u),
+		  m_stencil(false) {
 	// Get a pointer to the application object so we can forward Windows messages to 
 	// the object's window procedure through the global window procedure.
 	g_engine = this;
@@ -37,18 +43,6 @@ HalflingEngine::~HalflingEngine() {
 	g_engine = nullptr;
 }
 
-HINSTANCE HalflingEngine::AppInst() const {
-	return m_hinstance;
-}
-
-HWND HalflingEngine::MainWnd() const {
-	return m_hwnd;
-}
-
-float HalflingEngine::AspectRatio() const {
-	return static_cast<float>(m_clientWidth) / m_clientHeight;
-}
-
 bool HalflingEngine::Initialize(LPCTSTR mainWndCaption, uint32 screenWidth, uint32 screenHeight, bool fullscreen) {
 	m_mainWndCaption = mainWndCaption;
 	m_clientWidth = screenWidth;
@@ -56,26 +50,101 @@ bool HalflingEngine::Initialize(LPCTSTR mainWndCaption, uint32 screenWidth, uint
 	m_fullscreen = fullscreen;
 
 	// Initialize the window
-	InitializeWindow(fullscreen);
+	InitializeWindow();
 
-	// Initialize the managers
-	if (!m_graphicsManager->Initialize(m_clientWidth, m_clientHeight, m_hwnd, fullscreen))
+	// Create the device and device context.
+	UINT createDeviceFlags = 0;
+	#if defined(DEBUG) || defined(_DEBUG)  
+		createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
+	#endif
+
+	D3D_FEATURE_LEVEL featureLevel;
+	HRESULT hr = D3D11CreateDevice(NULL,
+								   D3D_DRIVER_TYPE_HARDWARE,
+								   NULL,
+								   createDeviceFlags,
+								   NULL, 0,
+								   D3D11_SDK_VERSION,
+								   &m_device,
+								   &featureLevel,
+								   &m_immediateContext);
+
+	// Describe the swap chain
+	DXGI_SWAP_CHAIN_DESC sd;
+	sd.BufferDesc.Width = m_clientWidth;
+	sd.BufferDesc.Height = m_clientHeight;
+	sd.BufferDesc.RefreshRate.Numerator = 60;
+	sd.BufferDesc.RefreshRate.Denominator = 1;
+	sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	sd.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+	sd.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+
+	if (FAILED(hr)) {
+		DXTRACE_ERR_MSGBOX(L"D3D11CreateDevice Failed.", hr);
 		return false;
+	}
+
+	// Use MSAA? 
+	if (m_msaaCount > 1) {
+		uint msaaQuality;
+		HR(m_device->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, m_msaaCount, &msaaQuality));
+		assert(msaaQuality > 0);
+
+		sd.SampleDesc.Count = m_msaaCount;
+		sd.SampleDesc.Quality = msaaQuality - 1;
+	} else {
+		sd.SampleDesc.Count = 1;
+		sd.SampleDesc.Quality = 0;
+	}
+
+	sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+	sd.BufferCount = 1;
+	sd.OutputWindow = m_hwnd;
+	sd.Windowed = !fullscreen;
+	sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+	sd.Flags = 0;
+
+	IDXGIDevice* dxgiDevice;
+	HR(m_device->QueryInterface(__uuidof(IDXGIDevice), (void**)&dxgiDevice));
+
+	IDXGIAdapter* dxgiAdapter;
+	HR(dxgiDevice->GetParent(__uuidof(IDXGIAdapter), (void**)&dxgiAdapter));
+
+	IDXGIFactory* dxgiFactory;
+	HR(dxgiAdapter->GetParent(__uuidof(IDXGIFactory), (void**)&dxgiFactory));
+
+	HR(dxgiFactory->CreateSwapChain((IUnknown *)m_device, &sd, &m_swapChain));
+
+	// Cleanup
+	ReleaseCOM(dxgiFactory);
+	ReleaseCOM(dxgiAdapter);
+	ReleaseCOM(dxgiDevice);
+
+	m_d3dInitialized = true;
+
+	// The remaining steps that need to be carried out for d3d creation
+	// also need to be executed every time the window is resized.  So
+	// just call the OnResize method here to avoid code duplication.
+	OnResize();
 
 	return true;
 }
 
 void HalflingEngine::Shutdown() {
 	// Shutdown in reverse order
-	m_gameStateManager->Shutdown();
-	m_graphicsManager->Shutdown();
+	ReleaseCOM(m_swapChain);
+
+	// Restore all default settings.
+	if (m_immediateContext)
+		m_immediateContext->ClearState();
+
+	ReleaseCOM(m_immediateContext);
+	ReleaseCOM(m_device);
 	
 	// Shutdown the window.
 	ShutdownWindow();
 
 	g_engine = nullptr;
-
-	return;
 }
 
 void HalflingEngine::Run() {
@@ -85,9 +154,9 @@ void HalflingEngine::Run() {
 
 	
 	bool done = false;
-	double accumulatedTime = 0.0;
+	// Force an update before the first render
+	double accumulatedTime = m_updatePeriod;
 	double deltaTime = 0.0;
-	const double updatePeriod = m_gameStateManager->GetUpdatePeriod();
 
 	// Loop until there is a quit message from the window or the user.
 	while (!done) {
@@ -116,12 +185,13 @@ void HalflingEngine::Run() {
 			}
 			accumulatedTime += deltaTime;
 
-			while (accumulatedTime >= updatePeriod) {
-				accumulatedTime -= updatePeriod;
-				m_gameStateManager->Update();
+			while (accumulatedTime >= m_updatePeriod) {
+				accumulatedTime -= m_updatePeriod;
+				Update();
 			}
 			
-			m_graphicsManager->DrawFrame(deltaTime);
+			CalculateFrameStats(deltaTime);
+			DrawFrame(deltaTime);
 		}
 	}
 
@@ -129,10 +199,6 @@ void HalflingEngine::Run() {
 }
 
 LRESULT HalflingEngine::MsgProc(HWND hwnd, uint msg, WPARAM wParam, LPARAM lParam) {
-	// Send event message to AntTweakBar
-	if (TwEventWin(hwnd, msg, wParam, lParam))
-		return 0; // Event has been handled by AntTweakBar
-
 	switch (msg) {
 		// WM_ACTIVATE is sent when the window is activated or deactivated.  
 		// We pause the game when the window is deactivated and unpause it 
@@ -214,18 +280,18 @@ LRESULT HalflingEngine::MsgProc(HWND hwnd, uint msg, WPARAM wParam, LPARAM lPara
 	case WM_LBUTTONDOWN:
 	case WM_MBUTTONDOWN:
 	case WM_RBUTTONDOWN:
-		m_gameStateManager->MouseDown(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+		MouseDown(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 		return 0;
 	case WM_LBUTTONUP:
 	case WM_MBUTTONUP:
 	case WM_RBUTTONUP:
-		m_gameStateManager->MouseUp(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+		MouseUp(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 		return 0;
 	case WM_MOUSEMOVE:
-		m_gameStateManager->MouseMove(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+		MouseMove(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 		return 0;
 	case WM_MOUSEWHEEL:
-		m_gameStateManager->MouseWheel(GET_WHEEL_DELTA_WPARAM(wParam));
+		MouseWheel(GET_WHEEL_DELTA_WPARAM(wParam));
 	}
 
 	return DefWindowProc(hwnd, msg, wParam, lParam);
@@ -234,23 +300,14 @@ LRESULT HalflingEngine::MsgProc(HWND hwnd, uint msg, WPARAM wParam, LPARAM lPara
 void HalflingEngine::PauseGame() {
 	m_appPaused = true;
 	m_timer.Stop();
-	m_graphicsManager->GamePaused();
-	m_gameStateManager->GamePaused();
 }
 
 void HalflingEngine::UnPauseGame() {
 	m_appPaused = false;
 	m_timer.Start();
-	m_graphicsManager->GameUnpaused();
-	m_gameStateManager->GameUnpaused();
 }
 
-void HalflingEngine::OnResize() {
-	m_graphicsManager->OnResize(m_clientWidth, m_clientHeight);
-	m_gameStateManager->OnResize(m_clientWidth, m_clientHeight);
-}
-
-void HalflingEngine::InitializeWindow(bool fullscreen) {
+void HalflingEngine::InitializeWindow() {
 	WNDCLASS wc;
 	wc.style = CS_HREDRAW | CS_VREDRAW;
 	wc.lpfnWndProc = MainWndProc;
@@ -275,7 +332,7 @@ void HalflingEngine::InitializeWindow(bool fullscreen) {
 	int height = rect.bottom - rect.top;
 
 	DWORD windowType;
-	if (fullscreen) {
+	if (m_fullscreen) {
 		windowType = WS_EX_TOPMOST | WS_POPUP;
 	} else {
 		windowType = WS_OVERLAPPEDWINDOW;
@@ -330,6 +387,28 @@ void HalflingEngine::ShutdownWindow() {
 	m_hinstance = NULL;
 
 	return;
+}
+
+void HalflingEngine::CalculateFrameStats(double deltaTime) {
+	// Code computes the average frames per second, and also the 
+	// average time it takes to render one frame.  These stats 
+	// are appended to the window caption bar.
+
+	static uint frameCount = 0;
+	static double timeElapsed = 0.0;
+
+	frameCount++;
+	timeElapsed += deltaTime;
+
+	// Compute averages over one second period.
+	if (timeElapsed >= 1000.0f) {
+		m_fps = frameCount; // fps = frameCount / 1
+		m_frameTime = 1000.0f / m_fps;
+
+		// Reset for next average.
+		frameCount = 0;
+		timeElapsed = 0;
+	}
 }
 
 } // End of namespace Halfling

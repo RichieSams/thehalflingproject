@@ -94,7 +94,7 @@ public:
 	 * 
 	 * @param meshData    Pointer to the MeshData object that will be filled with the box data
 	 */
-	static void CreateFullscreenQuad(MeshData& meshData) {}
+	static void CreateFullscreenQuad(MeshData& meshData);
 };
 
 } // End of namespace Common

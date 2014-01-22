@@ -232,4 +232,38 @@ void GeometryGenerator::CreateSphere(float radius, uint sliceCount, uint stackCo
 	}
 }
 
+void GeometryGenerator::CreateFullscreenQuad(MeshData& meshData) {
+	meshData.Vertices.resize(4);
+	meshData.Indices.resize(6);
+
+	// Position coordinates specified in NDC space.
+	meshData.Vertices[0] = Vertex(
+		-1.0f, -1.0f, 0.0f,
+		0.0f, 0.0f, -1.0f,
+		0.0f, 1.0f);
+
+	meshData.Vertices[1] = Vertex(
+		-1.0f, +1.0f, 0.0f,
+		0.0f, 0.0f, -1.0f,
+		0.0f, 0.0f);
+
+	meshData.Vertices[2] = Vertex(
+		+1.0f, +1.0f, 0.0f,
+		0.0f, 0.0f, -1.0f,
+		1.0f, 0.0f);
+
+	meshData.Vertices[3] = Vertex(
+		+1.0f, -1.0f, 0.0f,
+		0.0f, 0.0f, -1.0f,
+		1.0f, 1.0f);
+
+	meshData.Indices[0] = 0;
+	meshData.Indices[1] = 1;
+	meshData.Indices[2] = 2;
+
+	meshData.Indices[3] = 0;
+	meshData.Indices[4] = 2;
+	meshData.Indices[5] = 3;
+}
+
 } // End of namespace Common

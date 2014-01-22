@@ -59,7 +59,7 @@ void DeferredShadingDemo::RenderMainPass() {
 
 	// Set the vertex and pixel shaders that will be used to render this triangle.
 	m_immediateContext->VSSetShader(m_vertexShader, NULL, 0);
-	m_immediateContext->PSSetShader(m_pixelShader, NULL, 0);
+	m_immediateContext->PSSetShader(m_gbufferPixelShader, NULL, 0);
 
 	m_models[0].DrawSubset(m_immediateContext);
 

@@ -32,7 +32,7 @@
     <FxCompile Include="..\deferred_shading_demo\vertex_shader.hlsl">
       <Filter>Shader Logic</Filter>
     </FxCompile>
-    <FxCompile Include="..\deferred_shading_demo\deferred_pixel_shader.hlsl">
+    <FxCompile Include="..\deferred_shading_demo\gbuffer_pixel_shader.hlsl">
       <Filter>Shader Logic</Filter>
     </FxCompile>
   </ItemGroup>

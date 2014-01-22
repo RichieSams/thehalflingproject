@@ -34,7 +34,7 @@ DeferredShadingDemo::DeferredShadingDemo(HINSTANCE hinstance)
 	  m_pointLightBuffer(nullptr),
 	  m_spotLightBuffer(nullptr),
 	  m_vertexShader(nullptr),
-	  m_pixelShader(nullptr),
+	  m_gbufferPixelShader(nullptr),
 	  m_diffuseSampleState(nullptr),
 	  m_wireframeRS(nullptr),
 	  m_solidRS(nullptr) {
@@ -52,7 +52,7 @@ void DeferredShadingDemo::Shutdown() {
 	ReleaseCOM(m_wireframeRS);
 	ReleaseCOM(m_solidRS);
 	ReleaseCOM(m_vertexShader);
-	ReleaseCOM(m_pixelShader);
+	ReleaseCOM(m_gbufferPixelShader);
 	ReleaseCOM(m_inputLayout);
 	ReleaseCOM(m_renderTargetView);
 

@@ -74,7 +74,7 @@ private:
 
 	// Shaders
 	ID3D11VertexShader *m_vertexShader;
-	ID3D11PixelShader *m_pixelShader;
+	ID3D11PixelShader *m_gbufferPixelShader;
 
 	ID3D11Buffer *m_vertexShaderFrameConstantsBuffer;
 	ID3D11Buffer *m_vertexShaderObjectConstantsBuffer;

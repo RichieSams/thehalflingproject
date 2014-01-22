@@ -120,7 +120,7 @@ XCOPY "$(OutDir)..\Halfling\sprite_pixel_shader.cso" "$(OutDir)" /D /K /Y</Comma
     <ClInclude Include="..\deferred_shading_demo\shader_defines.h" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\deferred_shading_demo\deferred_pixel_shader.hlsl">
+    <FxCompile Include="..\deferred_shading_demo\gbuffer_pixel_shader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>

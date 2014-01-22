@@ -49,6 +49,7 @@ private:
 	ID3D11UnorderedAccessView* m_unorderedAccess;
 	
 public:
+	inline int NumElements() { return m_numElements; }
 	inline ID3D11Buffer *GetBuffer() { return mBuffer; }
 	inline ID3D11UnorderedAccessView *GetUnorderedAccess() { return m_unorderedAccess; }
 	inline ID3D11ShaderResourceView *GetShaderResource() { return m_shaderResource; }

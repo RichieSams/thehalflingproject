@@ -238,7 +238,7 @@ D3D11_TEXTURE2D_DESC SpriteRenderer::SetPerBatchData(ID3D11ShaderResourceView* t
 	return desc;
 }
 
-void SpriteRenderer::Render(ID3D11ShaderResourceView *texture, const DirectX::XMFLOAT4X4 &transform, const const DirectX::XMFLOAT4 &color, const const DirectX::XMFLOAT4 *drawRect) {
+void SpriteRenderer::Render(ID3D11ShaderResourceView *texture, const DirectX::XMFLOAT4X4 &transform, const DirectX::XMFLOAT4 &color, const const DirectX::XMFLOAT4 *drawRect) {
 	assert(m_context);
 	assert(m_initialized);
 

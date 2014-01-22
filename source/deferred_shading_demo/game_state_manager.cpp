@@ -127,6 +127,18 @@ void GameStateManager::CreateLights() {
 	DirectionalLight.Diffuse = DirectX::XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
 	DirectionalLight.Specular = DirectX::XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
 	DirectionalLight.Direction = DirectX::XMFLOAT3(0.57735f, -0.57735f, 0.57735f);
+
+	for (uint i = 0; i < 100; ++i) {
+		Common::PointLight pointLight;
+		pointLight.Ambient = pointLight.Diffuse = pointLight.Specular = DirectX::XMFLOAT4(Common::RandF(), Common::RandF(), Common::RandF(), 1.0f);
+		pointLight.Attenuation = DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f);
+		pointLight.Range = 5.0f;
+		pointLight.Position = DirectX::XMFLOAT3(Common::RandF(-80.0f, 80.0f), Common::RandF(20.0f, 60.0f), Common::RandF(-80.0f, 80.0f));
+
+		PointLights.push_back(pointLight);
+	}
+
+	PointLightBufferNeedsRebuild = true;
 }
 
 float GameStateManager::GetHillHeight(float x, float z) const {

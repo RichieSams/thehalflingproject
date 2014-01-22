@@ -36,9 +36,6 @@
     <ClCompile Include="..\common\geometry_generator.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\common\light_manager.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
     <ClCompile Include="..\common\texture2d.cpp">
       <Filter>Common</Filter>
     </ClCompile>
@@ -98,9 +95,6 @@
     <ClInclude Include="..\common\geometry_generator.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\model_manager.h">
-      <Filter>Common</Filter>
-    </ClInclude>
     <ClInclude Include="..\common\structured_buffer.h">
       <Filter>Common</Filter>
     </ClInclude>
@@ -108,9 +102,6 @@
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="..\common\materials.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\common\light_manager.h">
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="..\common\texture2d.h">

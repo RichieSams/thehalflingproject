@@ -21,7 +21,7 @@ struct ModelSubset {
 	uint FaceStart;
 	uint FaceCount;
 
-	Common::Material Material;
+	Common::BlinnPhongMaterial Material;
 
 	ID3D11ShaderResourceView *SRV;
 };
@@ -75,7 +75,7 @@ private:
 	DisposeAfterUse::Flag m_disposeSubsetArray;
 
 public:
-	const Common::Material &GetSubsetMaterial(uint subsetIndex) const;
+	const Common::BlinnPhongMaterial &GetSubsetMaterial(uint subsetIndex) const;
 	void SetVertices(ID3D11Device *device, Vertex *vertices, uint vertexCount, DisposeAfterUse::Flag disposeAfterUse = DisposeAfterUse::YES);
 	void SetIndices(ID3D11Device *device, uint *indices, uint indexCount, DisposeAfterUse::Flag disposeAfterUse = DisposeAfterUse::YES);
 	void SetSubsets(ModelSubset *subsetArray, uint subsetCount, DisposeAfterUse::Flag disposeAfterUse = DisposeAfterUse::YES);
@@ -84,7 +84,7 @@ public:
 };
 
 template <typename Vertex>
-const Common::Material &Model<Vertex>::GetSubsetMaterial(uint subsetIndex) const {
+const Common::BlinnPhongMaterial &Model<Vertex>::GetSubsetMaterial(uint subsetIndex) const {
 	if (subsetIndex < m_subsetCount)
 		return m_subsets[subsetIndex].Material;
 	

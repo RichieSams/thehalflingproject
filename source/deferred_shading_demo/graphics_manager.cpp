@@ -219,13 +219,23 @@ void GraphicsManager::SetObjectConstants(DirectX::XMMATRIX &worldMatrix, DirectX
 }
 
 void GraphicsManager::SetLightBuffers(DirectX::XMMATRIX &viewMatrix) {
-	//{
-	//	Common::PointLight* light = m_pointLightBuffer->MapDiscard(m_immediateContext);
-	//	for (unsigned int i = 0; i < mActiveLights; ++i) {
-	//		light[i] = mPointLightParameters[i];
-	//	}
-	//	mLightBuffer->Unmap(d3dDeviceContext);
+	uint numPointLights = m_gameStateManager->PointLights.size();
+	//uint numSpotLights = m_gameStateManager->SpotLights.size();
+
+	assert(m_pointLightBuffer->NumElements() == numPointLights);
+	//assert(m_spotLightBuffer->NumElements() == numSpotLights);
+
+	Common::PointLight *pointLightArray = m_pointLightBuffer->MapDiscard(m_immediateContext);
+	for (unsigned int i = 0; i < m_gameStateManager->PointLights.size(); ++i) {
+		pointLightArray[i] = m_gameStateManager->PointLights[i];
+	}
+	m_pointLightBuffer->Unmap(m_immediateContext);
+
+	//Common::SpotLight *spotLightArray = m_spotLightBuffer->MapDiscard(m_immediateContext);
+	//for (unsigned int i = 0; i < m_gameStateManager->SpotLights.size(); ++i) {
+	//	spotLightArray[i] = m_gameStateManager->SpotLights[i];
 	//}
+	//m_pointLightBuffer->Unmap(m_immediateContext);
 }
 
 void GraphicsManager::OnResize(int newClientWidth, int newClientHeight) {
@@ -370,8 +380,8 @@ void GraphicsManager::LoadShaders() {
 
 	m_device->CreateBuffer(&pixelShaderObjectBufferDesc, NULL, &m_pixelShaderObjectConstantsBuffer);
 
-	m_pointLightBuffer = new Common::StructuredBuffer<Common::PointLight>(m_device, 1, D3D11_BIND_SHADER_RESOURCE, true);
-	m_spotLightBuffer = new Common::StructuredBuffer<Common::SpotLight>(m_device, 1, D3D11_BIND_SHADER_RESOURCE, true);
+	m_pointLightBuffer = new Common::StructuredBuffer<Common::PointLight>(m_device, m_gameStateManager->PointLights.size(), D3D11_BIND_SHADER_RESOURCE, true);
+	m_spotLightBuffer = new Common::StructuredBuffer<Common::SpotLight>(m_device, m_gameStateManager->SpotLights.size(), D3D11_BIND_SHADER_RESOURCE, true);
 
 	D3D11_SAMPLER_DESC diffuseSamplerDesc;
 	memset(&diffuseSamplerDesc, 0, sizeof(D3D11_SAMPLER_DESC));

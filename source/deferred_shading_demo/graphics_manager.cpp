@@ -211,7 +211,7 @@ void GraphicsManager::SetObjectConstants(DirectX::XMMATRIX &worldMatrix, DirectX
 	HR(m_immediateContext->Map(m_pixelShaderFrameConstantsBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
 
 	PixelShaderFrameConstants *pixelShaderFrameConstants = static_cast<PixelShaderFrameConstants *>(mappedResource.pData);
-	pixelShaderFrameConstants->directionalLight = *(m_gameStateManager->LightManager.GetDirectionalLight());
+	pixelShaderFrameConstants->directionalLight = m_gameStateManager->DirectionalLight;
 	pixelShaderFrameConstants->eyePosition = m_gameStateManager->GetCameraPosition();
 
 	m_immediateContext->Unmap(m_pixelShaderFrameConstantsBuffer, 0);

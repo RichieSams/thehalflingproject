@@ -16,7 +16,9 @@ namespace DeferredShadingDemo {
 
 GameStateManager::GameStateManager() 
 	: GameStateManagerBase(),
-	  m_camera(1.5f * DirectX::XM_PI, 0.25f * DirectX::XM_PI, 50.0f) {
+	  m_camera(1.5f * DirectX::XM_PI, 0.25f * DirectX::XM_PI, 50.0f),
+	  PointLightBufferNeedsRebuild(false),
+	  SpotLightBufferNeedsRebuild(false) {
 }
 
 bool GameStateManager::Initialize(HWND hwnd, ID3D11Device **device) {
@@ -121,11 +123,10 @@ void GameStateManager::BuildGeometryBuffers() {
 }
 
 void GameStateManager::CreateLights() {
-	Common::DirectionalLight *directionalLight = LightManager.GetDirectionalLight();
-	directionalLight->Ambient = DirectX::XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
-	directionalLight->Diffuse = DirectX::XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-	directionalLight->Specular = DirectX::XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-	directionalLight->Direction = DirectX::XMFLOAT3(0.57735f, -0.57735f, 0.57735f);
+	DirectionalLight.Ambient = DirectX::XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
+	DirectionalLight.Diffuse = DirectX::XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+	DirectionalLight.Specular = DirectX::XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+	DirectionalLight.Direction = DirectX::XMFLOAT3(0.57735f, -0.57735f, 0.57735f);
 }
 
 float GameStateManager::GetHillHeight(float x, float z) const {

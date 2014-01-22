@@ -49,7 +49,13 @@ private:
 public:
 	WorldViewProjection WorldViewProj;
 	std::vector<Common::Model<Vertex> > Models;
-	Common::LightManager LightManager;
+
+	Common::DirectionalLight DirectionalLight;
+	std::vector<Common::PointLight> PointLights;
+	std::vector<Common::SpotLight> SpotLights;
+
+	bool PointLightBufferNeedsRebuild;
+	bool SpotLightBufferNeedsRebuild;
 
 public:
 	bool Initialize(HWND hwnd, ID3D11Device **device);

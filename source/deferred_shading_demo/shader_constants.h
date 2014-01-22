@@ -7,7 +7,6 @@
 #ifndef DEFERRED_SHADING_DEMO_SHADING_CONSTANTS_H
 #define DEFERRED_SHADING_DEMO_SHADING_CONSTANTS_H
 
-#include "common/light_manager.h"
 #include "common/materials.h"
 
 #include "DirectXMath.h"

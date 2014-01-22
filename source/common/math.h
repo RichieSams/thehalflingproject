@@ -13,16 +13,6 @@
 namespace Common {
 
 template<typename T>
-inline T Min(const T& a, const T& b) {
-	return a < b ? a : b;
-}
-
-template<typename T>
-inline T Max(const T& a, const T& b) {
-	return a > b ? a : b;
-}
-
-template<typename T>
 inline T Lerp(const T& a, const T& b, float t) {
 	return a + (b - a)*t;
 }

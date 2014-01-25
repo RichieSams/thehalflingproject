@@ -44,18 +44,18 @@ float4 ForwardPS(ForwardPixelIn input) : SV_TARGET {
 	// Sum the contribution from each light source
 	uint numLights, dummy, lightIndex;
 
-	AccumulateDirectionalLight(gMaterial, gDirectionalLight, input.normal, toEye, ambient, diffuse, spec);
+	AccumulateBlinnPhongDirectionalLight(gMaterial, gDirectionalLight, input.normal, toEye, ambient, diffuse, spec);
 
 	gPointLights.GetDimensions(numLights, dummy);
 	for (lightIndex = 0; lightIndex < numLights; ++lightIndex) {
         PointLight light = gPointLights[lightIndex];
-		AccumulatePointLight(gMaterial, light, input.positionWorld, input.normal, toEye, ambient, diffuse, spec);
+		AccumulateBlinnPhongPointLight(gMaterial, light, input.positionWorld, input.normal, toEye, ambient, diffuse, spec);
     }
 
 	gSpotLights.GetDimensions(numLights, dummy);
 	for (lightIndex = 0; lightIndex < numLights; ++lightIndex) {
         SpotLight light = gSpotLights[lightIndex];
-		AccumulateSpotLight(gMaterial, light, input.positionWorld, input.normal, toEye, ambient, diffuse, spec);
+		AccumulateBlinnPhongSpotLight(gMaterial, light, input.positionWorld, input.normal, toEye, ambient, diffuse, spec);
     }
 
 	// Combine

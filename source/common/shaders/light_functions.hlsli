@@ -21,12 +21,13 @@ void AccumulateBlinnPhongDirectionalLight(BlinnPhongMaterial mat, DirectionalLig
 		diffuse = diffuseFactor * mat.Diffuse * light.Diffuse;
 
 		[flatten]
-		// The alpha channel of the Ambient term is a flag for whether we should calculate specular light
-		if (mat.Ambient.w != 0.0f) {
+		// The alpha channel of the Ambient term is specular intensity
+		float specularIntensity = mat.Ambient.w;
+		if (specularIntensity > 0.0f) {
 			float3 v = reflect(light.Direction, normal);
 			float specFactor = pow(max(dot(v, toEye), 0.0f), mat.Specular.w);
 
-			spec = specFactor * mat.Specular * light.Specular;
+			spec = (specularIntensity * specFactor) * (mat.Specular * light.Specular);
 		}
 	}
 }
@@ -55,12 +56,13 @@ void AccumulateBlinnPhongPointLight(BlinnPhongMaterial mat, PointLight light, fl
 		diffuse *= attenuation;
 
 		[flatten]
-		if (mat.Ambient.w == 0.0f) {
-			// The alpha channel of the Ambient term is a flag for whether we should calculate specular light
+		// The alpha channel of the Ambient term is specular intensity
+		float specularIntensity = mat.Ambient.w;
+		if (specularIntensity > 0.0f) {
 			float3 v = reflect(-lightVector, normal);
 			float specFactor = pow(max(dot(v, toEye), 0.0f), mat.Specular.w);
 
-			spec = specFactor * mat.Specular * light.Specular;
+			spec = (specularIntensity * specFactor) * (mat.Specular * light.Specular);
 			spec *= attenuation;
 		}
 	}
@@ -91,12 +93,13 @@ void AccumulateBlinnPhongSpotLight(BlinnPhongMaterial mat, SpotLight light, floa
 		diffuse *= attenuation;
 
 		[flatten]
-		if (mat.Ambient.w == 0.0f) {
-			// The alpha channel of the Ambient term is a flag for whether we should calculate specular light
+		// The alpha channel of the Ambient term is specular intensity
+		float specularIntensity = mat.Ambient.w;
+		if (specularIntensity > 0.0f) {
 			float3 v = reflect(-lightVector, normal);
 			float specFactor = pow(max(dot(v, toEye), 0.0f), mat.Specular.w);
 		
-			spec = specFactor * mat.Specular * light.Specular;
+			spec = (specularIntensity * specFactor) * (mat.Specular * light.Specular);
 			spec *= attenuation;
 		}
 	}

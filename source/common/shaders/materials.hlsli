@@ -11,7 +11,6 @@ struct BlinnPhongMaterial {
 	float4 Ambient; // w = UseSpecular
 	float4 Diffuse;
 	float4 Specular; // w = SpecPower
-	float4 Reflect;
 };
 
 #endif

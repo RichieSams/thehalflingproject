@@ -136,46 +136,26 @@ void DeferredShadingDemo::LoadShaders() {
 }
 
 void DeferredShadingDemo::CreateShaderBuffers() {
-	// Create the constant shader buffers
-	D3D11_BUFFER_DESC vertexShaderFrameBufferDesc;
-	vertexShaderFrameBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	vertexShaderFrameBufferDesc.ByteWidth = sizeof(VertexShaderFrameConstants);
-	vertexShaderFrameBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	vertexShaderFrameBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	vertexShaderFrameBufferDesc.MiscFlags = 0;
-	vertexShaderFrameBufferDesc.StructureByteStride = 0;
-
-	m_device->CreateBuffer(&vertexShaderFrameBufferDesc, NULL, &m_vertexShaderFrameConstantsBuffer);
 
 	D3D11_BUFFER_DESC vertexShaderObjectBufferDesc;
 	vertexShaderObjectBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	vertexShaderObjectBufferDesc.ByteWidth = sizeof(VertexShaderObjectConstants);
+	vertexShaderObjectBufferDesc.ByteWidth = Common::CBSize(sizeof(GBufferVertexShaderObjectConstants));
 	vertexShaderObjectBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	vertexShaderObjectBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	vertexShaderObjectBufferDesc.MiscFlags = 0;
 	vertexShaderObjectBufferDesc.StructureByteStride = 0;
 
-	m_device->CreateBuffer(&vertexShaderObjectBufferDesc, NULL, &m_vertexShaderObjectConstantsBuffer);
+	m_device->CreateBuffer(&vertexShaderObjectBufferDesc, NULL, &m_gBufferVertexShaderObjectConstantsBuffer);
 
 	D3D11_BUFFER_DESC pixelShaderFrameBufferDesc;
 	pixelShaderFrameBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	pixelShaderFrameBufferDesc.ByteWidth = sizeof(PixelShaderFrameConstants);
+	pixelShaderFrameBufferDesc.ByteWidth = Common::CBSize(sizeof(GBufferPixelShaderObjectConstants));
 	pixelShaderFrameBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	pixelShaderFrameBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	pixelShaderFrameBufferDesc.MiscFlags = 0;
 	pixelShaderFrameBufferDesc.StructureByteStride = 0;
 
-	m_device->CreateBuffer(&pixelShaderFrameBufferDesc, NULL, &m_pixelShaderFrameConstantsBuffer);
-
-	D3D11_BUFFER_DESC pixelShaderObjectBufferDesc;
-	pixelShaderObjectBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	pixelShaderObjectBufferDesc.ByteWidth = sizeof(PixelShaderObjectConstants);
-	pixelShaderObjectBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	pixelShaderObjectBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	pixelShaderObjectBufferDesc.MiscFlags = 0;
-	pixelShaderObjectBufferDesc.StructureByteStride = 0;
-
-	m_device->CreateBuffer(&pixelShaderObjectBufferDesc, NULL, &m_pixelShaderObjectConstantsBuffer);
+	m_device->CreateBuffer(&pixelShaderFrameBufferDesc, NULL, &m_gBufferPixelShaderObjectConstantsBuffer);
 
 	m_pointLightBuffer = new Common::StructuredBuffer<Common::PointLight>(m_device, m_pointLights.size(), D3D11_BIND_SHADER_RESOURCE, true);
 	//m_spotLightBuffer = new Common::StructuredBuffer<Common::SpotLight>(m_device, m_spotLights.size(), D3D11_BIND_SHADER_RESOURCE, true);

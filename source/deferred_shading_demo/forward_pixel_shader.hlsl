@@ -10,12 +10,12 @@
 #include "common/shaders/light_functions.hlsli"
 
 
-cbuffer cbPerFrame : register(b2) {
+cbuffer cbPerFrame : register(b0) {
 	DirectionalLight gDirectionalLight;
 	float3 gEyePosition;
 }
 
-cbuffer cbPerObject : register(b3) {
+cbuffer cbPerObject : register(b1) {
 	BlinnPhongMaterial gMaterial;
 };
 

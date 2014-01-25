@@ -49,6 +49,7 @@ private:
 
 	WorldViewProjection m_worldViewProj;
 	std::vector<Common::Model<Vertex> > m_models;
+	std::vector<Common::BlinnPhongMaterial> m_frameMaterialList;
 
 	Common::DirectionalLight m_directionalLight;
 	std::vector<Common::PointLight> m_pointLights;
@@ -76,10 +77,8 @@ private:
 	ID3D11VertexShader *m_vertexShader;
 	ID3D11PixelShader *m_gbufferPixelShader;
 
-	ID3D11Buffer *m_vertexShaderFrameConstantsBuffer;
-	ID3D11Buffer *m_vertexShaderObjectConstantsBuffer;
-	ID3D11Buffer *m_pixelShaderFrameConstantsBuffer;
-	ID3D11Buffer *m_pixelShaderObjectConstantsBuffer;
+	ID3D11Buffer *m_gBufferVertexShaderObjectConstantsBuffer;
+	ID3D11Buffer *m_gBufferPixelShaderObjectConstantsBuffer;
 
 	// We assume there is only one directional light. Therefore, it is stored in a cbuffer
 	Common::StructuredBuffer<Common::PointLight> *m_pointLightBuffer;
@@ -132,8 +131,7 @@ private:
 	// Rendering methods
 	void RenderMainPass();
 	void RenderHUD();
-	void SetFrameConstants(DirectX::XMMATRIX &projMatrix, DirectX::XMMATRIX &viewProjMatrix);
-	void SetObjectConstants(DirectX::XMMATRIX &worldMatrix, DirectX::XMMATRIX &worldViewProjMatrix, const Common::BlinnPhongMaterial &material);
+	void SetGBufferShaderObjectConstants(DirectX::XMMATRIX &worldMatrix, DirectX::XMMATRIX &worldViewProjMatrix, uint materialIndex);
 	void SetLightBuffers(DirectX::XMMATRIX &viewMatrix);
 };
 

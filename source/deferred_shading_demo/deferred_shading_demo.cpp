@@ -27,10 +27,8 @@ DeferredShadingDemo::DeferredShadingDemo(HINSTANCE hinstance)
 	  m_wireframe(false),
 	  m_renderTargetView(nullptr),
 	  m_inputLayout(nullptr),
-	  m_vertexShaderFrameConstantsBuffer(nullptr),
-	  m_vertexShaderObjectConstantsBuffer(nullptr),
-	  m_pixelShaderFrameConstantsBuffer(nullptr),
-	  m_pixelShaderObjectConstantsBuffer(nullptr),
+	  m_gBufferVertexShaderObjectConstantsBuffer(nullptr),
+	  m_gBufferPixelShaderObjectConstantsBuffer(nullptr),
 	  m_pointLightBuffer(nullptr),
 	  m_spotLightBuffer(nullptr),
 	  m_vertexShader(nullptr),
@@ -42,10 +40,8 @@ DeferredShadingDemo::DeferredShadingDemo(HINSTANCE hinstance)
 
 void DeferredShadingDemo::Shutdown() {
 	// Release in the opposite order we initialized in
-	ReleaseCOM(m_vertexShaderFrameConstantsBuffer);
-	ReleaseCOM(m_vertexShaderObjectConstantsBuffer);
-	ReleaseCOM(m_pixelShaderFrameConstantsBuffer);
-	ReleaseCOM(m_pixelShaderObjectConstantsBuffer);
+	ReleaseCOM(m_gBufferVertexShaderObjectConstantsBuffer);
+	ReleaseCOM(m_gBufferPixelShaderObjectConstantsBuffer);
 	delete m_pointLightBuffer;
 	delete m_spotLightBuffer;
 	ReleaseCOM(m_diffuseSampleState);

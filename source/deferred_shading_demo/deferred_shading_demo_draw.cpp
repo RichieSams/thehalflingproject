@@ -23,9 +23,13 @@ void DeferredShadingDemo::DrawFrame(double deltaTime) {
 }
 
 void DeferredShadingDemo::RenderMainPass() {
+	// Clear the material list
+	m_frameMaterialList.clear();
+
 	// Bind the gbufferRTVs and depth/stencil view to the pipeline.
 	m_immediateContext->OMSetRenderTargets(2, &m_gBufferRTVs[0], m_depthStencilBuffer->GetDepthStencil());
 
+	// Clear the Render Targets and DepthStencil
 	m_immediateContext->ClearRenderTargetView(m_renderTargetView, DirectX::Colors::LightGray);
 	for (auto gbufferRTV : m_gBufferRTVs) {
 		m_immediateContext->ClearRenderTargetView(gbufferRTV, DirectX::Colors::Black);
@@ -39,30 +43,34 @@ void DeferredShadingDemo::RenderMainPass() {
 	m_immediateContext->OMSetDepthStencilState(m_depthStencilStates.StencilTestEnabled(), 0);
 	m_immediateContext->RSSetState(m_rasterizerStates.BackFaceCull());
 
-
-	// Transpose the matrices to prepare them for the shader.
-	DirectX::XMMATRIX worldMatrix = m_worldViewProj.world;
-	DirectX::XMMATRIX viewMatrix = m_worldViewProj.view;
-	DirectX::XMMATRIX projectionMatrix = m_worldViewProj.projection;
-
-	// Cache the matrix multiplications
-	DirectX::XMMATRIX viewProj = DirectX::XMMatrixTranspose(viewMatrix * projectionMatrix);
-	DirectX::XMMATRIX worldViewProjection = DirectX::XMMatrixTranspose(worldMatrix * viewMatrix * projectionMatrix);
-
-	SetFrameConstants(DirectX::XMMatrixTranspose(projectionMatrix), viewProj);
-
-	SetObjectConstants(DirectX::XMMatrixTranspose(worldMatrix), worldViewProjection, m_models[0].GetSubsetMaterial(0));
-	SetLightBuffers(viewMatrix);
-
-	m_immediateContext->IASetInputLayout(m_inputLayout);
-	m_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
 	// Set the vertex and pixel shaders that will be used to render this triangle.
 	m_immediateContext->VSSetShader(m_vertexShader, NULL, 0);
 	m_immediateContext->PSSetShader(m_gbufferPixelShader, NULL, 0);
 
-	m_models[0].DrawSubset(m_immediateContext);
+	m_immediateContext->IASetInputLayout(m_inputLayout);
+	m_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
+	// Fetch the transpose matricies
+	DirectX::XMMATRIX worldMatrix = m_worldViewProj.world;
+	DirectX::XMMATRIX viewMatrix = m_worldViewProj.view;
+	DirectX::XMMATRIX projectionMatrix = m_worldViewProj.projection;
+
+	uint materialIndex = 0;
+
+	for (uint i = 0; i < m_models.size(); ++i) {
+		m_frameMaterialList.push_back(m_models[i].GetSubsetMaterial(0));
+		uint materialIndex = m_frameMaterialList.size();
+
+		// Cache the matrix multiplications
+		DirectX::XMMATRIX worldViewProjection = DirectX::XMMatrixTranspose(worldMatrix * viewMatrix * projectionMatrix);
+
+		SetGBufferShaderObjectConstants(DirectX::XMMatrixTranspose(worldMatrix), worldViewProjection, materialIndex++);
+	
+		// Draw the models
+		m_models[i].DrawSubset(m_immediateContext);
+	}
+
+	//SetLightBuffers(viewMatrix);
 
 	m_immediateContext->OMSetRenderTargets(1, &m_renderTargetView, nullptr);
 
@@ -82,54 +90,28 @@ void DeferredShadingDemo::RenderMainPass() {
 	m_spriteRenderer.End();
 }
 
-void DeferredShadingDemo::SetFrameConstants(DirectX::XMMATRIX &projMatrix, DirectX::XMMATRIX &viewProjMatrix) {
-	// Fill in frame constants
-	D3D11_MAPPED_SUBRESOURCE mappedResource;
-
-	// Lock the constant buffer so it can be written to.
-	HR(m_immediateContext->Map(m_vertexShaderFrameConstantsBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
-
-	VertexShaderFrameConstants *vertexShaderFrameConstants = static_cast<VertexShaderFrameConstants *>(mappedResource.pData);
-	vertexShaderFrameConstants->proj = projMatrix;
-	vertexShaderFrameConstants->viewProj = viewProjMatrix;
-
-	m_immediateContext->Unmap(m_vertexShaderFrameConstantsBuffer, 0);
-	m_immediateContext->VSSetConstantBuffers(0, 1, &m_vertexShaderFrameConstantsBuffer);
-}
-
-void DeferredShadingDemo::SetObjectConstants(DirectX::XMMATRIX &worldMatrix, DirectX::XMMATRIX &worldViewProjMatrix, const Common::Material &material) {
+void DeferredShadingDemo::SetGBufferShaderObjectConstants(DirectX::XMMATRIX &worldMatrix, DirectX::XMMATRIX &worldViewProjMatrix, uint materialIndex) {
 	// Fill in object constants
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 
 	// Lock the constant buffer so it can be written to.
-	HR(m_immediateContext->Map(m_vertexShaderObjectConstantsBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
+	HR(m_immediateContext->Map(m_gBufferVertexShaderObjectConstantsBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
 
-	VertexShaderObjectConstants *vertexShaderObjectConstants = static_cast<VertexShaderObjectConstants *>(mappedResource.pData);
-	vertexShaderObjectConstants->world = worldMatrix;
-	vertexShaderObjectConstants->worldViewProj = worldViewProjMatrix;
+	GBufferVertexShaderObjectConstants *vertexShaderObjectConstants = static_cast<GBufferVertexShaderObjectConstants *>(mappedResource.pData);
+	vertexShaderObjectConstants->World = worldMatrix;
+	vertexShaderObjectConstants->WorldViewProj = worldViewProjMatrix;
 
-	m_immediateContext->Unmap(m_vertexShaderObjectConstantsBuffer, 0);
-	m_immediateContext->VSSetConstantBuffers(1, 1, &m_vertexShaderObjectConstantsBuffer);
-
-	// Lock the constant buffer so it can be written to.
-	HR(m_immediateContext->Map(m_pixelShaderObjectConstantsBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
-
-	PixelShaderObjectConstants *pixelShaderObjectConstants = static_cast<PixelShaderObjectConstants *>(mappedResource.pData);
-	pixelShaderObjectConstants->material = material;
-
-	m_immediateContext->Unmap(m_pixelShaderObjectConstantsBuffer, 0);
-	m_immediateContext->PSSetConstantBuffers(3, 1, &m_pixelShaderObjectConstantsBuffer);
-
+	m_immediateContext->Unmap(m_gBufferVertexShaderObjectConstantsBuffer, 0);
+	m_immediateContext->VSSetConstantBuffers(1, 1, &m_gBufferVertexShaderObjectConstantsBuffer);
 
 	// Lock the constant buffer so it can be written to.
-	HR(m_immediateContext->Map(m_pixelShaderFrameConstantsBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
+	HR(m_immediateContext->Map(m_gBufferPixelShaderObjectConstantsBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
 
-	PixelShaderFrameConstants *pixelShaderFrameConstants = static_cast<PixelShaderFrameConstants *>(mappedResource.pData);
-	pixelShaderFrameConstants->directionalLight = m_directionalLight;
-	pixelShaderFrameConstants->eyePosition = m_camera.GetCameraPosition();
+	GBufferPixelShaderObjectConstants *pixelShaderObjectConstants = static_cast<GBufferPixelShaderObjectConstants *>(mappedResource.pData);
+	pixelShaderObjectConstants->MaterialIndex = materialIndex;
 
-	m_immediateContext->Unmap(m_pixelShaderFrameConstantsBuffer, 0);
-	m_immediateContext->PSSetConstantBuffers(2, 1, &m_pixelShaderFrameConstantsBuffer);
+	m_immediateContext->Unmap(m_gBufferPixelShaderObjectConstantsBuffer, 0);
+	m_immediateContext->PSSetConstantBuffers(1, 1, &m_gBufferPixelShaderObjectConstantsBuffer);
 }
 
 void DeferredShadingDemo::SetLightBuffers(DirectX::XMMATRIX &viewMatrix) {

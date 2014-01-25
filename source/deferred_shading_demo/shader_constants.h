@@ -14,24 +14,31 @@
 
 namespace DeferredShadingDemo {
 
-struct VertexShaderFrameConstants {
-	DirectX::XMMATRIX viewProj;
-	DirectX::XMMATRIX proj;
+// Forward Shading
+struct ForwardVertexShaderObjectConstants {
+	DirectX::XMMATRIX WorldViewProj;
+	DirectX::XMMATRIX World;
 };
 
-struct VertexShaderObjectConstants {
-	DirectX::XMMATRIX worldViewProj;
-	DirectX::XMMATRIX world;
+struct ForwardPixelShaderFrameConstants {
+	Common::DirectionalLight DirectionalLight;
+	DirectX::XMFLOAT3 EyePosition;
 };
 
-struct PixelShaderFrameConstants {
-	Common::DirectionalLight directionalLight;
-	DirectX::XMFLOAT3 eyePosition;
-	float pad;
+struct ForwardPixelShaderObjectConstants {
+	Common::BlinnPhongMaterial Material;
 };
 
-struct PixelShaderObjectConstants {
-	Common::BlinnPhongMaterial material;
+
+// Gbuffer pass
+struct GBufferVertexShaderObjectConstants {
+	DirectX::XMMATRIX WorldViewProj;
+	DirectX::XMMATRIX World;
+};
+
+struct GBufferPixelShaderObjectConstants {
+	uint MaterialIndex;
+};
 };
 
 } // End of namespace DeferredShadingDemo

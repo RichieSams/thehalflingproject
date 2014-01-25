@@ -16,7 +16,7 @@ cbuffer cbPerFrame : register(b2) {
 }
 
 cbuffer cbPerObject : register(b3) {
-	Material gMaterial;
+	BlinnPhongMaterial gMaterial;
 };
 
 Texture2D gDiffuseTexture : register(t0);

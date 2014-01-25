@@ -31,7 +31,7 @@ struct PixelShaderFrameConstants {
 };
 
 struct PixelShaderObjectConstants {
-	Common::Material material;
+	Common::BlinnPhongMaterial material;
 };
 
 } // End of namespace DeferredShadingDemo

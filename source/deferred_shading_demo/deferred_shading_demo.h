@@ -133,7 +133,7 @@ private:
 	void RenderMainPass();
 	void RenderHUD();
 	void SetFrameConstants(DirectX::XMMATRIX &projMatrix, DirectX::XMMATRIX &viewProjMatrix);
-	void SetObjectConstants(DirectX::XMMATRIX &worldMatrix, DirectX::XMMATRIX &worldViewProjMatrix, const Common::Material &material);
+	void SetObjectConstants(DirectX::XMMATRIX &worldMatrix, DirectX::XMMATRIX &worldViewProjMatrix, const Common::BlinnPhongMaterial &material);
 	void SetLightBuffers(DirectX::XMMATRIX &viewMatrix);
 };
 

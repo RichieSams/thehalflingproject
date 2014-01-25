@@ -7,7 +7,7 @@
 #ifndef MATERIALS_SHADER_H
 #define MATERIALS_SHADER_H
 
-struct Material {
+struct BlinnPhongMaterial {
 	float4 Ambient; // w = UseSpecular
 	float4 Diffuse;
 	float4 Specular; // w = SpecPower

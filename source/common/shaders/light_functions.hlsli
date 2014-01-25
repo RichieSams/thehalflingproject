@@ -8,8 +8,10 @@
 #define LIGHT_FUNCTIONS_SHADER_H
 
 #include "common/shaders/lights.hlsli"
+#include "common/shaders/materials.hlsli"
 
-void AccumulateDirectionalLight(Material mat, DirectionalLight light, float3 normal, float3 toEye, inout float4 ambient, inout float4 diffuse, inout float4 spec) {
+
+void AccumulateDirectionalLight(BlinnPhongMaterial mat, DirectionalLight light, float3 normal, float3 toEye, inout float4 ambient, inout float4 diffuse, inout float4 spec) {
 	ambient = mat.Ambient * light.Ambient;
 
 	float diffuseFactor = dot(-light.Direction, normal);
@@ -29,7 +31,7 @@ void AccumulateDirectionalLight(Material mat, DirectionalLight light, float3 nor
 	}
 }
 
-void AccumulatePointLight(Material mat, PointLight light, float3 position, float3 normal, float3 toEye, inout float4 ambient, inout float4 diffuse, inout float4 spec) {
+void AccumulatePointLight(BlinnPhongMaterial mat, PointLight light, float3 position, float3 normal, float3 toEye, inout float4 ambient, inout float4 diffuse, inout float4 spec) {
 	// The vector from the surface to the light
 	float3 lightVector = light.Position - position;
 	float distance = length(lightVector);
@@ -64,7 +66,7 @@ void AccumulatePointLight(Material mat, PointLight light, float3 position, float
 	}
 }
 
-void AccumulateSpotLight(Material mat, SpotLight light, float3 position, float3 normal, float3 toEye, inout float4 ambient, inout float4 diffuse, inout float4 spec) {
+void AccumulateSpotLight(BlinnPhongMaterial mat, SpotLight light, float3 position, float3 normal, float3 toEye, inout float4 ambient, inout float4 diffuse, inout float4 spec) {
 	// The vector from the surface to the light
 	float3 lightVector = light.Position - position;
 	float distance = length(lightVector);

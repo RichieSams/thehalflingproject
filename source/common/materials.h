@@ -12,7 +12,7 @@
 
 namespace Common {
 
-struct Material {
+struct BlinnPhongMaterial {
 	DirectX::XMFLOAT4 Ambient; // w = UseSpecular
 	DirectX::XMFLOAT4 Diffuse;
 	DirectX::XMFLOAT4 Specular; // w = SpecPower

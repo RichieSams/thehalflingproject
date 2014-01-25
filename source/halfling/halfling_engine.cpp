@@ -21,7 +21,7 @@ HalflingEngine::HalflingEngine(HINSTANCE hinstance)
 		: m_hinstance(hinstance),
 		  m_timer(Common::Timer()),
 		  m_updatePeriod(30.0),
-		  m_fps(0.0f),
+		  m_fps(0),
 		  m_frameTime(0.0f),
 		  m_mainWndCaption(WINDOW_CLASS_NAME),
 		  m_appPaused(false),

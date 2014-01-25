@@ -10,19 +10,20 @@
 
 
 struct GBuffer {
-	float4 albedo : SV_Target0;
-    float3 normal_specular : SV_Target1;
+	float4 albedoMaterialId    : SV_Target0;
+	float2 normal              : SV_Target1;
 };
 
 cbuffer cbPerObject : register(b3) {
-	Material gMaterial;
+	uint gMaterialId;
 };
 
 Texture2D gDiffuseTexture : register(t0);
 SamplerState gDiffuseSampler : register(s0);
 
-void DeferredPS(GBufferShaderPixelIn input, out GBuffer gbuffer) {
-	gbuffer.normal_specular = float3(CartesianToSpherical(input.normal), 1.0f);
-	gbuffer.albedo = gDiffuseTexture.Sample(gDiffuseSampler, input.texCoord);
-	gbuffer.albedo.w = gMaterial.Specular.w;
+void GBufferPS(GBufferShaderPixelIn input, out GBuffer gbuffer) {
+	gbuffer.albedoMaterialId = gDiffuseTexture.Sample(gDiffuseSampler, input.texCoord);
+	gbuffer.albedoMaterialId.w = (float)gMaterialId;
+
+	gbuffer.normal = CartesianToSpherical(input.normal);
 }

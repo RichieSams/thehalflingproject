@@ -111,16 +111,16 @@ void DeferredShadingDemo::OnResize() {
 											   D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE,
 											   sampleDesc, m_stencil);
 
-	// Albedo and Specular Power
+	// Create the gBuffers
+	// Albedo and Material id
 	m_gBuffers.push_back(new Common::Texture2D(m_device, m_clientWidth, m_clientHeight,
 		DXGI_FORMAT_R8G8B8A8_UNORM,
 		D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE,
 		sampleDesc));
 
-	// Create the gBuffers
-	// Normal and Specular Intensity
+	// Normal
 	m_gBuffers.push_back(new Common::Texture2D(m_device, m_clientWidth, m_clientHeight,
-		DXGI_FORMAT_R11G11B10_FLOAT,
+		DXGI_FORMAT_R16G16_FLOAT,
 		D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE,
 		sampleDesc));
 

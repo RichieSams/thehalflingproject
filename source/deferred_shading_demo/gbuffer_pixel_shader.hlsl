@@ -10,20 +10,20 @@
 
 
 struct GBuffer {
-	float4 albedoMaterialId    : SV_Target0;
-	float2 normal              : SV_Target1;
+	float4 albedoMaterialIndex    : SV_Target0;
+	float2 normal                 : SV_Target1;
 };
 
-cbuffer cbPerObject : register(b3) {
-	uint gMaterialId;
+cbuffer cbPerObject : register(b1) {
+	uint gMaterialIndex;
 };
 
 Texture2D gDiffuseTexture : register(t0);
 SamplerState gDiffuseSampler : register(s0);
 
 void GBufferPS(GBufferShaderPixelIn input, out GBuffer gbuffer) {
-	gbuffer.albedoMaterialId = gDiffuseTexture.Sample(gDiffuseSampler, input.texCoord);
-	gbuffer.albedoMaterialId.w = (float)gMaterialId;
+	gbuffer.albedoMaterialIndex = gDiffuseTexture.Sample(gDiffuseSampler, input.texCoord);
+	gbuffer.albedoMaterialIndex.w = (float)gMaterialIndex;
 
 	gbuffer.normal = CartesianToSpherical(input.normal);
 }

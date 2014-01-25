@@ -21,7 +21,7 @@ cbuffer cbPerObject : register(b3) {
 Texture2D gDiffuseTexture : register(t0);
 SamplerState gDiffuseSampler : register(s0);
 
-void DeferredPS(PixelIn input, out GBuffer gbuffer) {
+void DeferredPS(GBufferShaderPixelIn input, out GBuffer gbuffer) {
 	gbuffer.normal_specular = float3(CartesianToSpherical(input.normal), 1.0f);
 	gbuffer.albedo = gDiffuseTexture.Sample(gDiffuseSampler, input.texCoord);
 	gbuffer.albedo.w = gMaterial.Specular.w;

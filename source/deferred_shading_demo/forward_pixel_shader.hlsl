@@ -26,7 +26,7 @@ StructuredBuffer<PointLight> gPointLights : register(t4);
 StructuredBuffer<SpotLight> gSpotLights : register(t5);
 
 
-float4 PS(PixelIn input) : SV_TARGET {
+float4 ForwardPS(ForwardPixelIn input) : SV_TARGET {
 	// Interpolating can unnormalize
 	input.normal = normalize(input.normal);
 	input.positionWorld = normalize(input.positionWorld);

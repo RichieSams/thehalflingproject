@@ -131,7 +131,7 @@ void DeferredShadingDemo::LoadShaders() {
 		{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0}
 	};
 
-	HR(Common::LoadVertexShader("vertex_shader.cso", m_device, &m_vertexShader, &m_inputLayout, vertexDesc, 3));
+	HR(Common::LoadVertexShader("gbuffer_vertex_shader.cso", m_device, &m_vertexShader, &m_inputLayout, vertexDesc, 3));
 	HR(Common::LoadPixelShader("gbuffer_pixel_shader.cso", m_device, &m_gbufferPixelShader));
 }
 

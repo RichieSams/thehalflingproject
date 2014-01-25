@@ -13,11 +13,21 @@ struct VertexIn {
 	float2 texCoord  : TEXCOORD;
 };
 
-struct PixelIn {
+struct ForwardPixelIn {
 	float4 positionClip   : SV_POSITION;
 	float3 positionWorld  : POSITION_WORLD;
 	float3 normal         : NORMAL;
 	float2 texCoord       : TEXCOORD;
+};
+
+struct GBufferShaderPixelIn {
+	float4 positionClip   : SV_POSITION;
+	float3 normal         : NORMAL;
+	float2 texCoord       : TEXCOORD;
+};
+
+struct FullScreenTrianglePixelIn {
+	float4 positionClip   : SV_POSITION;
 };
 
 #endif

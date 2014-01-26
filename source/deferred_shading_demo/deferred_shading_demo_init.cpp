@@ -139,7 +139,7 @@ void DeferredShadingDemo::CreateLights() {
 	for (uint i = 0; i < 100; ++i) {
 		Common::PointLight pointLight;
 		pointLight.Diffuse = pointLight.Specular = DirectX::XMFLOAT4(Common::RandF(), Common::RandF(), Common::RandF(), 1.0f);
-		pointLight.Attenuation = DirectX::XMFLOAT3(1.0f, 0.02f, 0.002f);
+		pointLight.AttenuationDistanceUNorm = 0.75;
 		pointLight.Range = 25.0f;
 		pointLight.Position = DirectX::XMFLOAT3(Common::RandF(-80.0f, 80.0f), Common::RandF(-40.0f, 40.0f), Common::RandF(-80.0f, 80.0f));
 

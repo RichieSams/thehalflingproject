@@ -37,10 +37,10 @@ public:
 	DirectX::XMFLOAT3 Position;
 	float Range;
 
-	DirectX::XMFLOAT3 Attenuation;
+	float AttenuationDistanceUNorm;
 
 private:
-	float pad; // To pad the last float3 to a float4
+	float pad[3]; // To pad the last float3 to a float4
 };
 
 struct SpotLight {

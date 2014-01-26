@@ -50,7 +50,7 @@ void AccumulateBlinnPhongPointLight(BlinnPhongMaterial mat, PointLight light, fl
 
 	[flatten]
 	if (diffuseFactor > 0.0f) {
-		float attenuation = 1.0f / dot(light.Attenuation, float3(1.0f, distance, distance * distance));
+		float attenuation = 1.0f - smoothstep(light.Range * light.AttenuationDistanceUNorm, light.Range, distance);
 
 		// Use explicit add instead of += so we can use MAD
 		float4 diffuseAdd = (attenuation * diffuseFactor) * (mat.Diffuse * light.Diffuse);

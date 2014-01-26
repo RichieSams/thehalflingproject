@@ -12,13 +12,15 @@
 
 
 void AccumulateBlinnPhongDirectionalLight(BlinnPhongMaterial mat, DirectionalLight light, float3 normal, float3 toEye, inout float4 ambient, inout float4 diffuse, inout float4 spec) {
-	ambient = mat.Ambient * light.Ambient;
+	// Use explicit add instead of += so we can use MAD
+	ambient = mat.Ambient * light.Ambient + ambient;
 
 	float diffuseFactor = dot(-light.Direction, normal);
 
 	[flatten]
 	if (diffuseFactor > 0.0f) {
-		diffuse = diffuseFactor * mat.Diffuse * light.Diffuse;
+		// Use explicit add instead of += so we can use MAD
+		diffuse = diffuseFactor * (mat.Diffuse * light.Diffuse) + diffuse;
 
 		[flatten]
 		// The alpha channel of the Ambient term is specular intensity
@@ -27,7 +29,8 @@ void AccumulateBlinnPhongDirectionalLight(BlinnPhongMaterial mat, DirectionalLig
 			float3 v = reflect(light.Direction, normal);
 			float specFactor = pow(max(dot(v, toEye), 0.0f), mat.Specular.w);
 
-			spec = (specularIntensity * specFactor) * (mat.Specular * light.Specular);
+			// Use explicit add instead of += so we can use MAD
+			spec = (specularIntensity * specFactor) * (mat.Specular * light.Specular) + spec;
 		}
 	}
 }
@@ -49,8 +52,9 @@ void AccumulateBlinnPhongPointLight(BlinnPhongMaterial mat, PointLight light, fl
 	if (diffuseFactor > 0.0f) {
 		float attenuation = 1.0f / dot(light.Attenuation, float3(1.0f, distance, distance * distance));
 
-		diffuse = diffuseFactor * mat.Diffuse * light.Diffuse;
-		diffuse *= attenuation;
+		// Use explicit add instead of += so we can use MAD
+		float4 diffuseAdd = (attenuation * diffuseFactor) * (mat.Diffuse * light.Diffuse);
+		diffuse = diffuseAdd + diffuse;
 
 		[flatten]
 		// The alpha channel of the Ambient term is specular intensity
@@ -59,8 +63,8 @@ void AccumulateBlinnPhongPointLight(BlinnPhongMaterial mat, PointLight light, fl
 			float3 v = reflect(-lightVector, normal);
 			float specFactor = pow(max(dot(v, toEye), 0.0f), mat.Specular.w);
 
-			spec = (specularIntensity * specFactor) * (mat.Specular * light.Specular);
-			spec *= attenuation;
+			// Use explicit add instead of += so we can use MAD
+			spec = (attenuation * specularIntensity * specFactor) * (mat.Specular * light.Specular) + spec;
 		}
 	}
 }
@@ -77,14 +81,15 @@ void AccumulateBlinnPhongSpotLight(BlinnPhongMaterial mat, SpotLight light, floa
 	lightVector /= distance;
 
 	float spot = pow(max(dot(-lightVector, light.Direction), 0.0f), light.Spot);
+
 	float diffuseFactor = dot(lightVector, normal);
 
 	[flatten]
 	if (diffuseFactor > 0.0f) {
 		float attenuation = spot / dot(light.Attenuation, float3(1.0f, distance, distance * distance));
 
-		diffuse = diffuseFactor * mat.Diffuse * light.Diffuse;
-		diffuse *= attenuation;
+		// Use explicit add instead of += so we can use MAD
+		diffuse = (attenuation * diffuseFactor) * (mat.Diffuse * light.Diffuse) + diffuse;
 
 		[flatten]
 		// The alpha channel of the Ambient term is specular intensity
@@ -92,9 +97,9 @@ void AccumulateBlinnPhongSpotLight(BlinnPhongMaterial mat, SpotLight light, floa
 		if (specularIntensity > 0.0f) {
 			float3 v = reflect(-lightVector, normal);
 			float specFactor = pow(max(dot(v, toEye), 0.0f), mat.Specular.w);
-		
-			spec = (specularIntensity * specFactor) * (mat.Specular * light.Specular);
-			spec *= attenuation;
+			
+			// Use explicit add instead of += so we can use MAD
+			spec = (attenuation * specularIntensity * specFactor) * (mat.Specular * light.Specular) + spec;
 		}
 	}
 }

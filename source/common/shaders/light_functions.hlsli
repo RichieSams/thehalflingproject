@@ -32,7 +32,7 @@ void AccumulateBlinnPhongDirectionalLight(BlinnPhongMaterial mat, DirectionalLig
 	}
 }
 
-void AccumulateBlinnPhongPointLight(BlinnPhongMaterial mat, PointLight light, float3 position, float3 normal, float3 toEye, inout float4 ambient, inout float4 diffuse, inout float4 spec) {
+void AccumulateBlinnPhongPointLight(BlinnPhongMaterial mat, PointLight light, float3 position, float3 normal, float3 toEye, inout float4 diffuse, inout float4 spec) {
 	// The vector from the surface to the light
 	float3 lightVector = light.Position - position;
 	float distance = length(lightVector);
@@ -42,9 +42,6 @@ void AccumulateBlinnPhongPointLight(BlinnPhongMaterial mat, PointLight light, fl
 
 	// Normalize the light vector
 	lightVector /= distance;
-
-	// Ambient
-	ambient = mat.Ambient * light.Ambient;
 
 	float diffuseFactor = dot(lightVector, normal);
 
@@ -68,7 +65,7 @@ void AccumulateBlinnPhongPointLight(BlinnPhongMaterial mat, PointLight light, fl
 	}
 }
 
-void AccumulateBlinnPhongSpotLight(BlinnPhongMaterial mat, SpotLight light, float3 position, float3 normal, float3 toEye, inout float4 ambient, inout float4 diffuse, inout float4 spec) {
+void AccumulateBlinnPhongSpotLight(BlinnPhongMaterial mat, SpotLight light, float3 position, float3 normal, float3 toEye, inout float4 diffuse, inout float4 spec) {
 	// The vector from the surface to the light
 	float3 lightVector = light.Position - position;
 	float distance = length(lightVector);
@@ -78,9 +75,6 @@ void AccumulateBlinnPhongSpotLight(BlinnPhongMaterial mat, SpotLight light, floa
 
 	// Normalize the light vector
 	lightVector /= distance;
-
-	// Ambient
-	ambient = mat.Ambient * light.Ambient;
 
 	float spot = pow(max(dot(-lightVector, light.Direction), 0.0f), light.Spot);
 	float diffuseFactor = dot(lightVector, normal);
@@ -103,9 +97,6 @@ void AccumulateBlinnPhongSpotLight(BlinnPhongMaterial mat, SpotLight light, floa
 			spec *= attenuation;
 		}
 	}
-
-	// Scale by spotlight factor
-	ambient *= spot;
 }
 
 #endif

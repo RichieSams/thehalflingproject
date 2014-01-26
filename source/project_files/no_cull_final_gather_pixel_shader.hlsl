@@ -61,13 +61,13 @@ float4 NoCullFinalGatherPS(FullScreenTrianglePixelIn input) : SV_TARGET {
 	gPointLights.GetDimensions(numLights, dummy);
 	for (lightIndex = 0; lightIndex < numLights; ++lightIndex) {
         PointLight light = gPointLights[lightIndex];
-		AccumulateBlinnPhongPointLight(material, light, positionWS, normal, toEye, ambient, diffuse, spec);
+		AccumulateBlinnPhongPointLight(material, light, positionWS, normal, toEye, diffuse, spec);
     }
 
 	gSpotLights.GetDimensions(numLights, dummy);
 	for (lightIndex = 0; lightIndex < numLights; ++lightIndex) {
         SpotLight light = gSpotLights[lightIndex];
-		AccumulateBlinnPhongSpotLight(material, light, positionWS, normal, toEye, ambient, diffuse, spec);
+		AccumulateBlinnPhongSpotLight(material, light, positionWS, normal, toEye, diffuse, spec);
     }
 
 	// Combine

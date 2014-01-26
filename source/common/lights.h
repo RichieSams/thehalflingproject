@@ -31,7 +31,6 @@ struct PointLight {
 public:
 	PointLight() { ZeroMemory(this, sizeof(this)); }
 
-	DirectX::XMFLOAT4 Ambient;
 	DirectX::XMFLOAT4 Diffuse;
 	DirectX::XMFLOAT4 Specular;
 
@@ -47,7 +46,6 @@ private:
 struct SpotLight {
 	SpotLight() { ZeroMemory(this, sizeof(this)); }
 
-	DirectX::XMFLOAT4 Ambient;
 	DirectX::XMFLOAT4 Diffuse;
 	DirectX::XMFLOAT4 Specular;
 

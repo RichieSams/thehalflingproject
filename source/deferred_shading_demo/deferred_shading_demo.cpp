@@ -26,13 +26,17 @@ DeferredShadingDemo::DeferredShadingDemo(HINSTANCE hinstance)
 	  m_vsync(false),
 	  m_wireframe(false),
 	  m_renderTargetView(nullptr),
-	  m_inputLayout(nullptr),
+	  m_gBufferInputLayout(nullptr),
+	  m_fullscreenTriangleInputLayout(nullptr),
 	  m_gBufferVertexShaderObjectConstantsBuffer(nullptr),
 	  m_gBufferPixelShaderObjectConstantsBuffer(nullptr),
+	  m_noCullFinalGatherPixelShaderConstantsBuffer(nullptr),
 	  m_pointLightBuffer(nullptr),
 	  m_spotLightBuffer(nullptr),
-	  m_vertexShader(nullptr),
+	  m_gbufferVertexShader(nullptr),
 	  m_gbufferPixelShader(nullptr),
+	  m_fullscreenTriangleVertexShader(nullptr),
+	  m_noCullFinalGatherPixelShader(nullptr),
 	  m_diffuseSampleState(nullptr),
 	  m_wireframeRS(nullptr),
 	  m_solidRS(nullptr) {
@@ -42,14 +46,18 @@ void DeferredShadingDemo::Shutdown() {
 	// Release in the opposite order we initialized in
 	ReleaseCOM(m_gBufferVertexShaderObjectConstantsBuffer);
 	ReleaseCOM(m_gBufferPixelShaderObjectConstantsBuffer);
+	ReleaseCOM(m_noCullFinalGatherPixelShaderConstantsBuffer);
 	delete m_pointLightBuffer;
 	delete m_spotLightBuffer;
 	ReleaseCOM(m_diffuseSampleState);
 	ReleaseCOM(m_wireframeRS);
 	ReleaseCOM(m_solidRS);
-	ReleaseCOM(m_vertexShader);
+	ReleaseCOM(m_gbufferVertexShader);
 	ReleaseCOM(m_gbufferPixelShader);
-	ReleaseCOM(m_inputLayout);
+	ReleaseCOM(m_fullscreenTriangleVertexShader);
+	ReleaseCOM(m_noCullFinalGatherPixelShader);
+	ReleaseCOM(m_gBufferInputLayout);
+	ReleaseCOM(m_fullscreenTriangleInputLayout);
 	ReleaseCOM(m_renderTargetView);
 
 	TwTerminate();

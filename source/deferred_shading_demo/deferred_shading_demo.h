@@ -32,6 +32,10 @@ struct Vertex {
 	DirectX::XMFLOAT2 texCoord;
 };
 
+struct FullScreenTriangleVertex {
+	DirectX::XMFLOAT3 pos;
+};
+
 struct WorldViewProjection {
 	DirectX::XMMATRIX world;
 	DirectX::XMMATRIX view;
@@ -43,12 +47,15 @@ public:
 	DeferredShadingDemo(HINSTANCE hinstance);
 
 private:
+	static const uint kMaxMaterialsPerFrame = 20;
+
 	Common::Vector2 m_mouseLastPos;
 	Common::Camera m_camera;
 	Common::TextureManager m_textureManager;
 
 	WorldViewProjection m_worldViewProj;
 	std::vector<Common::Model<Vertex> > m_models;
+	Common::Model<FullScreenTriangleVertex> m_fullScreenQuad;
 	std::vector<Common::BlinnPhongMaterial> m_frameMaterialList;
 
 	Common::DirectionalLight m_directionalLight;
@@ -62,7 +69,8 @@ private:
 	bool m_wireframe;
 
 	ID3D11RenderTargetView *m_renderTargetView;
-	ID3D11InputLayout *m_inputLayout;
+	ID3D11InputLayout *m_gBufferInputLayout;
+	ID3D11InputLayout *m_fullscreenTriangleInputLayout;
 
 	Common::Depth2D *m_depthStencilBuffer;
 	D3D11_VIEWPORT m_screenViewport;
@@ -74,15 +82,20 @@ private:
 	TwBar *m_settingsBar;
 
 	// Shaders
-	ID3D11VertexShader *m_vertexShader;
+	ID3D11VertexShader *m_gbufferVertexShader;
 	ID3D11PixelShader *m_gbufferPixelShader;
+	ID3D11VertexShader *m_fullscreenTriangleVertexShader;
+	ID3D11PixelShader *m_noCullFinalGatherPixelShader;
 
 	ID3D11Buffer *m_gBufferVertexShaderObjectConstantsBuffer;
 	ID3D11Buffer *m_gBufferPixelShaderObjectConstantsBuffer;
+	ID3D11Buffer *m_noCullFinalGatherPixelShaderConstantsBuffer;
 
 	// We assume there is only one directional light. Therefore, it is stored in a cbuffer
 	Common::StructuredBuffer<Common::PointLight> *m_pointLightBuffer;
 	Common::StructuredBuffer<Common::SpotLight> *m_spotLightBuffer;
+
+	Common::StructuredBuffer<Common::BlinnPhongMaterial> *m_frameMaterialListBuffer;
 
 	ID3D11SamplerState *m_diffuseSampleState;
 
@@ -132,7 +145,9 @@ private:
 	void RenderMainPass();
 	void RenderHUD();
 	void SetGBufferShaderObjectConstants(DirectX::XMMATRIX &worldMatrix, DirectX::XMMATRIX &worldViewProjMatrix, uint materialIndex);
-	void SetLightBuffers(DirectX::XMMATRIX &viewMatrix);
+	void SetNoCullFinalGatherShaderConstants(DirectX::XMMATRIX &projMatrix, DirectX::XMMATRIX &invViewProjMatrix);
+	void SetLightBuffers();
+	void SetMaterialList();
 };
 
 } // End of namespace DeferredShadingDemo

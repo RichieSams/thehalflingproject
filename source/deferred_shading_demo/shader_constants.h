@@ -39,6 +39,14 @@ struct GBufferVertexShaderObjectConstants {
 struct GBufferPixelShaderObjectConstants {
 	uint MaterialIndex;
 };
+
+// No cull final gather pass
+struct NoCullFinalGatherPixelShaderFrameConstants {
+	DirectX::XMMATRIX gProjection;
+	DirectX::XMMATRIX gInvViewProjection;
+
+	Common::DirectionalLight gDirectionalLight;
+	DirectX::XMFLOAT3 gEyePosition;
 };
 
 } // End of namespace DeferredShadingDemo

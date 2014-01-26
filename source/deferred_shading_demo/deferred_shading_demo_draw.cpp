@@ -44,10 +44,10 @@ void DeferredShadingDemo::RenderMainPass() {
 	m_immediateContext->RSSetState(m_rasterizerStates.BackFaceCull());
 
 	// Set the vertex and pixel shaders that will be used to render this triangle.
-	m_immediateContext->VSSetShader(m_vertexShader, NULL, 0);
-	m_immediateContext->PSSetShader(m_gbufferPixelShader, NULL, 0);
+	m_immediateContext->VSSetShader(m_gbufferVertexShader, nullptr, 0);
+	m_immediateContext->PSSetShader(m_gbufferPixelShader, nullptr, 0);
 
-	m_immediateContext->IASetInputLayout(m_inputLayout);
+	m_immediateContext->IASetInputLayout(m_gBufferInputLayout);
 	m_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// Fetch the transpose matricies
@@ -57,37 +57,66 @@ void DeferredShadingDemo::RenderMainPass() {
 
 	uint materialIndex = 0;
 
+	// Cache the matrix multiplication
+	DirectX::XMMATRIX viewProj = viewMatrix * projectionMatrix;
+
 	for (uint i = 0; i < m_models.size(); ++i) {
 		m_frameMaterialList.push_back(m_models[i].GetSubsetMaterial(0));
-		uint materialIndex = m_frameMaterialList.size();
 
-		// Cache the matrix multiplications
-		DirectX::XMMATRIX worldViewProjection = DirectX::XMMatrixTranspose(worldMatrix * viewMatrix * projectionMatrix);
+		DirectX::XMMATRIX worldViewProjection = DirectX::XMMatrixTranspose(worldMatrix * viewProj);
 
-		SetGBufferShaderObjectConstants(DirectX::XMMatrixTranspose(worldMatrix), worldViewProjection, materialIndex++);
+		SetGBufferShaderObjectConstants(DirectX::XMMatrixTranspose(worldMatrix), worldViewProjection, m_frameMaterialList.size() - 1);
 	
 		// Draw the models
 		m_models[i].DrawSubset(m_immediateContext);
 	}
 
-	//SetLightBuffers(viewMatrix);
+	// Cleanup (aka make the runtime happy)
+	m_immediateContext->OMSetRenderTargets(0, 0, 0);
 
+	
+	// Final gather pass
 	m_immediateContext->OMSetRenderTargets(1, &m_renderTargetView, nullptr);
 
-	// Draw the gbuffers to the frame
-	m_spriteRenderer.Begin(m_immediateContext, Common::SpriteRenderer::Point);
-	DirectX::XMFLOAT4X4 transform{0.5, 0, 0, 0,
-		0, 0.5, 0, 0,
-		0, 0, 0.5, 0,
-		0, 0, 0, 1};
-	m_spriteRenderer.Render(m_gBufferSRVs[0], transform);
-	transform._41 = 0;
-	transform._42 = 300;
-	m_spriteRenderer.Render(m_gBufferSRVs[1], transform);
-	transform._41 = 400;
-	transform._42 = 0;
-	m_spriteRenderer.Render(m_gBufferSRVs[2], transform);
-	m_spriteRenderer.End();
+	// Full screen triangle setup
+	m_immediateContext->IASetInputLayout(m_fullscreenTriangleInputLayout);
+	m_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	m_immediateContext->VSSetShader(m_fullscreenTriangleVertexShader, nullptr, 0);
+	m_immediateContext->GSSetShader(0, 0, 0);
+	m_immediateContext->PSSetShader(m_noCullFinalGatherPixelShader, nullptr, 0);
+
+	m_immediateContext->RSSetState(m_rasterizerStates.NoCull());
+
+	DirectX::XMMATRIX invViewProj = DirectX::XMMatrixInverse(nullptr, viewProj);
+	SetNoCullFinalGatherShaderConstants(DirectX::XMMatrixTranspose(projectionMatrix), DirectX::XMMatrixTranspose(invViewProj));
+
+	m_immediateContext->PSSetShaderResources(0, 3, &m_gBufferSRVs.front());
+
+	// Set light buffers
+	SetLightBuffers();
+
+	ID3D11ShaderResourceView *srvArray[2];
+	srvArray[0] = m_pointLightBuffer->GetShaderResource();
+	//srvArray[1] = m_spotLightBuffer->GetShaderResource();
+	m_immediateContext->PSSetShaderResources(3, 1, srvArray);
+
+	// Set material list
+	SetMaterialList();
+
+	m_fullScreenQuad.DrawSubset(m_immediateContext);
+
+	// Cleanup (aka make the runtime happy)
+	m_immediateContext->VSSetShader(0, 0, 0);
+	m_immediateContext->GSSetShader(0, 0, 0);
+	m_immediateContext->PSSetShader(0, 0, 0);
+	m_immediateContext->OMSetRenderTargets(0, 0, 0);
+	ID3D11ShaderResourceView* nullSRV[6] = {0, 0, 0, 0, 0, 0};
+	m_immediateContext->VSSetShaderResources(0, 6, nullSRV);
+	m_immediateContext->PSSetShaderResources(0, 6, nullSRV);
+	//m_immediateContext->CSSetShaderResources(0, 8, nullSRV);
+	//ID3D11UnorderedAccessView *nullUAV[1] = {0};
+	//m_immediateContext->CSSetUnorderedAccessViews(0, 1, nullUAV, 0);
 }
 
 void DeferredShadingDemo::SetGBufferShaderObjectConstants(DirectX::XMMATRIX &worldMatrix, DirectX::XMMATRIX &worldViewProjMatrix, uint materialIndex) {
@@ -114,7 +143,24 @@ void DeferredShadingDemo::SetGBufferShaderObjectConstants(DirectX::XMMATRIX &wor
 	m_immediateContext->PSSetConstantBuffers(1, 1, &m_gBufferPixelShaderObjectConstantsBuffer);
 }
 
-void DeferredShadingDemo::SetLightBuffers(DirectX::XMMATRIX &viewMatrix) {
+void DeferredShadingDemo::SetNoCullFinalGatherShaderConstants(DirectX::XMMATRIX &projMatrix, DirectX::XMMATRIX &invViewProjMatrix) {
+	// Fill in object constants
+	D3D11_MAPPED_SUBRESOURCE mappedResource;
+
+	// Lock the constant buffer so it can be written to.
+	HR(m_immediateContext->Map(m_noCullFinalGatherPixelShaderConstantsBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
+
+	NoCullFinalGatherPixelShaderFrameConstants *pixelShaderFrameConstants = static_cast<NoCullFinalGatherPixelShaderFrameConstants *>(mappedResource.pData);
+	pixelShaderFrameConstants->gProjection = projMatrix;
+	pixelShaderFrameConstants->gInvViewProjection = invViewProjMatrix;
+	pixelShaderFrameConstants->gDirectionalLight = m_directionalLight;
+	pixelShaderFrameConstants->gEyePosition = m_camera.GetCameraPosition();
+
+	m_immediateContext->Unmap(m_noCullFinalGatherPixelShaderConstantsBuffer, 0);
+	m_immediateContext->PSSetConstantBuffers(0, 1, &m_noCullFinalGatherPixelShaderConstantsBuffer);
+}
+
+void DeferredShadingDemo::SetLightBuffers() {
 	uint numPointLights = m_pointLights.size();
 	//uint numSpotLights = m_gameStateManager->SpotLights.size();
 
@@ -134,7 +180,23 @@ void DeferredShadingDemo::SetLightBuffers(DirectX::XMMATRIX &viewMatrix) {
 	//m_pointLightBuffer->Unmap(m_immediateContext);
 }
 
+void DeferredShadingDemo::SetMaterialList() {
+	uint numMaterials = m_frameMaterialList.size();
+	assert(numMaterials <= kMaxMaterialsPerFrame);
+	
+	Common::BlinnPhongMaterial *materialArray = m_frameMaterialListBuffer->MapDiscard(m_immediateContext);
+	for (uint i = 0; i < numMaterials; ++i) {
+		materialArray[i] = m_frameMaterialList[i];
+	}
+	m_frameMaterialListBuffer->Unmap(m_immediateContext);
+
+	ID3D11ShaderResourceView *view = m_frameMaterialListBuffer->GetShaderResource();
+	m_immediateContext->PSSetShaderResources(5, 1, &view);
+}
+
 void DeferredShadingDemo::RenderHUD() {
+	m_immediateContext->OMSetRenderTargets(1, &m_renderTargetView, nullptr);
+
 	m_spriteRenderer.Begin(m_immediateContext, Common::SpriteRenderer::Point);
 	std::wostringstream stream;
 	stream << L"FPS: " << m_fps << L"\nFrame Time: " << m_frameTime << L" (ms)";
@@ -147,6 +209,9 @@ void DeferredShadingDemo::RenderHUD() {
 	m_spriteRenderer.End();
 
 	TwDraw();
+
+	// Cleanup (aka make the runtime happy)
+	m_immediateContext->OMSetRenderTargets(0, 0, 0);
 }
 
 } // End of namespace DeferredShadingDemo

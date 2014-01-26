@@ -87,6 +87,31 @@ void DeferredShadingDemo::BuildGeometryBuffers() {
 		}
 	};
 	model->SetSubsets(subsets, 1);
+
+	meshData.Indices.clear();
+	meshData.Vertices.clear();
+
+	Common::GeometryGenerator::CreateFullscreenQuad(meshData);
+
+	vertexCount = meshData.Vertices.size();
+	indexCount = meshData.Indices.size();
+
+	FullScreenTriangleVertex *fullscreenQuadVertices = new FullScreenTriangleVertex[vertexCount];
+	for (uint i = 0; i < vertexCount; ++i) {
+		fullscreenQuadVertices[i].pos = meshData.Vertices[i].Position;
+	}
+	m_fullScreenQuad.SetVertices(m_device, fullscreenQuadVertices, vertexCount);
+
+	uint *fullscreenQuadIndices = new uint[indexCount];
+	for (uint i = 0; i < indexCount; ++i) {
+		fullscreenQuadIndices[i] = meshData.Indices[i];
+	}
+	m_fullScreenQuad.SetIndices(m_device, fullscreenQuadIndices, indexCount);
+
+	Common::ModelSubset *fullscreenQuadSubsets = new Common::ModelSubset[1] {
+		{0, vertexCount, 0, indexCount / 3, {{0,0,0,0}}, nullptr}
+	};
+	m_fullScreenQuad.SetSubsets(fullscreenQuadSubsets, 1);
 }
 
 float DeferredShadingDemo::GetHillHeight(float x, float z) const {
@@ -113,10 +138,10 @@ void DeferredShadingDemo::CreateLights() {
 
 	for (uint i = 0; i < 100; ++i) {
 		Common::PointLight pointLight;
-		pointLight.Ambient = pointLight.Diffuse = pointLight.Specular = DirectX::XMFLOAT4(Common::RandF(), Common::RandF(), Common::RandF(), 1.0f);
-		pointLight.Attenuation = DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f);
-		pointLight.Range = 5.0f;
-		pointLight.Position = DirectX::XMFLOAT3(Common::RandF(-80.0f, 80.0f), Common::RandF(20.0f, 60.0f), Common::RandF(-80.0f, 80.0f));
+		pointLight.Diffuse = pointLight.Specular = DirectX::XMFLOAT4(Common::RandF(), Common::RandF(), Common::RandF(), 1.0f);
+		pointLight.Attenuation = DirectX::XMFLOAT3(1.0f, 0.02f, 0.002f);
+		pointLight.Range = 25.0f;
+		pointLight.Position = DirectX::XMFLOAT3(Common::RandF(-80.0f, 80.0f), Common::RandF(-40.0f, 40.0f), Common::RandF(-80.0f, 80.0f));
 
 		m_pointLights.push_back(pointLight);
 	}
@@ -131,8 +156,14 @@ void DeferredShadingDemo::LoadShaders() {
 		{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0}
 	};
 
-	HR(Common::LoadVertexShader("gbuffer_vertex_shader.cso", m_device, &m_vertexShader, &m_inputLayout, vertexDesc, 3));
+	D3D11_INPUT_ELEMENT_DESC fullscreenTriangleVertexDesc[] = {
+		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0}
+	};
+
+	HR(Common::LoadVertexShader("gbuffer_vertex_shader.cso", m_device, &m_gbufferVertexShader, &m_gBufferInputLayout, vertexDesc, 3));
 	HR(Common::LoadPixelShader("gbuffer_pixel_shader.cso", m_device, &m_gbufferPixelShader));
+	HR(Common::LoadVertexShader("fullscreen_triangle_vertex_shader.cso", m_device, &m_fullscreenTriangleVertexShader, &m_fullscreenTriangleInputLayout, fullscreenTriangleVertexDesc, 1));
+	HR(Common::LoadPixelShader("no_cull_final_gather_pixel_shader.cso", m_device, &m_noCullFinalGatherPixelShader));
 }
 
 void DeferredShadingDemo::CreateShaderBuffers() {
@@ -157,8 +188,20 @@ void DeferredShadingDemo::CreateShaderBuffers() {
 
 	m_device->CreateBuffer(&pixelShaderFrameBufferDesc, NULL, &m_gBufferPixelShaderObjectConstantsBuffer);
 
+	D3D11_BUFFER_DESC noCullFinalGatherPixelShaderFrameBufferDesc;
+	noCullFinalGatherPixelShaderFrameBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	noCullFinalGatherPixelShaderFrameBufferDesc.ByteWidth = Common::CBSize(sizeof(NoCullFinalGatherPixelShaderFrameConstants));
+	noCullFinalGatherPixelShaderFrameBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	noCullFinalGatherPixelShaderFrameBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	noCullFinalGatherPixelShaderFrameBufferDesc.MiscFlags = 0;
+	noCullFinalGatherPixelShaderFrameBufferDesc.StructureByteStride = 0;
+
+	m_device->CreateBuffer(&noCullFinalGatherPixelShaderFrameBufferDesc, NULL, &m_noCullFinalGatherPixelShaderConstantsBuffer);
+
 	m_pointLightBuffer = new Common::StructuredBuffer<Common::PointLight>(m_device, m_pointLights.size(), D3D11_BIND_SHADER_RESOURCE, true);
 	//m_spotLightBuffer = new Common::StructuredBuffer<Common::SpotLight>(m_device, m_spotLights.size(), D3D11_BIND_SHADER_RESOURCE, true);
+
+	m_frameMaterialListBuffer = new Common::StructuredBuffer<Common::BlinnPhongMaterial>(m_device, kMaxMaterialsPerFrame, D3D11_BIND_SHADER_RESOURCE, true);
 
 	D3D11_SAMPLER_DESC diffuseSamplerDesc;
 	memset(&diffuseSamplerDesc, 0, sizeof(D3D11_SAMPLER_DESC));

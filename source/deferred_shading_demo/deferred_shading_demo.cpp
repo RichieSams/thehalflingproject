@@ -37,9 +37,7 @@ DeferredShadingDemo::DeferredShadingDemo(HINSTANCE hinstance)
 	  m_gbufferPixelShader(nullptr),
 	  m_fullscreenTriangleVertexShader(nullptr),
 	  m_noCullFinalGatherPixelShader(nullptr),
-	  m_diffuseSampleState(nullptr),
-	  m_wireframeRS(nullptr),
-	  m_solidRS(nullptr) {
+	  m_diffuseSampleState(nullptr) {
 }
 
 void DeferredShadingDemo::Shutdown() {
@@ -50,8 +48,6 @@ void DeferredShadingDemo::Shutdown() {
 	delete m_pointLightBuffer;
 	delete m_spotLightBuffer;
 	ReleaseCOM(m_diffuseSampleState);
-	ReleaseCOM(m_wireframeRS);
-	ReleaseCOM(m_solidRS);
 	ReleaseCOM(m_gbufferVertexShader);
 	ReleaseCOM(m_gbufferPixelShader);
 	ReleaseCOM(m_fullscreenTriangleVertexShader);
@@ -184,12 +180,6 @@ void DeferredShadingDemo::MouseWheel(int zDelta) {
 void TW_CALL DeferredShadingDemo::SetWireframeRSCallback(const void *value, void *clientData) {
 	DeferredShadingDemo *graphicsManager = ((DeferredShadingDemo *)clientData);
 	graphicsManager->m_wireframe = *((bool *)value);
-
-	if (graphicsManager->m_wireframe) {
-		graphicsManager->m_immediateContext->RSSetState(graphicsManager->m_wireframeRS);
-	} else {
-		graphicsManager->m_immediateContext->RSSetState(graphicsManager->m_solidRS);
-	}
 }
 
 void TW_CALL DeferredShadingDemo::GetWireframeTSCallback(void *value, void *clientData) {

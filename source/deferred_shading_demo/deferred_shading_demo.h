@@ -99,9 +99,6 @@ private:
 
 	ID3D11SamplerState *m_diffuseSampleState;
 
-	ID3D11RasterizerState *m_wireframeRS;
-	ID3D11RasterizerState *m_solidRS;
-
 	Common::BlendStates m_blendStates;
 	Common::DepthStencilStates m_depthStencilStates;
 	Common::RasterizerStates m_rasterizerStates;

@@ -34,14 +34,14 @@ void DeferredShadingDemo::RenderMainPass() {
 	for (auto gbufferRTV : m_gBufferRTVs) {
 		m_immediateContext->ClearRenderTargetView(gbufferRTV, DirectX::Colors::Black);
 	}
-	m_immediateContext->ClearDepthStencilView(m_depthStencilBuffer->GetDepthStencil(), D3D11_CLEAR_DEPTH, 1.0f, 0);
+	m_immediateContext->ClearDepthStencilView(m_depthStencilBuffer->GetDepthStencil(), D3D11_CLEAR_DEPTH, 0.0f, 0);
 
 	// Set States
 	m_immediateContext->PSSetSamplers(0, 1, &m_diffuseSampleState);
 	float blendFactor[4] = {1.0f, 1.0f, 1.0f, 1.0f};
 	m_immediateContext->OMSetBlendState(m_blendStates.BlendDisabled(), blendFactor, 0xFFFFFFFF);
-	m_immediateContext->OMSetDepthStencilState(m_depthStencilStates.DepthWriteEnabled(), 0);
 	m_immediateContext->RSSetState(m_rasterizerStates.BackFaceCull());
+	m_immediateContext->OMSetDepthStencilState(m_depthStencilStates.ReverseDepthWriteEnabled(), 0);
 
 	// Set the vertex and pixel shaders that will be used to render this triangle.
 	m_immediateContext->VSSetShader(m_gbufferVertexShader, nullptr, 0);

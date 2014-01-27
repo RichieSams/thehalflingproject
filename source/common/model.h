@@ -152,11 +152,15 @@ void Common::Model<Vertex>::DrawSubset(ID3D11DeviceContext *deviceContext, int s
 
 	if (subsetId == -1) {
 		for (uint i = 0; i < m_subsetCount; ++i) {
-			deviceContext->PSSetShaderResources(0, 1, &m_subsets[i].SRV);
+			if (m_subsets[i].SRV) {
+				deviceContext->PSSetShaderResources(0, 1, &m_subsets[i].SRV);
+			}
 			deviceContext->DrawIndexed(m_subsets[i].FaceCount * 3, m_subsets[i].FaceStart * 3, 0);
 		}
 	} else {
-		deviceContext->PSSetShaderResources(0, 1, &m_subsets[subsetId].SRV);
+		if (m_subsets[subsetId].SRV) {
+			deviceContext->PSSetShaderResources(0, 1, &m_subsets[subsetId].SRV);
+		}
 		deviceContext->DrawIndexed(m_subsets[subsetId].FaceCount * 3, m_subsets[subsetId].FaceStart * 3, 0);
 	}
 }

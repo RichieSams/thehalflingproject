@@ -97,10 +97,14 @@ void DeferredShadingDemo::RenderMainPass() {
 	// Set light buffers
 	SetLightBuffers();
 
-	ID3D11ShaderResourceView *srvArray[2];
-	srvArray[0] = m_pointLightBuffer->GetShaderResource();
-	//srvArray[1] = m_spotLightBuffer->GetShaderResource();
-	m_immediateContext->PSSetShaderResources(3, 1, srvArray);
+	if (m_pointLights.size() > 0) {
+		ID3D11ShaderResourceView *srv = m_pointLightBuffer->GetShaderResource();
+		m_immediateContext->PSSetShaderResources(3, 1, &srv);
+	}
+	if (m_spotLights.size() > 0) {
+		ID3D11ShaderResourceView *srv = m_spotLightBuffer->GetShaderResource();
+		m_immediateContext->PSGetShaderResources(4, 1, &srv);
+	}
 
 	// Set material list
 	SetMaterialList();
@@ -115,9 +119,6 @@ void DeferredShadingDemo::RenderMainPass() {
 	ID3D11ShaderResourceView* nullSRV[6] = {0, 0, 0, 0, 0, 0};
 	m_immediateContext->VSSetShaderResources(0, 6, nullSRV);
 	m_immediateContext->PSSetShaderResources(0, 6, nullSRV);
-	//m_immediateContext->CSSetShaderResources(0, 8, nullSRV);
-	//ID3D11UnorderedAccessView *nullUAV[1] = {0};
-	//m_immediateContext->CSSetUnorderedAccessViews(0, 1, nullUAV, 0);
 }
 
 void DeferredShadingDemo::SetGBufferShaderObjectConstants(DirectX::XMMATRIX &worldMatrix, DirectX::XMMATRIX &worldViewProjMatrix, uint materialIndex) {
@@ -163,22 +164,27 @@ void DeferredShadingDemo::SetNoCullFinalGatherShaderConstants(DirectX::XMMATRIX 
 
 void DeferredShadingDemo::SetLightBuffers() {
 	uint numPointLights = m_pointLights.size();
-	//uint numSpotLights = m_gameStateManager->SpotLights.size();
+	uint numSpotLights = m_spotLights.size();
 
-	assert(m_pointLightBuffer->NumElements() == numPointLights);
-	//assert(m_spotLightBuffer->NumElements() == numSpotLights);
+	if (numPointLights > 0) {
+		assert(m_pointLightBuffer->NumElements() == numPointLights);
 
-	Common::PointLight *pointLightArray = m_pointLightBuffer->MapDiscard(m_immediateContext);
-	for (unsigned int i = 0; i < m_pointLights.size(); ++i) {
-		pointLightArray[i] = m_pointLights[i];
+		Common::PointLight *pointLightArray = m_pointLightBuffer->MapDiscard(m_immediateContext);
+		for (unsigned int i = 0; i < m_pointLights.size(); ++i) {
+			pointLightArray[i] = m_pointLights[i];
+		}
+		m_pointLightBuffer->Unmap(m_immediateContext);
 	}
-	m_pointLightBuffer->Unmap(m_immediateContext);
+	
+	if (numSpotLights > 0) {
+		assert(m_spotLightBuffer->NumElements() == numSpotLights);
 
-	//Common::SpotLight *spotLightArray = m_spotLightBuffer->MapDiscard(m_immediateContext);
-	//for (unsigned int i = 0; i < m_gameStateManager->SpotLights.size(); ++i) {
-	//	spotLightArray[i] = m_gameStateManager->SpotLights[i];
-	//}
-	//m_pointLightBuffer->Unmap(m_immediateContext);
+		Common::SpotLight *spotLightArray = m_spotLightBuffer->MapDiscard(m_immediateContext);
+		for (unsigned int i = 0; i < numSpotLights; ++i) {
+			spotLightArray[i] = m_spotLights[i];
+		}
+		m_pointLightBuffer->Unmap(m_immediateContext);
+	}
 }
 
 void DeferredShadingDemo::SetMaterialList() {

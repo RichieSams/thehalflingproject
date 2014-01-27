@@ -31,8 +31,6 @@ SpriteRenderer::~SpriteRenderer() {
 }
 
 void SpriteRenderer::Initialize(ID3D11Device* device) {
-	m_device = device;
-
 	// Define the input layouts
 	D3D11_INPUT_ELEMENT_DESC layout[] =
 	{
@@ -55,7 +53,7 @@ void SpriteRenderer::Initialize(ID3D11Device* device) {
 	// Load the shaders
 	HR(Common::LoadVertexShader("sprite_vertex_shader.cso", device, &m_vertexShader, &m_inputLayout, layout, 2));
 	HR(Common::LoadVertexShader("sprite_instanced_vertex_shader.cso", device, &m_vertexShaderInstanced, &m_inputLayoutInstanced, layoutInstanced, 8));
-	HR(Common::LoadPixelShader("sprite_pixel_shader.cso", m_device, &m_pixelShader));
+	HR(Common::LoadPixelShader("sprite_pixel_shader.cso", device, &m_pixelShader));
 
 	// Create the vertex buffer
 	SpriteVertex verts[] =

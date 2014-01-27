@@ -61,7 +61,6 @@ private:
 	SpriteDrawData textDrawData[MaxBatchSize];
 
 protected:
-	ID3D11Device *m_device;
 	ID3D11VertexShader *m_vertexShader;
 	ID3D11VertexShader *m_vertexShaderInstanced;
 	ID3D11PixelShader *m_pixelShader;

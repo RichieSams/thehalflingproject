@@ -29,6 +29,19 @@ StructuredBuffer<BlinnPhongMaterial> gMaterialList : register(t5);
 float4 NoCullFinalGatherPS(FullScreenTrianglePixelIn input) : SV_TARGET {
 	float2 pixelCoord = input.positionClip.xy;
 
+	// Sample from the Depth GBuffer and calculate position
+	float zw = (float)(gGBufferDepth.Load(pixelCoord, 0));
+
+	// Discard pixels that have infinite depth.
+	if (zw == 0.0f)
+		discard;
+
+	float2 gbufferDim;
+	uint dummy;
+	gGBufferDepth.GetDimensions(gbufferDim.x, gbufferDim.y, dummy);
+
+	float3 positionWS = PositionFromDepth(zw, pixelCoord, gbufferDim, gInvViewProjection);
+
 	// Sample from the Albedo-Specular Power GBuffer
 	float4 albedoMaterialIndex = gGBufferAlbedoMaterialIndex.Load(pixelCoord, 0).xyzw;
 	float4 albedo = float4(albedoMaterialIndex.xyz, 1.0f);
@@ -37,14 +50,6 @@ float4 NoCullFinalGatherPS(FullScreenTrianglePixelIn input) : SV_TARGET {
 	// Sample from the Normal-Specular Intensity GBuffer
 	float2 normalSphericalCoords = gGBufferNormal.Load(pixelCoord, 0).xy;
 	float3 normal = SphericalToCartesian(normalSphericalCoords);
-
-	float2 gbufferDim;
-	uint dummy;
-	gGBufferDepth.GetDimensions(gbufferDim.x, gbufferDim.y, dummy);
-	
-	// Sample from the Depth GBuffer and calculate position
-	float zw = (float)(gGBufferDepth.Load(pixelCoord, 0));
-	float3 positionWS = PositionFromDepth(zw, pixelCoord, gbufferDim, gInvViewProjection);
 
 	float3 toEye = normalize(gEyePosition - positionWS);
 

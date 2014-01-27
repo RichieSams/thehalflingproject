@@ -14,7 +14,7 @@ float2 CartesianToSpherical(float3 cartesian) {
 	float2 spherical;
 
 	spherical.x = atan2(cartesian.y, cartesian.x);
-	spherical.y = cartesian.z;
+	spherical.y = acos(cartesian.z);
 
 	return spherical;
 }
@@ -25,7 +25,7 @@ float3 SphericalToCartesian(float2 spherical) {
 	float2 sinCosTheta, sinCosPhi;
 
 	sincos(spherical.x, sinCosTheta.x, sinCosTheta.y);
-	sinCosPhi = float2(sqrt(1.0 - spherical.y * spherical.y), spherical.y);
+	sincos(spherical.y, sinCosPhi.x, sinCosPhi.y);
 
 	return float3(sinCosTheta.y * sinCosPhi.x, sinCosTheta.x * sinCosPhi.x, sinCosPhi.y);
 }

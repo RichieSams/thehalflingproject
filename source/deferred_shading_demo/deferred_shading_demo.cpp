@@ -47,6 +47,7 @@ void DeferredShadingDemo::Shutdown() {
 	ReleaseCOM(m_noCullFinalGatherPixelShaderConstantsBuffer);
 	delete m_pointLightBuffer;
 	delete m_spotLightBuffer;
+	delete m_frameMaterialListBuffer;
 	ReleaseCOM(m_diffuseSampleState);
 	ReleaseCOM(m_gbufferVertexShader);
 	ReleaseCOM(m_gbufferPixelShader);
@@ -54,6 +55,12 @@ void DeferredShadingDemo::Shutdown() {
 	ReleaseCOM(m_noCullFinalGatherPixelShader);
 	ReleaseCOM(m_gBufferInputLayout);
 	ReleaseCOM(m_fullscreenTriangleInputLayout);
+
+	for (auto iter = m_gBuffers.begin(); iter != m_gBuffers.end(); ++iter) {
+		delete *iter;
+	}
+
+	delete m_depthStencilBuffer;
 	ReleaseCOM(m_renderTargetView);
 
 	TwTerminate();

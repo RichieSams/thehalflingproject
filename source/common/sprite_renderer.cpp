@@ -28,6 +28,22 @@ SpriteRenderer::SpriteRenderer()
 }
 
 SpriteRenderer::~SpriteRenderer() {
+	// Release in the opposite order we initialized in
+	ReleaseCOM(m_pointSamplerState);
+	ReleaseCOM(m_linearSamplerState);
+	ReleaseCOM(m_depthStencilState);
+	ReleaseCOM(m_alphaBlendState);
+	ReleaseCOM(m_rastState);
+	ReleaseCOM(m_vsPerInstanceConstBuffer);
+	ReleaseCOM(m_vsPerBatchConstBuffer);
+	ReleaseCOM(m_indexBuffer);
+	ReleaseCOM(m_instanceDataBuffer);
+	ReleaseCOM(m_vertexBuffer);
+	ReleaseCOM(m_pixelShader);
+	ReleaseCOM(m_vertexShaderInstanced);
+	ReleaseCOM(m_inputLayoutInstanced);
+	ReleaseCOM(m_vertexShader);
+	ReleaseCOM(m_inputLayout);
 }
 
 void SpriteRenderer::Initialize(ID3D11Device* device) {

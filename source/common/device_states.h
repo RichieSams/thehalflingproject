@@ -21,6 +21,9 @@
 namespace Common {
 
 class BlendStates {
+public:
+	~BlendStates();
+
 private:
 	ID3D11BlendState *m_blendDisabled;
 	ID3D11BlendState *m_additiveBlend;
@@ -52,6 +55,9 @@ public:
 
 
 class RasterizerStates {
+public:
+	~RasterizerStates();
+
 private:
 	ID3D11RasterizerState *m_noCull;
 	ID3D11RasterizerState *m_cullBackFaces;
@@ -86,6 +92,9 @@ public:
 
 
 class DepthStencilStates {
+public:
+	~DepthStencilStates();
+
 private:
 	ID3D11DepthStencilState *m_depthDisabled;
 	ID3D11DepthStencilState *m_depthEnabled;
@@ -117,6 +126,9 @@ public:
 
 
 class SamplerStates {
+public:
+	~SamplerStates();
+
 private:
 	ID3D11SamplerState *m_linear;
 	ID3D11SamplerState *m_linearClamp;

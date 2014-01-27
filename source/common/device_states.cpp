@@ -30,6 +30,16 @@ void BlendStates::Initialize(ID3D11Device* device) {
 	HR(device->CreateBlendState(&OpacityBlendDesc(), &m_opacityBlend));
 }
 
+BlendStates::~BlendStates() {
+	ReleaseCOM(m_blendDisabled);
+	ReleaseCOM(m_additiveBlend);
+	ReleaseCOM(m_alphaBlend);
+	ReleaseCOM(m_pmAlphaBlend);
+	ReleaseCOM(m_noColor);
+	ReleaseCOM(m_alphaToCoverage);
+	ReleaseCOM(m_opacityBlend);
+}
+
 D3D11_BLEND_DESC BlendStates::BlendDisabledDesc() {
 	D3D11_BLEND_DESC blendDesc;
 	blendDesc.AlphaToCoverageEnable = false;
@@ -167,6 +177,17 @@ void RasterizerStates::Initialize(ID3D11Device* device) {
 	HR(device->CreateRasterizerState(&NoCullNoMSDesc(), &m_noCullNoMS));
 	HR(device->CreateRasterizerState(&NoCullScissorDesc(), &m_noCullScissor));
 	HR(device->CreateRasterizerState(&WireframeDesc(), &m_wireframe));
+}
+
+RasterizerStates::~RasterizerStates() {
+	ReleaseCOM(m_noCull);
+	ReleaseCOM(m_cullFrontFaces);
+	ReleaseCOM(m_cullFrontFacesScissor);
+	ReleaseCOM(m_cullBackFaces);
+	ReleaseCOM(m_cullBackFacesScissor);
+	ReleaseCOM(m_noCullNoMS);
+	ReleaseCOM(m_noCullScissor);
+	ReleaseCOM(m_wireframe);
 }
 
 D3D11_RASTERIZER_DESC RasterizerStates::NoCullDesc() {
@@ -315,6 +336,16 @@ void DepthStencilStates::Initialize(ID3D11Device* device) {
 	HR(device->CreateDepthStencilState(&StencilEnabledDesc(), &m_stencilEnabled));
 }
 
+DepthStencilStates::~DepthStencilStates() {
+	ReleaseCOM(m_depthDisabled);
+	ReleaseCOM(m_depthEnabled);
+	ReleaseCOM(m_revDepthEnabled);
+	ReleaseCOM(m_depthWriteEnabled);
+	ReleaseCOM(m_revDepthWriteEnabled);
+	ReleaseCOM(m_depthStencilWriteEnabled);
+	ReleaseCOM(m_stencilEnabled);
+}
+
 D3D11_DEPTH_STENCIL_DESC DepthStencilStates::DepthDisabledDesc() {
 	D3D11_DEPTH_STENCIL_DESC dsDesc;
 	dsDesc.DepthEnable = false;
@@ -442,6 +473,16 @@ void SamplerStates::Initialize(ID3D11Device* device) {
 	HR(device->CreateSamplerState(&AnisotropicDesc(), &m_anisotropic));
 	HR(device->CreateSamplerState(&ShadowMapDesc(), &m_shadowMap));
 	HR(device->CreateSamplerState(&ShadowMapPCFDesc(), &m_shadowMapPCF));
+}
+
+SamplerStates::~SamplerStates() {
+	ReleaseCOM(m_linear);
+	ReleaseCOM(m_linearClamp);
+	ReleaseCOM(m_linearBorder);
+	ReleaseCOM(m_point);
+	ReleaseCOM(m_anisotropic);
+	ReleaseCOM(m_shadowMap);
+	ReleaseCOM(m_shadowMapPCF);
 }
 
 D3D11_SAMPLER_DESC SamplerStates::LinearDesc() {

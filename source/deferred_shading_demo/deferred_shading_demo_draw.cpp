@@ -40,7 +40,7 @@ void DeferredShadingDemo::RenderMainPass() {
 	m_immediateContext->PSSetSamplers(0, 1, &m_diffuseSampleState);
 	float blendFactor[4] = {1.0f, 1.0f, 1.0f, 1.0f};
 	m_immediateContext->OMSetBlendState(m_blendStates.BlendDisabled(), blendFactor, 0xFFFFFFFF);
-	m_immediateContext->OMSetDepthStencilState(m_depthStencilStates.StencilTestEnabled(), 0);
+	m_immediateContext->OMSetDepthStencilState(m_depthStencilStates.DepthWriteEnabled(), 0);
 	m_immediateContext->RSSetState(m_rasterizerStates.BackFaceCull());
 
 	// Set the vertex and pixel shaders that will be used to render this triangle.

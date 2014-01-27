@@ -30,7 +30,6 @@ void DeferredShadingDemo::RenderMainPass() {
 	m_immediateContext->OMSetRenderTargets(2, &m_gBufferRTVs[0], m_depthStencilBuffer->GetDepthStencil());
 
 	// Clear the Render Targets and DepthStencil
-	m_immediateContext->ClearRenderTargetView(m_renderTargetView, DirectX::Colors::LightGray);
 	for (auto gbufferRTV : m_gBufferRTVs) {
 		m_immediateContext->ClearRenderTargetView(gbufferRTV, DirectX::Colors::Black);
 	}
@@ -78,6 +77,7 @@ void DeferredShadingDemo::RenderMainPass() {
 	
 	// Final gather pass
 	m_immediateContext->OMSetRenderTargets(1, &m_renderTargetView, nullptr);
+	m_immediateContext->ClearRenderTargetView(m_renderTargetView, DirectX::Colors::LightGray);
 
 	// Full screen triangle setup
 	m_immediateContext->IASetInputLayout(m_fullscreenTriangleInputLayout);

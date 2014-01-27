@@ -58,7 +58,7 @@ void DeferredShadingDemo::BuildGeometryBuffers() {
 	Common::Model<Vertex> *model = &m_models.back();
 
 	Common::GeometryGenerator::MeshData meshData;
-	Common::GeometryGenerator::CreateGrid(160.0f, 160.0f, 50, 50, &meshData);
+	Common::GeometryGenerator::CreateGrid(160.0f, 160.0f, 50, 50, &meshData, 3.0f, 3.0f);
 
 	uint vertexCount = meshData.Vertices.size();
 	uint indexCount = meshData.Indices.size();

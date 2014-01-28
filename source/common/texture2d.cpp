@@ -207,8 +207,7 @@ void Depth2D::InternalConstruct(ID3D11Device *d3dDevice, int width, int height, 
 	}
 }
 
-Depth2D::~Depth2D()
-{
+Depth2D::~Depth2D() {
 	for (std::size_t i = 0; i < mDepthStencilElements.size(); ++i) {
 		mDepthStencilElements[i]->Release();
 	}

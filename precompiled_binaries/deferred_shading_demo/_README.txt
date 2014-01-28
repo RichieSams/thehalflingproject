@@ -4,7 +4,7 @@ As this project is still in progress, if you want to most up-to-date version of 
 
 Overview:
 This demo is my first attempt at deferred shading. Initially, I was going to go straight to Tiled-Light Culling Deferred, but after a while
-I chose to first cut my teeth on naive, no light culling, deferred shading.
+I chose to first cut my teeth on naive, no light culling, deferred shading. The scene contains 1 directional light and 100 point lights.
 
 
 The GBuffers are laid out as follows:

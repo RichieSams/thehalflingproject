@@ -144,6 +144,10 @@ void DeferredShadingDemo::CreateLights() {
 		pointLight.Position = DirectX::XMFLOAT3(Common::RandF(-80.0f, 80.0f), Common::RandF(-40.0f, 40.0f), Common::RandF(-80.0f, 80.0f));
 
 		m_pointLights.push_back(pointLight);
+
+		m_pointLightAnimators.emplace_back(DirectX::XMFLOAT3(Common::RandF(-0.006f, 0.006f), Common::RandF(-0.006f, 0.006f), Common::RandF(-0.006f, 0.006f)),
+		                                   DirectX::XMFLOAT3(-80.0f, -40.0f, -80.0f),
+		                                   DirectX::XMFLOAT3(80.0f, 40.0f, 80.0f));
 	}
 
 	m_pointLightBufferNeedsRebuild = true;

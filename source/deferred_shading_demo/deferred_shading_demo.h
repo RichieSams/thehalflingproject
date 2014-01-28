@@ -19,6 +19,7 @@
 #include "common/sprite_renderer.h"
 #include "common/sprite_font.h"
 #include "common/lights.h"
+#include "common/light_animator.h"
 
 #include <vector>
 #include <AntTweakBar.h>
@@ -60,6 +61,7 @@ private:
 
 	Common::DirectionalLight m_directionalLight;
 	std::vector<Common::PointLight> m_pointLights;
+	std::vector<Common::PointLightAnimator> m_pointLightAnimators;
 	std::vector<Common::SpotLight> m_spotLights;
 
 	bool m_pointLightBufferNeedsRebuild;

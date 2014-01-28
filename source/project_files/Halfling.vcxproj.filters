@@ -4,9 +4,6 @@
     <Filter Include="Core">
       <UniqueIdentifier>{4fdf668e-69b9-4dcf-b10e-812c9a94be7a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Input">
-      <UniqueIdentifier>{be02aa71-c22b-43e1-a096-df070d231c8b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Common">
       <UniqueIdentifier>{9b149d28-97e2-4b3b-ba12-b8bdff49bdef}</UniqueIdentifier>
     </Filter>
@@ -58,9 +55,6 @@
     </ClInclude>
     <ClInclude Include="..\common\typedefs.h">
       <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\halfling\input.cpp">
-      <Filter>Input</Filter>
     </ClInclude>
     <ClInclude Include="..\halfling\halfling_engine.h">
       <Filter>Core</Filter>

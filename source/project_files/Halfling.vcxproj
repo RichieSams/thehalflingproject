@@ -43,7 +43,6 @@
     <ClInclude Include="..\common\typedefs.h" />
     <ClInclude Include="..\common\vector.h" />
     <ClInclude Include="..\halfling\halfling_engine.h" />
-    <ClInclude Include="..\halfling\input.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\common\shaders\lights.hlsli" />

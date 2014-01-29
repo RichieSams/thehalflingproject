@@ -90,28 +90,6 @@ void DeferredShadingDemo::BuildGeometryBuffers() {
 
 	meshData.Indices.clear();
 	meshData.Vertices.clear();
-
-	Common::GeometryGenerator::CreateFullscreenQuad(meshData);
-
-	vertexCount = meshData.Vertices.size();
-	indexCount = meshData.Indices.size();
-
-	FullScreenTriangleVertex *fullscreenQuadVertices = new FullScreenTriangleVertex[vertexCount];
-	for (uint i = 0; i < vertexCount; ++i) {
-		fullscreenQuadVertices[i].pos = meshData.Vertices[i].Position;
-	}
-	m_fullScreenQuad.SetVertices(m_device, fullscreenQuadVertices, vertexCount);
-
-	uint *fullscreenQuadIndices = new uint[indexCount];
-	for (uint i = 0; i < indexCount; ++i) {
-		fullscreenQuadIndices[i] = meshData.Indices[i];
-	}
-	m_fullScreenQuad.SetIndices(m_device, fullscreenQuadIndices, indexCount);
-
-	Common::ModelSubset *fullscreenQuadSubsets = new Common::ModelSubset[1] {
-		{0, vertexCount, 0, indexCount / 3, {{0,0,0,0}}, nullptr}
-	};
-	m_fullScreenQuad.SetSubsets(fullscreenQuadSubsets, 1);
 }
 
 float DeferredShadingDemo::GetHillHeight(float x, float z) const {
@@ -160,13 +138,9 @@ void DeferredShadingDemo::LoadShaders() {
 		{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0}
 	};
 
-	D3D11_INPUT_ELEMENT_DESC fullscreenTriangleVertexDesc[] = {
-		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0}
-	};
-
 	HR(Common::LoadVertexShader("gbuffer_vertex_shader.cso", m_device, &m_gbufferVertexShader, &m_gBufferInputLayout, vertexDesc, 3));
 	HR(Common::LoadPixelShader("gbuffer_pixel_shader.cso", m_device, &m_gbufferPixelShader));
-	HR(Common::LoadVertexShader("fullscreen_triangle_vertex_shader.cso", m_device, &m_fullscreenTriangleVertexShader, &m_fullscreenTriangleInputLayout, fullscreenTriangleVertexDesc, 1));
+	HR(Common::LoadVertexShader("fullscreen_triangle_vertex_shader.cso", m_device, &m_fullscreenTriangleVertexShader, nullptr));
 	HR(Common::LoadPixelShader("no_cull_final_gather_pixel_shader.cso", m_device, &m_noCullFinalGatherPixelShader));
 }
 

@@ -56,7 +56,6 @@ private:
 
 	WorldViewProjection m_worldViewProj;
 	std::vector<Common::Model<Vertex> > m_models;
-	Common::Model<FullScreenTriangleVertex> m_fullScreenQuad;
 	std::vector<Common::BlinnPhongMaterial> m_frameMaterialList;
 
 	Common::DirectionalLight m_directionalLight;
@@ -72,7 +71,6 @@ private:
 
 	ID3D11RenderTargetView *m_renderTargetView;
 	ID3D11InputLayout *m_gBufferInputLayout;
-	ID3D11InputLayout *m_fullscreenTriangleInputLayout;
 
 	Common::Depth2D *m_depthStencilBuffer;
 	D3D11_VIEWPORT m_screenViewport;

@@ -27,7 +27,6 @@ DeferredShadingDemo::DeferredShadingDemo(HINSTANCE hinstance)
 	  m_wireframe(false),
 	  m_renderTargetView(nullptr),
 	  m_gBufferInputLayout(nullptr),
-	  m_fullscreenTriangleInputLayout(nullptr),
 	  m_gBufferVertexShaderObjectConstantsBuffer(nullptr),
 	  m_gBufferPixelShaderObjectConstantsBuffer(nullptr),
 	  m_noCullFinalGatherPixelShaderConstantsBuffer(nullptr),
@@ -54,7 +53,6 @@ void DeferredShadingDemo::Shutdown() {
 	ReleaseCOM(m_fullscreenTriangleVertexShader);
 	ReleaseCOM(m_noCullFinalGatherPixelShader);
 	ReleaseCOM(m_gBufferInputLayout);
-	ReleaseCOM(m_fullscreenTriangleInputLayout);
 
 	for (auto iter = m_gBuffers.begin(); iter != m_gBuffers.end(); ++iter) {
 		delete *iter;

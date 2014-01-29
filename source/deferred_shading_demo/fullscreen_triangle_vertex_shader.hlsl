@@ -21,20 +21,12 @@
 #include "types.hlsli"
 
 
-//FullScreenTrianglePixelIn FullScreenTriangleVS(uint vertexID : SV_VertexID) {
-//	FullScreenTrianglePixelIn output;
-//
-//	// Parametrically work out vertex location for full screen triangle
-//    float2 grid = float2((vertexID << 1) & 2, vertexID & 2);
-//    output.positionClip = float4(grid * float2(2.0f, -2.0f) + float2(-1.0f, 1.0f), 1.0f, 1.0f);
-//    
-//    return output;
-//}
-
-FullScreenTrianglePixelIn FullScreenTriangleVS(float3 positionClip : POSITION) {
+FullScreenTrianglePixelIn FullScreenTriangleVS(uint vertexID : SV_VertexID) {
 	FullScreenTrianglePixelIn output;
 
-	output.positionClip = float4(positionClip, 1.0f);
-
-	return output;
+	// Parametrically work out vertex location for full screen triangle
+    float2 grid = float2((vertexID << 1) & 2, vertexID & 2);
+    output.positionClip = float4(grid * float2(2.0f, -2.0f) + float2(-1.0f, 1.0f), 1.0f, 1.0f);
+    
+    return output;
 }

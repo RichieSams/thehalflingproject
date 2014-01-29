@@ -80,7 +80,7 @@ void DeferredShadingDemo::RenderMainPass() {
 	m_immediateContext->ClearRenderTargetView(m_renderTargetView, DirectX::Colors::LightGray);
 
 	// Full screen triangle setup
-	m_immediateContext->IASetInputLayout(m_fullscreenTriangleInputLayout);
+	m_immediateContext->IASetInputLayout(nullptr);
 	m_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	m_immediateContext->VSSetShader(m_fullscreenTriangleVertexShader, nullptr, 0);
@@ -109,7 +109,10 @@ void DeferredShadingDemo::RenderMainPass() {
 	// Set material list
 	SetMaterialList();
 
-	m_fullScreenQuad.DrawSubset(m_immediateContext);
+	m_immediateContext->IASetVertexBuffers(0, 0, 0, 0, 0);
+	m_immediateContext->IASetIndexBuffer(0, DXGI_FORMAT_R32_UINT, 0);
+	
+	m_immediateContext->Draw(3, 0);
 
 	// Cleanup (aka make the runtime happy)
 	m_immediateContext->VSSetShader(0, 0, 0);

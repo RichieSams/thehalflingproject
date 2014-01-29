@@ -27,7 +27,7 @@ struct GBufferShaderPixelIn {
 };
 
 struct FullScreenTrianglePixelIn {
-	float4 positionClip   : SV_POSITION;
+	float4 positionClip  : SV_POSITION;
 };
 
 #endif

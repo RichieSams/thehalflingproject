@@ -16,6 +16,7 @@ namespace DeferredShadingDemo {
 
 void DeferredShadingDemo::DrawFrame(double deltaTime) {
 	RenderMainPass();
+	RenderDebugGeometry();
 	RenderHUD();
 
 	uint syncInterval = m_vsync ? 1 : 0;
@@ -115,36 +116,6 @@ void DeferredShadingDemo::RenderMainPass() {
 	m_immediateContext->Draw(3, 0);
 
 
-	// Debug pass
-
-	uint maxInstances;
-	DebugObjectInstance *instances = m_debugSphere.MapInstanceBuffer(m_immediateContext, &maxInstances);
-
-	DirectX::XMMATRIX identity = DirectX::XMMatrixIdentity();
-	for (uint i = 0; i < m_pointLights.size(); ++i) {
-		DirectX::XMMATRIX translation = DirectX::XMMatrixTranslation(m_pointLights[i].Position.x, m_pointLights[i].Position.y, m_pointLights[i].Position.z);
-		instances[i].worldViewProj = DirectX::XMMatrixTranspose(translation * viewProj);
-		instances[i].color = m_pointLights[i].Diffuse;
-	}
-
-	m_debugSphere.UnMapInstanceBuffer(m_immediateContext);
-
-	// Use the backbuffer render target and the original depth buffer
-	m_immediateContext->OMSetRenderTargets(1, &m_renderTargetView, m_depthStencilBuffer->GetDepthStencil());
-
-	// Set States
-	m_immediateContext->OMSetDepthStencilState(m_depthStencilStates.ReverseDepthWriteEnabled(), 0);
-	m_immediateContext->RSSetState(m_rasterizerStates.BackFaceCull());
-
-	// Set the vertex and pixel shaders that will be used to render this triangle.
-	m_immediateContext->VSSetShader(m_debugObjectVertexShader, nullptr, 0);
-	m_immediateContext->PSSetShader(m_debugObjectPixelShader, nullptr, 0);
-
-	m_immediateContext->IASetInputLayout(m_debugObjectInputLayout);
-	m_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-	m_debugSphere.DrawInstancedSubset(m_immediateContext, m_debugSphereNumIndices, m_pointLights.size());
-
 	// Cleanup (aka make the runtime happy)
 	m_immediateContext->VSSetShader(0, 0, 0);
 	m_immediateContext->GSSetShader(0, 0, 0);
@@ -233,6 +204,45 @@ void DeferredShadingDemo::SetMaterialList() {
 
 	ID3D11ShaderResourceView *view = m_frameMaterialListBuffer->GetShaderResource();
 	m_immediateContext->PSSetShaderResources(5, 1, &view);
+}
+
+void DeferredShadingDemo::RenderDebugGeometry() {
+
+	DirectX::XMMATRIX viewMatrix = m_worldViewProj.view;
+	DirectX::XMMATRIX projectionMatrix = m_worldViewProj.projection;
+
+	// Cache the matrix multiplication
+	DirectX::XMMATRIX viewProj = viewMatrix * projectionMatrix;
+
+	if (m_showLightLocations) {
+		uint maxInstances;
+		DebugObjectInstance *instances = m_debugSphere.MapInstanceBuffer(m_immediateContext, &maxInstances);
+
+		DirectX::XMMATRIX identity = DirectX::XMMatrixIdentity();
+		for (uint i = 0; i < m_pointLights.size(); ++i) {
+			DirectX::XMMATRIX translation = DirectX::XMMatrixTranslation(m_pointLights[i].Position.x, m_pointLights[i].Position.y, m_pointLights[i].Position.z);
+			instances[i].worldViewProj = DirectX::XMMatrixTranspose(translation * viewProj);
+			instances[i].color = m_pointLights[i].Diffuse;
+		}
+
+		m_debugSphere.UnMapInstanceBuffer(m_immediateContext);
+
+		// Use the backbuffer render target and the original depth buffer
+		m_immediateContext->OMSetRenderTargets(1, &m_renderTargetView, m_depthStencilBuffer->GetDepthStencil());
+
+		// Set States
+		m_immediateContext->OMSetDepthStencilState(m_depthStencilStates.ReverseDepthWriteEnabled(), 0);
+		m_immediateContext->RSSetState(m_rasterizerStates.BackFaceCull());
+
+		// Set the vertex and pixel shaders that will be used to render this triangle.
+		m_immediateContext->VSSetShader(m_debugObjectVertexShader, nullptr, 0);
+		m_immediateContext->PSSetShader(m_debugObjectPixelShader, nullptr, 0);
+
+		m_immediateContext->IASetInputLayout(m_debugObjectInputLayout);
+		m_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+		m_debugSphere.DrawInstancedSubset(m_immediateContext, m_debugSphereNumIndices, m_pointLights.size());
+	}
 }
 
 void DeferredShadingDemo::RenderHUD() {

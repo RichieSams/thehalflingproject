@@ -155,6 +155,7 @@ private:
 
 	// Rendering methods
 	void RenderMainPass();
+	void RenderDebugGeometry();
 	void RenderHUD();
 	void SetGBufferShaderObjectConstants(DirectX::XMMATRIX &worldMatrix, DirectX::XMMATRIX &worldViewProjMatrix, uint materialIndex);
 	void SetNoCullFinalGatherShaderConstants(DirectX::XMMATRIX &projMatrix, DirectX::XMMATRIX &invViewProjMatrix);

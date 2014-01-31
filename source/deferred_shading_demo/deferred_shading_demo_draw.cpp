@@ -207,12 +207,21 @@ void DeferredShadingDemo::SetMaterialList() {
 }
 
 void DeferredShadingDemo::RenderDebugGeometry() {
-
 	DirectX::XMMATRIX viewMatrix = m_worldViewProj.view;
 	DirectX::XMMATRIX projectionMatrix = m_worldViewProj.projection;
 
 	// Cache the matrix multiplication
 	DirectX::XMMATRIX viewProj = viewMatrix * projectionMatrix;
+
+	m_spriteRenderer.Begin(m_immediateContext);
+
+	DirectX::XMFLOAT4X4 identity(1.0f, 0.0f, 0.0f, 0.0f,
+	                             0.0f, 1.0f, 0.0f, 0.0f,
+	                             0.0f, 0.0f, 1.0f, 0.0f,
+	                             0.0f, 0.0f, 0.0f, 1.0f);
+
+	m_spriteRenderer.Render(m_gBufferSRVs[0], identity);
+	m_spriteRenderer.End();
 
 	if (m_showLightLocations) {
 		uint maxInstances;

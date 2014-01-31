@@ -47,10 +47,11 @@ void DeferredShadingDemo::InitTweakBar() {
 	int success = TwInit(TW_DIRECT3D11, m_device);
 
 	m_settingsBar = TwNewBar("settings");
-	TwDefine(" settings label='Settings' size='200 300' movable=true resizable=false fontresizable=false contained=true iconified=true ");
+	TwDefine(" settings label='Settings' size='200 100' position='580 20' movable=true resizable=false fontresizable=false contained=true iconified=true ");
 
 	TwAddVarRW(m_settingsBar, "V-Sync", TwType::TW_TYPE_BOOLCPP, &m_vsync, "");
 	TwAddVarCB(m_settingsBar, "Wireframe", TwType::TW_TYPE_BOOLCPP, DeferredShadingDemo::SetWireframeRSCallback, DeferredShadingDemo::GetWireframeTSCallback, this, "");
+	TwAddVarRW(m_settingsBar, "Show light locations", TwType::TW_TYPE_BOOLCPP, &m_showLightLocations, "");
 }
 
 void DeferredShadingDemo::BuildGeometryBuffers() {

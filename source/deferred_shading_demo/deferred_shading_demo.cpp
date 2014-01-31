@@ -25,6 +25,7 @@ DeferredShadingDemo::DeferredShadingDemo(HINSTANCE hinstance)
 	  m_spotLightBufferNeedsRebuild(false),
 	  m_vsync(false),
 	  m_wireframe(false),
+	  m_showLightLocations(false),
 	  m_renderTargetView(nullptr),
 	  m_gBufferInputLayout(nullptr),
 	  m_debugObjectInputLayout(nullptr),

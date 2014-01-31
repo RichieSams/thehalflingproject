@@ -70,13 +70,13 @@ void DeferredShadingDemo::BuildGeometryBuffers() {
 		vertices[i].normal = GetHillNormal(vertices[i].pos.x, vertices[i].pos.z);
 		vertices[i].texCoord = meshData.Vertices[i].TexCoord;
 	}
-	model->SetVertices(m_device, vertices, vertexCount);
+	model->CreateVertexBuffer(m_device, vertices, vertexCount);
 
 	uint *indices = new uint[indexCount];
 	for (uint i = 0; i < indexCount; ++i) {
 		indices[i] = meshData.Indices[i];
 	}
-	model->SetIndices(m_device, indices, indexCount);
+	model->CreateIndexBuffer(m_device, indices, indexCount);
 
 	// Create subsets
 	Common::ModelSubset *subsets = new Common::ModelSubset[1] {
@@ -86,7 +86,7 @@ void DeferredShadingDemo::BuildGeometryBuffers() {
 			m_textureManager.GetSRVFromDDSFile(m_device, "grass.dds", D3D11_USAGE_IMMUTABLE)
 		}
 	};
-	model->SetSubsets(subsets, 1);
+	model->CreateSubsets(subsets, 1);
 
 	meshData.Indices.clear();
 	meshData.Vertices.clear();

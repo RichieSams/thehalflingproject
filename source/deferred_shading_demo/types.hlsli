@@ -30,4 +30,15 @@ struct FullScreenTrianglePixelIn {
 	float4 positionClip  : SV_POSITION;
 };
 
+struct DebugObjectShaderVertexIn {
+	float3 position                   : POSITION;
+	float4x4 instanceWorldViewProj    : INSTANCE_WORLDVIEWPROJ;
+	float4 instanceColor              : INSTANCE_COLOR;
+};
+
+struct DebugObjectShaderPixelIn {
+	float4 positionClip   : SV_POSITION;
+	float4 color          : COLOR;
+};
+
 #endif

@@ -44,6 +44,12 @@
     <FxCompile Include="..\deferred_shading_demo\fullscreen_triangle_vertex_shader.hlsl">
       <Filter>Shader Logic</Filter>
     </FxCompile>
+    <FxCompile Include="..\deferred_shading_demo\debug_object_vertex_shader.hlsl">
+      <Filter>Shader Logic</Filter>
+    </FxCompile>
+    <FxCompile Include="..\deferred_shading_demo\debug_object_pixel_shader.hlsl">
+      <Filter>Shader Logic</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

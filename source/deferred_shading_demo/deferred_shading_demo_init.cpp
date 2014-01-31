@@ -90,6 +90,31 @@ void DeferredShadingDemo::BuildGeometryBuffers() {
 
 	meshData.Indices.clear();
 	meshData.Vertices.clear();
+
+	Common::GeometryGenerator::CreateSphere(1.0f, 10, 10, &meshData);
+	vertexCount = meshData.Vertices.size();
+	indexCount = meshData.Indices.size();
+
+	DebugObjectVertex *debugSphereVertices = new DebugObjectVertex[vertexCount];
+	for (uint i = 0; i < vertexCount; ++i) {
+		debugSphereVertices[i].pos = meshData.Vertices[i].Position;
+	}
+	m_debugSphere.CreateVertexBuffer(m_device, debugSphereVertices, vertexCount);
+
+	uint *debugSphereIndices = new uint[indexCount];
+	for (uint i = 0; i < indexCount; ++i) {
+		debugSphereIndices[i] = meshData.Indices[i];
+	}
+	m_debugSphere.CreateIndexBuffer(m_device, debugSphereIndices, indexCount);
+	m_debugSphereNumIndices = indexCount;
+
+	// Create subsets
+	Common::ModelSubset *debugSphereSubsets = new Common::ModelSubset[1] {
+		{0, vertexCount, 0, indexCount / 3, {{0.0f, 0.0f, 0.0f, 0.0f}}, nullptr}
+	};
+	m_debugSphere.CreateSubsets(debugSphereSubsets, 1);
+
+	m_debugSphere.CreateInstanceBuffer(m_device, 100);
 }
 
 float DeferredShadingDemo::GetHillHeight(float x, float z) const {
@@ -138,10 +163,24 @@ void DeferredShadingDemo::LoadShaders() {
 		{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0}
 	};
 
+	D3D11_INPUT_ELEMENT_DESC instanceVertexDesc[] = {
+		// Data from the vertex buffer
+		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+
+		// Data from the instance buffer
+		{"INSTANCE_WORLDVIEWPROJ", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 0, D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"INSTANCE_WORLDVIEWPROJ", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 16, D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"INSTANCE_WORLDVIEWPROJ", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 32, D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"INSTANCE_WORLDVIEWPROJ", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 48, D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"INSTANCE_COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 64, D3D11_INPUT_PER_INSTANCE_DATA, 1}
+	};
+
 	HR(Common::LoadVertexShader("gbuffer_vertex_shader.cso", m_device, &m_gbufferVertexShader, &m_gBufferInputLayout, vertexDesc, 3));
 	HR(Common::LoadPixelShader("gbuffer_pixel_shader.cso", m_device, &m_gbufferPixelShader));
 	HR(Common::LoadVertexShader("fullscreen_triangle_vertex_shader.cso", m_device, &m_fullscreenTriangleVertexShader, nullptr));
 	HR(Common::LoadPixelShader("no_cull_final_gather_pixel_shader.cso", m_device, &m_noCullFinalGatherPixelShader));
+	HR(Common::LoadVertexShader("debug_object_vertex_shader.cso", m_device, &m_debugObjectVertexShader, &m_debugObjectInputLayout, instanceVertexDesc, 6));
+	HR(Common::LoadPixelShader("debug_object_pixel_shader.cso", m_device, &m_debugObjectPixelShader));
 }
 
 void DeferredShadingDemo::CreateShaderBuffers() {

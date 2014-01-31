@@ -33,6 +33,15 @@ struct Vertex {
 	DirectX::XMFLOAT2 texCoord;
 };
 
+struct DebugObjectVertex {
+	DirectX::XMFLOAT3 pos;
+};
+
+struct DebugObjectInstance {
+	DirectX::XMMATRIX worldViewProj;
+	DirectX::XMFLOAT4 color;
+};
+
 struct FullScreenTriangleVertex {
 	DirectX::XMFLOAT3 pos;
 };
@@ -58,6 +67,9 @@ private:
 	std::vector<Common::Model<Vertex> > m_models;
 	std::vector<Common::BlinnPhongMaterial> m_frameMaterialList;
 
+	Common::Model<DebugObjectVertex, DebugObjectInstance> m_debugSphere;
+	uint m_debugSphereNumIndices;
+
 	Common::DirectionalLight m_directionalLight;
 	std::vector<Common::PointLight> m_pointLights;
 	std::vector<Common::PointLightAnimator> m_pointLightAnimators;
@@ -71,6 +83,7 @@ private:
 
 	ID3D11RenderTargetView *m_renderTargetView;
 	ID3D11InputLayout *m_gBufferInputLayout;
+	ID3D11InputLayout *m_debugObjectInputLayout;
 
 	Common::Depth2D *m_depthStencilBuffer;
 	D3D11_VIEWPORT m_screenViewport;
@@ -86,6 +99,8 @@ private:
 	ID3D11PixelShader *m_gbufferPixelShader;
 	ID3D11VertexShader *m_fullscreenTriangleVertexShader;
 	ID3D11PixelShader *m_noCullFinalGatherPixelShader;
+	ID3D11VertexShader *m_debugObjectVertexShader;
+	ID3D11PixelShader *m_debugObjectPixelShader;
 
 	ID3D11Buffer *m_gBufferVertexShaderObjectConstantsBuffer;
 	ID3D11Buffer *m_gBufferPixelShaderObjectConstantsBuffer;

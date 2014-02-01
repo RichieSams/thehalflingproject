@@ -18,7 +18,7 @@ cbuffer cbPerFrame : register(b0) {
 }
 
 Texture2DMS<float4> gGBufferAlbedoMaterialIndex    : register(t0);
-Texture2DMS<float3> gGBufferNormal                 : register(t1);
+Texture2DMS<float2> gGBufferNormal                 : register(t1);
 Texture2DMS<float> gGBufferDepth                   : register(t2);
 
 StructuredBuffer<PointLight> gPointLights : register(t3);

@@ -32,8 +32,6 @@ DeferredShadingDemo::DeferredShadingDemo(HINSTANCE hinstance)
 	  m_gBufferVertexShaderObjectConstantsBuffer(nullptr),
 	  m_gBufferPixelShaderObjectConstantsBuffer(nullptr),
 	  m_noCullFinalGatherPixelShaderConstantsBuffer(nullptr),
-	  m_debugObjectVertexShader(nullptr),
-	  m_debugObjectPixelShader(nullptr),
 	  m_transformedFullscreenTriangleVertexShaderConstantsBuffer(nullptr),
 	  m_renderGbuffersPixelShaderConstantsBuffer(nullptr),
 	  m_pointLightBuffer(nullptr),
@@ -42,6 +40,8 @@ DeferredShadingDemo::DeferredShadingDemo(HINSTANCE hinstance)
 	  m_gbufferPixelShader(nullptr),
 	  m_fullscreenTriangleVertexShader(nullptr),
 	  m_noCullFinalGatherPixelShader(nullptr),
+	  m_debugObjectVertexShader(nullptr),
+	  m_debugObjectPixelShader(nullptr),
 	  m_transformedFullscreenTriangleVertexShader(nullptr),
 	  m_renderGbuffersPixelShader(nullptr),
 	  m_diffuseSampleState(nullptr) {

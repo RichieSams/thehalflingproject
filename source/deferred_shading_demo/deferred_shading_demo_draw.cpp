@@ -231,7 +231,7 @@ void DeferredShadingDemo::RenderDebugGeometry() {
 		m_immediateContext->OMSetRenderTargets(1, &m_renderTargetView, m_depthStencilBuffer->GetDepthStencil());
 
 		// Set States
-		m_immediateContext->OMSetDepthStencilState(m_depthStencilStates.ReverseDepthWriteEnabled(), 0);
+		m_immediateContext->OMSetDepthStencilState(m_depthStencilStates.ReverseDepthEnabled(), 0);
 		m_immediateContext->RSSetState(m_rasterizerStates.BackFaceCull());
 
 		// Set the vertex and pixel shaders that will be used to render this triangle.

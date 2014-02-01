@@ -102,10 +102,14 @@ private:
 	ID3D11PixelShader *m_noCullFinalGatherPixelShader;
 	ID3D11VertexShader *m_debugObjectVertexShader;
 	ID3D11PixelShader *m_debugObjectPixelShader;
+	ID3D11VertexShader *m_transformedFullscreenTriangleVertexShader;
+	ID3D11PixelShader *m_renderGbuffersPixelShader;
 
 	ID3D11Buffer *m_gBufferVertexShaderObjectConstantsBuffer;
 	ID3D11Buffer *m_gBufferPixelShaderObjectConstantsBuffer;
 	ID3D11Buffer *m_noCullFinalGatherPixelShaderConstantsBuffer;
+	ID3D11Buffer *m_transformedFullscreenTriangleVertexShaderConstantsBuffer;
+	ID3D11Buffer *m_renderGbuffersPixelShaderConstantsBuffer;
 
 	// We assume there is only one directional light. Therefore, it is stored in a cbuffer
 	Common::StructuredBuffer<Common::PointLight> *m_pointLightBuffer;

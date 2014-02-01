@@ -49,6 +49,18 @@ struct NoCullFinalGatherPixelShaderFrameConstants {
 	DirectX::XMFLOAT3 gEyePosition;
 };
 
+// Debug pass
+struct TransformedFullScreenTriangleVertexShaderConstants {
+	DirectX::XMFLOAT2 gClipTranslation;
+	float gClipScale;
+};
+
+struct RenderGBuffersPixelShaderConstants {
+	DirectX::XMMATRIX gProj;
+	DirectX::XMMATRIX gInvViewProjection;
+	uint gGBufferIndex;
+};
+
 } // End of namespace DeferredShadingDemo
 
 #endif

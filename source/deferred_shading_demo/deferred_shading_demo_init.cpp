@@ -182,6 +182,8 @@ void DeferredShadingDemo::LoadShaders() {
 	HR(Common::LoadPixelShader("no_cull_final_gather_pixel_shader.cso", m_device, &m_noCullFinalGatherPixelShader));
 	HR(Common::LoadVertexShader("debug_object_vertex_shader.cso", m_device, &m_debugObjectVertexShader, &m_debugObjectInputLayout, instanceVertexDesc, 6));
 	HR(Common::LoadPixelShader("debug_object_pixel_shader.cso", m_device, &m_debugObjectPixelShader));
+	HR(Common::LoadVertexShader("transformed_fullscreen_triangle_vertex_shader.cso", m_device, &m_transformedFullscreenTriangleVertexShader, nullptr));
+	HR(Common::LoadPixelShader("render_gbuffers_pixel_shader.cso", m_device, &m_renderGbuffersPixelShader));
 }
 
 void DeferredShadingDemo::CreateShaderBuffers() {
@@ -216,6 +218,27 @@ void DeferredShadingDemo::CreateShaderBuffers() {
 
 	m_device->CreateBuffer(&noCullFinalGatherPixelShaderFrameBufferDesc, NULL, &m_noCullFinalGatherPixelShaderConstantsBuffer);
 
+	D3D11_BUFFER_DESC transformedFullScreenTriangleBufferDesc;
+	transformedFullScreenTriangleBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	transformedFullScreenTriangleBufferDesc.ByteWidth = Common::CBSize(sizeof(TransformedFullScreenTriangleVertexShaderConstants));
+	transformedFullScreenTriangleBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	transformedFullScreenTriangleBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	transformedFullScreenTriangleBufferDesc.MiscFlags = 0;
+	transformedFullScreenTriangleBufferDesc.StructureByteStride = 0;
+
+	m_device->CreateBuffer(&transformedFullScreenTriangleBufferDesc, NULL, &m_transformedFullscreenTriangleVertexShaderConstantsBuffer);
+
+	D3D11_BUFFER_DESC renderGBuffersBufferDesc;
+	renderGBuffersBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	renderGBuffersBufferDesc.ByteWidth = Common::CBSize(sizeof(RenderGBuffersPixelShaderConstants));
+	renderGBuffersBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	renderGBuffersBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	renderGBuffersBufferDesc.MiscFlags = 0;
+	renderGBuffersBufferDesc.StructureByteStride = 0;
+
+	m_device->CreateBuffer(&renderGBuffersBufferDesc, NULL, &m_renderGbuffersPixelShaderConstantsBuffer);
+
+	
 	if (m_pointLights.size() > 0)
 		m_pointLightBuffer = new Common::StructuredBuffer<Common::PointLight>(m_device, m_pointLights.size(), D3D11_BIND_SHADER_RESOURCE, true);
 	if (m_spotLights.size() > 0)

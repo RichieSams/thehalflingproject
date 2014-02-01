@@ -244,58 +244,61 @@ void DeferredShadingDemo::RenderDebugGeometry() {
 		m_debugSphere.DrawInstancedSubset(m_immediateContext, m_debugSphereNumIndices, m_pointLights.size());
 	}
 
-	// Use the backbuffer render target
-	m_immediateContext->OMSetRenderTargets(1, &m_renderTargetView, nullptr);
+	if (m_showGBuffers) {
+		// Use the backbuffer render target
+		m_immediateContext->OMSetRenderTargets(1, &m_renderTargetView, nullptr);
 
-	// Set States
-	m_immediateContext->OMSetDepthStencilState(m_depthStencilStates.DepthDisabled(), 0);
-	m_immediateContext->RSSetState(m_rasterizerStates.NoCull());
+		// Set States
+		m_immediateContext->OMSetDepthStencilState(m_depthStencilStates.DepthDisabled(), 0);
+		m_immediateContext->RSSetState(m_rasterizerStates.NoCull());
 
-	m_immediateContext->IASetInputLayout(nullptr);
-	m_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		m_immediateContext->IASetInputLayout(nullptr);
+		m_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	m_immediateContext->VSSetShader(m_transformedFullscreenTriangleVertexShader, nullptr, 0);
-	m_immediateContext->GSSetShader(0, 0, 0);
-	m_immediateContext->PSSetShader(m_renderGbuffersPixelShader, nullptr, 0);
+		m_immediateContext->VSSetShader(m_transformedFullscreenTriangleVertexShader, nullptr, 0);
+		m_immediateContext->GSSetShader(0, 0, 0);
+		m_immediateContext->PSSetShader(m_renderGbuffersPixelShader, nullptr, 0);
 
-	m_immediateContext->IASetVertexBuffers(0, 0, 0, 0, 0);
-	m_immediateContext->IASetIndexBuffer(0, DXGI_FORMAT_R32_UINT, 0);
+		m_immediateContext->IASetVertexBuffers(0, 0, 0, 0, 0);
+		m_immediateContext->IASetIndexBuffer(0, DXGI_FORMAT_R32_UINT, 0);
 
-	m_immediateContext->PSSetShaderResources(0, 3, &m_gBufferSRVs.front());
+		m_immediateContext->PSSetShaderResources(0, 3, &m_gBufferSRVs.front());
 
-	DirectX::XMFLOAT2 translations[6] = {DirectX::XMFLOAT2(-1.0f, -1.0f),
-		DirectX::XMFLOAT2(-0.5f, -1.0f),
-		DirectX::XMFLOAT2(0.0f, -1.0f),
-		DirectX::XMFLOAT2(0.5f, -1.0f),
-		DirectX::XMFLOAT2(0.5f, -0.5f),
-		DirectX::XMFLOAT2(0.5f, 0.0f)};
+		DirectX::XMFLOAT2 translations[6] = {DirectX::XMFLOAT2(-1.0f, -1.0f),
+			DirectX::XMFLOAT2(-0.5f, -1.0f),
+			DirectX::XMFLOAT2(0.0f, -1.0f),
+			DirectX::XMFLOAT2(0.5f, -1.0f),
+			DirectX::XMFLOAT2(0.5f, -0.5f),
+			DirectX::XMFLOAT2(0.5f, 0.0f)};
 
-	for (uint i = 0; i < 6; ++i) {
-		// Fill in object constants
-		D3D11_MAPPED_SUBRESOURCE mappedResource;
+		for (uint i = 0; i < 6; ++i) {
+			// Fill in object constants
+			D3D11_MAPPED_SUBRESOURCE mappedResource;
 
-		HR(m_immediateContext->Map(m_renderGbuffersPixelShaderConstantsBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
+			HR(m_immediateContext->Map(m_renderGbuffersPixelShaderConstantsBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
 
-		RenderGBuffersPixelShaderConstants *pixelShaderConstantsBuffer = static_cast<RenderGBuffersPixelShaderConstants *>(mappedResource.pData);
-		pixelShaderConstantsBuffer->gProj = DirectX::XMMatrixTranspose(projectionMatrix);
-		pixelShaderConstantsBuffer->gInvViewProjection = DirectX::XMMatrixTranspose(invViewProj);
-		pixelShaderConstantsBuffer->gGBufferIndex = i;
+			RenderGBuffersPixelShaderConstants *pixelShaderConstantsBuffer = static_cast<RenderGBuffersPixelShaderConstants *>(mappedResource.pData);
+			pixelShaderConstantsBuffer->gProj = DirectX::XMMatrixTranspose(projectionMatrix);
+			pixelShaderConstantsBuffer->gInvViewProjection = DirectX::XMMatrixTranspose(invViewProj);
+			pixelShaderConstantsBuffer->gGBufferIndex = i;
 
-		m_immediateContext->Unmap(m_renderGbuffersPixelShaderConstantsBuffer, 0);
-		m_immediateContext->PSSetConstantBuffers(0, 1, &m_renderGbuffersPixelShaderConstantsBuffer);
+			m_immediateContext->Unmap(m_renderGbuffersPixelShaderConstantsBuffer, 0);
+			m_immediateContext->PSSetConstantBuffers(0, 1, &m_renderGbuffersPixelShaderConstantsBuffer);
 
-		// Lock the constant buffer so it can be written to.
-		HR(m_immediateContext->Map(m_transformedFullscreenTriangleVertexShaderConstantsBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
+			// Lock the constant buffer so it can be written to.
+			HR(m_immediateContext->Map(m_transformedFullscreenTriangleVertexShaderConstantsBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
 
-		TransformedFullScreenTriangleVertexShaderConstants *vertexShaderConstantsBuffer = static_cast<TransformedFullScreenTriangleVertexShaderConstants *>(mappedResource.pData);
-		vertexShaderConstantsBuffer->gClipTranslation = translations[i];
-		vertexShaderConstantsBuffer->gClipScale = 0.25f;
+			TransformedFullScreenTriangleVertexShaderConstants *vertexShaderConstantsBuffer = static_cast<TransformedFullScreenTriangleVertexShaderConstants *>(mappedResource.pData);
+			vertexShaderConstantsBuffer->gClipTranslation = translations[i];
+			vertexShaderConstantsBuffer->gClipScale = 0.25f;
 
-		m_immediateContext->Unmap(m_transformedFullscreenTriangleVertexShaderConstantsBuffer, 0);
-		m_immediateContext->VSSetConstantBuffers(1, 1, &m_transformedFullscreenTriangleVertexShaderConstantsBuffer);
+			m_immediateContext->Unmap(m_transformedFullscreenTriangleVertexShaderConstantsBuffer, 0);
+			m_immediateContext->VSSetConstantBuffers(1, 1, &m_transformedFullscreenTriangleVertexShaderConstantsBuffer);
 
-		m_immediateContext->Draw(6, 0);
-	}
+			m_immediateContext->Draw(6, 0);
+		}
+
+
 
 	// Cleanup (aka make the runtime happy)
 	m_immediateContext->VSSetShader(0, 0, 0);

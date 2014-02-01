@@ -81,6 +81,7 @@ private:
 	bool m_vsync;
 	bool m_wireframe;
 	bool m_showLightLocations;
+	bool m_showGBuffers;
 
 	ID3D11RenderTargetView *m_renderTargetView;
 	ID3D11InputLayout *m_gBufferInputLayout;

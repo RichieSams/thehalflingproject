@@ -52,6 +52,7 @@ void DeferredShadingDemo::InitTweakBar() {
 	TwAddVarRW(m_settingsBar, "V-Sync", TwType::TW_TYPE_BOOLCPP, &m_vsync, "");
 	TwAddVarCB(m_settingsBar, "Wireframe", TwType::TW_TYPE_BOOLCPP, DeferredShadingDemo::SetWireframeRSCallback, DeferredShadingDemo::GetWireframeTSCallback, this, "");
 	TwAddVarRW(m_settingsBar, "Show light locations", TwType::TW_TYPE_BOOLCPP, &m_showLightLocations, "");
+	TwAddVarRW(m_settingsBar, "Show GBuffer parts", TwType::TW_TYPE_BOOLCPP, &m_showGBuffers, "");
 }
 
 void DeferredShadingDemo::BuildGeometryBuffers() {

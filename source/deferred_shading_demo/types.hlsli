@@ -30,6 +30,11 @@ struct FullScreenTrianglePixelIn {
 	float4 positionClip  : SV_POSITION;
 };
 
+struct TransformedFullScreenTrianglePixelIn {
+	float4 positionClip  : SV_POSITION;
+	float2 texCoord      : TEXCOORD;
+};
+
 struct DebugObjectShaderVertexIn {
 	float3 position                   : POSITION;
 	float4x4 instanceWorldViewProj    : INSTANCE_WORLDVIEWPROJ;

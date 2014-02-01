@@ -298,8 +298,35 @@ void DeferredShadingDemo::RenderDebugGeometry() {
 			m_immediateContext->Draw(6, 0);
 		}
 
+		// Render labels for each GBuffer part
+		m_spriteRenderer.Begin(m_immediateContext);
 
+		float quarterWidth = (float)m_clientWidth / 4.0f;
+		float quarterHeight = (float)m_clientHeight / 4.0f;
+		DirectX::XMFLOAT4X4 transform{1, 0, 0, 0,
+		                              0, 1, 0, 0,
+		                              0, 0, 1, 0,
+		                              0, m_clientHeight - quarterHeight, 0, 1};
+		m_spriteRenderer.RenderText(m_timesNewRoman12Font, L"Diffuse Albedo", transform, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) /* Yellow */);
+		
+		transform._41 = quarterWidth;
+		m_spriteRenderer.RenderText(m_timesNewRoman12Font, L"MaterialId", transform, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) /* Yellow */);
 
+		transform._41 = 2.0f * quarterWidth;
+		m_spriteRenderer.RenderText(m_timesNewRoman12Font, L"Spherical Coord Normal", transform, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) /* Yellow */);
+
+		transform._41 = 3.0f * quarterWidth;
+		m_spriteRenderer.RenderText(m_timesNewRoman12Font, L"Cartesian Coord Normal", transform, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) /* Yellow */);
+
+		transform._42 = m_clientHeight - (2.0f * quarterHeight);
+		m_spriteRenderer.RenderText(m_timesNewRoman12Font, L"Z/W Depth", transform, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) /* Yellow */);
+
+		transform._42 = m_clientHeight - (3.0f * quarterHeight);
+		m_spriteRenderer.RenderText(m_timesNewRoman12Font, L"Position", transform, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) /* Yellow */);
+
+		m_spriteRenderer.End();
+	}
+	
 	// Cleanup (aka make the runtime happy)
 	m_immediateContext->VSSetShader(0, 0, 0);
 	m_immediateContext->GSSetShader(0, 0, 0);

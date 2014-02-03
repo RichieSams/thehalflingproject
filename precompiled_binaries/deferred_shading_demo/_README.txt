@@ -35,3 +35,10 @@ Hold left mouse and drag to rotate
 Scroll middle mouse to zoom
 
 Click the little arrow in the bottom left-corner to change settings
+
+
+Change log:
+
+Commit range efeecb242 to 0ec53f2e2
+- Add the ability to show spheres showing the location of each point light
+- Add the ability to show the gbuffers. (Broken into logical parts)

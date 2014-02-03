@@ -41,15 +41,15 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\..\build\$(ConfigurationName)\$(ProjectName)\</OutDir>
-    <IntDir>..\..\obj\$(ConfigurationName)\$(ProjectName)\</IntDir>
+    <OutDir>..\..\build\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>..\..\obj\$(Configuration)\$(ProjectName)\</IntDir>
     <IncludePath>../;../libs/AntTweakBar/include;../libs/DirectXTK/include;$(IncludePath)</IncludePath>
     <LibraryPath>../libs/AntTweakBar/lib;../libs/DirectXTK/lib/Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\..\build\$(ConfigurationName)\$(ProjectName)\</OutDir>
-    <IntDir>..\..\obj\$(ConfigurationName)\$(ProjectName)\</IntDir>
+    <OutDir>..\..\build\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>..\..\obj\$(Configuration)\$(ProjectName)\</IntDir>
     <IncludePath>../;../libs/AntTweakBar/include;../libs/DirectXTK/include;$(IncludePath)</IncludePath>
     <LibraryPath>../libs/AntTweakBar/lib;../libs/DirectXTK/lib/Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>

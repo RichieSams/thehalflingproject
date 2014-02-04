@@ -66,8 +66,9 @@ void DeferredShadingDemo::RenderMainPass() {
 
 		DirectX::XMMATRIX worldViewProjection = DirectX::XMMatrixTranspose(worldMatrix * viewProj);
 
-		SetGBufferShaderObjectConstants(DirectX::XMMatrixTranspose(worldMatrix), worldViewProjection, m_frameMaterialList.size() - 1);
-	
+		SetGBufferVertexShaderConstants(DirectX::XMMatrixTranspose(worldMatrix), worldViewProjection);
+		SetGBufferPixelShaderConstants(m_frameMaterialList.size() - 1);
+
 		// Draw the models
 		m_models[i].DrawSubset(m_immediateContext);
 	}
@@ -126,7 +127,7 @@ void DeferredShadingDemo::RenderMainPass() {
 	m_immediateContext->PSSetShaderResources(0, 6, nullSRV);
 }
 
-void DeferredShadingDemo::SetGBufferShaderObjectConstants(DirectX::XMMATRIX &worldMatrix, DirectX::XMMATRIX &worldViewProjMatrix, uint materialIndex) {
+void DeferredShadingDemo::SetGBufferVertexShaderConstants(DirectX::XMMATRIX &worldMatrix, DirectX::XMMATRIX &worldViewProjMatrix) {
 	// Fill in object constants
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 
@@ -139,7 +140,12 @@ void DeferredShadingDemo::SetGBufferShaderObjectConstants(DirectX::XMMATRIX &wor
 
 	m_immediateContext->Unmap(m_gBufferVertexShaderObjectConstantsBuffer, 0);
 	m_immediateContext->VSSetConstantBuffers(1, 1, &m_gBufferVertexShaderObjectConstantsBuffer);
+}
 
+void DeferredShadingDemo::SetGBufferPixelShaderConstants(uint materialIndex) {
+	// Fill in object constants
+	D3D11_MAPPED_SUBRESOURCE mappedResource;
+	
 	// Lock the constant buffer so it can be written to.
 	HR(m_immediateContext->Map(m_gBufferPixelShaderObjectConstantsBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
 

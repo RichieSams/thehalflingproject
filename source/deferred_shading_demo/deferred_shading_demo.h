@@ -163,7 +163,8 @@ private:
 	void RenderMainPass();
 	void RenderDebugGeometry();
 	void RenderHUD();
-	void SetGBufferShaderObjectConstants(DirectX::XMMATRIX &worldMatrix, DirectX::XMMATRIX &worldViewProjMatrix, uint materialIndex);
+	void SetGBufferVertexShaderConstants(DirectX::XMMATRIX &worldMatrix, DirectX::XMMATRIX &worldViewProjMatrix);
+	void SetGBufferPixelShaderConstants(uint materialIndex);
 	void SetNoCullFinalGatherShaderConstants(DirectX::XMMATRIX &projMatrix, DirectX::XMMATRIX &invViewProjMatrix);
 	void SetLightBuffers();
 	void SetMaterialList();

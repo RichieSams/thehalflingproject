@@ -26,34 +26,37 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\deferred_shading_demo\gbuffer_pixel_shader.hlsl">
+    <FxCompile Include="..\deferred_shading_demo\debug_object_ps.hlsl">
       <Filter>Shader Logic</Filter>
     </FxCompile>
-    <FxCompile Include="..\deferred_shading_demo\gbuffer_vertex_shader.hlsl">
+    <FxCompile Include="..\deferred_shading_demo\debug_object_vs.hlsl">
       <Filter>Shader Logic</Filter>
     </FxCompile>
-    <FxCompile Include="..\deferred_shading_demo\forward_vertex_shader.hlsl">
+    <FxCompile Include="..\deferred_shading_demo\forward_ps.hlsl">
       <Filter>Shader Logic</Filter>
     </FxCompile>
-    <FxCompile Include="..\deferred_shading_demo\forward_pixel_shader.hlsl">
+    <FxCompile Include="..\deferred_shading_demo\forward_vs.hlsl">
       <Filter>Shader Logic</Filter>
     </FxCompile>
-    <FxCompile Include="no_cull_final_gather_pixel_shader.hlsl">
+    <FxCompile Include="..\deferred_shading_demo\fullscreen_triangle_vs.hlsl">
       <Filter>Shader Logic</Filter>
     </FxCompile>
-    <FxCompile Include="..\deferred_shading_demo\fullscreen_triangle_vertex_shader.hlsl">
+    <FxCompile Include="..\deferred_shading_demo\gbuffer_ps.hlsl">
       <Filter>Shader Logic</Filter>
     </FxCompile>
-    <FxCompile Include="..\deferred_shading_demo\debug_object_vertex_shader.hlsl">
+    <FxCompile Include="no_cull_final_gather_ps.hlsl">
       <Filter>Shader Logic</Filter>
     </FxCompile>
-    <FxCompile Include="..\deferred_shading_demo\debug_object_pixel_shader.hlsl">
+    <FxCompile Include="..\deferred_shading_demo\render_gbuffers_ps.hlsl">
       <Filter>Shader Logic</Filter>
     </FxCompile>
-    <FxCompile Include="..\deferred_shading_demo\transformed_fullscreen_triangle_vertex_shader.hlsl">
+    <FxCompile Include="..\deferred_shading_demo\tiled_culling_cs.hlsl">
       <Filter>Shader Logic</Filter>
     </FxCompile>
-    <FxCompile Include="..\deferred_shading_demo\render_gbuffers_pixel_shader.hlsl">
+    <FxCompile Include="..\deferred_shading_demo\transformed_fullscreen_triangle_vs.hlsl">
+      <Filter>Shader Logic</Filter>
+    </FxCompile>
+    <FxCompile Include="..\deferred_shading_demo\gbuffer_vs.hlsl">
       <Filter>Shader Logic</Filter>
     </FxCompile>
   </ItemGroup>

@@ -181,16 +181,16 @@ void DeferredShadingDemo::LoadShaders() {
 		{"INSTANCE_COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 64, D3D11_INPUT_PER_INSTANCE_DATA, 1}
 	};
 
-	HR(Common::LoadVertexShader("forward_vertex_shader.cso", m_device, &m_forwardVertexShader, nullptr));
-	HR(Common::LoadPixelShader("forward_pixel_shader.cso", m_device, &m_forwardPixelShader));
-	HR(Common::LoadVertexShader("gbuffer_vertex_shader.cso", m_device, &m_gbufferVertexShader, &m_gBufferInputLayout, vertexDesc, 3));
-	HR(Common::LoadPixelShader("gbuffer_pixel_shader.cso", m_device, &m_gbufferPixelShader));
-	HR(Common::LoadVertexShader("fullscreen_triangle_vertex_shader.cso", m_device, &m_fullscreenTriangleVertexShader, nullptr));
-	HR(Common::LoadPixelShader("no_cull_final_gather_pixel_shader.cso", m_device, &m_noCullFinalGatherPixelShader));
-	HR(Common::LoadVertexShader("debug_object_vertex_shader.cso", m_device, &m_debugObjectVertexShader, &m_debugObjectInputLayout, instanceVertexDesc, 6));
-	HR(Common::LoadPixelShader("debug_object_pixel_shader.cso", m_device, &m_debugObjectPixelShader));
-	HR(Common::LoadVertexShader("transformed_fullscreen_triangle_vertex_shader.cso", m_device, &m_transformedFullscreenTriangleVertexShader, nullptr));
-	HR(Common::LoadPixelShader("render_gbuffers_pixel_shader.cso", m_device, &m_renderGbuffersPixelShader));
+	HR(Common::LoadVertexShader("forward_vs.cso", m_device, &m_forwardVertexShader, nullptr));
+	HR(Common::LoadPixelShader("forward_ps.cso", m_device, &m_forwardPixelShader));
+	HR(Common::LoadVertexShader("gbuffer_vs.cso", m_device, &m_gbufferVertexShader, &m_gBufferInputLayout, vertexDesc, 3));
+	HR(Common::LoadPixelShader("gbuffer_ps.cso", m_device, &m_gbufferPixelShader));
+	HR(Common::LoadVertexShader("fullscreen_triangle_vs.cso", m_device, &m_fullscreenTriangleVertexShader, nullptr));
+	HR(Common::LoadPixelShader("no_cull_final_gather_ps.cso", m_device, &m_noCullFinalGatherPixelShader));
+	HR(Common::LoadVertexShader("debug_object_vs.cso", m_device, &m_debugObjectVertexShader, &m_debugObjectInputLayout, instanceVertexDesc, 6));
+	HR(Common::LoadPixelShader("debug_object_ps.cso", m_device, &m_debugObjectPixelShader));
+	HR(Common::LoadVertexShader("transformed_fullscreen_triangle_vs.cso", m_device, &m_transformedFullscreenTriangleVertexShader, nullptr));
+	HR(Common::LoadPixelShader("render_gbuffers_ps.cso", m_device, &m_renderGbuffersPixelShader));
 }
 
 void DeferredShadingDemo::CreateShaderBuffers() {

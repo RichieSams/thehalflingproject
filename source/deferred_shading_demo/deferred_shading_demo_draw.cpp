@@ -35,6 +35,101 @@ void DeferredShadingDemo::RenderMainPass() {
 }
 
 void DeferredShadingDemo::ForwardRenderingPass() {
+	// Set the backbuffer as the main render target
+	m_immediateContext->OMSetRenderTargets(1, &m_renderTargetView, m_depthStencilBuffer->GetDepthStencil());
+
+	// Clear the render target view and depth buffer
+	m_immediateContext->ClearRenderTargetView(m_renderTargetView, DirectX::Colors::LightGray);
+	m_immediateContext->ClearDepthStencilView(m_depthStencilBuffer->GetDepthStencil(), D3D11_CLEAR_DEPTH, 0.0f, 0);
+
+	// Set States
+	m_immediateContext->PSSetSamplers(0, 1, &m_diffuseSampleState);
+	float blendFactor[4] = {1.0f, 1.0f, 1.0f, 1.0f};
+	m_immediateContext->OMSetBlendState(m_blendStates.BlendDisabled(), blendFactor, 0xFFFFFFFF);
+	m_immediateContext->OMSetDepthStencilState(m_depthStencilStates.ReverseDepthWriteEnabled(), 0);
+	ID3D11RasterizerState *rasterState = m_wireframe ? m_rasterizerStates.Wireframe() : m_rasterizerStates.BackFaceCull();
+	m_immediateContext->RSSetState(rasterState);
+
+	// Set the vertex and pixel shaders that will be used to render this triangle.
+	m_immediateContext->VSSetShader(m_forwardVertexShader, nullptr, 0);
+	m_immediateContext->PSSetShader(m_forwardPixelShader, nullptr, 0);
+
+	m_immediateContext->IASetInputLayout(m_gBufferInputLayout);
+	m_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	// Fetch the transpose matricies
+	DirectX::XMMATRIX worldMatrix = m_worldViewProj.world;
+	DirectX::XMMATRIX viewMatrix = m_worldViewProj.view;
+	DirectX::XMMATRIX projectionMatrix = m_worldViewProj.projection;
+
+	// Cache the matrix multiplication
+	DirectX::XMMATRIX viewProj = viewMatrix * projectionMatrix;
+
+	SetForwardPixelShaderFrameConstants();
+
+	// Set light buffers
+	SetLightBuffers();
+
+	if (m_pointLights.size() > 0) {
+		ID3D11ShaderResourceView *srv = m_pointLightBuffer->GetShaderResource();
+		m_immediateContext->PSSetShaderResources(3, 1, &srv);
+	}
+	if (m_spotLights.size() > 0) {
+		ID3D11ShaderResourceView *srv = m_spotLightBuffer->GetShaderResource();
+		m_immediateContext->PSSetShaderResources(4, 1, &srv);
+	}
+
+	for (uint i = 0; i < m_models.size(); ++i) {
+		m_frameMaterialList.push_back(m_models[i].GetSubsetMaterial(0));
+
+		DirectX::XMMATRIX worldViewProjection = DirectX::XMMatrixTranspose(worldMatrix * viewProj);
+
+		// GBuffer pass and Forward pass share the same Vertex cbPerFrame signature
+		SetGBufferVertexShaderConstants(DirectX::XMMatrixTranspose(worldMatrix), worldViewProjection);
+
+		SetForwardPixelShaderObjectConstants(m_models[i].GetSubsetMaterial(0));
+
+		// Draw the models
+		m_models[i].DrawSubset(m_immediateContext);
+	}
+
+	// Cleanup (aka make the runtime happy)
+	m_immediateContext->VSSetShader(0, 0, 0);
+	m_immediateContext->GSSetShader(0, 0, 0);
+	m_immediateContext->PSSetShader(0, 0, 0);
+	m_immediateContext->OMSetRenderTargets(0, 0, 0);
+	ID3D11ShaderResourceView* nullSRV[6] = {0, 0, 0, 0, 0, 0};
+	m_immediateContext->VSSetShaderResources(0, 6, nullSRV);
+	m_immediateContext->PSSetShaderResources(0, 6, nullSRV);
+}
+
+void DeferredShadingDemo::SetForwardPixelShaderFrameConstants() {
+	// Fill in object constants
+	D3D11_MAPPED_SUBRESOURCE mappedResource;
+
+	// Lock the constant buffer so it can be written to.
+	HR(m_immediateContext->Map(m_forwardPixelShaderFrameConstantsBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
+
+	ForwardPixelShaderFrameConstants *pixelShaderFrameConstants = static_cast<ForwardPixelShaderFrameConstants *>(mappedResource.pData);
+	pixelShaderFrameConstants->DirectionalLight = m_directionalLight;
+	pixelShaderFrameConstants->EyePosition = m_camera.GetCameraPosition();
+
+	m_immediateContext->Unmap(m_forwardPixelShaderFrameConstantsBuffer, 0);
+	m_immediateContext->PSSetConstantBuffers(0, 1, &m_forwardPixelShaderFrameConstantsBuffer);
+}
+
+void DeferredShadingDemo::SetForwardPixelShaderObjectConstants(const Common::BlinnPhongMaterial &material) {
+	// Fill in object constants
+	D3D11_MAPPED_SUBRESOURCE mappedResource;
+
+	// Lock the constant buffer so it can be written to.
+	HR(m_immediateContext->Map(m_forwardPixelShaderObjectConstantsBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
+
+	ForwardPixelShaderObjectConstants *pixelShaderObjectConstants = static_cast<ForwardPixelShaderObjectConstants *>(mappedResource.pData);
+	pixelShaderObjectConstants->Material = material;
+
+	m_immediateContext->Unmap(m_forwardPixelShaderObjectConstantsBuffer, 0);
+	m_immediateContext->PSSetConstantBuffers(1, 1, &m_forwardPixelShaderObjectConstantsBuffer);
 }
 
 void DeferredShadingDemo::NoCullDeferredRenderingPass() {
@@ -264,7 +359,7 @@ void DeferredShadingDemo::RenderDebugGeometry() {
 		m_debugSphere.DrawInstancedSubset(m_immediateContext, m_debugSphereNumIndices, m_pointLights.size());
 	}
 
-	if (m_showGBuffers) {
+	if (m_showGBuffers && m_shadingType == ShadingType::NoCullDeferred) {
 		// Use the backbuffer render target
 		m_immediateContext->OMSetRenderTargets(1, &m_renderTargetView, nullptr);
 

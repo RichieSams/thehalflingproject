@@ -22,14 +22,13 @@ cbuffer cbPerObject : register(b1) {
 Texture2D gDiffuseTexture : register(t0);
 SamplerState gDiffuseSampler : register(s0);
 
-StructuredBuffer<PointLight> gPointLights : register(t4);
-StructuredBuffer<SpotLight> gSpotLights : register(t5);
+StructuredBuffer<PointLight> gPointLights : register(t3);
+StructuredBuffer<SpotLight> gSpotLights : register(t4);
 
 
 float4 ForwardPS(ForwardPixelIn input) : SV_TARGET {
 	// Interpolating can unnormalize
 	input.normal = normalize(input.normal);
-	input.positionWorld = normalize(input.positionWorld);
 
 	float3 toEye = normalize(gEyePosition - input.positionWorld);
 
@@ -42,27 +41,27 @@ float4 ForwardPS(ForwardPixelIn input) : SV_TARGET {
 	float4 textureColor = gDiffuseTexture.Sample(gDiffuseSampler, input.texCoord);
 
 	// Sum the contribution from each light source
-	uint numLights, dummy, lightIndex;
+	uint numLights, lightIndex, dummy;
 
 	AccumulateBlinnPhongDirectionalLight(gMaterial, gDirectionalLight, input.normal, toEye, ambient, diffuse, spec);
 
 	gPointLights.GetDimensions(numLights, dummy);
 	for (lightIndex = 0; lightIndex < numLights; ++lightIndex) {
-        PointLight light = gPointLights[lightIndex];
+		PointLight light = gPointLights[lightIndex];
 		AccumulateBlinnPhongPointLight(gMaterial, light, input.positionWorld, input.normal, toEye, diffuse, spec);
-    }
+	}
 
 	gSpotLights.GetDimensions(numLights, dummy);
 	for (lightIndex = 0; lightIndex < numLights; ++lightIndex) {
-        SpotLight light = gSpotLights[lightIndex];
+		SpotLight light = gSpotLights[lightIndex];
 		AccumulateBlinnPhongSpotLight(gMaterial, light, input.positionWorld, input.normal, toEye, diffuse, spec);
-    }
+	}
 
 	// Combine
 	float4 litColor = textureColor * (ambient + diffuse) + spec;
 
-	// Take alpha from diffuse material and texture
-	litColor.a = gMaterial.Diffuse.a * textureColor.a;
+	// Take alpha from diffuse material
+	litColor.a = gMaterial.Diffuse.a;
 
 	return litColor;
 }

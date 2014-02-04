@@ -31,6 +31,8 @@ DeferredShadingDemo::DeferredShadingDemo(HINSTANCE hinstance)
 	  m_renderTargetView(nullptr),
 	  m_gBufferInputLayout(nullptr),
 	  m_debugObjectInputLayout(nullptr),
+	  m_forwardPixelShaderFrameConstantsBuffer(nullptr),
+	  m_forwardPixelShaderObjectConstantsBuffer(nullptr),
 	  m_gBufferVertexShaderObjectConstantsBuffer(nullptr),
 	  m_gBufferPixelShaderObjectConstantsBuffer(nullptr),
 	  m_noCullFinalGatherPixelShaderConstantsBuffer(nullptr),
@@ -51,6 +53,8 @@ DeferredShadingDemo::DeferredShadingDemo(HINSTANCE hinstance)
 
 void DeferredShadingDemo::Shutdown() {
 	// Release in the opposite order we initialized in
+	ReleaseCOM(m_forwardPixelShaderFrameConstantsBuffer);
+	ReleaseCOM(m_forwardPixelShaderObjectConstantsBuffer);
 	ReleaseCOM(m_gBufferVertexShaderObjectConstantsBuffer);
 	ReleaseCOM(m_gBufferPixelShaderObjectConstantsBuffer);
 	ReleaseCOM(m_noCullFinalGatherPixelShaderConstantsBuffer);

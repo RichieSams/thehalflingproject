@@ -103,6 +103,8 @@ private:
 	TwBar *m_settingsBar;
 
 	// Shaders
+	ID3D11VertexShader *m_forwardVertexShader;
+	ID3D11PixelShader *m_forwardPixelShader;
 	ID3D11VertexShader *m_gbufferVertexShader;
 	ID3D11PixelShader *m_gbufferPixelShader;
 	ID3D11VertexShader *m_fullscreenTriangleVertexShader;
@@ -112,6 +114,8 @@ private:
 	ID3D11VertexShader *m_transformedFullscreenTriangleVertexShader;
 	ID3D11PixelShader *m_renderGbuffersPixelShader;
 
+	ID3D11Buffer *m_forwardPixelShaderFrameConstantsBuffer;
+	ID3D11Buffer *m_forwardPixelShaderObjectConstantsBuffer;
 	ID3D11Buffer *m_gBufferVertexShaderObjectConstantsBuffer;
 	ID3D11Buffer *m_gBufferPixelShaderObjectConstantsBuffer;
 	ID3D11Buffer *m_noCullFinalGatherPixelShaderConstantsBuffer;
@@ -171,9 +175,13 @@ private:
 	void NoCullDeferredRenderingPass();
 	void RenderDebugGeometry();
 	void RenderHUD();
+
+	void SetForwardPixelShaderFrameConstants();
+	void SetForwardPixelShaderObjectConstants(const Common::BlinnPhongMaterial &material);
 	void SetGBufferVertexShaderConstants(DirectX::XMMATRIX &worldMatrix, DirectX::XMMATRIX &worldViewProjMatrix);
 	void SetGBufferPixelShaderConstants(uint materialIndex);
 	void SetNoCullFinalGatherShaderConstants(DirectX::XMMATRIX &projMatrix, DirectX::XMMATRIX &invViewProjMatrix);
+	
 	void SetLightBuffers();
 	void SetMaterialList();
 };

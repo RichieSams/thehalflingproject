@@ -177,6 +177,8 @@ void DeferredShadingDemo::LoadShaders() {
 		{"INSTANCE_COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 64, D3D11_INPUT_PER_INSTANCE_DATA, 1}
 	};
 
+	HR(Common::LoadVertexShader("forward_vertex_shader.cso", m_device, &m_forwardVertexShader, nullptr));
+	HR(Common::LoadPixelShader("forward_pixel_shader.cso", m_device, &m_forwardPixelShader));
 	HR(Common::LoadVertexShader("gbuffer_vertex_shader.cso", m_device, &m_gbufferVertexShader, &m_gBufferInputLayout, vertexDesc, 3));
 	HR(Common::LoadPixelShader("gbuffer_pixel_shader.cso", m_device, &m_gbufferPixelShader));
 	HR(Common::LoadVertexShader("fullscreen_triangle_vertex_shader.cso", m_device, &m_fullscreenTriangleVertexShader, nullptr));
@@ -188,6 +190,25 @@ void DeferredShadingDemo::LoadShaders() {
 }
 
 void DeferredShadingDemo::CreateShaderBuffers() {
+	D3D11_BUFFER_DESC forwardPixelShaderFrameBufferDesc;
+	forwardPixelShaderFrameBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	forwardPixelShaderFrameBufferDesc.ByteWidth = Common::CBSize(sizeof(ForwardPixelShaderFrameConstants));
+	forwardPixelShaderFrameBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	forwardPixelShaderFrameBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	forwardPixelShaderFrameBufferDesc.MiscFlags = 0;
+	forwardPixelShaderFrameBufferDesc.StructureByteStride = 0;
+
+	m_device->CreateBuffer(&forwardPixelShaderFrameBufferDesc, NULL, &m_forwardPixelShaderFrameConstantsBuffer);
+
+	D3D11_BUFFER_DESC forwardPixelShaderObjectBufferDesc;
+	forwardPixelShaderObjectBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	forwardPixelShaderObjectBufferDesc.ByteWidth = Common::CBSize(sizeof(ForwardPixelShaderObjectConstants));
+	forwardPixelShaderObjectBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	forwardPixelShaderObjectBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	forwardPixelShaderObjectBufferDesc.MiscFlags = 0;
+	forwardPixelShaderObjectBufferDesc.StructureByteStride = 0;
+
+	m_device->CreateBuffer(&forwardPixelShaderObjectBufferDesc, NULL, &m_forwardPixelShaderObjectConstantsBuffer);
 
 	D3D11_BUFFER_DESC vertexShaderObjectBufferDesc;
 	vertexShaderObjectBufferDesc.Usage = D3D11_USAGE_DYNAMIC;

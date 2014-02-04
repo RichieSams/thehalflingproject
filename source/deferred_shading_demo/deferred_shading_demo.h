@@ -167,6 +167,8 @@ private:
 
 	// Rendering methods
 	void RenderMainPass();
+	void ForwardRenderingPass();
+	void NoCullDeferredRenderingPass();
 	void RenderDebugGeometry();
 	void RenderHUD();
 	void SetGBufferVertexShaderConstants(DirectX::XMMATRIX &worldMatrix, DirectX::XMMATRIX &worldViewProjMatrix);

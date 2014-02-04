@@ -24,6 +24,20 @@ void DeferredShadingDemo::DrawFrame(double deltaTime) {
 }
 
 void DeferredShadingDemo::RenderMainPass() {
+	switch (m_shadingType) {
+	case ShadingType::Forward:
+		ForwardRenderingPass();
+		break;
+	case ShadingType::NoCullDeferred:
+		NoCullDeferredRenderingPass();
+		break;
+	}
+}
+
+void DeferredShadingDemo::ForwardRenderingPass() {
+}
+
+void DeferredShadingDemo::NoCullDeferredRenderingPass() {
 	// Clear the material list
 	m_frameMaterialList.clear();
 

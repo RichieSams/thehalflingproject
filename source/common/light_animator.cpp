@@ -16,28 +16,28 @@ void PointLightAnimator::MoveLight(Common::PointLight *light, double deltaTime) 
 
 	// Check x for out of bounds
 	if (xPosition > m_positiveBounds.x) {
-		xPosition = xPosition - (m_positiveBounds.x - xPosition);
+		xPosition = m_positiveBounds.x - (xPosition - m_positiveBounds.x);
 		m_velocity.x = -m_velocity.x;
 	} else if (xPosition < m_negativeBounds.x) {
-		xPosition = xPosition + (m_negativeBounds.x - xPosition);
+		xPosition = m_negativeBounds.x + (m_negativeBounds.x - xPosition);
 		m_velocity.x = -m_velocity.x;
 	}
 
 	// Check y for out of bounds
 	if (yPosition > m_positiveBounds.y) {
-		yPosition = yPosition - (m_positiveBounds.y - yPosition);
+		yPosition = m_positiveBounds.y - (yPosition - m_positiveBounds.y);
 		m_velocity.y = -m_velocity.y;
 	} else if (yPosition < m_negativeBounds.y) {
-		yPosition = yPosition + (m_negativeBounds.y - yPosition);
+		yPosition = m_negativeBounds.y + (m_negativeBounds.y - yPosition);
 		m_velocity.y = -m_velocity.y;
 	}
 
 	// Check z for out of bounds
 	if (zPosition > m_positiveBounds.z) {
-		zPosition = zPosition - (m_positiveBounds.z - zPosition);
+		zPosition = m_positiveBounds.z - (zPosition - m_positiveBounds.z);
 		m_velocity.z = -m_velocity.z;
 	} else if (zPosition < m_negativeBounds.z) {
-		zPosition = zPosition + (m_negativeBounds.z - zPosition);
+		zPosition = m_negativeBounds.z + (m_negativeBounds.z - zPosition);
 		m_velocity.z = -m_velocity.z;
 	}
 

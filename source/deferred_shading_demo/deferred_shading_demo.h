@@ -52,6 +52,11 @@ struct WorldViewProjection {
 	DirectX::XMMATRIX projection;
 };
 
+enum ShadingType {
+	Forward,
+	NoCullDeferred
+};
+
 class DeferredShadingDemo : public Halfling::HalflingEngine {
 public:
 	DeferredShadingDemo(HINSTANCE hinstance);
@@ -80,6 +85,7 @@ private:
 
 	bool m_vsync;
 	bool m_wireframe;
+	ShadingType m_shadingType;
 	bool m_showLightLocations;
 	bool m_showGBuffers;
 

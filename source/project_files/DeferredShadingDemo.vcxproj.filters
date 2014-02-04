@@ -50,9 +50,6 @@
     <FxCompile Include="..\deferred_shading_demo\render_gbuffers_ps.hlsl">
       <Filter>Shader Logic</Filter>
     </FxCompile>
-    <FxCompile Include="..\deferred_shading_demo\tiled_culling_cs.hlsl">
-      <Filter>Shader Logic</Filter>
-    </FxCompile>
     <FxCompile Include="..\deferred_shading_demo\transformed_fullscreen_triangle_vs.hlsl">
       <Filter>Shader Logic</Filter>
     </FxCompile>

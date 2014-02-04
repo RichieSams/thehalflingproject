@@ -214,7 +214,7 @@ void DeferredShadingDemo::NoCullDeferredRenderingPass() {
 	}
 	if (m_spotLights.size() > 0) {
 		ID3D11ShaderResourceView *srv = m_spotLightBuffer->GetShaderResource();
-		m_immediateContext->PSGetShaderResources(4, 1, &srv);
+		m_immediateContext->PSSetShaderResources(4, 1, &srv);
 	}
 
 	// Set material list

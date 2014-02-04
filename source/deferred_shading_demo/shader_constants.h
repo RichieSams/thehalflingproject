@@ -15,11 +15,6 @@
 namespace DeferredShadingDemo {
 
 // Forward Shading
-struct ForwardVertexShaderObjectConstants {
-	DirectX::XMMATRIX WorldViewProj;
-	DirectX::XMMATRIX World;
-};
-
 struct ForwardPixelShaderFrameConstants {
 	Common::DirectionalLight DirectionalLight;
 	DirectX::XMFLOAT3 EyePosition;

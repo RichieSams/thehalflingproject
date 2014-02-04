@@ -7,13 +7,13 @@
     <ClCompile Include="..\deferred_shading_demo\deferred_shading_demo.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\deferred_shading_demo\deferred_shading_demo_update.cpp">
+    <ClCompile Include="..\deferred_shading_demo\deferred_shading_demo.update.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\deferred_shading_demo\deferred_shading_demo_init.cpp">
+    <ClCompile Include="..\deferred_shading_demo\deferred_shading_demo.init.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\deferred_shading_demo\deferred_shading_demo_draw.cpp">
+    <ClCompile Include="..\deferred_shading_demo\deferred_shading_demo.draw.cpp">
       <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>

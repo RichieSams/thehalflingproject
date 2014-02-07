@@ -34,9 +34,13 @@ struct SpotLight {
 	float Range;
 
 	float3 Direction;
-	float Spot;
+	float AttenuationDistanceUNorm;
 
-	float3 Attenuation;
+	float CosInnerConeAngle;
+	float CosOuterConeAngle;
+	
+	float SpotLightFactor;
+
 	float pad;
 };
 

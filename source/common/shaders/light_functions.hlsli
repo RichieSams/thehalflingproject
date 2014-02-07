@@ -80,13 +80,13 @@ void AccumulateBlinnPhongSpotLight(BlinnPhongMaterial mat, SpotLight light, floa
 	// Normalize the light vector
 	lightVector /= distance;
 
-	float spot = pow(max(dot(-lightVector, light.Direction), 0.0f), light.Spot);
-
 	float diffuseFactor = dot(lightVector, normal);
 
 	[flatten]
 	if (diffuseFactor > 0.0f) {
-		float attenuation = spot / dot(light.Attenuation, float3(1.0f, distance, distance * distance));
+		float currentAngle = dot(-lightVector, light.Direction);
+		float spot = 1.0f - smoothstep(light.CosInnerConeAngle, light.CosOuterConeAngle, currentAngle);
+		float attenuation = spot * (1.0f - smoothstep(light.Range * light.AttenuationDistanceUNorm, light.Range, distance));
 
 		// Use explicit add instead of += so we can use MAD
 		diffuse = (attenuation * diffuseFactor) * (mat.Diffuse * light.Diffuse) + diffuse;

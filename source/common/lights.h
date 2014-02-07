@@ -53,9 +53,12 @@ struct SpotLight {
 	float Range;
 
 	DirectX::XMFLOAT3 Direction;
-	float Spot;
+	float AttenuationDistanceUNorm;
 
-	DirectX::XMFLOAT3 Attenuation;
+	float CosInnerConeAngle;
+	float CosOuterConeAngle;
+	
+	float SpotLightFactor;
 
 private:
 	float pad; // To pad the last float3 to a float4

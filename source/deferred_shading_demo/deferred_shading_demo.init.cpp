@@ -121,7 +121,7 @@ void DeferredShadingDemo::BuildGeometryBuffers() {
 	};
 	m_debugSphere.CreateSubsets(debugSphereSubsets, 1);
 
-	m_debugSphere.CreateInstanceBuffer(m_device, 100);
+	m_debugSphere.CreateInstanceBuffer(m_device, 500);
 
 
 	meshData.Indices.clear();
@@ -176,7 +176,7 @@ void DeferredShadingDemo::CreateLights() {
 	m_directionalLight.Specular = DirectX::XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
 	m_directionalLight.Direction = DirectX::XMFLOAT3(0.57735f, -0.57735f, 0.57735f);
 
-	for (uint i = 0; i < 100; ++i) {
+	for (uint i = 0; i < 500; ++i) {
 		Common::PointLight pointLight;
 		pointLight.Diffuse = pointLight.Specular = DirectX::XMFLOAT4(Common::RandF(), Common::RandF(), Common::RandF(), 1.0f);
 		pointLight.AttenuationDistanceUNorm = 0.75;

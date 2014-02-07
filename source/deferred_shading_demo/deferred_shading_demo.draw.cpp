@@ -341,6 +341,26 @@ void DeferredShadingDemo::RenderDebugGeometry() {
 
 		m_debugSphere.UnMapInstanceBuffer(m_immediateContext);
 
+		instances = m_debugCone.MapInstanceBuffer(m_immediateContext, &maxInstances);
+
+		DirectX::XMVECTOR xAxis = DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);
+		DirectX::XMVECTOR yAxis = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+		DirectX::XMVECTOR zAxis = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
+		for (uint i = 0; i < m_spotLights.size(); ++i) {
+			DirectX::XMMATRIX translation = DirectX::XMMatrixTranslation(m_spotLights[i].Position.x, m_spotLights[i].Position.y, m_spotLights[i].Position.z);
+
+			DirectX::XMVECTOR direction = DirectX::XMLoadFloat3(&m_spotLights[i].Direction);
+
+			DirectX::XMVECTOR crossProduct = DirectX::XMVector3Normalize(DirectX::XMVector3Cross(direction, yAxis));
+			float angle = acos(DirectX::XMVector3Dot(direction, yAxis).m128_f32[0]);
+			DirectX::XMVECTOR quaternion = DirectX::XMQuaternionRotationNormal(crossProduct, -angle);
+
+			instances[i].worldViewProj = DirectX::XMMatrixTranspose(DirectX::XMMatrixRotationQuaternion(quaternion) * translation * viewProj);
+			instances[i].color = m_spotLights[i].Diffuse;
+		}
+
+		m_debugCone.UnMapInstanceBuffer(m_immediateContext);
+
 		// Use the backbuffer render target and the original depth buffer
 		m_immediateContext->OMSetRenderTargets(1, &m_renderTargetView, m_depthStencilBuffer->GetDepthStencil());
 
@@ -356,6 +376,7 @@ void DeferredShadingDemo::RenderDebugGeometry() {
 		m_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 		m_debugSphere.DrawInstancedSubset(m_immediateContext, m_debugSphereNumIndices, m_pointLights.size());
+		m_debugCone.DrawInstancedSubset(m_immediateContext, m_debugConeNumIndices, m_spotLights.size());
 	}
 
 	if (m_showGBuffers && m_shadingType == ShadingType::NoCullDeferred) {

@@ -73,7 +73,9 @@ private:
 	std::vector<Common::BlinnPhongMaterial> m_frameMaterialList;
 
 	Common::Model<DebugObjectVertex, DebugObjectInstance> m_debugSphere;
+	Common::Model<DebugObjectVertex, DebugObjectInstance> m_debugCone;
 	uint m_debugSphereNumIndices;
+	uint m_debugConeNumIndices;
 
 	Common::DirectionalLight m_directionalLight;
 	std::vector<Common::PointLight> m_pointLights;

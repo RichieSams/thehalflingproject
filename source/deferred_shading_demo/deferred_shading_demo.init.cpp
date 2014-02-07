@@ -121,6 +121,36 @@ void DeferredShadingDemo::BuildGeometryBuffers() {
 	m_debugSphere.CreateSubsets(debugSphereSubsets, 1);
 
 	m_debugSphere.CreateInstanceBuffer(m_device, 100);
+
+
+	meshData.Indices.clear();
+	meshData.Vertices.clear();
+
+	// Create debug cone
+	Common::GeometryGenerator::CreateCone(0.8029f, 5.0f, 10, &meshData, true); // ~ 60 degrees
+	vertexCount = meshData.Vertices.size();
+	indexCount = meshData.Indices.size();
+
+	DebugObjectVertex *debugConeVertices = new DebugObjectVertex[vertexCount];
+	for (uint i = 0; i < vertexCount; ++i) {
+		debugConeVertices[i].pos = meshData.Vertices[i].Position;
+	}
+	m_debugCone.CreateVertexBuffer(m_device, debugConeVertices, vertexCount);
+
+	uint *debugConeIndices = new uint[indexCount];
+	for (uint i = 0; i < indexCount; ++i) {
+		debugConeIndices[i] = meshData.Indices[i];
+	}
+	m_debugCone.CreateIndexBuffer(m_device, debugConeIndices, indexCount);
+	m_debugConeNumIndices = indexCount;
+
+	// Create subsets
+	Common::ModelSubset *debugConeSubsets = new Common::ModelSubset[1] {
+		{0, vertexCount, 0, indexCount / 3, {{0.0f, 0.0f, 0.0f, 0.0f}}, nullptr}
+	};
+	m_debugCone.CreateSubsets(debugConeSubsets, 1);
+
+	m_debugCone.CreateInstanceBuffer(m_device, 500);
 }
 
 float DeferredShadingDemo::GetHillHeight(float x, float z) const {

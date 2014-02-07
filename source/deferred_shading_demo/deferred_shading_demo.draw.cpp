@@ -303,7 +303,7 @@ void DeferredShadingDemo::SetLightBuffers() {
 		for (unsigned int i = 0; i < numSpotLights; ++i) {
 			spotLightArray[i] = m_spotLights[i];
 		}
-		m_pointLightBuffer->Unmap(m_immediateContext);
+		m_spotLightBuffer->Unmap(m_immediateContext);
 	}
 }
 

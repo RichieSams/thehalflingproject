@@ -29,7 +29,7 @@ protected:
 
 class PointLightAnimator : public LightAnimatorBase {
 public:
-	PointLightAnimator(DirectX::XMFLOAT3 velocity, DirectX::XMFLOAT3 negativeBounds, DirectX::XMFLOAT3 positiveBounds)
+	PointLightAnimator(DirectX::XMFLOAT3 &velocity, DirectX::XMFLOAT3 &negativeBounds, DirectX::XMFLOAT3 &positiveBounds)
 		: LightAnimatorBase(velocity, negativeBounds, positiveBounds) {}
 
 public:

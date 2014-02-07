@@ -62,7 +62,7 @@ public:
 	 * 
 	 * @param radius             Radius of the sphere
 	 * @param numSubdivisions    The number of subdivisions to perform
-	 * @param meshData           Pointer to the MeshData object that will be filled with the box data
+	 * @param meshData           Pointer to the MeshData object that will be filled with the sphere data
 	 */
 	static void CreateGeosphere(float radius, uint numSubdivisions, MeshData* meshData) {}
 	/**
@@ -102,7 +102,7 @@ public:
 	/**
 	 * Create a triangulated quad the size of the screen
 	 * 
-	 * @param meshData    Pointer to the MeshData object that will be filled with the box data
+	 * @param meshData    Pointer to the MeshData object that will be filled with the quad data
 	 */
 	static void CreateFullscreenQuad(MeshData& meshData);
 };

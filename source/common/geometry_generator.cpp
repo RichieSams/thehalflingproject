@@ -266,4 +266,69 @@ void GeometryGenerator::CreateFullscreenQuad(MeshData& meshData) {
 	meshData.Indices[5] = 3;
 }
 
+void GeometryGenerator::CreateCone(float angle, float height, uint sliceCount, MeshData* meshData, bool invert) {
+	float bottomRadius = tanf(angle / 2.0f) * height;
+	float phiHeight = tanf(angle / 2.0f) * bottomRadius;
+	phiHeight = invert ? -phiHeight : phiHeight;
+
+	float top = invert ? 0.0f : height;
+	float bottom = invert ? height : 0.0f;
+
+	// Vertices of ring
+	float dTheta = DirectX::XM_2PI / sliceCount;
+	float halfDTheta = dTheta / 2.0f;
+	for (uint i = 0; i < sliceCount; ++i) {
+		Vertex firstVertex;
+		firstVertex.Position = DirectX::XMFLOAT3(bottomRadius * cosf(i * dTheta), bottom, bottomRadius * sinf(i * dTheta));
+		firstVertex.Normal = DirectX::XMFLOAT3(firstVertex.Position.x, phiHeight, firstVertex.Position.z);
+		// Normalize and store
+		DirectX::XMVECTOR normalizedNormal = DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&firstVertex.Normal));
+		DirectX::XMStoreFloat3(&firstVertex.Normal, normalizedNormal);
+		meshData->Vertices.push_back(firstVertex);
+
+		Vertex topVertex;
+		topVertex.Position = DirectX::XMFLOAT3(0.0f, top, 0.0f);
+		// Point halfway between 'firstVertex' and the next vertex
+		topVertex.Normal = DirectX::XMFLOAT3(bottomRadius * cosf(i * dTheta + halfDTheta), phiHeight, bottomRadius * (sinf(i * dTheta + halfDTheta)));
+		// Normalize and store
+		normalizedNormal = DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&topVertex.Normal));
+		DirectX::XMStoreFloat3(&topVertex.Normal, normalizedNormal);
+		meshData->Vertices.push_back(topVertex);
+	}
+
+	for (uint i = 0; i < sliceCount * 2; i += 2) {
+		meshData->Indices.push_back(i);
+		meshData->Indices.push_back(i + 1);
+
+		uint lastIndex = i + 2;
+		if (lastIndex == sliceCount * 2)
+			lastIndex = 0;
+		meshData->Indices.push_back(lastIndex);
+	}
+
+	// Build the bottom cap
+	uint baseIndex = meshData->Vertices.size();
+
+	Vertex centerVertex;
+	centerVertex.Position = DirectX::XMFLOAT3(0.0f, bottom, 0.0f);
+	centerVertex.Normal = DirectX::XMFLOAT3(0.0f, invert ? 1.0f : -1.0f, 0.0f);
+	meshData->Vertices.push_back(centerVertex);
+
+	for (uint i = 0; i < sliceCount; ++i) {
+		Vertex bottomVertex;
+		bottomVertex.Position = DirectX::XMFLOAT3(bottomRadius * cosf(i * dTheta), bottom, bottomRadius * sinf(i * dTheta));
+		bottomVertex.Normal = centerVertex.Normal;
+		meshData->Vertices.push_back(bottomVertex);
+	}
+
+	for (uint i = 1; i <= sliceCount; ++i) {
+		uint lastIndex = baseIndex + i + 1;
+		if (lastIndex == meshData->Vertices.size())
+			lastIndex = 0;
+		meshData->Indices.push_back(lastIndex);
+		meshData->Indices.push_back(baseIndex);
+		meshData->Indices.push_back(baseIndex + i);
+	}
+}
+
 } // End of namespace Common

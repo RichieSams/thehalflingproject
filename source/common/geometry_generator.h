@@ -74,9 +74,19 @@ public:
 	 * @param height          Height of the cylinder
 	 * @param sliceCount      Number of slices to divide the sphere into
 	 * @param stackCount      Number of stacks to divide the sphere into
-	 * @param meshData        Pointer to the MeshData object that will be filled with the box data
+	 * @param meshData        Pointer to the MeshData object that will be filled with the cylinder data
 	 */
 	static void CreateCylinder(float bottomRadius, float topRadius, float height, uint sliceCount, uint stackCount, MeshData* meshData) {}
+	/**
+	 * Creates a cone by dividing it into radial slices. 
+	 * 
+	 * @param angle         Angle of the cone (In radians)
+	 * @param height        Height of the cone
+	 * @param sliceCount    Number of slices to divide the cone into
+	 * @param meshData      Pointer to the MeshData object that will be filled with the cone data
+	 * @return          
+	 */
+	static void CreateCone(float angle, float height, uint sliceCount, MeshData* meshData, bool invert = false);
 	/**
 	 * Creates a grid of quads
 	 * 

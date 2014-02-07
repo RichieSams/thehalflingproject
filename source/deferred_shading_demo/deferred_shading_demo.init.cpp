@@ -97,6 +97,7 @@ void DeferredShadingDemo::BuildGeometryBuffers() {
 	meshData.Indices.clear();
 	meshData.Vertices.clear();
 
+	// Create debug sphere
 	Common::GeometryGenerator::CreateSphere(1.0f, 10, 10, &meshData);
 	vertexCount = meshData.Vertices.size();
 	indexCount = meshData.Indices.size();

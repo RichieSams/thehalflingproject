@@ -91,6 +91,8 @@ private:
 	ShadingType m_shadingType;
 	bool m_showLightLocations;
 	bool m_showGBuffers;
+	uint32 m_numSpotLightsToDraw;
+	uint32 m_numPointLightsToDraw;
 
 	ID3D11RenderTargetView *m_renderTargetView;
 	ID3D11InputLayout *m_gBufferInputLayout;

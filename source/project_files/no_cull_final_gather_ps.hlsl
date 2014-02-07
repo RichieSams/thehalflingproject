@@ -10,11 +10,12 @@
 #include "deferred_shading_demo/hlsl_util.hlsli"
 
 cbuffer cbPerFrame : register(b0) {
-	float4x4 gProjection;
-	float4x4 gInvViewProjection;
-
-	DirectionalLight gDirectionalLight;
-	float3 gEyePosition;
+	float4x4 gProjection : packoffset(c0);
+	float4x4 gInvViewProjection : packoffset(c4);
+	DirectionalLight gDirectionalLight : packoffset(c8);
+	float3 gEyePosition : packoffset(c12);
+	uint gNumPointLightsToDraw : packoffset(c13.x);
+	uint gNumSpotLightsToDraw : packoffset(c13.y);
 }
 
 Texture2DMS<float4> gGBufferAlbedoMaterialIndex    : register(t0);
@@ -59,18 +60,16 @@ float4 NoCullFinalGatherPS(FullScreenTrianglePixelIn input) : SV_TARGET {
 	float4 spec = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
 	// Sum the contribution from each light source
-	uint numLights, lightIndex;
+	uint lightIndex;
 
 	AccumulateBlinnPhongDirectionalLight(material, gDirectionalLight, normal, toEye, ambient, diffuse, spec);
 
-	gPointLights.GetDimensions(numLights, dummy);
-	for (lightIndex = 0; lightIndex < numLights; ++lightIndex) {
+	for (lightIndex = 0; lightIndex < gNumPointLightsToDraw; ++lightIndex) {
         PointLight light = gPointLights[lightIndex];
 		AccumulateBlinnPhongPointLight(material, light, positionWS, normal, toEye, diffuse, spec);
     }
 
-	gSpotLights.GetDimensions(numLights, dummy);
-	for (lightIndex = 0; lightIndex < numLights; ++lightIndex) {
+	for (lightIndex = 0; lightIndex < gNumSpotLightsToDraw; ++lightIndex) {
         SpotLight light = gSpotLights[lightIndex];
 		AccumulateBlinnPhongSpotLight(material, light, positionWS, normal, toEye, diffuse, spec);
     }

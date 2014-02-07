@@ -16,8 +16,13 @@ namespace DeferredShadingDemo {
 
 // Forward Shading
 struct ForwardPixelShaderFrameConstants {
-	Common::DirectionalLight DirectionalLight;
-	DirectX::XMFLOAT3 EyePosition;
+	Common::DirectionalLight gDirectionalLight;
+	DirectX::XMFLOAT3 gEyePosition;
+	float pad;
+
+	uint gNumPointLightsToDraw;
+	uint gNumSpotLightsToDraw;
+	uint pad2[2];
 };
 
 struct ForwardPixelShaderObjectConstants {
@@ -42,6 +47,11 @@ struct NoCullFinalGatherPixelShaderFrameConstants {
 
 	Common::DirectionalLight gDirectionalLight;
 	DirectX::XMFLOAT3 gEyePosition;
+	float pad;
+
+	uint gNumPointLightsToDraw;
+	uint gNumSpotLightsToDraw;
+	uint pad2[2];
 };
 
 // Debug pass

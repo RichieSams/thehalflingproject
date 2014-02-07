@@ -28,6 +28,8 @@ DeferredShadingDemo::DeferredShadingDemo(HINSTANCE hinstance)
 	  m_shadingType(ShadingType::NoCullDeferred),
 	  m_showLightLocations(false),
 	  m_showGBuffers(false),
+	  m_numPointLightsToDraw(100),
+	  m_numSpotLightsToDraw(100),
 	  m_renderTargetView(nullptr),
 	  m_gBufferInputLayout(nullptr),
 	  m_debugObjectInputLayout(nullptr),

@@ -111,8 +111,10 @@ void DeferredShadingDemo::SetForwardPixelShaderFrameConstants() {
 	HR(m_immediateContext->Map(m_forwardPixelShaderFrameConstantsBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
 
 	ForwardPixelShaderFrameConstants *pixelShaderFrameConstants = static_cast<ForwardPixelShaderFrameConstants *>(mappedResource.pData);
-	pixelShaderFrameConstants->DirectionalLight = m_directionalLight;
-	pixelShaderFrameConstants->EyePosition = m_camera.GetCameraPosition();
+	pixelShaderFrameConstants->gDirectionalLight = m_directionalLight;
+	pixelShaderFrameConstants->gEyePosition = m_camera.GetCameraPosition();
+	pixelShaderFrameConstants->gNumPointLightsToDraw = m_numPointLightsToDraw;
+	pixelShaderFrameConstants->gNumSpotLightsToDraw = m_numSpotLightsToDraw;
 
 	m_immediateContext->Unmap(m_forwardPixelShaderFrameConstantsBuffer, 0);
 	m_immediateContext->PSSetConstantBuffers(0, 1, &m_forwardPixelShaderFrameConstantsBuffer);
@@ -277,30 +279,29 @@ void DeferredShadingDemo::SetNoCullFinalGatherShaderConstants(DirectX::XMMATRIX 
 	pixelShaderFrameConstants->gInvViewProjection = invViewProjMatrix;
 	pixelShaderFrameConstants->gDirectionalLight = m_directionalLight;
 	pixelShaderFrameConstants->gEyePosition = m_camera.GetCameraPosition();
+	pixelShaderFrameConstants->gNumPointLightsToDraw = m_numPointLightsToDraw;
+	pixelShaderFrameConstants->gNumSpotLightsToDraw = m_numSpotLightsToDraw;
 
 	m_immediateContext->Unmap(m_noCullFinalGatherPixelShaderConstantsBuffer, 0);
 	m_immediateContext->PSSetConstantBuffers(0, 1, &m_noCullFinalGatherPixelShaderConstantsBuffer);
 }
 
 void DeferredShadingDemo::SetLightBuffers() {
-	uint numPointLights = m_pointLights.size();
-	uint numSpotLights = m_spotLights.size();
-
-	if (numPointLights > 0) {
-		assert(m_pointLightBuffer->NumElements() == numPointLights);
+	if (m_numPointLightsToDraw > 0) {
+		assert(m_pointLightBuffer->NumElements() >= m_numPointLightsToDraw);
 
 		Common::PointLight *pointLightArray = m_pointLightBuffer->MapDiscard(m_immediateContext);
-		for (unsigned int i = 0; i < m_pointLights.size(); ++i) {
+		for (unsigned int i = 0; i < m_numPointLightsToDraw; ++i) {
 			pointLightArray[i] = m_pointLights[i];
 		}
 		m_pointLightBuffer->Unmap(m_immediateContext);
 	}
 	
-	if (numSpotLights > 0) {
-		assert(m_spotLightBuffer->NumElements() == numSpotLights);
+	if (m_numSpotLightsToDraw > 0) {
+		assert(m_spotLightBuffer->NumElements() >= m_numSpotLightsToDraw);
 
 		Common::SpotLight *spotLightArray = m_spotLightBuffer->MapDiscard(m_immediateContext);
-		for (unsigned int i = 0; i < numSpotLights; ++i) {
+		for (unsigned int i = 0; i < m_numSpotLightsToDraw; ++i) {
 			spotLightArray[i] = m_spotLights[i];
 		}
 		m_spotLightBuffer->Unmap(m_immediateContext);
@@ -333,7 +334,7 @@ void DeferredShadingDemo::RenderDebugGeometry() {
 		uint maxInstances;
 		DebugObjectInstance *instances = m_debugSphere.MapInstanceBuffer(m_immediateContext, &maxInstances);
 
-		for (uint i = 0; i < m_pointLights.size(); ++i) {
+		for (uint i = 0; i < m_numPointLightsToDraw; ++i) {
 			DirectX::XMMATRIX translation = DirectX::XMMatrixTranslation(m_pointLights[i].Position.x, m_pointLights[i].Position.y, m_pointLights[i].Position.z);
 			instances[i].worldViewProj = DirectX::XMMatrixTranspose(translation * viewProj);
 			instances[i].color = m_pointLights[i].Diffuse;
@@ -346,7 +347,7 @@ void DeferredShadingDemo::RenderDebugGeometry() {
 		DirectX::XMVECTOR xAxis = DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);
 		DirectX::XMVECTOR yAxis = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 		DirectX::XMVECTOR zAxis = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
-		for (uint i = 0; i < m_spotLights.size(); ++i) {
+		for (uint i = 0; i < m_numSpotLightsToDraw; ++i) {
 			DirectX::XMMATRIX translation = DirectX::XMMatrixTranslation(m_spotLights[i].Position.x, m_spotLights[i].Position.y, m_spotLights[i].Position.z);
 
 			DirectX::XMVECTOR direction = DirectX::XMLoadFloat3(&m_spotLights[i].Direction);
@@ -375,8 +376,8 @@ void DeferredShadingDemo::RenderDebugGeometry() {
 		m_immediateContext->IASetInputLayout(m_debugObjectInputLayout);
 		m_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-		m_debugSphere.DrawInstancedSubset(m_immediateContext, m_debugSphereNumIndices, m_pointLights.size());
-		m_debugCone.DrawInstancedSubset(m_immediateContext, m_debugConeNumIndices, m_spotLights.size());
+		m_debugSphere.DrawInstancedSubset(m_immediateContext, m_debugSphereNumIndices, m_numPointLightsToDraw);
+		m_debugCone.DrawInstancedSubset(m_immediateContext, m_debugConeNumIndices, m_numSpotLightsToDraw);
 	}
 
 	if (m_showGBuffers && m_shadingType == ShadingType::NoCullDeferred) {

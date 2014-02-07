@@ -11,8 +11,10 @@
 
 
 cbuffer cbPerFrame : register(b0) {
-	DirectionalLight gDirectionalLight;
-	float3 gEyePosition;
+	DirectionalLight gDirectionalLight : packoffset(c0);
+	float3 gEyePosition : packoffset(c4);
+	uint gNumPointLightsToDraw : packoffset(c5.x);
+	uint gNumSpotLightsToDraw : packoffset(c5.y);
 }
 
 cbuffer cbPerObject : register(b1) {
@@ -41,18 +43,16 @@ float4 ForwardPS(ForwardPixelIn input) : SV_TARGET {
 	float4 textureColor = gDiffuseTexture.Sample(gDiffuseSampler, input.texCoord);
 
 	// Sum the contribution from each light source
-	uint numLights, lightIndex, dummy;
+	uint lightIndex;
 
 	AccumulateBlinnPhongDirectionalLight(gMaterial, gDirectionalLight, input.normal, toEye, ambient, diffuse, spec);
 
-	gPointLights.GetDimensions(numLights, dummy);
-	for (lightIndex = 0; lightIndex < numLights; ++lightIndex) {
+	for (lightIndex = 0; lightIndex < gNumPointLightsToDraw; ++lightIndex) {
 		PointLight light = gPointLights[lightIndex];
 		AccumulateBlinnPhongPointLight(gMaterial, light, input.positionWorld, input.normal, toEye, diffuse, spec);
 	}
 
-	gSpotLights.GetDimensions(numLights, dummy);
-	for (lightIndex = 0; lightIndex < numLights; ++lightIndex) {
+	for (lightIndex = 0; lightIndex < gNumSpotLightsToDraw; ++lightIndex) {
 		SpotLight light = gSpotLights[lightIndex];
 		AccumulateBlinnPhongSpotLight(gMaterial, light, input.positionWorld, input.normal, toEye, diffuse, spec);
 	}

@@ -57,6 +57,9 @@ void DeferredShadingDemo::InitTweakBar() {
 	TwEnumVal shaderEV[] = {{ShadingType::Forward, "Forward"}, {ShadingType::NoCullDeferred, "No-cull Deferred"}};
 	TwType shaderType = TwDefineEnum("ShaderType", shaderEV, 2);
 	TwAddVarRW(m_settingsBar, "Shader Type", shaderType, &m_shadingType, NULL);
+
+	TwAddVarRW(m_settingsBar, "Number of PointLights", TW_TYPE_INT32, &m_numPointLightsToDraw, " min=0 max=500 ");
+	TwAddVarRW(m_settingsBar, "Number of SpotLights", TW_TYPE_INT32, &m_numSpotLightsToDraw, " min=0 max=500 ");
 }
 
 void DeferredShadingDemo::BuildGeometryBuffers() {

@@ -20,7 +20,7 @@ LRESULT DeferredShadingDemo::MsgProc(HWND hwnd, uint msg, WPARAM wParam, LPARAM 
 
 DeferredShadingDemo::DeferredShadingDemo(HINSTANCE hinstance)
 	: Halfling::HalflingEngine(hinstance),
-	  m_camera(1.5f * DirectX::XM_PI, 0.25f * DirectX::XM_PI, 50.0f),
+	  m_camera(0.25f * DirectX::XM_PI, 0.25f * DirectX::XM_PI, 50.0f),
 	  m_pointLightBufferNeedsRebuild(false),
 	  m_spotLightBufferNeedsRebuild(false),
 	  m_vsync(false),

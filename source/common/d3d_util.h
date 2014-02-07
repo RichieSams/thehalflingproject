@@ -48,7 +48,7 @@ HRESULT LoadPixelShader(const char *fileName, ID3D11Device *device, ID3D11PixelS
 
 // Returns a size suitable for creating a constant buffer, by rounding up
 // to the next multiple of 16
-inline UINT CBSize(UINT size) {
+inline size_t CBSize(size_t size) {
 	return ((size + 15) / 16) * 16;
 }
 

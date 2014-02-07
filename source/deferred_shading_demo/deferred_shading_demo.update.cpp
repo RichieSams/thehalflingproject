@@ -15,6 +15,10 @@ void DeferredShadingDemo::Update() {
 	for (uint i = 0; i < m_pointLightAnimators.size(); ++i) {
 		m_pointLightAnimators[i].MoveLight(&m_pointLights[i], m_updatePeriod);
 	}
+
+	for (uint i = 0; i < m_spotLightAnimators.size(); ++i) {
+		m_spotLightAnimators[i].MoveLight(&m_spotLights[i], m_updatePeriod);
+	}
 }
 
 } // End of namespace DeferredShadingDemo

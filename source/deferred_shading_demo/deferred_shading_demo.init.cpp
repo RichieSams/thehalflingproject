@@ -160,6 +160,30 @@ void DeferredShadingDemo::CreateLights() {
 	}
 
 	m_pointLightBufferNeedsRebuild = true;
+
+	for (uint i = 0; i < 500; ++i) {
+		Common::SpotLight spotLight;
+		spotLight.Diffuse = spotLight.Specular = DirectX::XMFLOAT4(Common::RandF(), Common::RandF(), Common::RandF(), 1.0f);
+		spotLight.AttenuationDistanceUNorm = 0.75;
+		spotLight.Range = 35.0f;
+		spotLight.Position = DirectX::XMFLOAT3(Common::RandF(-80.0f, 80.0f), Common::RandF(-40.0f, 40.0f), Common::RandF(-80.0f, 80.0f));
+		float outerConeAngle = Common::RandF(0.2967f, 0.7854f); // ~ 35 - 90 degrees
+		spotLight.CosOuterConeAngle = cos(outerConeAngle);
+		spotLight.CosInnerConeAngle = cos(outerConeAngle - 0.17f); // ~ 10 degrees
+		spotLight.Direction = DirectX::XMFLOAT3(Common::RandF(), Common::RandF(), Common::RandF());
+		// Normalize
+		DirectX::XMVECTOR normalizedDirection = DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&spotLight.Direction));
+		DirectX::XMStoreFloat3(&spotLight.Direction, normalizedDirection);
+
+		m_spotLights.push_back(spotLight);
+
+		m_spotLightAnimators.emplace_back(DirectX::XMFLOAT3(Common::RandF(-0.006f, 0.006f), Common::RandF(-0.006f, 0.006f), Common::RandF(-0.006f, 0.006f)),
+										  DirectX::XMFLOAT3(Common::RandF(-0.125f, 0.125f), Common::RandF(-0.125f, 0.125f), Common::RandF(-0.125f, 0.125f)),
+										  DirectX::XMFLOAT3(-80.0f, -40.0f, -80.0f),
+										  DirectX::XMFLOAT3(80.0f, 40.0f, 80.0f));
+	}
+
+	m_spotLightBufferNeedsRebuild = true;
 }
 
 void DeferredShadingDemo::LoadShaders() {

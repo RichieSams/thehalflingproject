@@ -36,6 +36,23 @@ public:
 	void MoveLight(Common::PointLight *light, double deltaTime);
 };
 
+
+class SpotLightAnimator : public LightAnimatorBase {
+public:
+	SpotLightAnimator(DirectX::XMFLOAT3 &velocity, DirectX::XMFLOAT3 &angularVelocity, DirectX::XMFLOAT3 &negativeBounds, DirectX::XMFLOAT3 &positiveBounds)
+		: LightAnimatorBase(velocity, negativeBounds, positiveBounds),
+		  m_angularVelocity(angularVelocity) {
+	}
+
+private:
+	DirectX::XMFLOAT3 m_angularVelocity;
+
+
+
+public:
+	void MoveLight(Common::SpotLight *light, double deltaTime);
+};
+
 } // End of namespace Common
 
 #endif

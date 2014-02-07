@@ -333,7 +333,6 @@ void DeferredShadingDemo::RenderDebugGeometry() {
 		uint maxInstances;
 		DebugObjectInstance *instances = m_debugSphere.MapInstanceBuffer(m_immediateContext, &maxInstances);
 
-		DirectX::XMMATRIX identity = DirectX::XMMatrixIdentity();
 		for (uint i = 0; i < m_pointLights.size(); ++i) {
 			DirectX::XMMATRIX translation = DirectX::XMMatrixTranslation(m_pointLights[i].Position.x, m_pointLights[i].Position.y, m_pointLights[i].Position.z);
 			instances[i].worldViewProj = DirectX::XMMatrixTranspose(translation * viewProj);

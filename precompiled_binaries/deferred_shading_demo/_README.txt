@@ -4,7 +4,7 @@ As this project is still in progress, if you want to most up-to-date version of 
 
 Overview:
 This demo is my first attempt at deferred shading. Initially, I was going to go straight to Tiled-Light Culling Deferred, but after a while
-I chose to first cut my teeth on naive, no light culling, deferred shading. The scene contains 1 directional light and 100 point lights.
+I chose to first cut my teeth on naive, no light culling, deferred shading. The scene contains 1 directional light and up to 500 point lights and 500 spot lights.
 
 
 The GBuffers are laid out as follows:
@@ -39,6 +39,15 @@ Click the little arrow in the bottom left-corner to change settings
 
 Change log:
 
+02/08/2014
+Commit range 0ec53f2e2 to 5153485f5
+- Add the ability to toggle between forward shading and deferred shading
+- Fixed light animation bouncing
+- Added spot lights
+- Added the ability to change the number of lights in real time
+- Added the ability to toggle light animation
+
+02/03/2014
 Commit range efeecb242 to 0ec53f2e2
 - Add the ability to show spheres showing the location of each point light
 - Add the ability to show the gbuffers. (Broken into logical parts)

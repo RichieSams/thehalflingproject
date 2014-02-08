@@ -148,10 +148,6 @@ public:
 	bool Initialize(LPCTSTR mainWndCaption, uint32 screenWidth, uint32 screenHeight, bool fullscreen);
 	void Shutdown();
 
-	// Tweak bar callbacks
-	static void TW_CALL SetWireframeRSCallback(const void *value, void *clientData);
-	static void TW_CALL GetWireframeTSCallback(void *value, void *clientData);
-
 private:
 	// Inherited methods
 	LRESULT MsgProc(HWND hwnd, uint msg, WPARAM wParam, LPARAM lParam);

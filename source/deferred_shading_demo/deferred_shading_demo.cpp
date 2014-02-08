@@ -205,13 +205,4 @@ void DeferredShadingDemo::MouseWheel(int zDelta) {
 	m_camera.MoveCamera(0.0f, 0.0f, -0.01f * (float)zDelta);
 }
 
-void TW_CALL DeferredShadingDemo::SetWireframeRSCallback(const void *value, void *clientData) {
-	DeferredShadingDemo *graphicsManager = ((DeferredShadingDemo *)clientData);
-	graphicsManager->m_wireframe = *((bool *)value);
-}
-
-void TW_CALL DeferredShadingDemo::GetWireframeTSCallback(void *value, void *clientData) {
-	*((bool *)value) = ((DeferredShadingDemo *)clientData)->m_wireframe;
-}
-
 } // End of namespace DeferredShadingDemo

@@ -88,6 +88,7 @@ private:
 
 	bool m_vsync;
 	bool m_wireframe;
+	bool m_animateLights;
 	ShadingType m_shadingType;
 	bool m_showLightLocations;
 	bool m_showGBuffers;

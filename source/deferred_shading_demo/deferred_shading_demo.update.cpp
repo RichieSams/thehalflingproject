@@ -12,12 +12,14 @@ namespace DeferredShadingDemo {
 void DeferredShadingDemo::Update() {
 	m_worldViewProj.view = m_camera.CreateViewMatrix(DirectX::XMVectorZero());
 
-	for (uint i = 0; i < m_pointLightAnimators.size(); ++i) {
-		m_pointLightAnimators[i].AnimateLight(&m_pointLights[i], m_updatePeriod);
-	}
+	if (m_animateLights) {
+		for (uint i = 0; i < m_pointLightAnimators.size(); ++i) {
+			m_pointLightAnimators[i].AnimateLight(&m_pointLights[i], m_updatePeriod);
+		}
 
-	for (uint i = 0; i < m_spotLightAnimators.size(); ++i) {
-		m_spotLightAnimators[i].AnimateLight(&m_spotLights[i], m_updatePeriod);
+		for (uint i = 0; i < m_spotLightAnimators.size(); ++i) {
+			m_spotLightAnimators[i].AnimateLight(&m_spotLights[i], m_updatePeriod);
+		}
 	}
 }
 

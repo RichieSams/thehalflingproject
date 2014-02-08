@@ -33,7 +33,7 @@ public:
 		: LightAnimatorBase(velocity, negativeBounds, positiveBounds) {}
 
 public:
-	void MoveLight(Common::PointLight *light, double deltaTime);
+	void AnimateLight(Common::PointLight *light, double deltaTime);
 };
 
 
@@ -50,7 +50,7 @@ private:
 
 
 public:
-	void MoveLight(Common::SpotLight *light, double deltaTime);
+	void AnimateLight(Common::SpotLight *light, double deltaTime);
 };
 
 } // End of namespace Common

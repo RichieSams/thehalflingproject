@@ -9,7 +9,7 @@
 
 namespace Common {
 
-void PointLightAnimator::MoveLight(Common::PointLight *light, double deltaTime) {
+void PointLightAnimator::AnimateLight(Common::PointLight *light, double deltaTime) {
 	float xPosition = m_velocity.x * deltaTime + light->Position.x;
 	float yPosition = m_velocity.y * deltaTime + light->Position.y;
 	float zPosition = m_velocity.z * deltaTime + light->Position.z;
@@ -45,7 +45,7 @@ void PointLightAnimator::MoveLight(Common::PointLight *light, double deltaTime) 
 }
 
 
-void SpotLightAnimator::MoveLight(Common::SpotLight *light, double deltaTime) {
+void SpotLightAnimator::AnimateLight(Common::SpotLight *light, double deltaTime) {
 	// Move the light
 	float xPosition = m_velocity.x * deltaTime + light->Position.x;
 	float yPosition = m_velocity.y * deltaTime + light->Position.y;

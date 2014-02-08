@@ -171,10 +171,15 @@ private:
 	void CreateLights();
 
 	// Rendering methods
+	/** Renders the geometry using the ShadingType in m_shadingType */
 	void RenderMainPass();
+	/** Renders the geometry using Forward Shading */
 	void ForwardRenderingPass();
+	/** Renders the geometry using Deferred Shading with no light culling */
 	void NoCullDeferredRenderingPass();
+	/** Renders any geometry used for visualizing effects, etc. (Light locations, etc) */
 	void RenderDebugGeometry();
+	/** Renders the frame statistics and the settings bar */
 	void RenderHUD();
 
 	void SetForwardPixelShaderFrameConstants();
@@ -183,7 +188,9 @@ private:
 	void SetGBufferPixelShaderConstants(uint materialIndex);
 	void SetNoCullFinalGatherShaderConstants(DirectX::XMMATRIX &projMatrix, DirectX::XMMATRIX &invViewProjMatrix);
 	
+	/** Maps the point light StructuredBuffer and the spot light Structured buffer to the pixel shader */
 	void SetLightBuffers();
+	/** Maps a list of Materials used in the frame to the pixel shader. This is only used for deferred shading */
 	void SetMaterialList();
 };
 

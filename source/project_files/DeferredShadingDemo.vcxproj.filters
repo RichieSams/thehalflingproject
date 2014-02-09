@@ -44,9 +44,6 @@
     <FxCompile Include="..\deferred_shading_demo\gbuffer_ps.hlsl">
       <Filter>Shader Logic</Filter>
     </FxCompile>
-    <FxCompile Include="no_cull_final_gather_ps.hlsl">
-      <Filter>Shader Logic</Filter>
-    </FxCompile>
     <FxCompile Include="..\deferred_shading_demo\render_gbuffers_ps.hlsl">
       <Filter>Shader Logic</Filter>
     </FxCompile>
@@ -54,6 +51,9 @@
       <Filter>Shader Logic</Filter>
     </FxCompile>
     <FxCompile Include="..\deferred_shading_demo\gbuffer_vs.hlsl">
+      <Filter>Shader Logic</Filter>
+    </FxCompile>
+    <FxCompile Include="..\deferred_shading_demo\no_cull_final_gather_ps.hlsl">
       <Filter>Shader Logic</Filter>
     </FxCompile>
   </ItemGroup>

@@ -69,6 +69,7 @@
     </Link>
     <FxCompile>
       <AdditionalIncludeDirectories>../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ShaderModel>5.0</ShaderModel>
     </FxCompile>
     <PostBuildEvent>
       <Command>XCOPY "$(SolutionDir)..\libs\AntTweakBar\lib\AntTweakBar.dll" "$(OutDir)" /D /K /Y
@@ -98,6 +99,7 @@ XCOPY "$(OutDir)..\Halfling\sprite_pixel_shader.cso" "$(OutDir)" /D /K /Y</Comma
     </Link>
     <FxCompile>
       <AdditionalIncludeDirectories>../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ShaderModel>5.0</ShaderModel>
     </FxCompile>
     <PostBuildEvent>
       <Command>XCOPY "$(SolutionDir)..\libs\AntTweakBar\lib\AntTweakBar.dll" "$(OutDir)" /D /K /Y

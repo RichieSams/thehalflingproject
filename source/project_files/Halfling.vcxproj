@@ -139,6 +139,7 @@
     </Lib>
     <FxCompile>
       <AdditionalIncludeDirectories>../</AdditionalIncludeDirectories>
+      <ShaderModel>5.0</ShaderModel>
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -159,6 +160,7 @@
     </Link>
     <FxCompile>
       <AdditionalIncludeDirectories>../</AdditionalIncludeDirectories>
+      <ShaderModel>5.0</ShaderModel>
     </FxCompile>
     <Lib>
       <AdditionalDependencies>AntTweakBar.lib;DirectXTK.lib;gdiplus.lib</AdditionalDependencies>

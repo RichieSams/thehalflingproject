@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Core">
+      <UniqueIdentifier>{6b1c779b-6710-4ba0-968d-ec0da55d610b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{63dd57b0-332b-42f2-9d38-22a306354db0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader Logic">
+      <UniqueIdentifier>{a868b9a9-f314-46b4-bece-bdb6434f171b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\obj_loader_demo\debug_object_ps.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\obj_loader_demo\debug_object_vs.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\obj_loader_demo\forward_ps.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\obj_loader_demo\forward_vs.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\obj_loader_demo\fullscreen_triangle_vs.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\obj_loader_demo\gbuffer_ps.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\obj_loader_demo\gbuffer_vs.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\obj_loader_demo\render_gbuffers_ps.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\obj_loader_demo\transformed_fullscreen_triangle_vs.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\obj_loader_demo\no_cull_final_gather_ps.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\obj_loader_demo\hlsl_util.hlsli">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\obj_loader_demo\types.hlsli">
+      <Filter>Shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\obj_loader_demo\main.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\obj_loader_demo\obj_loader_demo.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\obj_loader_demo\obj_loader_demo.draw.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\obj_loader_demo\obj_loader_demo.init.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\obj_loader_demo\obj_loader_demo.update.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\obj_loader_demo\obj_loader_demo.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\obj_loader_demo\shader_constants.h">
+      <Filter>Shader Logic</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

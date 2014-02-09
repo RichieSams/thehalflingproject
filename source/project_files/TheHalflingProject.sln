@@ -5,7 +5,7 @@ VisualStudioVersion = 12.0.30110.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Halfling", "Halfling.vcxproj", "{E126E907-E152-410A-B81B-D206B709BA48}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DeferredShadingDemo", "DeferredShadingDemo.vcxproj", "{C07D054E-0202-492B-9B2A-F595F6E21CF0}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ObjLoaderDemo", "ObjLoaderDemo.vcxproj", "{E886DA04-6632-4E24-9994-2FF1C0AEBA5A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{E126E907-E152-410A-B81B-D206B709BA48}.Debug|Win32.Build.0 = Debug|Win32
 		{E126E907-E152-410A-B81B-D206B709BA48}.Release|Win32.ActiveCfg = Release|Win32
 		{E126E907-E152-410A-B81B-D206B709BA48}.Release|Win32.Build.0 = Release|Win32
-		{C07D054E-0202-492B-9B2A-F595F6E21CF0}.Debug|Win32.ActiveCfg = Debug|Win32
-		{C07D054E-0202-492B-9B2A-F595F6E21CF0}.Debug|Win32.Build.0 = Debug|Win32
-		{C07D054E-0202-492B-9B2A-F595F6E21CF0}.Release|Win32.ActiveCfg = Release|Win32
-		{C07D054E-0202-492B-9B2A-F595F6E21CF0}.Release|Win32.Build.0 = Release|Win32
+		{E886DA04-6632-4E24-9994-2FF1C0AEBA5A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E886DA04-6632-4E24-9994-2FF1C0AEBA5A}.Debug|Win32.Build.0 = Debug|Win32
+		{E886DA04-6632-4E24-9994-2FF1C0AEBA5A}.Release|Win32.ActiveCfg = Release|Win32
+		{E886DA04-6632-4E24-9994-2FF1C0AEBA5A}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

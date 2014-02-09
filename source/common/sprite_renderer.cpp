@@ -24,7 +24,8 @@
 namespace Common {
 
 SpriteRenderer::SpriteRenderer()
-	: m_initialized(false) {
+	: m_context(nullptr),
+	  m_initialized(false) {
 }
 
 SpriteRenderer::~SpriteRenderer() {

@@ -6,6 +6,13 @@
 
 #include "common/geometry_generator.h"
 
+#include "common/file_io_util.h"
+#include "common/string_util.h"
+
+#include <fstream>
+#include <stdio.h>
+#include <unordered_map>
+#include <tuple>
 
 namespace Common {
 
@@ -328,6 +335,232 @@ void GeometryGenerator::CreateCone(float angle, float height, uint sliceCount, M
 		meshData->Indices.push_back(lastIndex);
 		meshData->Indices.push_back(baseIndex);
 		meshData->Indices.push_back(baseIndex + i);
+	}
+}
+
+typedef std::tuple<uint, uint, uint> TupleUInt3;
+typedef std::tuple<TupleUInt3, TupleUInt3, TupleUInt3> FaceTuple;
+
+bool GeometryGenerator::LoadFromOBJ(const wchar *fileName,  MeshData *meshData, std::vector<MeshSubset> *meshSubsets, bool fileIsRightHanded) {
+	//Arrays to store our model's information
+	std::unordered_map<Vertex, uint, Vertex> vertexMap;
+
+	std::vector<DirectX::XMFLOAT3> vertPos;
+	std::vector<DirectX::XMFLOAT3> vertNorm;
+	std::vector<DirectX::XMFLOAT2> vertTexCoord;
+	std::vector<FaceTuple> faces;
+
+	std::vector<std::string> meshMaterials;
+
+	std::wstring materialFile;
+	materialFile.reserve(200);
+
+	char materialName[200];
+
+	std::string line;
+	char nextChar;
+
+	std::ifstream fin(fileName, std::ios::in);
+	uint lineNumber = 0;
+
+	if (!fin.is_open())
+		return false;
+
+	while (!fin.eof()) {
+		SafeGetLine(fin, line);	//Get next line
+		Trim(line);
+		++lineNumber;
+
+		if (line.empty())
+			continue;
+
+		switch (line[0]) {
+			// Comments
+		case '#':
+			break;
+			// Vertex Descriptions
+		case 'v':
+			nextChar = line[1];
+			// v - vert position
+			if (nextChar == ' ') {
+				float vx, vy, vz;
+				sscanf(line.c_str(), "%*s %f %f %f", &vx, &vy, &vz);	//Store the next three types
+
+				if (fileIsRightHanded)	//If model is from an RH Coord System
+					vertPos.push_back(DirectX::XMFLOAT3(vx, vy, vz * -1.0f));	//Invert the Z axis
+				else
+					vertPos.push_back(DirectX::XMFLOAT3(vx, vy, vz));
+			}
+			// vt - vert tex coords
+			if (nextChar == 't') {
+				float vtcu, vtcv;
+				sscanf(line.c_str(), "%*s %f %f", &vtcu, &vtcv);	//Store the next two types
+
+				if (fileIsRightHanded)	//If model is from an RH Coord System
+					vertTexCoord.push_back(DirectX::XMFLOAT2(vtcu, 1.0f - vtcv));	//Reverse the "v" axis
+				else
+					vertTexCoord.push_back(DirectX::XMFLOAT2(vtcu, vtcv));
+			}
+			// vn - vert normal
+			if (nextChar == 'n') {
+				float vnx, vny, vnz;
+				sscanf(line.c_str(), "%*s %f %f %f", &vnx, &vny, &vnz);	//Store the next three types
+
+				if (fileIsRightHanded)	//If model is from an RH Coord System
+					vertNorm.push_back(DirectX::XMFLOAT3(vnx, vny, vnz * -1.0f));	//Invert the Z axis
+				else
+					vertNorm.push_back(DirectX::XMFLOAT3(vnx, vny, vnz));
+			}
+			break;
+
+			// New group (Subset)
+		case 'g':	//g - defines a group
+			nextChar = line[1];
+			if (nextChar == ' ') {
+				// TODO: Contemplate saving the group names and being able to render them by name as well as by index
+				
+				// Do nothing, AKA ignore groups
+			}
+			break;
+
+		case 'f':
+		{
+			bool isQuad = false;
+			char prefix[2];
+			int a[4], b[4], c[4];
+
+			// Support triangles and quads
+			if (sscanf(line.c_str(), "%2s %d/%d/%d %d/%d/%d %d/%d/%d %d/%d/%d", prefix, &a[0], &b[0], &c[0], &a[1], &b[1], &c[1], &a[2], &b[2], &c[2], &a[3], &b[3], &c[3]) == 13) {
+				isQuad = true;
+			} else if (sscanf(line.c_str(), "%2s %d//%d %d//%d %d//%d %d//%d", prefix, &a[0], &c[0], &a[1], &c[1], &a[2], &c[2], &a[3], &c[3]) == 9) {
+				isQuad = true;
+				b[0] = b[1] = b[2] = b[3] = 0;
+			} else if (sscanf(line.c_str(), "%2s %d/%d %d/%d %d/%d %d/%d", prefix, &a[0], &b[0], &a[1], &b[1], &a[2], &b[2]) == 9) {
+				isQuad = true;
+				c[0] = c[1] = c[2] = c[3] = 0;
+			} else if (sscanf(line.c_str(), "%2s %d/%d/%d %d/%d/%d %d/%d/%d", prefix, &a[0], &b[0], &c[0], &a[1], &b[1], &c[1], &a[2], &b[2], &c[2]) == 10) {
+				a[3] = b[3] = c[3] = 0;
+			} else if (sscanf(line.c_str(), "%2s %d//%d %d//%d %d//%d", prefix, &a[0], &c[0], &a[1], &c[1], &a[2], &c[2]) == 7) {
+				b[0] = b[1] = b[2] = 0;
+				a[3] = b[3] = c[3] = 0;
+			} else if (sscanf(line.c_str(), "%2s %d/%d %d/%d %d/%d", prefix, &a[0], &b[0], &a[1], &b[1], &a[2], &b[2]) == 7) {
+				c[0] = c[1] = c[2] = 0;
+				a[3] = b[3] = c[3] = 0;
+			} else {
+				break;
+			}
+
+			// Handle negative indices
+			for (uint i = 0; i < 4; ++i) {
+				if (a[i] < 0)
+					a[i] += vertPos.size() + 1;
+				if (b[i] < 0)
+					b[i] += vertTexCoord.size() + 1;
+				if (c[i] < 0)
+					c[i] += vertNorm.size() + 1;
+			}
+
+			// Store the index of the current material and the vertex indices
+			if (isQuad) {
+				// Triangulate quads
+				faces.push_back(FaceTuple(TupleUInt3(a[0], b[0], c[0]), TupleUInt3(a[1], b[1], c[1]), TupleUInt3(a[3], b[3], c[3])));
+				faces.push_back(FaceTuple(TupleUInt3(a[3], b[3], c[3]), TupleUInt3(a[1], b[1], c[1]), TupleUInt3(a[2], b[2], c[2])));
+			} else {
+				faces.push_back(FaceTuple(TupleUInt3(a[0], b[0], c[0]), TupleUInt3(a[1], b[1], c[1]), TupleUInt3(a[2], b[2], c[2])));
+			}
+			
+			break;
+		}
+		case 'm':	//mtllib - material library filename
+			if (line.find("mtllib") != std::string::npos) {
+				//Store the material libraries file name
+				sscanf(line.c_str(), "mtllib %200s", materialFile.c_str());
+			}
+			break;
+
+		case 'u':	//usemtl - which material to use
+			if (line.find("usemtl") != std::string::npos) {
+				//Store the material libraries file name
+				sscanf(line.c_str(), "usemtl %200s", materialName);
+
+				meshMaterials.push_back(materialName);
+
+				// Set the length of the previous subset
+				if (meshSubsets->size() != 0) {
+					GeometryGenerator::MeshSubset *lastSubset = &meshSubsets->back();
+					lastSubset->FaceCount = faces.size() - lastSubset->FaceStart;
+				}
+
+				meshSubsets->push_back(GeometryGenerator::MeshSubset());
+				GeometryGenerator::MeshSubset *subset = &meshSubsets->back();				
+				subset->FaceStart = faces.size();
+			}
+			break;
+
+		default:
+			break;
+		}
+	}
+
+	// Make sure there is at least one subset
+	if (meshSubsets->size() == 0) {
+		meshSubsets->push_back({0, 0, 0, faces.size()});
+	} else {
+		// Set the length of the last subset
+		GeometryGenerator::MeshSubset *lastSubset = &meshSubsets->back();
+		lastSubset->FaceCount = faces.size() - lastSubset->FaceStart;
+	}
+
+
+	// Post processing
+
+	for (uint i = 0; i < faces.size(); ++i) {
+		TupleUInt3 firstTuple = std::get<0>(faces[i]);
+		TupleUInt3 secondTuple = std::get<1>(faces[i]);
+		TupleUInt3 thirdTuple = std::get<2>(faces[i]);
+
+		uint posIndex[3];
+		posIndex[0] = std::get<0>(firstTuple);
+		posIndex[1] = std::get<0>(secondTuple);
+		posIndex[2] = std::get<0>(thirdTuple);
+
+		uint texCoordIndex[3];
+		texCoordIndex[0] = std::get<1>(firstTuple);
+		texCoordIndex[1] = std::get<1>(secondTuple);
+		texCoordIndex[2] = std::get<1>(thirdTuple);
+
+		uint normalIndex[3];
+		normalIndex[0] = std::get<2>(firstTuple);
+		normalIndex[1] = std::get<2>(secondTuple);
+		normalIndex[2] = std::get<2>(thirdTuple);
+
+		for (uint j = 0; j < 3; ++j) {
+			DirectX::XMFLOAT3 position = posIndex[j] == 0 ? DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f) : vertPos[posIndex[j] - 1];
+			DirectX::XMFLOAT3 normal = normalIndex[j] == 0 ? DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f) : vertNorm[normalIndex[j] - 1];
+			DirectX::XMFLOAT2 texCoord = texCoordIndex[j] == 0 ? DirectX::XMFLOAT2(0.0f, 0.0f) : vertTexCoord[texCoordIndex[j] - 1];
+
+			Vertex newVertex = Vertex(position, normal, texCoord);
+
+			auto iter = vertexMap.find(newVertex);
+			if (iter != vertexMap.end()) {
+				// We found a match
+				meshData->Indices.push_back(iter->second);
+			} else {
+				// No match. Make a new one
+				uint index = meshData->Vertices.size();
+				vertexMap[newVertex] = index;
+				meshData->Vertices.push_back(newVertex);
+
+				meshData->Indices.push_back(index);
+			}
+		}
+	}
+
+	// Process subsets
+	// TODO: Think of a better way to optimize the vertex buffer so we don't have to use the whole buffer for each subset
+	for (auto iter = meshSubsets->begin(); iter != meshSubsets->end(); ++iter) {
+		iter->VertexStart = 0;
+		iter->VertexCount = meshData->Vertices.size();
 	}
 }
 

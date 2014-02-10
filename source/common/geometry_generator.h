@@ -30,11 +30,31 @@ public:
 		DirectX::XMFLOAT3 Position;
 		DirectX::XMFLOAT3 Normal;
 		DirectX::XMFLOAT2 TexCoord;
+
+		inline bool operator==(const Vertex &other) const {
+			return Position.x == other.Position.x && Position.y == other.Position.y && Position.z == other.Position.z &&
+			       Normal.x == other.Normal.x && Normal.y == other.Normal.y && Normal.z == other.Normal.z &&
+			       TexCoord.x == other.TexCoord.x && TexCoord.y == other.TexCoord.y;
+		}
+
+		inline std::size_t operator()(const Vertex& key) const {
+			return std::hash<float>()(key.Position.x) ^ std::hash<float>()(key.Position.y) ^ std::hash<float>()(key.Position.z) ^
+			       std::hash<float>()(key.Normal.x) ^ std::hash<float>()(key.Normal.y) ^ std::hash<float>()(key.Normal.z) ^
+			       std::hash<float>()(key.TexCoord.x) ^ std::hash<float>()(key.TexCoord.y);
+		}
 	};
 
 	struct MeshData {
 		std::vector<Vertex> Vertices;
 		std::vector<uint> Indices;
+	};
+
+	struct MeshSubset {
+		uint VertexStart;
+		uint VertexCount;
+
+		uint FaceStart;
+		uint FaceCount;
 	};
 
 	/**
@@ -105,6 +125,7 @@ public:
 	 * @param meshData    Pointer to the MeshData object that will be filled with the quad data
 	 */
 	static void CreateFullscreenQuad(MeshData& meshData);
+	static bool LoadFromOBJ(const wchar *fileName, MeshData *meshData, std::vector<MeshSubset> *meshSubsets, bool fileIsRightHanded = false);
 };
 
 } // End of namespace Common

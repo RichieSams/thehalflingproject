@@ -23,6 +23,8 @@
 
 #include <vector>
 #include <AntTweakBar.h>
+#include <atomic>
+#include <thread>
 
 
 namespace ObjLoaderDemo {
@@ -44,6 +46,16 @@ struct DebugObjectInstance {
 
 struct FullScreenTriangleVertex {
 	DirectX::XMFLOAT3 pos;
+};
+
+struct SceneLoaderModel {
+	Vertex *Vertices;
+	uint *Indices;
+	Common::ModelSubset *Subsets;
+
+	uint VertexCount;
+	uint IndexCount;
+	uint SubsetCount;
 };
 
 struct WorldViewProjection {
@@ -71,6 +83,11 @@ private:
 	WorldViewProjection m_worldViewProj;
 	std::vector<Common::Model<Vertex> > m_models;
 	std::vector<Common::BlinnPhongMaterial> m_frameMaterialList;
+
+	std::vector<SceneLoaderModel> m_sceneLoaderModels;
+	std::atomic<bool> m_sceneLoaded;
+	bool m_sceneIsSetup;
+	std::thread m_sceneLoaderThread;
 
 	Common::Model<DebugObjectVertex, DebugObjectInstance> m_debugSphere;
 	Common::Model<DebugObjectVertex, DebugObjectInstance> m_debugCone;
@@ -166,6 +183,7 @@ private:
 	void InitTweakBar();
 	void LoadShaders();
 	void CreateShaderBuffers();
+	void SetupScene();
 	void BuildGeometryBuffers();
 	inline float GetHillHeight(float x, float z) const;
 	inline DirectX::XMFLOAT3 GetHillNormal(float x, float z) const;

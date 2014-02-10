@@ -15,8 +15,16 @@
 namespace ObjLoaderDemo {
 
 void ObjLoaderDemo::DrawFrame(double deltaTime) {
-	RenderMainPass();
-	RenderDebugGeometry();
+	if (m_sceneLoaded.load(std::memory_order_relaxed)) {
+		if (!m_sceneIsSetup) {
+			// Clean-up the thread
+			m_sceneLoaderThread.join();
+
+			SetupScene();
+		}
+		RenderMainPass();
+		RenderDebugGeometry();
+	}
 	RenderHUD();
 
 	uint syncInterval = m_vsync ? 1 : 0;

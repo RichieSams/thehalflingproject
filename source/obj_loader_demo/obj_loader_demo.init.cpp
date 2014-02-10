@@ -14,12 +14,15 @@
 
 namespace ObjLoaderDemo {
 
+void LoadScene(std::atomic<bool> *sceneIsLoaded, std::vector<SceneLoaderModel> *sceneModelList);
+
 bool ObjLoaderDemo::Initialize(LPCTSTR mainWndCaption, uint32 screenWidth, uint32 screenHeight, bool fullscreen) {
 	if (!Halfling::HalflingEngine::Initialize(mainWndCaption, screenWidth, screenHeight, fullscreen))
 		return false;
 
 	InitTweakBar();
 
+	m_sceneLoaderThread = std::thread(LoadScene, &m_sceneLoaded, &m_sceneLoaderModels);
 	BuildGeometryBuffers();
 	CreateLights();
 
@@ -63,48 +66,67 @@ void ObjLoaderDemo::InitTweakBar() {
 	TwAddVarRW(m_settingsBar, "Number of SpotLights", TW_TYPE_INT32, &m_numSpotLightsToDraw, " min=0 max=500 ");
 }
 
-void ObjLoaderDemo::BuildGeometryBuffers() {
-	m_models.push_back(Common::Model<Vertex>());
-	Common::Model<Vertex> *model = &m_models.back();
-
+void LoadScene(std::atomic<bool> *sceneIsLoaded, std::vector<SceneLoaderModel> *sceneModelList) {
 	Common::GeometryGenerator::MeshData meshData;
-	Common::GeometryGenerator::CreateGrid(160.0f, 160.0f, 50, 50, &meshData, 3.0f, 3.0f);
+	std::vector<Common::GeometryGenerator::MeshSubset> meshSubsets;
+	Common::GeometryGenerator::LoadFromOBJ(L"sponza.obj", &meshData, &meshSubsets);
 
 	uint vertexCount = meshData.Vertices.size();
 	uint indexCount = meshData.Indices.size();
+	uint subsetCount = meshSubsets.size();
 
 	Vertex *vertices = new Vertex[vertexCount];
 	for (uint i = 0; i < vertexCount; ++i) {
 		vertices[i].pos = meshData.Vertices[i].Position;
-		vertices[i].pos.y = GetHillHeight(vertices[i].pos.x, vertices[i].pos.z);
-		vertices[i].normal = GetHillNormal(vertices[i].pos.x, vertices[i].pos.z);
+		vertices[i].normal = meshData.Vertices[i].Normal;
 		vertices[i].texCoord = meshData.Vertices[i].TexCoord;
 	}
-	model->CreateVertexBuffer(m_device, vertices, vertexCount);
 
 	uint *indices = new uint[indexCount];
 	for (uint i = 0; i < indexCount; ++i) {
 		indices[i] = meshData.Indices[i];
 	}
-	model->CreateIndexBuffer(m_device, indices, indexCount);
 
 	// Create subsets
-	Common::ModelSubset *subsets = new Common::ModelSubset[1] {
-		{0, vertexCount, 0, indexCount / 3, {DirectX::XMFLOAT4(0.48f, 0.77f, 0.46f, 0.0f),
-		                                     DirectX::XMFLOAT4(0.48f, 0.77f, 0.46f, 1.0f),
-		                                     DirectX::XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f)},
-			m_textureManager.GetSRVFromDDSFile(m_device, "grass.dds", D3D11_USAGE_IMMUTABLE)
-		}
-	};
-	model->CreateSubsets(subsets, 1);
+	Common::ModelSubset *subsets = new Common::ModelSubset[subsetCount];
 
-	meshData.Indices.clear();
-	meshData.Vertices.clear();
+	for (uint i = 0; i < subsetCount; ++i) {
+		subsets[i].FaceCount = meshSubsets[i].FaceCount;
+		subsets[i].FaceStart = meshSubsets[i].FaceStart;
+		subsets[i].VertexCount = meshSubsets[i].VertexCount;
+		subsets[i].VertexStart = meshSubsets[i].VertexStart;
+		subsets[i].Material = Common::BlinnPhongMaterial{DirectX::XMFLOAT4(0.2f, 0.2f, 0.2f, 0.0f),
+			DirectX::XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f),
+			DirectX::XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f)};
+		subsets[i].SRV = nullptr;
+	}
+	
+	sceneModelList->push_back({vertices, indices, subsets, vertexCount, indexCount, subsetCount});
+	sceneIsLoaded->store(true, std::memory_order_relaxed);
+}
+
+void ObjLoaderDemo::SetupScene() {
+	for (auto iter = m_sceneLoaderModels.begin(); iter != m_sceneLoaderModels.end(); ++iter) {
+		m_models.push_back(Common::Model<Vertex>());
+		Common::Model<Vertex> *model = &m_models.back();
+
+		model->CreateVertexBuffer(m_device, iter->Vertices, iter->VertexCount);
+		model->CreateIndexBuffer(m_device, iter->Indices, iter->IndexCount);
+		model->CreateSubsets(iter->Subsets, iter->SubsetCount);
+	}
+
+	// Cleanup
+	m_sceneLoaderModels.clear();
+	m_sceneIsSetup = true;
+}
+
+void ObjLoaderDemo::BuildGeometryBuffers() {
+	Common::GeometryGenerator::MeshData meshData;
 
 	// Create debug sphere
 	Common::GeometryGenerator::CreateSphere(1.0f, 10, 10, &meshData);
-	vertexCount = meshData.Vertices.size();
-	indexCount = meshData.Indices.size();
+	uint vertexCount = meshData.Vertices.size();
+	uint indexCount = meshData.Indices.size();
 
 	DebugObjectVertex *debugSphereVertices = new DebugObjectVertex[vertexCount];
 	for (uint i = 0; i < vertexCount; ++i) {

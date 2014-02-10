@@ -103,7 +103,7 @@ void ObjLoaderDemo::OnResize() {
 	}
 
 	// Update the aspect ratio and the projection matrix
-	m_worldViewProj.projection = DirectX::XMMatrixPerspectiveFovLH(0.25f * DirectX::XM_PI, float(m_clientWidth) / m_clientHeight, 1000.0f, 1.0f);
+	m_worldViewProj.projection = DirectX::XMMatrixPerspectiveFovLH(0.25f * DirectX::XM_PI, float(m_clientWidth) / m_clientHeight, 10000.0f, 1.0f);
 
 	// Release the gBuffers
 	for (auto gbuffer : m_gBuffers) {

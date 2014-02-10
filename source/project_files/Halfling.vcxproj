@@ -39,6 +39,7 @@
     <ClInclude Include="..\common\model.h" />
     <ClInclude Include="..\common\sprite_font.h" />
     <ClInclude Include="..\common\sprite_renderer.h" />
+    <ClInclude Include="..\common\string_util.h" />
     <ClInclude Include="..\common\structured_buffer.h" />
     <ClInclude Include="..\common\texture2d.h" />
     <ClInclude Include="..\common\texture_manager.h" />

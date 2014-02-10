@@ -113,6 +113,9 @@
     <ClInclude Include="..\common\file_io_util.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="..\common\string_util.h">
+      <Filter>Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\common\shaders\lights.hlsli">

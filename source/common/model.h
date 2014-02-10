@@ -165,7 +165,7 @@ InstanceType *Model<Vertex, InstanceType>::MapInstanceBuffer(ID3D11DeviceContext
 }
 
 template <typename Vertex, typename InstanceType>
-void Model<Vertex, InstanceType>::UnMapInstanceBuffer(ID3D11DeviceContext *deviceContext){
+void Model<Vertex, InstanceType>::UnMapInstanceBuffer(ID3D11DeviceContext *deviceContext) {
 	deviceContext->Unmap(m_instanceBuffer, 0);
 }
 

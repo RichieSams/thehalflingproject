@@ -296,7 +296,7 @@ void ObjLoaderDemo::SetNoCullFinalGatherShaderConstants(DirectX::XMMATRIX &projM
 
 void ObjLoaderDemo::SetLightBuffers() {
 	if (m_numPointLightsToDraw > 0) {
-		assert(m_pointLightBuffer->NumElements() >= m_numPointLightsToDraw);
+		assert(m_pointLightBuffer->NumElements() >= (int)m_numPointLightsToDraw);
 
 		Common::PointLight *pointLightArray = m_pointLightBuffer->MapDiscard(m_immediateContext);
 		for (unsigned int i = 0; i < m_numPointLightsToDraw; ++i) {
@@ -306,7 +306,7 @@ void ObjLoaderDemo::SetLightBuffers() {
 	}
 	
 	if (m_numSpotLightsToDraw > 0) {
-		assert(m_spotLightBuffer->NumElements() >= m_numSpotLightsToDraw);
+		assert(m_spotLightBuffer->NumElements() >= (int)m_numSpotLightsToDraw);
 
 		Common::SpotLight *spotLightArray = m_spotLightBuffer->MapDiscard(m_immediateContext);
 		for (unsigned int i = 0; i < m_numSpotLightsToDraw; ++i) {

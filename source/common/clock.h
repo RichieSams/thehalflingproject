@@ -4,17 +4,17 @@
  * Copyright Adrian Astley 2013
  */
 
-#ifndef TIMER_H
-#define TIMER_H
+#ifndef COMMON_CLOCK_H
+#define COMMON_CLOCK_H
 
 #include "common/typedefs.h"
 
 
 namespace Common {
 
-class Timer {
+class Clock {
 public:
-	Timer();
+	Clock();
 
 	double DeltaTime() const { return m_deltaTime; }
 

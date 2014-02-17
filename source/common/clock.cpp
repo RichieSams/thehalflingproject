@@ -4,14 +4,14 @@
  * Copyright Adrian Astley 2013
  */
 
-#include "timer.h"
+#include "common/clock.h"
 
 #include <windows.h>
 
 
 namespace Common {
 
-Timer::Timer() 
+Clock::Clock() 
 		: m_milliSecondsPerCount(0.0f),
 		  m_deltaTime(-1.0f),
 		  m_baseTime(0),
@@ -24,7 +24,7 @@ Timer::Timer()
 	m_milliSecondsPerCount = 1000.0 / (double)countsPerSec;
 }
 
-void Timer::Tick() {
+void Clock::Tick() {
 	if (m_isStopped) {
 		m_deltaTime = 0.0f;
 		return;
@@ -48,7 +48,7 @@ void Timer::Tick() {
 	}
 }
 
-void Timer::Start() {
+void Clock::Start() {
 	if (m_isStopped) {
 		int64 startTime;
 		QueryPerformanceCounter((LARGE_INTEGER *)&startTime);
@@ -61,7 +61,7 @@ void Timer::Start() {
 	}
 }
 
-void Timer::Stop() {
+void Clock::Stop() {
 	if (!m_isStopped) {
 		int64 currTime;
 		QueryPerformanceCounter((LARGE_INTEGER *)&currTime);
@@ -71,7 +71,7 @@ void Timer::Stop() {
 	}
 }
 
-void Timer::Reset() {
+void Clock::Reset() {
 	int64 currTime;
 	QueryPerformanceCounter((LARGE_INTEGER *)&currTime);
 
@@ -81,7 +81,7 @@ void Timer::Reset() {
 	m_isStopped = false;
 }
 
-double Timer::TotalTime() const {
+double Clock::TotalTime() const {
 	if (m_isStopped) {
 		return ((m_stopTime - m_pausedTime) - m_baseTime) * m_milliSecondsPerCount;
 	}

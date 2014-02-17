@@ -12,9 +12,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\common\timer.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
     <ClCompile Include="..\halfling\halfling_engine.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -48,12 +45,12 @@
     <ClCompile Include="..\common\light_animator.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="..\common\clock.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\common\halfling_sys.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\common\timer.h">
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="..\common\typedefs.h">
@@ -114,6 +111,9 @@
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="..\common\string_util.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\clock.h">
       <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>

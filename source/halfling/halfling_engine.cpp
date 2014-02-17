@@ -19,7 +19,7 @@ namespace Halfling {
 
 HalflingEngine::HalflingEngine(HINSTANCE hinstance)
 		: m_hinstance(hinstance),
-		  m_timer(Common::Timer()),
+		  m_mainClock(Common::Clock()),
 		  m_updatePeriod(30.0),
 		  m_fps(0),
 		  m_frameTime(0.0f),
@@ -177,8 +177,8 @@ void HalflingEngine::Run() {
 		else
 		{
 			// Otherwise do the frame processing
-			m_timer.Tick();
-			deltaTime = m_timer.DeltaTime();
+			m_mainClock.Tick();
+			deltaTime = m_mainClock.DeltaTime();
 			// Avoid spiral of death
 			if (deltaTime > 250.0) {
 				deltaTime = 250.0;
@@ -299,12 +299,12 @@ LRESULT HalflingEngine::MsgProc(HWND hwnd, uint msg, WPARAM wParam, LPARAM lPara
 
 void HalflingEngine::PauseGame() {
 	m_appPaused = true;
-	m_timer.Stop();
+	m_mainClock.Stop();
 }
 
 void HalflingEngine::UnPauseGame() {
 	m_appPaused = false;
-	m_timer.Start();
+	m_mainClock.Start();
 }
 
 void HalflingEngine::InitializeWindow() {

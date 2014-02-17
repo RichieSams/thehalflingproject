@@ -8,7 +8,7 @@
 #define HALFLING_ENGINE_H
 
 #include "common/halfling_sys.h"
-#include "common/timer.h"
+#include "common/clock.h"
 
 #include "d3d11.h"
 
@@ -28,7 +28,7 @@ private:
 	bool m_isMinOrMaximized;
 	bool m_resizing;
 
-	Common::Timer m_timer;
+	Common::Clock m_mainClock;
 
 protected:
 	HWND m_hwnd;

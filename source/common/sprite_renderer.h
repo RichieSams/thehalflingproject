@@ -64,6 +64,7 @@ protected:
 	ID3D11VertexShader *m_vertexShader;
 	ID3D11VertexShader *m_vertexShaderInstanced;
 	ID3D11PixelShader *m_pixelShader;
+	ID3D11PixelShader *m_sampledPixelShader;
 	ID3D11Buffer *m_vertexBuffer;
 	ID3D11Buffer *m_indexBuffer;
 	ID3D11Buffer *m_vsPerBatchConstBuffer;

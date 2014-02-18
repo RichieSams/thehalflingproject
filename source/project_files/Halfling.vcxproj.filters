@@ -162,5 +162,8 @@
     <FxCompile Include="..\common\shaders\sprite_instanced_vertex_shader.hlsl">
       <Filter>Common\Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="..\common\shaders\sprite_sampled_pixel_shader.hlsl">
+      <Filter>Common\Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

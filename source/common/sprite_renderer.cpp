@@ -69,6 +69,7 @@ void SpriteRenderer::Initialize(ID3D11Device *device) {
 	HR(Common::LoadVertexShader("sprite_vertex_shader.cso", device, &m_vertexShader, &m_inputLayout, layout, 2));
 	HR(Common::LoadVertexShader("sprite_instanced_vertex_shader.cso", device, &m_vertexShaderInstanced, &m_inputLayoutInstanced, layoutInstanced, 8));
 	HR(Common::LoadPixelShader("sprite_pixel_shader.cso", device, &m_pixelShader));
+	HR(Common::LoadPixelShader("sprite_sampled_pixel_shader.cso", device, &m_sampledPixelShader));
 
 	// Create the vertex buffer
 	SpriteVertex verts[] = {
@@ -210,7 +211,6 @@ void SpriteRenderer::Begin(ID3D11DeviceContext *deviceContext, FilterMode filter
 	}
 
 	// Set the shaders
-	m_context->PSSetShader(m_pixelShader, nullptr, 0);
 	m_context->GSSetShader(nullptr, nullptr, 0);
 	m_context->DSSetShader(nullptr, nullptr, 0);
 	m_context->HSSetShader(nullptr, nullptr, 0);
@@ -236,10 +236,14 @@ D3D11_TEXTURE2D_DESC SpriteRenderer::SetPerBatchData(ID3D11ShaderResourceView *t
 		texResource = reinterpret_cast<ID3D11Texture2D *>(resource);
 		texResource->GetDesc(&desc);
 		perBatch.TextureSize = DirectX::XMFLOAT2(static_cast<float>(desc.Width), static_cast<float>(desc.Height));
+
+		m_context->PSSetShader(m_sampledPixelShader, nullptr, 0);
 	} else {
 		perBatch.TextureSize = DirectX::XMFLOAT2(1.0f, 1.0f);
 		desc.Width = 1;
 		desc.Height = 1;
+
+		m_context->PSSetShader(m_pixelShader, nullptr, 0);
 	}
 
 	// Copy it into the buffer

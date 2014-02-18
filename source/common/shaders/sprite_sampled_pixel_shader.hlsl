@@ -18,6 +18,9 @@
 //=================================================================================================
 // Pixel Shader
 //=================================================================================================
-float4 SpritePS(in VSOutput input) : SV_Target {
-    return input.Color;
+float4 SpriteSampledPS(in VSOutput input) : SV_Target {
+    float4 texColor = SpriteTexture.Sample(SpriteSampler, input.TexCoord);
+    texColor = texColor * input.Color;
+    texColor.rgb *= texColor.a;
+    return texColor;
 }

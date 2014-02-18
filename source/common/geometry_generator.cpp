@@ -10,6 +10,7 @@
 #include "common/string_util.h"
 #include "common/profiler.h"
 #include "common/memory_stream.h"
+#include "common/hash.h"
 
 #include <unordered_map>
 #include <tuple>
@@ -348,7 +349,7 @@ bool GeometryGenerator::LoadFromOBJ(const wchar *fileName,  MeshData *meshData, 
 	profiler.StartEvent("total");
 
 	//Arrays to store our model's information
-	std::unordered_map<Vertex, uint, Vertex> vertexMap;
+	std::unordered_map<TupleUInt3, uint> vertexMap;
 
 	std::vector<DirectX::XMFLOAT3> vertPos;
 	std::vector<DirectX::XMFLOAT3> vertNorm;
@@ -588,15 +589,16 @@ bool GeometryGenerator::LoadFromOBJ(const wchar *fileName,  MeshData *meshData, 
 			DirectX::XMFLOAT2 texCoord = texCoordIndex[j] == 0 ? DirectX::XMFLOAT2(0.0f, 0.0f) : vertTexCoord[texCoordIndex[j] - 1];
 
 			Vertex newVertex = Vertex(position, normal, texCoord);
+			TupleUInt3 vertexTuple {posIndex[j], texCoordIndex[j], normalIndex[j]};
 
-			auto iter = vertexMap.find(newVertex);
+			auto iter = vertexMap.find(vertexTuple);
 			if (iter != vertexMap.end()) {
 				// We found a match
 				meshData->Indices.push_back(iter->second);
 			} else {
 				// No match. Make a new one
 				uint index = meshData->Vertices.size();
-				vertexMap[newVertex] = index;
+				vertexMap[vertexTuple] = index;
 				meshData->Vertices.push_back(newVertex);
 
 				meshData->Indices.push_back(index);

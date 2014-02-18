@@ -9,9 +9,8 @@
 #include "common/file_io_util.h"
 #include "common/string_util.h"
 #include "common/profiler.h"
+#include "common/memory_stream.h"
 
-#include <fstream>
-#include <stdio.h>
 #include <unordered_map>
 #include <tuple>
 
@@ -366,17 +365,22 @@ bool GeometryGenerator::LoadFromOBJ(const wchar *fileName,  MeshData *meshData, 
 	std::string line;
 	char nextChar;
 
-	std::ifstream fin(fileName, std::ios::in);
-	uint lineNumber = 0;
-
-	if (!fin.is_open()) {
-		return false;
-	}
 	profiler.StartEvent("fileRead");
 
+	DWORD bytesRead;
+	char *fileBuffer = ReadWholeFile(L"sponza.obj", &bytesRead);
+	if (fileBuffer == NULL)
+		return false;
 
-	while (!fin.eof()) {
-		SafeGetLine(fin, line); //Get next line
+	Common::MemoryInputStream fin(fileBuffer, bytesRead);
+	uint lineNumber = 0;
+
+	profiler.EndEvent("fileRead");
+
+	profiler.StartEvent("fileProcess");
+
+
+	while (SafeGetLine(fin, line)) {
 		Trim(line);
 		++lineNumber;
 
@@ -542,7 +546,7 @@ bool GeometryGenerator::LoadFromOBJ(const wchar *fileName,  MeshData *meshData, 
 		}
 	}
 
-	profiler.EndEvent("fileRead");
+	profiler.EndEvent("fileProcess");
 
 	// Make sure there is at least one subset
 	if (meshSubsets->size() == 0) {

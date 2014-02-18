@@ -26,8 +26,9 @@ GraphicsManager::GraphicsManager(GameStateManager *gameStateManager)
 }
 
 bool CrateDemo::GraphicsManager::Initialize(int clientWidth, int clientHeight, HWND hwnd) {
-	if (!Common::GraphicsManagerBase::Initialize(clientWidth, clientHeight, hwnd))
+	if (!Common::GraphicsManagerBase::Initialize(clientWidth, clientHeight, hwnd)) {
 		return false;
+	}
 
 	LoadShaders();
 	BuildGeometryBuffers();
@@ -49,12 +50,12 @@ void GraphicsManager::Shutdown() {
 }
 
 void GraphicsManager::DrawFrame() {
-	m_immediateContext->ClearRenderTargetView(m_renderTargetView, reinterpret_cast<const float*>(&Colors::Blue));
+	m_immediateContext->ClearRenderTargetView(m_renderTargetView, reinterpret_cast<const float *>(&Colors::Blue));
 	m_immediateContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 	// Write the wold, view, projection matrices to the constant shader buffer
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
-	MatrixBufferType* dataPtr;
+	MatrixBufferType *dataPtr;
 	unsigned int bufferNumber;
 
 	// Transpose the matrices to prepare them for the shader.
@@ -66,7 +67,7 @@ void GraphicsManager::DrawFrame() {
 	HR(m_immediateContext->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
 
 	// Get a pointer to the data in the constant buffer.
-	dataPtr = (MatrixBufferType*)mappedResource.pData;
+	dataPtr = (MatrixBufferType *)mappedResource.pData;
 
 	// Copy the matrices into the constant buffer.
 	dataPtr->world = worldMatrix;
@@ -111,8 +112,8 @@ void GraphicsManager::OnResize(int newClientWidth, int newClientHeight) {
 	Common::GraphicsManagerBase::OnResize(newClientWidth, newClientHeight);
 
 	// Recreate the render target view.
-	ID3D11Texture2D* backBuffer;
-	HR(m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&backBuffer)));
+	ID3D11Texture2D *backBuffer;
+	HR(m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void **>(&backBuffer)));
 	HR(m_device->CreateRenderTargetView(backBuffer, 0, &m_renderTargetView));
 	ReleaseCOM(backBuffer);
 
@@ -161,7 +162,7 @@ void GraphicsManager::BuildGeometryBuffers() {
 	vbd.CPUAccessFlags = 0;
 	vbd.MiscFlags = 0;
 	vbd.StructureByteStride = 0;
-	
+
 	D3D11_SUBRESOURCE_DATA vInitData;
 	vInitData.pSysMem = verticies;
 
@@ -196,7 +197,7 @@ void GraphicsManager::BuildGeometryBuffers() {
 	ibd.CPUAccessFlags = 0;
 	ibd.MiscFlags = 0;
 	ibd.StructureByteStride = 0;
-	
+
 	D3D11_SUBRESOURCE_DATA iInitData;
 	iInitData.pSysMem = indicies;
 

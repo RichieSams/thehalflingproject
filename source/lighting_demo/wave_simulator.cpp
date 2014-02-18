@@ -11,7 +11,7 @@
 
 namespace LightingDemo {
 
-LightingDemo::WaveSimulator::WaveSimulator() 
+LightingDemo::WaveSimulator::WaveSimulator()
 	: m_numRows(0),
 	  m_numCols(0),
 	  m_vertexCount(0),
@@ -62,8 +62,8 @@ void WaveSimulator::Init(uint m, uint n, float dx, float dt, float speed, float 
 		for (uint j = 0; j < n; ++j) {
 			float x = -halfWidth + (j * dx);
 
-			m_prevSolution[i*n + j] = DirectX::XMFLOAT3(x, 0.0f, z);
-			m_currSolution[i*n + j] = DirectX::XMFLOAT3(x, 0.0f, z);
+			m_prevSolution[i * n + j] = DirectX::XMFLOAT3(x, 0.0f, z);
+			m_currSolution[i * n + j] = DirectX::XMFLOAT3(x, 0.0f, z);
 		}
 	}
 }
@@ -73,9 +73,10 @@ void WaveSimulator::Update(float dt) {
 	m_accumulatedTime += dt;
 
 	// Only update the simulation at the specified time step.
-	if (m_accumulatedTime < m_timeStep) 
+	if (m_accumulatedTime < m_timeStep) {
 		return;
-		
+	}
+
 	m_accumulatedTime -= dt;
 
 	// Only update interior points; we use zero boundary conditions.
@@ -83,11 +84,11 @@ void WaveSimulator::Update(float dt) {
 		for (uint j = 1; j < m_numCols - 1; ++j) {
 			// After this update we will be discarding the old previous
 			// buffer, so overwrite that buffer with the new update.
-			// Note how we can do this in place (read/write to same element) 
+			// Note how we can do this in place (read/write to same element)
 			// because we won't need prev_ij again and the assignment happens last.
 
 			// Note j indexes x and i indexes z: h(x_j, z_i, t_k)
-			// Moreover, our +z axis goes "down"; this is just to 
+			// Moreover, our +z axis goes "down"; this is just to
 			// keep consistent with our row indices going down.
 			m_prevSolution[(i * m_numCols) + j].y = m_k1 * m_prevSolution[(i * m_numCols) + j].y +
 			                                        m_k2 * m_currSolution[(i * m_numCols) + j].y +

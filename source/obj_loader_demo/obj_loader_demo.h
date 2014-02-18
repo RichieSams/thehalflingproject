@@ -206,7 +206,7 @@ private:
 	void SetGBufferVertexShaderConstants(DirectX::XMMATRIX &worldMatrix, DirectX::XMMATRIX &worldViewProjMatrix);
 	void SetGBufferPixelShaderConstants(uint materialIndex);
 	void SetNoCullFinalGatherShaderConstants(DirectX::XMMATRIX &projMatrix, DirectX::XMMATRIX &invViewProjMatrix);
-	
+
 	/** Maps the point light StructuredBuffer and the spot light Structured buffer to the pixel shader */
 	void SetLightBuffers();
 	/** Maps a list of Materials used in the frame to the pixel shader. This is only used for deferred shading */

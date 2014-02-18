@@ -14,12 +14,12 @@ namespace Common {
 
 /**
  * Reads a line from an istream using /r, /r/n, and /n as line delimiters
- * 
+ *
  * @param inputStream    The stream to read from
  * @param output         Will be filled with the line read
  * @return               The input stream
  */
-std::istream& SafeGetLine(std::istream& inputStream, std::string& output) {
+std::istream &SafeGetLine(std::istream &inputStream, std::string &output) {
 	output.clear();
 
 	// The characters in the stream are read one-by-one using a std::streambuf.
@@ -29,7 +29,7 @@ std::istream& SafeGetLine(std::istream& inputStream, std::string& output) {
 	// such as thread synchronization and updating the stream state.
 
 	std::istream::sentry se(inputStream, true);
-	std::streambuf* sb = inputStream.rdbuf();
+	std::streambuf *sb = inputStream.rdbuf();
 
 	for (;;) {
 		int c = sb->sbumpc();
@@ -37,13 +37,15 @@ std::istream& SafeGetLine(std::istream& inputStream, std::string& output) {
 		case '\n':
 			return inputStream;
 		case '\r':
-			if (sb->sgetc() == '\n')
+			if (sb->sgetc() == '\n') {
 				sb->sbumpc();
+			}
 			return inputStream;
 		case EOF:
 			// Also handle the case when the last line has no line ending
-			if (output.empty())
+			if (output.empty()) {
 				inputStream.setstate(std::ios::eofbit);
+			}
 			return inputStream;
 		default:
 			output += (char)c;

@@ -14,7 +14,7 @@
 
 namespace LightingDemo {
 
-GameStateManager::GameStateManager() 
+GameStateManager::GameStateManager()
 	: GameStateManagerBase(),
 	  m_camera(1.5f * DirectX::XM_PI, 0.25f * DirectX::XM_PI, 50.0f) {
 }
@@ -132,9 +132,9 @@ float GameStateManager::GetHillHeight(float x, float z) const {
 
 DirectX::XMFLOAT3 GameStateManager::GetHillNormal(float x, float z) const {
 	DirectX::XMFLOAT3 normal(
-		-0.03f * z * cosf(0.1f * x) - 0.3f * cosf(0.1f * z),
-		1.0f,
-		0.3f * sinf(0.1f * x) + 0.03f * x * sinf(0.1f * z));
+	    -0.03f * z * cosf(0.1f * x) - 0.3f * cosf(0.1f * z),
+	    1.0f,
+	    0.3f * sinf(0.1f * x) + 0.03f * x * sinf(0.1f * z));
 
 	DirectX::XMVECTOR unitNormal = DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&normal));
 	DirectX::XMStoreFloat3(&normal, unitNormal);

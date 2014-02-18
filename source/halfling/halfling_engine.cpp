@@ -54,20 +54,20 @@ bool HalflingEngine::Initialize(LPCTSTR mainWndCaption, uint32 screenWidth, uint
 
 	// Create the device and device context.
 	UINT createDeviceFlags = 0;
-	#if defined(DEBUG) || defined(_DEBUG)  
-		createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
+	#if defined(DEBUG) || defined(_DEBUG)
+	createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 	#endif
 
 	D3D_FEATURE_LEVEL featureLevel;
 	HRESULT hr = D3D11CreateDevice(NULL,
-								   D3D_DRIVER_TYPE_HARDWARE,
-								   NULL,
-								   createDeviceFlags,
-								   NULL, 0,
-								   D3D11_SDK_VERSION,
-								   &m_device,
-								   &featureLevel,
-								   &m_immediateContext);
+	                               D3D_DRIVER_TYPE_HARDWARE,
+	                               NULL,
+	                               createDeviceFlags,
+	                               NULL, 0,
+	                               D3D11_SDK_VERSION,
+	                               &m_device,
+	                               &featureLevel,
+	                               &m_immediateContext);
 
 	// Describe the swap chain
 	DXGI_SWAP_CHAIN_DESC sd;
@@ -84,7 +84,7 @@ bool HalflingEngine::Initialize(LPCTSTR mainWndCaption, uint32 screenWidth, uint
 		return false;
 	}
 
-	// Use MSAA? 
+	// Use MSAA?
 	if (m_msaaCount > 1) {
 		uint msaaQuality;
 		HR(m_device->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, m_msaaCount, &msaaQuality));
@@ -104,14 +104,14 @@ bool HalflingEngine::Initialize(LPCTSTR mainWndCaption, uint32 screenWidth, uint
 	sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 	sd.Flags = 0;
 
-	IDXGIDevice* dxgiDevice;
-	HR(m_device->QueryInterface(__uuidof(IDXGIDevice), (void**)&dxgiDevice));
+	IDXGIDevice *dxgiDevice;
+	HR(m_device->QueryInterface(__uuidof(IDXGIDevice), (void **)&dxgiDevice));
 
-	IDXGIAdapter* dxgiAdapter;
-	HR(dxgiDevice->GetParent(__uuidof(IDXGIAdapter), (void**)&dxgiAdapter));
+	IDXGIAdapter *dxgiAdapter;
+	HR(dxgiDevice->GetParent(__uuidof(IDXGIAdapter), (void **)&dxgiAdapter));
 
-	IDXGIFactory* dxgiFactory;
-	HR(dxgiAdapter->GetParent(__uuidof(IDXGIFactory), (void**)&dxgiFactory));
+	IDXGIFactory *dxgiFactory;
+	HR(dxgiAdapter->GetParent(__uuidof(IDXGIFactory), (void **)&dxgiFactory));
 
 	HR(dxgiFactory->CreateSwapChain((IUnknown *)m_device, &sd, &m_swapChain));
 
@@ -135,12 +135,13 @@ void HalflingEngine::Shutdown() {
 	ReleaseCOM(m_swapChain);
 
 	// Restore all default settings.
-	if (m_immediateContext)
+	if (m_immediateContext) {
 		m_immediateContext->ClearState();
+	}
 
 	ReleaseCOM(m_immediateContext);
 	ReleaseCOM(m_device);
-	
+
 	// Shutdown the window.
 	ShutdownWindow();
 
@@ -152,7 +153,7 @@ void HalflingEngine::Run() {
 	// Initialize the message structure.
 	ZeroMemory(&msg, sizeof(MSG));
 
-	
+
 	bool done = false;
 	// Force an update before the first render
 	double accumulatedTime = m_updatePeriod;
@@ -173,9 +174,7 @@ void HalflingEngine::Run() {
 
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
-		}
-		else
-		{
+		} else {
 			// Otherwise do the frame processing
 			m_mainClock.Tick();
 			deltaTime = m_mainClock.DeltaTime();
@@ -189,7 +188,7 @@ void HalflingEngine::Run() {
 				accumulatedTime -= m_updatePeriod;
 				Update();
 			}
-			
+
 			CalculateFrameStats(deltaTime);
 			DrawFrame(deltaTime);
 		}
@@ -200,9 +199,9 @@ void HalflingEngine::Run() {
 
 LRESULT HalflingEngine::MsgProc(HWND hwnd, uint msg, WPARAM wParam, LPARAM lParam) {
 	switch (msg) {
-		// WM_ACTIVATE is sent when the window is activated or deactivated.  
-		// We pause the game when the window is deactivated and unpause it 
-		// when it becomes active.  
+	// WM_ACTIVATE is sent when the window is activated or deactivated.
+	// We pause the game when the window is deactivated and unpause it
+	// when it becomes active.
 	case WM_ACTIVATE:
 		if (LOWORD(wParam) == WA_INACTIVE) {
 			PauseGame();
@@ -211,7 +210,7 @@ LRESULT HalflingEngine::MsgProc(HWND hwnd, uint msg, WPARAM wParam, LPARAM lPara
 		}
 		return 0;
 
-		// WM_SIZE is sent when the user resizes the window.  
+	// WM_SIZE is sent when the user resizes the window.
 	case WM_SIZE:
 		// Save the new client area dimensions.
 		m_clientWidth = LOWORD(lParam);
@@ -230,13 +229,13 @@ LRESULT HalflingEngine::MsgProc(HWND hwnd, uint msg, WPARAM wParam, LPARAM lPara
 				m_isMinOrMaximized = false;
 				OnResize();
 			} else if (m_resizing) {
-				// If user is dragging the resize bars, we do not resize 
-				// the buffers here because as the user continuously 
+				// If user is dragging the resize bars, we do not resize
+				// the buffers here because as the user continuously
 				// drags the resize bars, a stream of WM_SIZE messages are
 				// sent to the window, and it would be pointless (and slow)
 				// to resize for each WM_SIZE message received from dragging
-				// the resize bars.  So instead, we reset after the user is 
-				// done resizing the window and releases the resize bars, which 
+				// the resize bars.  So instead, we reset after the user is
+				// done resizing the window and releases the resize bars, which
 				// sends a WM_EXITSIZEMOVE message.
 			} else {
 				// API call such as SetWindowPos or mSwapChain->SetFullscreenState.
@@ -246,32 +245,32 @@ LRESULT HalflingEngine::MsgProc(HWND hwnd, uint msg, WPARAM wParam, LPARAM lPara
 
 		return 0;
 
-		// WM_EXITSIZEMOVE is sent when the user grabs the resize bars.
+	// WM_EXITSIZEMOVE is sent when the user grabs the resize bars.
 	case WM_ENTERSIZEMOVE:
 		PauseGame();
 		m_resizing = true;
 		return 0;
 
-		// WM_EXITSIZEMOVE is sent when the user releases the resize bars.
-		// Here we reset everything based on the new window dimensions.
+	// WM_EXITSIZEMOVE is sent when the user releases the resize bars.
+	// Here we reset everything based on the new window dimensions.
 	case WM_EXITSIZEMOVE:
 		UnPauseGame();
 		m_resizing = false;
 		OnResize();
 		return 0;
 
-		// WM_DESTROY is sent when the window is being destroyed.
+	// WM_DESTROY is sent when the window is being destroyed.
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		return 0;
 
-		// The WM_MENUCHAR message is sent when a menu is active and the user presses 
-		// a key that does not correspond to any mnemonic or accelerator key. 
+	// The WM_MENUCHAR message is sent when a menu is active and the user presses
+	// a key that does not correspond to any mnemonic or accelerator key.
 	case WM_MENUCHAR:
 		// Don't beep when we alt-enter.
 		return MAKELRESULT(0, MNC_CLOSE);
 
-		// Catch this message so to prevent the window from becoming too small.
+	// Catch this message so to prevent the window from becoming too small.
 	case WM_GETMINMAXINFO:
 		((MINMAXINFO *)lParam)->ptMinTrackSize.x = 200;
 		((MINMAXINFO *)lParam)->ptMinTrackSize.y = 200;
@@ -345,19 +344,19 @@ void HalflingEngine::InitializeWindow() {
 		DWORD dw = GetLastError();
 
 		FormatMessage(
-			FORMAT_MESSAGE_ALLOCATE_BUFFER |
-			FORMAT_MESSAGE_FROM_SYSTEM |
-			FORMAT_MESSAGE_IGNORE_INSERTS,
-			NULL,
-			dw,
-			MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-			(LPTSTR)&lpMsgBuf,
-			0, NULL);
+		    FORMAT_MESSAGE_ALLOCATE_BUFFER |
+		    FORMAT_MESSAGE_FROM_SYSTEM |
+		    FORMAT_MESSAGE_IGNORE_INSERTS,
+		    NULL,
+		    dw,
+		    MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+		    (LPTSTR)&lpMsgBuf,
+		    0, NULL);
 
 		// Display the error message and exit the process
 
 		lpDisplayBuf = (LPVOID)LocalAlloc(LMEM_ZEROINIT,
-										  (lstrlen((LPCTSTR)lpMsgBuf) + 40) * sizeof(TCHAR));
+		                                  (lstrlen((LPCTSTR)lpMsgBuf) + 40) * sizeof(TCHAR));
 		MessageBox(NULL, (LPCTSTR)lpDisplayBuf, TEXT("Error"), MB_OK);
 		MessageBox(0, L"CreateWindow Failed.", 0, 0);
 		return;
@@ -374,7 +373,7 @@ void HalflingEngine::ShutdownWindow() {
 	//ShowCursor(true);
 
 	// Fix the display settings if leaving full screen mode.
-	if(m_fullscreen) {
+	if (m_fullscreen) {
 		ChangeDisplaySettings(NULL, 0);
 	}
 
@@ -390,8 +389,8 @@ void HalflingEngine::ShutdownWindow() {
 }
 
 void HalflingEngine::CalculateFrameStats(double deltaTime) {
-	// Code computes the average frames per second, and also the 
-	// average time it takes to render one frame.  These stats 
+	// Code computes the average frames per second, and also the
+	// average time it takes to render one frame.  These stats
 	// are appended to the window caption bar.
 
 	static uint frameCount = 0;

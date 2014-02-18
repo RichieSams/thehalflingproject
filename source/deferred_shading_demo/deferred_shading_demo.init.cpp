@@ -15,8 +15,9 @@
 namespace DeferredShadingDemo {
 
 bool DeferredShadingDemo::Initialize(LPCTSTR mainWndCaption, uint32 screenWidth, uint32 screenHeight, bool fullscreen) {
-	if (!Halfling::HalflingEngine::Initialize(mainWndCaption, screenWidth, screenHeight, fullscreen))
+	if (!Halfling::HalflingEngine::Initialize(mainWndCaption, screenWidth, screenHeight, fullscreen)) {
 		return false;
+	}
 
 	InitTweakBar();
 
@@ -164,9 +165,9 @@ float DeferredShadingDemo::GetHillHeight(float x, float z) const {
 
 DirectX::XMFLOAT3 DeferredShadingDemo::GetHillNormal(float x, float z) const {
 	DirectX::XMFLOAT3 normal(
-		-0.03f * z * cosf(0.1f * x) - 0.3f * cosf(0.1f * z),
-		1.0f,
-		0.3f * sinf(0.1f * x) + 0.03f * x * sinf(0.1f * z));
+	    -0.03f * z * cosf(0.1f * x) - 0.3f * cosf(0.1f * z),
+	    1.0f,
+	    0.3f * sinf(0.1f * x) + 0.03f * x * sinf(0.1f * z));
 
 	DirectX::XMVECTOR unitNormal = DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&normal));
 	DirectX::XMStoreFloat3(&normal, unitNormal);
@@ -213,9 +214,9 @@ void DeferredShadingDemo::CreateLights() {
 		m_spotLights.push_back(spotLight);
 
 		m_spotLightAnimators.emplace_back(DirectX::XMFLOAT3(Common::RandF(-0.006f, 0.006f), Common::RandF(-0.006f, 0.006f), Common::RandF(-0.006f, 0.006f)),
-										  DirectX::XMFLOAT3(Common::RandF(-0.125f, 0.125f), Common::RandF(-0.125f, 0.125f), Common::RandF(-0.125f, 0.125f)),
-										  DirectX::XMFLOAT3(-80.0f, -40.0f, -80.0f),
-										  DirectX::XMFLOAT3(80.0f, 40.0f, 80.0f));
+		                                  DirectX::XMFLOAT3(Common::RandF(-0.125f, 0.125f), Common::RandF(-0.125f, 0.125f), Common::RandF(-0.125f, 0.125f)),
+		                                  DirectX::XMFLOAT3(-80.0f, -40.0f, -80.0f),
+		                                  DirectX::XMFLOAT3(80.0f, 40.0f, 80.0f));
 	}
 
 	m_spotLightBufferNeedsRebuild = true;
@@ -323,11 +324,13 @@ void DeferredShadingDemo::CreateShaderBuffers() {
 
 	m_device->CreateBuffer(&renderGBuffersBufferDesc, NULL, &m_renderGbuffersPixelShaderConstantsBuffer);
 
-	
-	if (m_pointLights.size() > 0)
+
+	if (m_pointLights.size() > 0) {
 		m_pointLightBuffer = new Common::StructuredBuffer<Common::PointLight>(m_device, m_pointLights.size(), D3D11_BIND_SHADER_RESOURCE, true);
-	if (m_spotLights.size() > 0)
+	}
+	if (m_spotLights.size() > 0) {
 		m_spotLightBuffer = new Common::StructuredBuffer<Common::SpotLight>(m_device, m_spotLights.size(), D3D11_BIND_SHADER_RESOURCE, true);
+	}
 
 	m_frameMaterialListBuffer = new Common::StructuredBuffer<Common::BlinnPhongMaterial>(m_device, kMaxMaterialsPerFrame, D3D11_BIND_SHADER_RESOURCE, true);
 

@@ -16,7 +16,7 @@
 
 namespace Common {
 
-void GeometryGenerator::CreateGrid(float width, float depth, uint m, uint n, MeshData* meshData, float textureTilingX, float textureTilingY) {
+void GeometryGenerator::CreateGrid(float width, float depth, uint m, uint n, MeshData *meshData, float textureTilingX, float textureTilingY) {
 	uint vertexCount = m * n;
 	uint faceCount = (m - 1) * (n - 1) * 2;
 
@@ -65,7 +65,7 @@ void GeometryGenerator::CreateGrid(float width, float depth, uint m, uint n, Mes
 	}
 }
 
-void GeometryGenerator::CreateBox(float width, float height, float depth, MeshData* meshData) {
+void GeometryGenerator::CreateBox(float width, float height, float depth, MeshData *meshData) {
 	//
 	// Create the vertices.
 	//
@@ -147,7 +147,7 @@ void GeometryGenerator::CreateBox(float width, float height, float depth, MeshDa
 	meshData->Indices.assign(&i[0], &i[36]);
 }
 
-void GeometryGenerator::CreateSphere(float radius, uint sliceCount, uint stackCount, MeshData* meshData) {
+void GeometryGenerator::CreateSphere(float radius, uint sliceCount, uint stackCount, MeshData *meshData) {
 	//
 	// Compute the vertices stating at the top pole and moving down the stacks.
 	//
@@ -165,11 +165,11 @@ void GeometryGenerator::CreateSphere(float radius, uint sliceCount, uint stackCo
 
 	// Compute vertices for each stack ring (do not count the poles as rings).
 	for (uint i = 1; i <= stackCount - 1; ++i) {
-		float phi = i*phiStep;
+		float phi = i * phiStep;
 
 		// Vertices of ring.
 		for (uint j = 0; j <= sliceCount; ++j) {
-			float theta = j*thetaStep;
+			float theta = j * thetaStep;
 
 			Vertex v;
 
@@ -211,12 +211,12 @@ void GeometryGenerator::CreateSphere(float radius, uint sliceCount, uint stackCo
 	uint ringVertexCount = sliceCount + 1;
 	for (uint i = 0; i < stackCount - 2; ++i) {
 		for (uint j = 0; j < sliceCount; ++j) {
-			meshData->Indices.push_back(baseIndex + i*ringVertexCount + j);
-			meshData->Indices.push_back(baseIndex + i*ringVertexCount + j + 1);
+			meshData->Indices.push_back(baseIndex + i * ringVertexCount + j);
+			meshData->Indices.push_back(baseIndex + i * ringVertexCount + j + 1);
 			meshData->Indices.push_back(baseIndex + (i + 1)*ringVertexCount + j);
 
 			meshData->Indices.push_back(baseIndex + (i + 1)*ringVertexCount + j);
-			meshData->Indices.push_back(baseIndex + i*ringVertexCount + j + 1);
+			meshData->Indices.push_back(baseIndex + i * ringVertexCount + j + 1);
 			meshData->Indices.push_back(baseIndex + (i + 1)*ringVertexCount + j + 1);
 		}
 	}
@@ -239,7 +239,7 @@ void GeometryGenerator::CreateSphere(float radius, uint sliceCount, uint stackCo
 	}
 }
 
-void GeometryGenerator::CreateFullscreenQuad(MeshData& meshData) {
+void GeometryGenerator::CreateFullscreenQuad(MeshData &meshData) {
 	meshData.Vertices.resize(4);
 	meshData.Indices.resize(6);
 
@@ -273,7 +273,7 @@ void GeometryGenerator::CreateFullscreenQuad(MeshData& meshData) {
 	meshData.Indices[5] = 3;
 }
 
-void GeometryGenerator::CreateCone(float angle, float height, uint sliceCount, MeshData* meshData, bool invert) {
+void GeometryGenerator::CreateCone(float angle, float height, uint sliceCount, MeshData *meshData, bool invert) {
 	float bottomRadius = tanf(angle / 2.0f) * height;
 	float phiHeight = tanf(angle / 2.0f) * bottomRadius;
 	phiHeight = invert ? -phiHeight : phiHeight;
@@ -308,8 +308,9 @@ void GeometryGenerator::CreateCone(float angle, float height, uint sliceCount, M
 		meshData->Indices.push_back(i + 1);
 
 		uint lastIndex = i + 2;
-		if (lastIndex == sliceCount * 2)
+		if (lastIndex == sliceCount * 2) {
 			lastIndex = 0;
+		}
 		meshData->Indices.push_back(lastIndex);
 	}
 
@@ -330,8 +331,9 @@ void GeometryGenerator::CreateCone(float angle, float height, uint sliceCount, M
 
 	for (uint i = 1; i <= sliceCount; ++i) {
 		uint lastIndex = baseIndex + i + 1;
-		if (lastIndex == meshData->Vertices.size())
+		if (lastIndex == meshData->Vertices.size()) {
 			lastIndex = 0;
+		}
 		meshData->Indices.push_back(lastIndex);
 		meshData->Indices.push_back(baseIndex);
 		meshData->Indices.push_back(baseIndex + i);
@@ -363,68 +365,72 @@ bool GeometryGenerator::LoadFromOBJ(const wchar *fileName,  MeshData *meshData, 
 	std::ifstream fin(fileName, std::ios::in);
 	uint lineNumber = 0;
 
-	if (!fin.is_open())
+	if (!fin.is_open()) {
 		return false;
+	}
 
 	while (!fin.eof()) {
-		SafeGetLine(fin, line);	//Get next line
+		SafeGetLine(fin, line); //Get next line
 		Trim(line);
 		++lineNumber;
 
-		if (line.empty())
+		if (line.empty()) {
 			continue;
+		}
 
 		switch (line[0]) {
-			// Comments
+		// Comments
 		case '#':
 			break;
-			// Vertex Descriptions
+		// Vertex Descriptions
 		case 'v':
 			nextChar = line[1];
 			// v - vert position
 			if (nextChar == ' ') {
 				float vx, vy, vz;
-				sscanf(line.c_str(), "%*s %f %f %f", &vx, &vy, &vz);	//Store the next three types
+				sscanf(line.c_str(), "%*s %f %f %f", &vx, &vy, &vz);    //Store the next three types
 
-				if (fileIsRightHanded)	//If model is from an RH Coord System
-					vertPos.push_back(DirectX::XMFLOAT3(vx, vy, vz * -1.0f));	//Invert the Z axis
-				else
+				if (fileIsRightHanded) { //If model is from an RH Coord System
+					vertPos.push_back(DirectX::XMFLOAT3(vx, vy, vz * -1.0f));    //Invert the Z axis
+				} else {
 					vertPos.push_back(DirectX::XMFLOAT3(vx, vy, vz));
+				}
 			}
 			// vt - vert tex coords
 			if (nextChar == 't') {
 				float vtcu, vtcv;
-				sscanf(line.c_str(), "%*s %f %f", &vtcu, &vtcv);	//Store the next two types
+				sscanf(line.c_str(), "%*s %f %f", &vtcu, &vtcv);    //Store the next two types
 
-				if (fileIsRightHanded)	//If model is from an RH Coord System
-					vertTexCoord.push_back(DirectX::XMFLOAT2(vtcu, 1.0f - vtcv));	//Reverse the "v" axis
-				else
+				if (fileIsRightHanded) { //If model is from an RH Coord System
+					vertTexCoord.push_back(DirectX::XMFLOAT2(vtcu, 1.0f - vtcv));    //Reverse the "v" axis
+				} else {
 					vertTexCoord.push_back(DirectX::XMFLOAT2(vtcu, vtcv));
+				}
 			}
 			// vn - vert normal
 			if (nextChar == 'n') {
 				float vnx, vny, vnz;
-				sscanf(line.c_str(), "%*s %f %f %f", &vnx, &vny, &vnz);	//Store the next three types
+				sscanf(line.c_str(), "%*s %f %f %f", &vnx, &vny, &vnz); //Store the next three types
 
-				if (fileIsRightHanded)	//If model is from an RH Coord System
-					vertNorm.push_back(DirectX::XMFLOAT3(vnx, vny, vnz * -1.0f));	//Invert the Z axis
-				else
+				if (fileIsRightHanded) { //If model is from an RH Coord System
+					vertNorm.push_back(DirectX::XMFLOAT3(vnx, vny, vnz * -1.0f));    //Invert the Z axis
+				} else {
 					vertNorm.push_back(DirectX::XMFLOAT3(vnx, vny, vnz));
+				}
 			}
 			break;
 
-			// New group (Subset)
-		case 'g':	//g - defines a group
+		// New group (Subset)
+		case 'g':   //g - defines a group
 			nextChar = line[1];
 			if (nextChar == ' ') {
 				// TODO: Contemplate saving the group names and being able to render them by name as well as by index
-				
+
 				// Do nothing, AKA ignore groups
 			}
 			break;
 
-		case 'f':
-		{
+		case 'f': {
 			bool isQuad = false;
 			char prefix[2];
 			int a[4], b[4], c[4];
@@ -452,12 +458,15 @@ bool GeometryGenerator::LoadFromOBJ(const wchar *fileName,  MeshData *meshData, 
 
 			// Handle negative indices
 			for (uint i = 0; i < 4; ++i) {
-				if (a[i] < 0)
+				if (a[i] < 0) {
 					a[i] += vertPos.size() + 1;
-				if (b[i] < 0)
+				}
+				if (b[i] < 0) {
 					b[i] += vertTexCoord.size() + 1;
-				if (c[i] < 0)
+				}
+				if (c[i] < 0) {
 					c[i] += vertNorm.size() + 1;
+				}
 			}
 
 			// Store the index of the current material and the vertex indices
@@ -468,17 +477,17 @@ bool GeometryGenerator::LoadFromOBJ(const wchar *fileName,  MeshData *meshData, 
 			} else {
 				faces.push_back(FaceTuple(TupleUInt3(a[0], b[0], c[0]), TupleUInt3(a[1], b[1], c[1]), TupleUInt3(a[2], b[2], c[2])));
 			}
-			
+
 			break;
 		}
-		case 'm':	//mtllib - material library filename
+		case 'm':   //mtllib - material library filename
 			if (line.find("mtllib") != std::string::npos) {
 				//Store the material libraries file name
 				sscanf(line.c_str(), "mtllib %200s", materialFile.c_str());
 			}
 			break;
 
-		case 'u':	//usemtl - which material to use
+		case 'u':   //usemtl - which material to use
 			if (line.find("usemtl") != std::string::npos) {
 				//Store the material libraries file name
 				sscanf(line.c_str(), "usemtl %200s", materialName);
@@ -492,7 +501,7 @@ bool GeometryGenerator::LoadFromOBJ(const wchar *fileName,  MeshData *meshData, 
 				}
 
 				meshSubsets->push_back(GeometryGenerator::MeshSubset());
-				GeometryGenerator::MeshSubset *subset = &meshSubsets->back();				
+				GeometryGenerator::MeshSubset *subset = &meshSubsets->back();
 				subset->FaceStart = faces.size();
 			}
 			break;

@@ -88,7 +88,7 @@ public:
 	void End();
 
 protected:
-	D3D11_TEXTURE2D_DESC SetPerBatchData(ID3D11ShaderResourceView* texture);
+	D3D11_TEXTURE2D_DESC SetPerBatchData(ID3D11ShaderResourceView *texture);
 };
 
 } // End of namespace Common

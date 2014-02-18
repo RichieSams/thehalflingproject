@@ -13,12 +13,12 @@
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
 	LightingDemo::GameStateManager gameStateManager;
 	LightingDemo::GraphicsManager graphicsManager(&gameStateManager);
-	
+
 	Halfling::HalflingEngine engine(hInstance, &graphicsManager, &gameStateManager);
 
 	engine.Initialize(L"Lighting Demo", 800, 600, false);
 	engine.Run();
-	
+
 	engine.Shutdown();
 
 	return 0;

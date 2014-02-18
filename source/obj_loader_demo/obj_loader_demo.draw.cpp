@@ -32,10 +32,10 @@ void ObjLoaderDemo::DrawFrame(double deltaTime) {
 		m_immediateContext->ClearRenderTargetView(m_renderTargetView, DirectX::Colors::LightGray);
 
 		m_spriteRenderer.Begin(m_immediateContext);
-		DirectX::XMFLOAT4X4 transform{2.0f, 0.0f, 0.0f, 0.0f,
-		                              0.0f, 2.0f, 0.0f, 0.0f,
-		                              0.0f, 0.0f, 2.0f, 0.0f,
-		                              m_clientWidth / 2.0f - 90.0f, m_clientHeight / 2.0f - 30.0f, 0.0f, 1.0f};
+		DirectX::XMFLOAT4X4 transform {2.0f, 0.0f, 0.0f, 0.0f,
+		                               0.0f, 2.0f, 0.0f, 0.0f,
+		                               0.0f, 0.0f, 2.0f, 0.0f,
+		                               m_clientWidth / 2.0f - 90.0f, m_clientHeight / 2.0f - 30.0f, 0.0f, 1.0f};
 		m_spriteRenderer.RenderText(m_timesNewRoman12Font, L"Scene is loading....", transform, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f));
 		m_spriteRenderer.End();
 	}
@@ -120,7 +120,7 @@ void ObjLoaderDemo::ForwardRenderingPass() {
 	m_immediateContext->GSSetShader(0, 0, 0);
 	m_immediateContext->PSSetShader(0, 0, 0);
 	m_immediateContext->OMSetRenderTargets(0, 0, 0);
-	ID3D11ShaderResourceView* nullSRV[6] = {0, 0, 0, 0, 0, 0};
+	ID3D11ShaderResourceView *nullSRV[6] = {0, 0, 0, 0, 0, 0};
 	m_immediateContext->VSSetShaderResources(0, 6, nullSRV);
 	m_immediateContext->PSSetShaderResources(0, 6, nullSRV);
 }
@@ -209,7 +209,7 @@ void ObjLoaderDemo::NoCullDeferredRenderingPass() {
 	// Cleanup (aka make the runtime happy)
 	m_immediateContext->OMSetRenderTargets(0, 0, 0);
 
-	
+
 	// Final gather pass
 	m_immediateContext->OMSetRenderTargets(1, &m_renderTargetView, nullptr);
 	m_immediateContext->ClearRenderTargetView(m_renderTargetView, DirectX::Colors::LightGray);
@@ -246,7 +246,7 @@ void ObjLoaderDemo::NoCullDeferredRenderingPass() {
 
 	m_immediateContext->IASetVertexBuffers(0, 0, 0, 0, 0);
 	m_immediateContext->IASetIndexBuffer(0, DXGI_FORMAT_R32_UINT, 0);
-	
+
 	m_immediateContext->Draw(3, 0);
 
 
@@ -255,7 +255,7 @@ void ObjLoaderDemo::NoCullDeferredRenderingPass() {
 	m_immediateContext->GSSetShader(0, 0, 0);
 	m_immediateContext->PSSetShader(0, 0, 0);
 	m_immediateContext->OMSetRenderTargets(0, 0, 0);
-	ID3D11ShaderResourceView* nullSRV[6] = {0, 0, 0, 0, 0, 0};
+	ID3D11ShaderResourceView *nullSRV[6] = {0, 0, 0, 0, 0, 0};
 	m_immediateContext->VSSetShaderResources(0, 6, nullSRV);
 	m_immediateContext->PSSetShaderResources(0, 6, nullSRV);
 }
@@ -278,7 +278,7 @@ void ObjLoaderDemo::SetGBufferVertexShaderConstants(DirectX::XMMATRIX &worldMatr
 void ObjLoaderDemo::SetGBufferPixelShaderConstants(uint materialIndex) {
 	// Fill in object constants
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
-	
+
 	// Lock the constant buffer so it can be written to.
 	HR(m_immediateContext->Map(m_gBufferPixelShaderObjectConstantsBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
 
@@ -318,7 +318,7 @@ void ObjLoaderDemo::SetLightBuffers() {
 		}
 		m_pointLightBuffer->Unmap(m_immediateContext);
 	}
-	
+
 	if (m_numSpotLightsToDraw > 0) {
 		assert(m_spotLightBuffer->NumElements() >= (int)m_numSpotLightsToDraw);
 
@@ -333,7 +333,7 @@ void ObjLoaderDemo::SetLightBuffers() {
 void ObjLoaderDemo::SetMaterialList() {
 	uint numMaterials = m_frameMaterialList.size();
 	assert(numMaterials <= kMaxMaterialsPerFrame);
-	
+
 	Common::BlinnPhongMaterial *materialArray = m_frameMaterialListBuffer->MapDiscard(m_immediateContext);
 	for (uint i = 0; i < numMaterials; ++i) {
 		materialArray[i] = m_frameMaterialList[i];
@@ -350,7 +350,7 @@ void ObjLoaderDemo::RenderDebugGeometry() {
 
 	// Cache the matrix multiplication
 	DirectX::XMMATRIX viewProj = viewMatrix * projectionMatrix;
-	DirectX::XMMATRIX invViewProj = DirectX::XMMatrixInverse(nullptr, viewProj);	
+	DirectX::XMMATRIX invViewProj = DirectX::XMMatrixInverse(nullptr, viewProj);
 
 	if (m_showLightLocations) {
 		uint maxInstances;
@@ -423,11 +423,11 @@ void ObjLoaderDemo::RenderDebugGeometry() {
 		m_immediateContext->PSSetShaderResources(0, 3, &m_gBufferSRVs.front());
 
 		DirectX::XMFLOAT2 translations[6] = {DirectX::XMFLOAT2(-1.0f, -1.0f),
-			DirectX::XMFLOAT2(-0.5f, -1.0f),
-			DirectX::XMFLOAT2(0.0f, -1.0f),
-			DirectX::XMFLOAT2(0.5f, -1.0f),
-			DirectX::XMFLOAT2(0.5f, -0.5f),
-			DirectX::XMFLOAT2(0.5f, 0.0f)};
+		                                     DirectX::XMFLOAT2(-0.5f, -1.0f),
+		                                     DirectX::XMFLOAT2(0.0f, -1.0f),
+		                                     DirectX::XMFLOAT2(0.5f, -1.0f),
+		                                     DirectX::XMFLOAT2(0.5f, -0.5f),
+		                                     DirectX::XMFLOAT2(0.5f, 0.0f)};
 
 		for (uint i = 0; i < 6; ++i) {
 			// Fill in object constants
@@ -461,12 +461,12 @@ void ObjLoaderDemo::RenderDebugGeometry() {
 
 		float quarterWidth = (float)m_clientWidth / 4.0f;
 		float quarterHeight = (float)m_clientHeight / 4.0f;
-		DirectX::XMFLOAT4X4 transform{1, 0, 0, 0,
-		                              0, 1, 0, 0,
-		                              0, 0, 1, 0,
-		                              0, m_clientHeight - quarterHeight, 0, 1};
+		DirectX::XMFLOAT4X4 transform {1, 0, 0, 0,
+		                               0, 1, 0, 0,
+		                               0, 0, 1, 0,
+		                               0, m_clientHeight - quarterHeight, 0, 1};
 		m_spriteRenderer.RenderText(m_timesNewRoman12Font, L"Diffuse Albedo", transform, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) /* Yellow */);
-		
+
 		transform._41 = quarterWidth;
 		m_spriteRenderer.RenderText(m_timesNewRoman12Font, L"MaterialId", transform, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) /* Yellow */);
 
@@ -484,13 +484,13 @@ void ObjLoaderDemo::RenderDebugGeometry() {
 
 		m_spriteRenderer.End();
 	}
-	
+
 	// Cleanup (aka make the runtime happy)
 	m_immediateContext->VSSetShader(0, 0, 0);
 	m_immediateContext->GSSetShader(0, 0, 0);
 	m_immediateContext->PSSetShader(0, 0, 0);
 	m_immediateContext->OMSetRenderTargets(0, 0, 0);
-	ID3D11ShaderResourceView* nullSRV[6] = {0, 0, 0, 0, 0, 0};
+	ID3D11ShaderResourceView *nullSRV[6] = {0, 0, 0, 0, 0, 0};
 	m_immediateContext->VSSetShaderResources(0, 6, nullSRV);
 	m_immediateContext->PSSetShaderResources(0, 6, nullSRV);
 }
@@ -502,10 +502,10 @@ void ObjLoaderDemo::RenderHUD() {
 	std::wostringstream stream;
 	stream << L"FPS: " << m_fps << L"\nFrame Time: " << m_frameTime << L" (ms)";
 
-	DirectX::XMFLOAT4X4 transform{1, 0, 0, 0,
-		0, 1, 0, 0,
-		0, 0, 1, 0,
-		25, 25, 0, 1};
+	DirectX::XMFLOAT4X4 transform {1, 0, 0, 0,
+	                               0, 1, 0, 0,
+	                               0, 0, 1, 0,
+	                               25, 25, 0, 1};
 	m_spriteRenderer.RenderText(m_timesNewRoman12Font, stream.str().c_str(), transform, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) /* Yellow */);
 	m_spriteRenderer.End();
 

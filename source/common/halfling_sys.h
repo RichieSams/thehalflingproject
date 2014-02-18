@@ -20,18 +20,18 @@
 
 // Un-define min and max from the windows headers
 #ifdef min
-	#undef min
+#undef min
 #endif
 
 #ifdef max
-	#undef max
+#undef max
 #endif
 
 #define AssertMsg(condition, message) \
 	do {                                                                        \
 		if (!(condition)) {                                                     \
 			std::cerr << "Assertion `" #condition "` failed in " << __FILE__    \
-			<< " line " << __LINE__ << ": " << message << std::endl;            \
+			          << " line " << __LINE__ << ": " << message << std::endl;            \
 			std::exit(EXIT_FAILURE);                                            \
 		}                                                                       \
 	} while (false)

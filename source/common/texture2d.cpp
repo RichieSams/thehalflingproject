@@ -28,13 +28,13 @@
 namespace Common {
 
 Texture2D::Texture2D(ID3D11Device *d3dDevice, int width, int height, DXGI_FORMAT format, uint bindFlags, int mipLevels) {
-	InternalConstructor(d3dDevice, width, height, format, bindFlags, mipLevels, 1, 1, 0, 
+	InternalConstructor(d3dDevice, width, height, format, bindFlags, mipLevels, 1, 1, 0,
 	                    D3D11_RTV_DIMENSION_TEXTURE2D, D3D11_UAV_DIMENSION_TEXTURE2D, D3D11_SRV_DIMENSION_TEXTURE2D);
 }
 
 Texture2D::Texture2D(ID3D11Device *d3dDevice, int width, int height, DXGI_FORMAT format, uint bindFlags, const DXGI_SAMPLE_DESC &sampleDesc) {
 	// UAV's can't point to multisampled resources
-	InternalConstructor(d3dDevice, width, height, format, bindFlags, 1, 1, sampleDesc.Count, sampleDesc.Quality, 
+	InternalConstructor(d3dDevice, width, height, format, bindFlags, 1, 1, sampleDesc.Count, sampleDesc.Quality,
 	                    D3D11_RTV_DIMENSION_TEXTURE2DMS, D3D11_UAV_DIMENSION_UNKNOWN, D3D11_SRV_DIMENSION_TEXTURE2DMS);
 }
 
@@ -54,13 +54,13 @@ void Texture2D::InternalConstructor(ID3D11Device *d3dDevice, int width, int heig
 	mShaderResource = 0;
 
 	CD3D11_TEXTURE2D_DESC desc(
-		format,
-		width, height, arraySize, mipLevels,
-		bindFlags,
-		D3D11_USAGE_DEFAULT, 0,
-		sampleCount, sampleQuality,
-		// If they request mipmap levels, it's nice to be able to autogenerate them.
-		(mipLevels != 1 ? D3D11_RESOURCE_MISC_GENERATE_MIPS : 0)
+	    format,
+	    width, height, arraySize, mipLevels,
+	    bindFlags,
+	    D3D11_USAGE_DEFAULT, 0,
+	    sampleCount, sampleQuality,
+	    // If they request mipmap levels, it's nice to be able to autogenerate them.
+	    (mipLevels != 1 ? D3D11_RESOURCE_MISC_GENERATE_MIPS : 0)
 	);
 
 	d3dDevice->CreateTexture2D(&desc, 0, &mTexture);
@@ -71,10 +71,10 @@ void Texture2D::InternalConstructor(ID3D11Device *d3dDevice, int width, int heig
 	if (bindFlags & D3D11_BIND_RENDER_TARGET) {
 		for (int i = 0; i < arraySize; ++i) {
 			CD3D11_RENDER_TARGET_VIEW_DESC rtvDesc(
-				rtvDimension,
-				format,
-				0,          // Mips
-				i, 1        // Array
+			    rtvDimension,
+			    format,
+			    0,          // Mips
+			    i, 1        // Array
 			);
 
 			ID3D11RenderTargetView *renderTargetView;
@@ -89,10 +89,10 @@ void Texture2D::InternalConstructor(ID3D11Device *d3dDevice, int width, int heig
 
 		for (int i = 0; i < arraySize; ++i) {
 			CD3D11_UNORDERED_ACCESS_VIEW_DESC uavDesc(
-				uavDimension,
-				format,
-				0,          // Mips
-				i, 1        // Array
+			    uavDimension,
+			    format,
+			    0,          // Mips
+			    i, 1        // Array
 			);
 
 			ID3D11UnorderedAccessView *unorderedAccessView;
@@ -104,21 +104,21 @@ void Texture2D::InternalConstructor(ID3D11Device *d3dDevice, int width, int heig
 	if (bindFlags & D3D11_BIND_SHADER_RESOURCE) {
 		// Whole resource
 		CD3D11_SHADER_RESOURCE_VIEW_DESC srvDesc(
-			srvDimension,
-			format,
-			0, desc.MipLevels,  // Mips
-			0, desc.ArraySize   // Array
-		);        
+		    srvDimension,
+		    format,
+		    0, desc.MipLevels,  // Mips
+		    0, desc.ArraySize   // Array
+		);
 
 		d3dDevice->CreateShaderResourceView(mTexture, &srvDesc, &mShaderResource);
 
 		// Single elements
 		for (int i = 0; i < arraySize; ++i) {
 			CD3D11_SHADER_RESOURCE_VIEW_DESC srvElementDesc(
-				srvDimension,
-				format,
-				0, 1,  // Mips
-				i, 1   // Array
+			    srvDimension,
+			    format,
+			    0, 1,  // Mips
+			    i, 1   // Array
 			);
 
 			ID3D11ShaderResourceView *shaderResourceView;
@@ -165,17 +165,17 @@ Depth2D::Depth2D(ID3D11Device *d3dDevice, int width, int height, uint bindFlags,
 	InternalConstruct(d3dDevice, width, height, bindFlags, arraySize, sampleDesc.Count, sampleDesc.Quality,
 	                  D3D11_DSV_DIMENSION_TEXTURE2DMSARRAY, D3D11_SRV_DIMENSION_TEXTURE2DMSARRAY, stencil);
 }
-	
+
 void Depth2D::InternalConstruct(ID3D11Device *d3dDevice, int width, int height, uint bindFlags, int arraySize, int sampleCount, int sampleQuality, D3D11_DSV_DIMENSION dsvDimension, D3D11_SRV_DIMENSION srvDimension, bool stencil) {
 	// Initalize
 	mShaderResource = 0;
 
 	CD3D11_TEXTURE2D_DESC desc(
-		stencil ? DXGI_FORMAT_R32G8X24_TYPELESS : DXGI_FORMAT_R32_TYPELESS,
-		width, height, arraySize, 1,
-		bindFlags,
-		D3D11_USAGE_DEFAULT, 0,
-		sampleCount, sampleQuality
+	    stencil ? DXGI_FORMAT_R32G8X24_TYPELESS : DXGI_FORMAT_R32_TYPELESS,
+	    width, height, arraySize, 1,
+	    bindFlags,
+	    D3D11_USAGE_DEFAULT, 0,
+	    sampleCount, sampleQuality
 	);
 
 	d3dDevice->CreateTexture2D(&desc, 0, &mTexture);
@@ -183,10 +183,10 @@ void Depth2D::InternalConstruct(ID3D11Device *d3dDevice, int width, int height, 
 	if (bindFlags & D3D11_BIND_DEPTH_STENCIL) {
 		for (int i = 0; i < arraySize; ++i) {
 			CD3D11_DEPTH_STENCIL_VIEW_DESC depthStencilDesc(
-				dsvDimension,
-				stencil ? DXGI_FORMAT_D32_FLOAT_S8X24_UINT : DXGI_FORMAT_D32_FLOAT,
-				0,          // Mips
-				i, 1        // Array
+			    dsvDimension,
+			    stencil ? DXGI_FORMAT_D32_FLOAT_S8X24_UINT : DXGI_FORMAT_D32_FLOAT,
+			    0,          // Mips
+			    i, 1        // Array
 			);
 
 			ID3D11DepthStencilView *depthStencilView;
@@ -197,10 +197,10 @@ void Depth2D::InternalConstruct(ID3D11Device *d3dDevice, int width, int height, 
 
 	if (bindFlags & D3D11_BIND_SHADER_RESOURCE) {
 		CD3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceDesc(
-			srvDimension,
-			stencil ? DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS : DXGI_FORMAT_R32_FLOAT,
-			0, 1,           // Mips
-			0, arraySize    // Array
+		    srvDimension,
+		    stencil ? DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS : DXGI_FORMAT_R32_FLOAT,
+		    0, 1,           // Mips
+		    0, arraySize    // Array
 		);
 
 		d3dDevice->CreateShaderResourceView(mTexture, &shaderResourceDesc, &mShaderResource);

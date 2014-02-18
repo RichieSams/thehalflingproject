@@ -16,8 +16,9 @@ Timer::Timer(int64 performanceCounterFreq)
 		  m_accumulatedTicks(0),
 		  m_startCount(0),
 		  m_isRunning(false) {
-	if (performanceCounterFreq == 0)
+	if (performanceCounterFreq == 0) {
 		QueryPerformanceFrequency((LARGE_INTEGER *)&performanceCounterFreq);
+	}
 	m_milliSecondsPerCount = 1000.0 / (double)performanceCounterFreq;
 }
 
@@ -37,8 +38,9 @@ void Timer::Stop() {
 }
 
 double Timer::GetTime() {
-	if (!m_isRunning)
-		 return (double)m_accumulatedTicks * m_milliSecondsPerCount;
+	if (!m_isRunning) {
+		return (double)m_accumulatedTicks * m_milliSecondsPerCount;
+	}
 
 	int64 currCount;
 	QueryPerformanceCounter((LARGE_INTEGER *)&currCount);

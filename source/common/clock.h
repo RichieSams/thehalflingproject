@@ -22,7 +22,7 @@ public:
 	void Start();
 	void Stop();
 	void Reset();
-	
+
 	double TotalTime() const;
 
 private:

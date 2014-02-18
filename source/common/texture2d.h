@@ -63,16 +63,16 @@ public:
 
 private:
 	void InternalConstructor(ID3D11Device *d3dDevice,
-						   int width, int height, DXGI_FORMAT format,
-						   UINT bindFlags, int mipLevels, int arraySize,
-						   int sampleCount, int sampleQuality,
-						   D3D11_RTV_DIMENSION rtvDimension,
-						   D3D11_UAV_DIMENSION uavDimension,
-						   D3D11_SRV_DIMENSION srvDimension);
+	                         int width, int height, DXGI_FORMAT format,
+	                         UINT bindFlags, int mipLevels, int arraySize,
+	                         int sampleCount, int sampleQuality,
+	                         D3D11_RTV_DIMENSION rtvDimension,
+	                         D3D11_UAV_DIMENSION uavDimension,
+	                         D3D11_SRV_DIMENSION srvDimension);
 
 	// Not implemented
 	Texture2D(const Texture2D &);
-	Texture2D& operator=(const Texture2D &);
+	Texture2D &operator=(const Texture2D &);
 };
 
 
@@ -104,16 +104,16 @@ public:
 
 private:
 	void InternalConstruct(ID3D11Device *d3dDevice,
-						   int width, int height,
-						   UINT bindFlags, int arraySize,
-						   int sampleCount, int sampleQuality,
-						   D3D11_DSV_DIMENSION dsvDimension,
-						   D3D11_SRV_DIMENSION srvDimension,
-						   bool stencil);
+	                       int width, int height,
+	                       UINT bindFlags, int arraySize,
+	                       int sampleCount, int sampleQuality,
+	                       D3D11_DSV_DIMENSION dsvDimension,
+	                       D3D11_SRV_DIMENSION srvDimension,
+	                       bool stencil);
 
 	// Not implemented
 	Depth2D(const Depth2D &);
-	Depth2D& operator=(const Depth2D &);
+	Depth2D &operator=(const Depth2D &);
 };
 
 } // End of namespace Common

@@ -12,7 +12,7 @@
 
 namespace CrateDemo {
 
-GameStateManager::GameStateManager() 
+GameStateManager::GameStateManager()
 	: GameStateManagerBase(),
 	  m_camera(1.5f * DirectX::XM_PI, 0.25f * DirectX::XM_PI, 5.0f) {
 }

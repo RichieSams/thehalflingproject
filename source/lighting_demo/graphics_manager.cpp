@@ -35,16 +35,18 @@ GraphicsManager::GraphicsManager(GameStateManager *gameStateManager)
 }
 
 bool GraphicsManager::Initialize(int clientWidth, int clientHeight, HWND hwnd, bool fullscreen) {
-	if (!Common::GraphicsManagerBase::Initialize(clientWidth, clientHeight, hwnd, fullscreen))
+	if (!Common::GraphicsManagerBase::Initialize(clientWidth, clientHeight, hwnd, fullscreen)) {
 		return false;
+	}
 
 	InitTweakBar();
 
-	if (!m_gameStateManager->Initialize(hwnd, &m_device))
+	if (!m_gameStateManager->Initialize(hwnd, &m_device)) {
 		return false;
+	}
 
 	LoadShaders();
-	
+
 	D3D11_RASTERIZER_DESC wireframeDesc;
 	ZeroMemory(&wireframeDesc, sizeof(D3D11_RASTERIZER_DESC));
 	wireframeDesc.FillMode = D3D11_FILL_WIREFRAME;
@@ -89,7 +91,7 @@ void GraphicsManager::Shutdown() {
 void GraphicsManager::DrawFrame(float deltaTime) {
 	CalculateFrameStats(deltaTime);
 
-	m_immediateContext->ClearRenderTargetView(m_renderTargetView, reinterpret_cast<const float*>(&Colors::Blue));
+	m_immediateContext->ClearRenderTargetView(m_renderTargetView, reinterpret_cast<const float *>(&Colors::Blue));
 	m_immediateContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 	// Transpose the matrices to prepare them for the shader.
@@ -117,10 +119,11 @@ void GraphicsManager::DrawFrame(float deltaTime) {
 
 	TwDraw();
 
-	if (m_vsync)
+	if (m_vsync) {
 		m_swapChain->Present(1, 0);
-	else
+	} else {
 		m_swapChain->Present(0, 0);
+	}
 }
 
 void GraphicsManager::SetFrameConstants(DirectX::XMMATRIX &projMatrix, DirectX::XMMATRIX &viewProjMatrix) {
@@ -129,7 +132,7 @@ void GraphicsManager::SetFrameConstants(DirectX::XMMATRIX &projMatrix, DirectX::
 
 	// Lock the constant buffer so it can be written to.
 	HR(m_immediateContext->Map(m_vertexShaderFrameConstantsBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
-	
+
 	VertexShaderFrameConstants *vertexShaderFrameConstants = static_cast<VertexShaderFrameConstants *>(mappedResource.pData);
 	vertexShaderFrameConstants->proj = projMatrix;
 	vertexShaderFrameConstants->viewProj = viewProjMatrix;
@@ -175,11 +178,11 @@ void GraphicsManager::SetObjectConstants(DirectX::XMMATRIX &worldMatrix, DirectX
 
 void GraphicsManager::SetLightBuffers(DirectX::XMMATRIX &viewMatrix) {
 	//{
-	//	Common::PointLight* light = m_pointLightBuffer->MapDiscard(m_immediateContext);
-	//	for (unsigned int i = 0; i < mActiveLights; ++i) {
-	//		light[i] = mPointLightParameters[i];
-	//	}
-	//	mLightBuffer->Unmap(d3dDeviceContext);
+	//  Common::PointLight* light = m_pointLightBuffer->MapDiscard(m_immediateContext);
+	//  for (unsigned int i = 0; i < mActiveLights; ++i) {
+	//      light[i] = mPointLightParameters[i];
+	//  }
+	//  mLightBuffer->Unmap(d3dDeviceContext);
 	//}
 }
 
@@ -194,8 +197,8 @@ void GraphicsManager::OnResize(int newClientWidth, int newClientHeight) {
 	Common::GraphicsManagerBase::OnResize(newClientWidth, newClientHeight);
 
 	// Recreate the render target view.
-	ID3D11Texture2D* backBuffer;
-	HR(m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&backBuffer)));
+	ID3D11Texture2D *backBuffer;
+	HR(m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void **>(&backBuffer)));
 	HR(m_device->CreateRenderTargetView(backBuffer, 0, &m_renderTargetView));
 	ReleaseCOM(backBuffer);
 
@@ -235,7 +238,7 @@ void GraphicsManager::LoadShaders() {
 	vertexShaderFrameBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	vertexShaderFrameBufferDesc.MiscFlags = 0;
 	vertexShaderFrameBufferDesc.StructureByteStride = 0;
-	
+
 	m_device->CreateBuffer(&vertexShaderFrameBufferDesc, NULL, &m_vertexShaderFrameConstantsBuffer);
 
 	D3D11_BUFFER_DESC vertexShaderObjectBufferDesc;

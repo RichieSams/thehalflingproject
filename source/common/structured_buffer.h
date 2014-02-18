@@ -1,7 +1,7 @@
 /**
  * Copyright 2010 Intel Corporation
  * All Rights Reserved
- * 
+ *
  * Permission is granted to use, copy, distribute and prepare derivative works of this
  * software for any purpose and without fee, provided, that the above copyright notice
  * and this statement appear in all copies.  Intel makes no representations about the
@@ -33,21 +33,20 @@ namespace Common {
 
 // NOTE: Ensure that T is exactly the same size/layout as the shader structure!
 template <typename T>
-class StructuredBuffer
-{
+class StructuredBuffer {
 public:
 	// Construct a structured buffer
-	StructuredBuffer(ID3D11Device* d3dDevice, int numElements,
-					 UINT bindFlags = D3D11_BIND_UNORDERED_ACCESS | D3D11_BIND_SHADER_RESOURCE,
-					 bool dynamic = false);
+	StructuredBuffer(ID3D11Device *d3dDevice, int numElements,
+	                 UINT bindFlags = D3D11_BIND_UNORDERED_ACCESS | D3D11_BIND_SHADER_RESOURCE,
+	                 bool dynamic = false);
 	~StructuredBuffer();
 
 private:
 	int m_numElements;
-	ID3D11Buffer* mBuffer;
-	ID3D11ShaderResourceView* m_shaderResource;
-	ID3D11UnorderedAccessView* m_unorderedAccess;
-	
+	ID3D11Buffer *mBuffer;
+	ID3D11ShaderResourceView *m_shaderResource;
+	ID3D11UnorderedAccessView *m_unorderedAccess;
+
 public:
 	inline int NumElements() { return m_numElements; }
 	inline ID3D11Buffer *GetBuffer() { return mBuffer; }
@@ -61,15 +60,15 @@ public:
 
 private:
 	// Not implemented
-	StructuredBuffer(const StructuredBuffer&);
-	StructuredBuffer& operator=(const StructuredBuffer&);
+	StructuredBuffer(const StructuredBuffer &);
+	StructuredBuffer &operator=(const StructuredBuffer &);
 };
 
 
 template <typename T>
-StructuredBuffer<T>::StructuredBuffer(ID3D11Device* d3dDevice, int numElements, UINT bindFlags, bool dynamic)
-		: m_numElements(numElements), 
-		  m_shaderResource(0), 
+StructuredBuffer<T>::StructuredBuffer(ID3D11Device *d3dDevice, int numElements, UINT bindFlags, bool dynamic)
+		: m_numElements(numElements),
+		  m_shaderResource(0),
 		  m_unorderedAccess(0) {
 	CD3D11_BUFFER_DESC desc(sizeof(T) * numElements, bindFlags,
 	                        dynamic ? D3D11_USAGE_DYNAMIC : D3D11_USAGE_DEFAULT,
@@ -96,7 +95,7 @@ StructuredBuffer<T>::~StructuredBuffer() {
 }
 
 template <typename T>
-T* StructuredBuffer<T>::MapDiscard(ID3D11DeviceContext *d3dDeviceContext) {
+T *StructuredBuffer<T>::MapDiscard(ID3D11DeviceContext *d3dDeviceContext) {
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 	d3dDeviceContext->Map(mBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 

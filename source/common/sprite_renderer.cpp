@@ -47,16 +47,14 @@ SpriteRenderer::~SpriteRenderer() {
 	ReleaseCOM(m_inputLayout);
 }
 
-void SpriteRenderer::Initialize(ID3D11Device* device) {
+void SpriteRenderer::Initialize(ID3D11Device *device) {
 	// Define the input layouts
-	D3D11_INPUT_ELEMENT_DESC layout[] =
-	{
+	D3D11_INPUT_ELEMENT_DESC layout[] = {
 		{"POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
 		{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0}
 	};
 
-	D3D11_INPUT_ELEMENT_DESC layoutInstanced[] =
-	{
+	D3D11_INPUT_ELEMENT_DESC layoutInstanced[] = {
 		{"POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
 		{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
 		{"TRANSFORM", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 0, D3D11_INPUT_PER_INSTANCE_DATA, 1},
@@ -73,8 +71,7 @@ void SpriteRenderer::Initialize(ID3D11Device* device) {
 	HR(Common::LoadPixelShader("sprite_pixel_shader.cso", device, &m_pixelShader));
 
 	// Create the vertex buffer
-	SpriteVertex verts[] =
-	{
+	SpriteVertex verts[] = {
 		{DirectX::XMFLOAT2(0.0f, 0.0f), DirectX::XMFLOAT2(0.0f, 0.0f)},
 		{DirectX::XMFLOAT2(1.0f, 0.0f), DirectX::XMFLOAT2(1.0f, 0.0f)},
 		{DirectX::XMFLOAT2(1.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 1.0f)},
@@ -83,7 +80,7 @@ void SpriteRenderer::Initialize(ID3D11Device* device) {
 
 	D3D11_BUFFER_DESC desc;
 	desc.Usage = D3D11_USAGE_IMMUTABLE;
-	desc.ByteWidth = sizeof(SpriteVertex)* 4;
+	desc.ByteWidth = sizeof(SpriteVertex) * 4;
 	desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	desc.CPUAccessFlags = 0;
 	desc.MiscFlags = 0;
@@ -98,13 +95,13 @@ void SpriteRenderer::Initialize(ID3D11Device* device) {
 	desc.Usage = D3D11_USAGE_DYNAMIC;
 	desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	desc.ByteWidth = sizeof(SpriteDrawData)* MaxBatchSize;
+	desc.ByteWidth = sizeof(SpriteDrawData) * MaxBatchSize;
 	HR(device->CreateBuffer(&desc, nullptr, &m_instanceDataBuffer));
 
 	// Create the index buffer
 	uint16 indices[] = {0, 1, 2, 3, 0, 2};
 	desc.Usage = D3D11_USAGE_IMMUTABLE;
-	desc.ByteWidth = sizeof(uint16)* 6;
+	desc.ByteWidth = sizeof(uint16) * 6;
 	desc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	desc.CPUAccessFlags = 0;
 	initData.pSysMem = indices;
@@ -187,7 +184,7 @@ void SpriteRenderer::Initialize(ID3D11Device* device) {
 	m_initialized = true;
 }
 
-void SpriteRenderer::Begin(ID3D11DeviceContext* deviceContext, FilterMode filterMode) {
+void SpriteRenderer::Begin(ID3D11DeviceContext *deviceContext, FilterMode filterMode) {
 	assert(m_initialized);
 	assert(!m_context);
 	m_context = deviceContext;
@@ -206,10 +203,11 @@ void SpriteRenderer::Begin(ID3D11DeviceContext* deviceContext, FilterMode filter
 	m_context->OMSetBlendState(m_alphaBlendState, blendFactor, 0xFFFFFFFF);
 	m_context->OMSetDepthStencilState(m_depthStencilState, 0);
 
-	if (filterMode == Linear)
+	if (filterMode == Linear) {
 		m_context->PSSetSamplers(0, 1, &m_linearSamplerState);
-	else if (filterMode == Point)
+	} else if (filterMode == Point) {
 		m_context->PSSetSamplers(0, 1, &m_pointSamplerState);
+	}
 
 	// Set the shaders
 	m_context->PSSetShader(m_pixelShader, nullptr, 0);
@@ -218,7 +216,7 @@ void SpriteRenderer::Begin(ID3D11DeviceContext* deviceContext, FilterMode filter
 	m_context->HSSetShader(nullptr, nullptr, 0);
 }
 
-D3D11_TEXTURE2D_DESC SpriteRenderer::SetPerBatchData(ID3D11ShaderResourceView* texture) {
+D3D11_TEXTURE2D_DESC SpriteRenderer::SetPerBatchData(ID3D11ShaderResourceView *texture) {
 	// Set per-batch constants
 	VSPerBatchCB perBatch;
 
@@ -235,7 +233,7 @@ D3D11_TEXTURE2D_DESC SpriteRenderer::SetPerBatchData(ID3D11ShaderResourceView* t
 		ID3D11Resource *resource;
 		ID3D11Texture2D *texResource;
 		texture->GetResource(&resource);
-		texResource = reinterpret_cast<ID3D11Texture2D*>(resource);
+		texResource = reinterpret_cast<ID3D11Texture2D *>(resource);
 		texResource->GetDesc(&desc);
 		perBatch.TextureSize = DirectX::XMFLOAT2(static_cast<float>(desc.Width), static_cast<float>(desc.Height));
 	} else {
@@ -280,9 +278,9 @@ void SpriteRenderer::Render(ID3D11ShaderResourceView *texture, const DirectX::XM
 	perInstance.Color = color;
 
 	// Draw rect
-	if (drawRect == nullptr)
+	if (drawRect == nullptr) {
 		perInstance.DrawRect = DirectX::XMFLOAT4(0, 0, static_cast<float>(desc.Width), static_cast<float>(desc.Height));
-	else {
+	} else {
 		assert(drawRect->x >= 0 && drawRect->x < desc.Width);
 		assert(drawRect->y >= 0 && drawRect->y < desc.Height);
 		assert(drawRect->z > 0 && drawRect->x + drawRect->z < desc.Width);
@@ -296,7 +294,7 @@ void SpriteRenderer::Render(ID3D11ShaderResourceView *texture, const DirectX::XM
 	CopyMemory(mapped.pData, &perInstance, sizeof(SpriteDrawData));
 	m_context->Unmap(m_vsPerInstanceConstBuffer, 0);
 
-	ID3D11Buffer* buffers[2] = {m_vsPerBatchConstBuffer, m_vsPerInstanceConstBuffer};
+	ID3D11Buffer *buffers[2] = {m_vsPerBatchConstBuffer, m_vsPerInstanceConstBuffer};
 	m_context->VSSetConstantBuffers(0, 2, buffers);
 
 	// Set the texture
@@ -307,7 +305,7 @@ void SpriteRenderer::Render(ID3D11ShaderResourceView *texture, const DirectX::XM
 	//D3DPERF_EndEvent();
 }
 
-void SpriteRenderer::RenderBatch(ID3D11ShaderResourceView* texture, const SpriteDrawData* drawData, uint64 numSprites) {
+void SpriteRenderer::RenderBatch(ID3D11ShaderResourceView *texture, const SpriteDrawData *drawData, uint64 numSprites) {
 	assert(m_context);
 	assert(m_initialized);
 
@@ -340,13 +338,13 @@ void SpriteRenderer::RenderBatch(ID3D11ShaderResourceView* texture, const Sprite
 	m_context->Unmap(m_instanceDataBuffer, 0);
 
 	// Set the constant buffer
-	ID3D11Buffer* constantBuffers[1] = {m_vsPerBatchConstBuffer};
+	ID3D11Buffer *constantBuffers[1] = {m_vsPerBatchConstBuffer};
 	m_context->VSSetConstantBuffers(0, 1, constantBuffers);
 
 	// Set the vertex buffers
 	UINT strides[2] = {sizeof(SpriteVertex), sizeof(SpriteDrawData)};
 	UINT offsets[2] = {0, 0};
-	ID3D11Buffer* vertexBuffers[2] = {m_vertexBuffer, m_instanceDataBuffer};
+	ID3D11Buffer *vertexBuffers[2] = {m_vertexBuffer, m_instanceDataBuffer};
 	m_context->IASetVertexBuffers(0, 2, vertexBuffers, strides, offsets);
 
 	// Set the texture
@@ -358,8 +356,9 @@ void SpriteRenderer::RenderBatch(ID3D11ShaderResourceView* texture, const Sprite
 	//D3DPERF_EndEvent();
 
 	// If there's any left to be rendered, do it recursively
-	if (numSprites > numSpritesToDraw)
+	if (numSprites > numSpritesToDraw) {
 		RenderBatch(texture, drawData + numSpritesToDraw, numSprites - numSpritesToDraw);
+	}
 }
 
 void SpriteRenderer::RenderText(const SpriteFont &font, const wchar *text, const DirectX::XMFLOAT4X4 &transform, const DirectX::XMFLOAT4 &color) {
@@ -367,18 +366,18 @@ void SpriteRenderer::RenderText(const SpriteFont &font, const wchar *text, const
 
 	uint64 length = wcslen(text);
 
-	DirectX::XMFLOAT4X4 textTransform{1.0f, 0.0f, 0.0f, 0.0f,
-	                                  0.0f, 1.0f, 0.0f, 0.0f,
-	                                  0.0f, 0.0f, 1.0f, 0.0f,
-	                                  0.0f, 0.0f, 0.0f, 1.0f};
+	DirectX::XMFLOAT4X4 textTransform {1.0f, 0.0f, 0.0f, 0.0f,
+	                                   0.0f, 1.0f, 0.0f, 0.0f,
+	                                   0.0f, 0.0f, 1.0f, 0.0f,
+	                                   0.0f, 0.0f, 0.0f, 1.0f};
 
 	uint64 numCharsToDraw = std::min(length, MaxBatchSize);
 	uint64 currentDraw = 0;
 	for (uint64 i = 0; i < numCharsToDraw; ++i) {
 		wchar character = text[i];
-		if (character == ' ')
+		if (character == ' ') {
 			textTransform._41 += font.SpaceWidth();
-		else if (character == '\n') {
+		} else if (character == '\n') {
 			textTransform._42 += font.CharHeight();
 			textTransform._41 = 0;
 		} else {
@@ -402,8 +401,9 @@ void SpriteRenderer::RenderText(const SpriteFont &font, const wchar *text, const
 
 	//D3DPERF_EndEvent();
 
-	if (length > numCharsToDraw)
+	if (length > numCharsToDraw) {
 		RenderText(font, text + numCharsToDraw, textTransform, color);
+	}
 }
 
 void SpriteRenderer::End() {

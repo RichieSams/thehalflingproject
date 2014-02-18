@@ -17,8 +17,9 @@ namespace ObjLoaderDemo {
 void LoadScene(std::atomic<bool> *sceneIsLoaded, std::vector<SceneLoaderModel> *sceneModelList);
 
 bool ObjLoaderDemo::Initialize(LPCTSTR mainWndCaption, uint32 screenWidth, uint32 screenHeight, bool fullscreen) {
-	if (!Halfling::HalflingEngine::Initialize(mainWndCaption, screenWidth, screenHeight, fullscreen))
+	if (!Halfling::HalflingEngine::Initialize(mainWndCaption, screenWidth, screenHeight, fullscreen)) {
 		return false;
+	}
 
 	InitTweakBar();
 
@@ -95,12 +96,12 @@ void LoadScene(std::atomic<bool> *sceneIsLoaded, std::vector<SceneLoaderModel> *
 		subsets[i].FaceStart = meshSubsets[i].FaceStart;
 		subsets[i].VertexCount = meshSubsets[i].VertexCount;
 		subsets[i].VertexStart = meshSubsets[i].VertexStart;
-		subsets[i].Material = Common::BlinnPhongMaterial{DirectX::XMFLOAT4(0.2f, 0.2f, 0.2f, 0.0f),
-			DirectX::XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f),
-			DirectX::XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f)};
+		subsets[i].Material = Common::BlinnPhongMaterial {DirectX::XMFLOAT4(0.2f, 0.2f, 0.2f, 0.0f),
+		                                                  DirectX::XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f),
+		                                                  DirectX::XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f)};
 		subsets[i].SRV = nullptr;
 	}
-	
+
 	sceneModelList->push_back({vertices, indices, subsets, vertexCount, indexCount, subsetCount});
 	sceneIsLoaded->store(true, std::memory_order_relaxed);
 }
@@ -186,9 +187,9 @@ float ObjLoaderDemo::GetHillHeight(float x, float z) const {
 
 DirectX::XMFLOAT3 ObjLoaderDemo::GetHillNormal(float x, float z) const {
 	DirectX::XMFLOAT3 normal(
-		-0.03f * z * cosf(0.1f * x) - 0.3f * cosf(0.1f * z),
-		1.0f,
-		0.3f * sinf(0.1f * x) + 0.03f * x * sinf(0.1f * z));
+	    -0.03f * z * cosf(0.1f * x) - 0.3f * cosf(0.1f * z),
+	    1.0f,
+	    0.3f * sinf(0.1f * x) + 0.03f * x * sinf(0.1f * z));
 
 	DirectX::XMVECTOR unitNormal = DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&normal));
 	DirectX::XMStoreFloat3(&normal, unitNormal);
@@ -235,9 +236,9 @@ void ObjLoaderDemo::CreateLights() {
 		m_spotLights.push_back(spotLight);
 
 		m_spotLightAnimators.emplace_back(DirectX::XMFLOAT3(Common::RandF(-0.006f, 0.006f), Common::RandF(-0.006f, 0.006f), Common::RandF(-0.006f, 0.006f)),
-										  DirectX::XMFLOAT3(Common::RandF(-0.125f, 0.125f), Common::RandF(-0.125f, 0.125f), Common::RandF(-0.125f, 0.125f)),
-										  DirectX::XMFLOAT3(-80.0f, -40.0f, -80.0f),
-										  DirectX::XMFLOAT3(80.0f, 40.0f, 80.0f));
+		                                  DirectX::XMFLOAT3(Common::RandF(-0.125f, 0.125f), Common::RandF(-0.125f, 0.125f), Common::RandF(-0.125f, 0.125f)),
+		                                  DirectX::XMFLOAT3(-80.0f, -40.0f, -80.0f),
+		                                  DirectX::XMFLOAT3(80.0f, 40.0f, 80.0f));
 	}
 
 	m_spotLightBufferNeedsRebuild = true;
@@ -345,11 +346,13 @@ void ObjLoaderDemo::CreateShaderBuffers() {
 
 	m_device->CreateBuffer(&renderGBuffersBufferDesc, NULL, &m_renderGbuffersPixelShaderConstantsBuffer);
 
-	
-	if (m_pointLights.size() > 0)
+
+	if (m_pointLights.size() > 0) {
 		m_pointLightBuffer = new Common::StructuredBuffer<Common::PointLight>(m_device, m_pointLights.size(), D3D11_BIND_SHADER_RESOURCE, true);
-	if (m_spotLights.size() > 0)
+	}
+	if (m_spotLights.size() > 0) {
 		m_spotLightBuffer = new Common::StructuredBuffer<Common::SpotLight>(m_device, m_spotLights.size(), D3D11_BIND_SHADER_RESOURCE, true);
+	}
 
 	m_frameMaterialListBuffer = new Common::StructuredBuffer<Common::BlinnPhongMaterial>(m_device, kMaxMaterialsPerFrame, D3D11_BIND_SHADER_RESOURCE, true);
 

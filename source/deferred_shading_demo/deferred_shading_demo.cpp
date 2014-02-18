@@ -11,8 +11,9 @@ namespace DeferredShadingDemo {
 
 LRESULT DeferredShadingDemo::MsgProc(HWND hwnd, uint msg, WPARAM wParam, LPARAM lParam) {
 	// Send event message to AntTweakBar
-	if (TwEventWin(hwnd, msg, wParam, lParam))
-		return 0; // Event has been handled by AntTweakBar
+	if (TwEventWin(hwnd, msg, wParam, lParam)) {
+		return 0;    // Event has been handled by AntTweakBar
+	}
 
 	// Let the base engine handle any events that we don't handle
 	return Halfling::HalflingEngine::MsgProc(hwnd, msg, wParam, lParam);
@@ -115,15 +116,15 @@ void DeferredShadingDemo::OnResize() {
 	HR(m_swapChain->ResizeBuffers(2, m_clientWidth, m_clientHeight, DXGI_FORMAT_R8G8B8A8_UNORM, 0));
 
 	// Recreate the render target view.
-	ID3D11Texture2D* backBuffer;
-	HR(m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&backBuffer)));
+	ID3D11Texture2D *backBuffer;
+	HR(m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void **>(&backBuffer)));
 	HR(m_device->CreateRenderTargetView(backBuffer, 0, &m_renderTargetView));
 	ReleaseCOM(backBuffer);
 
 	// Create the depth/stencil buffer and view.
 	DXGI_SAMPLE_DESC sampleDesc;
 
-	// Use MSAA? 
+	// Use MSAA?
 	if (m_msaaCount > 1) {
 		uint msaaQuality;
 		HR(m_device->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, m_msaaCount, &msaaQuality));

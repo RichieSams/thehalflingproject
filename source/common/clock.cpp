@@ -40,7 +40,7 @@ void Clock::Tick() {
 	// Prepare for next frame.
 	m_prevTime = m_currTime;
 
-	// Force nonnegative.  The DXSDK's CDXUTTimer mentions that if the 
+	// Force nonnegative.  The DXSDK's CDXUTTimer mentions that if the
 	// processor goes into a power save mode or we get shuffled to another
 	// processor, then m_deltaTime can be negative.
 	if (m_deltaTime < 0.0) {

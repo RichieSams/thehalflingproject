@@ -10,10 +10,11 @@
 namespace Common {
 
 void Camera::MoveCamera(float dTheta, float dPhi, float dRadius) {
-	if (m_up > 0.0f)
+	if (m_up > 0.0f) {
 		m_theta += dTheta;
-	else
+	} else {
 		m_theta -= dTheta;
+	}
 
 	m_phi += dPhi;
 	m_radius += dRadius;

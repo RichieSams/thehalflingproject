@@ -41,7 +41,7 @@ void SpriteFont::Initialize(const wchar *fontName, float fontSize, UINT fontStyl
 
 	// Init GDI+
 	ULONG_PTR token = NULL;
-	Gdiplus::GdiplusStartupInput startupInput (NULL, true, true);
+	Gdiplus::GdiplusStartupInput startupInput(NULL, true, true);
 	Gdiplus::GdiplusStartupOutput startupOutput;
 	HR(GdiplusStartup(&token, &startupInput, &startupOutput));
 
@@ -84,16 +84,16 @@ void SpriteFont::Initialize(const wchar *fontName, float fontSize, UINT fontStyl
 	HR(drawGraphics.SetTextRenderingHint(hint));
 
 	// Create a temporary Bitmap + Graphics for creating a full character set
-	Gdiplus::Bitmap textBitmap (TexWidth, texHeight, PixelFormat32bppARGB);
+	Gdiplus::Bitmap textBitmap(TexWidth, texHeight, PixelFormat32bppARGB);
 	HR(textBitmap.GetLastStatus());
 
-	Gdiplus::Graphics textGraphics (&textBitmap);
+	Gdiplus::Graphics textGraphics(&textBitmap);
 	HR(textGraphics.GetLastStatus());
 	HR(textGraphics.Clear(Gdiplus::Color(0, 255, 255, 255)));
 	HR(textGraphics.SetCompositingMode(Gdiplus::CompositingModeSourceCopy));
 
 	// Solid brush for text rendering
-	Gdiplus::SolidBrush brush (Gdiplus::Color(255, 255, 255, 255));
+	Gdiplus::SolidBrush brush(Gdiplus::Color(255, 255, 255, 255));
 	HR(brush.GetLastStatus());
 
 	// Draw all of the characters, and copy them to the full character set
@@ -101,7 +101,7 @@ void SpriteFont::Initialize(const wchar *fontName, float fontSize, UINT fontStyl
 	charString[1] = 0;
 	int currentX = 0;
 	int currentY = 0;
-	for(uint64 i = 0; i < NumChars; ++i) {
+	for (uint64 i = 0; i < NumChars; ++i) {
 		charString[0] = static_cast<wchar>(i + StartChar);
 
 		// Draw the character
@@ -241,7 +241,7 @@ ID3D11Texture2D *SpriteFont::Texture() const {
 	return m_texture;
 }
 
-DirectX::XMFLOAT2 SpriteFont::MeasureText(const wchar* text) const {
+DirectX::XMFLOAT2 SpriteFont::MeasureText(const wchar *text) const {
 	DirectX::XMFLOAT2 size(0.0f, 0.0f);
 	DirectX::XMFLOAT2 curPos(0.0f, 0.0f);;
 

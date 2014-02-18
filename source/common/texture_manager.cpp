@@ -12,7 +12,7 @@
 
 namespace Common {
 
-ID3D11ShaderResourceView * TextureManager::GetSRVFromDDSFile(ID3D11Device *device, const std::string filePath, D3D11_USAGE usage, uint bindFlags, uint cpuAccessFlags, uint miscFlags, bool forceSRGB) {
+ID3D11ShaderResourceView *TextureManager::GetSRVFromDDSFile(ID3D11Device *device, const std::string filePath, D3D11_USAGE usage, uint bindFlags, uint cpuAccessFlags, uint miscFlags, bool forceSRGB) {
 	// First check the cache
 	auto bucket = m_textureCache.find(filePath);
 	if (bucket != m_textureCache.end()) {
@@ -27,15 +27,15 @@ ID3D11ShaderResourceView * TextureManager::GetSRVFromDDSFile(ID3D11Device *devic
 			}
 		}
 	}
-	    
+
 	// Else create it from scratch
-	std::wstring wideFilePath( filePath.begin(), filePath.end() );
+	std::wstring wideFilePath(filePath.begin(), filePath.end());
 
 	ID3D11ShaderResourceView *newSRV;
 	HR(DirectX::CreateDDSTextureFromFileEx(device, wideFilePath.c_str(), 0, usage, bindFlags, cpuAccessFlags, miscFlags, forceSRGB, nullptr, &newSRV));
 
 	// Store the new SRV in cache
-	TextureParams newParams{usage, bindFlags, cpuAccessFlags, miscFlags, forceSRGB};
+	TextureParams newParams {usage, bindFlags, cpuAccessFlags, miscFlags, forceSRGB};
 	m_textureCache[filePath].push_back(std::pair<TextureParams, ID3D11ShaderResourceView *>(newParams, newSRV));
 
 	// Finally return the SRV

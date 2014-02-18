@@ -18,13 +18,13 @@ typedef unsigned int uint32;
 typedef signed int int32;
 typedef unsigned int uint;
 
-typedef __int64				int64;
-typedef unsigned __int64	uint64;
+typedef __int64             int64;
+typedef unsigned __int64    uint64;
 
 typedef wchar_t wchar;
 
 namespace DisposeAfterUse {
-	enum Flag { NO, YES };
+enum Flag { NO, YES };
 }
 
 #endif

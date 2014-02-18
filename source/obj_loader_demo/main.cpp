@@ -12,7 +12,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	app.Initialize(L"OBJ Loader Demo", 800, 600, false);
 	app.Run();
-	
+
 	app.Shutdown();
 
 	return 0;

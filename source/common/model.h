@@ -85,9 +85,10 @@ public:
 
 template <typename Vertex, typename InstanceType>
 const Common::BlinnPhongMaterial &Model<Vertex, InstanceType>::GetSubsetMaterial(uint subsetIndex) const {
-	if (subsetIndex < m_subsetCount)
+	if (subsetIndex < m_subsetCount) {
 		return m_subsets[subsetIndex].Material;
-	
+	}
+
 	throw std::out_of_range("subsetIndex out of range");
 }
 
@@ -139,7 +140,7 @@ void Model<Vertex, InstanceType>::CreateInstanceBuffer(ID3D11Device *device, uin
 
 	D3D11_BUFFER_DESC instbd;
 	instbd.Usage = D3D11_USAGE_DYNAMIC;
-	instbd.ByteWidth = sizeof(InstanceType)* maxInstanceCount;
+	instbd.ByteWidth = sizeof(InstanceType) * maxInstanceCount;
 	instbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	instbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE; //needed for Map/Unmap
 	instbd.MiscFlags = 0;
@@ -199,7 +200,7 @@ void Model<Vertex, InstanceType>::DrawInstancedSubset(ID3D11DeviceContext *devic
 	assert(m_instanceBuffer);
 	assert(instanceCount <= m_maxInstanceCount);
 
-	ID3D11Buffer* vbs[] = {m_vertexBuffer, m_instanceBuffer};
+	ID3D11Buffer *vbs[] = {m_vertexBuffer, m_instanceBuffer};
 	uint strides[] = {sizeof(Vertex), sizeof(InstanceType)};
 	uint offsets[] = {0, 0};
 	deviceContext->IASetVertexBuffers(0, 2, vbs, strides, offsets);

@@ -38,6 +38,7 @@
     <ClInclude Include="..\common\light_animator.h" />
     <ClInclude Include="..\common\materials.h" />
     <ClInclude Include="..\common\math.h" />
+    <ClInclude Include="..\common\memory_stream.h" />
     <ClInclude Include="..\common\model.h" />
     <ClInclude Include="..\common\profiler.h" />
     <ClInclude Include="..\common\sprite_font.h" />

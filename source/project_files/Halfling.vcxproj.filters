@@ -119,18 +119,6 @@
     <ClInclude Include="..\common\string_util.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\clock.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\common\timer.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\common\profiler.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\common\memory_stream.h">
-      <Filter>Common</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\common\shaders\lights.hlsli">

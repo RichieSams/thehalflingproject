@@ -8,6 +8,7 @@
 
 #include "common/file_io_util.h"
 #include "common/string_util.h"
+#include "common/profiler.h"
 
 #include <fstream>
 #include <stdio.h>
@@ -344,6 +345,9 @@ typedef std::tuple<uint, uint, uint> TupleUInt3;
 typedef std::tuple<TupleUInt3, TupleUInt3, TupleUInt3> FaceTuple;
 
 bool GeometryGenerator::LoadFromOBJ(const wchar *fileName,  MeshData *meshData, std::vector<MeshSubset> *meshSubsets, bool fileIsRightHanded) {
+	Common::Profiler profiler;
+	profiler.StartEvent("total");
+
 	//Arrays to store our model's information
 	std::unordered_map<Vertex, uint, Vertex> vertexMap;
 
@@ -368,6 +372,8 @@ bool GeometryGenerator::LoadFromOBJ(const wchar *fileName,  MeshData *meshData, 
 	if (!fin.is_open()) {
 		return false;
 	}
+	profiler.StartEvent("fileRead");
+
 
 	while (!fin.eof()) {
 		SafeGetLine(fin, line); //Get next line
@@ -384,9 +390,13 @@ bool GeometryGenerator::LoadFromOBJ(const wchar *fileName,  MeshData *meshData, 
 			break;
 		// Vertex Descriptions
 		case 'v':
+			profiler.StartEvent("vertex");
+
 			nextChar = line[1];
 			// v - vert position
 			if (nextChar == ' ') {
+				profiler.StartEvent("vertPos");
+
 				float vx, vy, vz;
 				sscanf(line.c_str(), "%*s %f %f %f", &vx, &vy, &vz);    //Store the next three types
 
@@ -395,9 +405,13 @@ bool GeometryGenerator::LoadFromOBJ(const wchar *fileName,  MeshData *meshData, 
 				} else {
 					vertPos.push_back(DirectX::XMFLOAT3(vx, vy, vz));
 				}
+
+				profiler.EndEvent("vertPos");
 			}
 			// vt - vert tex coords
 			if (nextChar == 't') {
+				profiler.StartEvent("vertTexCoord");
+
 				float vtcu, vtcv;
 				sscanf(line.c_str(), "%*s %f %f", &vtcu, &vtcv);    //Store the next two types
 
@@ -406,9 +420,13 @@ bool GeometryGenerator::LoadFromOBJ(const wchar *fileName,  MeshData *meshData, 
 				} else {
 					vertTexCoord.push_back(DirectX::XMFLOAT2(vtcu, vtcv));
 				}
+
+				profiler.EndEvent("vertTexCoord");
 			}
 			// vn - vert normal
 			if (nextChar == 'n') {
+				profiler.StartEvent("vertNormal");
+
 				float vnx, vny, vnz;
 				sscanf(line.c_str(), "%*s %f %f %f", &vnx, &vny, &vnz); //Store the next three types
 
@@ -417,7 +435,11 @@ bool GeometryGenerator::LoadFromOBJ(const wchar *fileName,  MeshData *meshData, 
 				} else {
 					vertNorm.push_back(DirectX::XMFLOAT3(vnx, vny, vnz));
 				}
+
+				profiler.EndEvent("vertNormal");
 			}
+
+			profiler.EndEvent("vertex");
 			break;
 
 		// New group (Subset)
@@ -431,6 +453,8 @@ bool GeometryGenerator::LoadFromOBJ(const wchar *fileName,  MeshData *meshData, 
 			break;
 
 		case 'f': {
+			profiler.StartEvent("face");
+
 			bool isQuad = false;
 			char prefix[2];
 			int a[4], b[4], c[4];
@@ -478,16 +502,23 @@ bool GeometryGenerator::LoadFromOBJ(const wchar *fileName,  MeshData *meshData, 
 				faces.push_back(FaceTuple(TupleUInt3(a[0], b[0], c[0]), TupleUInt3(a[1], b[1], c[1]), TupleUInt3(a[2], b[2], c[2])));
 			}
 
+			profiler.EndEvent("face");
 			break;
 		}
 		case 'm':   //mtllib - material library filename
+			profiler.StartEvent("mtllib");
+
 			if (line.find("mtllib") != std::string::npos) {
 				//Store the material libraries file name
 				sscanf(line.c_str(), "mtllib %200s", materialFile.c_str());
 			}
+
+			profiler.EndEvent("mtllib");
 			break;
 
 		case 'u':   //usemtl - which material to use
+			profiler.StartEvent("usemtl");
+
 			if (line.find("usemtl") != std::string::npos) {
 				//Store the material libraries file name
 				sscanf(line.c_str(), "usemtl %200s", materialName);
@@ -504,12 +535,16 @@ bool GeometryGenerator::LoadFromOBJ(const wchar *fileName,  MeshData *meshData, 
 				GeometryGenerator::MeshSubset *subset = &meshSubsets->back();
 				subset->FaceStart = faces.size();
 			}
+
+			profiler.EndEvent("usemtl");
 			break;
 
 		default:
 			break;
 		}
 	}
+
+	profiler.EndEvent("fileRead");
 
 	// Make sure there is at least one subset
 	if (meshSubsets->size() == 0) {
@@ -522,6 +557,8 @@ bool GeometryGenerator::LoadFromOBJ(const wchar *fileName,  MeshData *meshData, 
 
 
 	// Post processing
+
+	profiler.StartEvent("postProcess");
 
 	for (uint i = 0; i < faces.size(); ++i) {
 		TupleUInt3 firstTuple = std::get<0>(faces[i]);
@@ -571,6 +608,13 @@ bool GeometryGenerator::LoadFromOBJ(const wchar *fileName,  MeshData *meshData, 
 		iter->VertexStart = 0;
 		iter->VertexCount = meshData->Vertices.size();
 	}
+
+	profiler.EndEvent("postProcess");
+	profiler.EndEvent("total");
+	
+	std::unordered_map<std::string, double> profileMap = profiler.GetAllEventTimes();
+
+	return true;
 }
 
 } // End of namespace Common

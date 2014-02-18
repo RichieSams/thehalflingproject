@@ -61,7 +61,7 @@ protected:
 
 public:
 	void Initialize(const wchar *fontName, float fontSize, uint fontStyle, bool antiAliased, ID3D11Device *device);
-	DirectX::XMFLOAT2 MeasureText(const wchar *text) const;
+	DirectX::XMFLOAT2 MeasureText(const wchar *text, uint maxWidth = 0U) const;
 
 	// Accessors
 	ID3D11ShaderResourceView *SRView() const;

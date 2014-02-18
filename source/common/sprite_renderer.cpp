@@ -365,7 +365,7 @@ void SpriteRenderer::RenderBatch(ID3D11ShaderResourceView *texture, const Sprite
 	}
 }
 
-void SpriteRenderer::RenderText(const SpriteFont &font, const wchar *text, const DirectX::XMFLOAT4X4 &transform, const DirectX::XMFLOAT4 &color) {
+const DirectX::XMFLOAT2 SpriteRenderer::RenderText(const SpriteFont &font, const wchar *text, const DirectX::XMFLOAT4X4 &transform, const uint maxWidth, const DirectX::XMFLOAT4 &color) {
 	//D3DPERF_BeginEvent(0xFFFFFFFF, L"SpriteRenderer RenderText");
 
 	uint64 length = wcslen(text);
@@ -377,15 +377,28 @@ void SpriteRenderer::RenderText(const SpriteFont &font, const wchar *text, const
 
 	uint64 numCharsToDraw = std::min(length, MaxBatchSize);
 	uint64 currentDraw = 0;
+	float spaceWidth = font.SpaceWidth();
 	for (uint64 i = 0; i < numCharsToDraw; ++i) {
 		wchar character = text[i];
 		if (character == ' ') {
-			textTransform._41 += font.SpaceWidth();
+			// Check for wrapping
+			if (maxWidth != 0U && textTransform._41 + spaceWidth > maxWidth) {
+				textTransform._42 += font.CharHeight();
+				textTransform._41 = 0;
+			}
+
+			textTransform._41 += spaceWidth;
 		} else if (character == '\n') {
 			textTransform._42 += font.CharHeight();
 			textTransform._41 = 0;
 		} else {
 			SpriteFont::CharDesc desc = font.GetCharDescriptor(character);
+
+			// Check for wrapping
+			if (maxWidth != 0U && textTransform._41 + desc.Width + 1 > maxWidth) {
+				textTransform._42 += font.CharHeight();
+				textTransform._41 = 0;
+			}
 
 			DirectX::XMMATRIX transformMatrix = DirectX::XMLoadFloat4x4(&textTransform) * DirectX::XMLoadFloat4x4(&transform);
 			DirectX::XMStoreFloat4x4(&textDrawData[currentDraw].Transform, transformMatrix);
@@ -406,8 +419,10 @@ void SpriteRenderer::RenderText(const SpriteFont &font, const wchar *text, const
 	//D3DPERF_EndEvent();
 
 	if (length > numCharsToDraw) {
-		RenderText(font, text + numCharsToDraw, textTransform, color);
+		RenderText(font, text + numCharsToDraw, textTransform, 0U, color);
 	}
+
+	return DirectX::XMFLOAT2(textTransform._41, textTransform._42);
 }
 
 void SpriteRenderer::End() {

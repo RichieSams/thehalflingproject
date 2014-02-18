@@ -85,7 +85,7 @@ public:
 	void Begin(ID3D11DeviceContext *deviceContext, FilterMode filterMode = DontSet);
 	void Render(ID3D11ShaderResourceView *texture, const DirectX::XMFLOAT4X4 &transform, const DirectX::XMFLOAT4 &color = DirectX::XMFLOAT4(1, 1, 1, 1), const DirectX::XMFLOAT4 *drawRect = nullptr);
 	void RenderBatch(ID3D11ShaderResourceView *texture, const SpriteDrawData *drawData, uint64 numSprites);
-	void RenderText(const SpriteFont &font, const wchar *text, const DirectX::XMFLOAT4X4 &transform, const DirectX::XMFLOAT4 &color = DirectX::XMFLOAT4(1, 1, 1, 1));
+	const DirectX::XMFLOAT2 RenderText(const SpriteFont &font, const wchar *text, const DirectX::XMFLOAT4X4 &transform, const uint maxWidth = 0U, const DirectX::XMFLOAT4 &color = DirectX::XMFLOAT4(1, 1, 1, 1));
 	void End();
 
 protected:

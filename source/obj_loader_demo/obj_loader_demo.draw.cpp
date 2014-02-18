@@ -36,7 +36,7 @@ void ObjLoaderDemo::DrawFrame(double deltaTime) {
 		                               0.0f, 2.0f, 0.0f, 0.0f,
 		                               0.0f, 0.0f, 2.0f, 0.0f,
 		                               m_clientWidth / 2.0f - 90.0f, m_clientHeight / 2.0f - 30.0f, 0.0f, 1.0f};
-		m_spriteRenderer.RenderText(m_timesNewRoman12Font, L"Scene is loading....", transform, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f));
+		m_spriteRenderer.RenderText(m_timesNewRoman12Font, L"Scene is loading....", transform, 0U, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f));
 		m_spriteRenderer.End();
 	}
 	RenderHUD();
@@ -465,22 +465,22 @@ void ObjLoaderDemo::RenderDebugGeometry() {
 		                               0, 1, 0, 0,
 		                               0, 0, 1, 0,
 		                               0, m_clientHeight - quarterHeight, 0, 1};
-		m_spriteRenderer.RenderText(m_timesNewRoman12Font, L"Diffuse Albedo", transform, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) /* Yellow */);
+		m_spriteRenderer.RenderText(m_timesNewRoman12Font, L"Diffuse Albedo", transform, 0U, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) /* Yellow */);
 
 		transform._41 = quarterWidth;
-		m_spriteRenderer.RenderText(m_timesNewRoman12Font, L"MaterialId", transform, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) /* Yellow */);
+		m_spriteRenderer.RenderText(m_timesNewRoman12Font, L"MaterialId", transform, 0U, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) /* Yellow */);
 
 		transform._41 = 2.0f * quarterWidth;
-		m_spriteRenderer.RenderText(m_timesNewRoman12Font, L"Spherical Coord Normal", transform, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) /* Yellow */);
+		m_spriteRenderer.RenderText(m_timesNewRoman12Font, L"Spherical Coord Normal", transform, 0U, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) /* Yellow */);
 
 		transform._41 = 3.0f * quarterWidth;
-		m_spriteRenderer.RenderText(m_timesNewRoman12Font, L"Cartesian Coord Normal", transform, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) /* Yellow */);
+		m_spriteRenderer.RenderText(m_timesNewRoman12Font, L"Cartesian Coord Normal", transform, 0U, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) /* Yellow */);
 
 		transform._42 = m_clientHeight - (2.0f * quarterHeight);
-		m_spriteRenderer.RenderText(m_timesNewRoman12Font, L"Z/W Depth", transform, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) /* Yellow */);
+		m_spriteRenderer.RenderText(m_timesNewRoman12Font, L"Z/W Depth", transform, 0U, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) /* Yellow */);
 
 		transform._42 = m_clientHeight - (3.0f * quarterHeight);
-		m_spriteRenderer.RenderText(m_timesNewRoman12Font, L"Position", transform, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) /* Yellow */);
+		m_spriteRenderer.RenderText(m_timesNewRoman12Font, L"Position", transform, 0U, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) /* Yellow */);
 
 		m_spriteRenderer.End();
 	}
@@ -506,7 +506,7 @@ void ObjLoaderDemo::RenderHUD() {
 	                               0, 1, 0, 0,
 	                               0, 0, 1, 0,
 	                               25, 25, 0, 1};
-	m_spriteRenderer.RenderText(m_timesNewRoman12Font, stream.str().c_str(), transform, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) /* Yellow */);
+	m_spriteRenderer.RenderText(m_timesNewRoman12Font, stream.str().c_str(), transform, 0U, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) /* Yellow */);
 	m_spriteRenderer.End();
 
 	TwDraw();

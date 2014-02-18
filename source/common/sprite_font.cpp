@@ -241,7 +241,7 @@ ID3D11Texture2D *SpriteFont::Texture() const {
 	return m_texture;
 }
 
-DirectX::XMFLOAT2 SpriteFont::MeasureText(const wchar *text) const {
+DirectX::XMFLOAT2 SpriteFont::MeasureText(const wchar *text, uint maxWidth) const {
 	DirectX::XMFLOAT2 size(0.0f, 0.0f);
 	DirectX::XMFLOAT2 curPos(0.0f, 0.0f);;
 
@@ -250,17 +250,33 @@ DirectX::XMFLOAT2 SpriteFont::MeasureText(const wchar *text) const {
 	for (uint64 i = 0; i < length; ++i) {
 		wchar character = text[i];
 		if (character == ' ') {
-			curPos.x += SpaceWidth();
+			// Check for wrapping
+			if (maxWidth != 0U && curPos.x + m_spaceWidth > maxWidth) {
+				size.x = std::max(size.x, curPos.x);
+				curPos.y += m_charHeight;
+				curPos.x = 0;
+			}
+
+			curPos.x += m_spaceWidth;
 		} else if (character == '\n') {
-			curPos.y += CharHeight();
+			size.x = std::max(size.x, curPos.x);
+			curPos.y += m_charHeight;
 			curPos.x = 0;
 		} else {
 			SpriteFont::CharDesc desc = GetCharDescriptor(character);
+
+			// Check for wrapping
+			if (maxWidth != 0U && curPos.x + desc.Width + 1 > maxWidth) {
+				size.x = std::max(size.x, curPos.x);
+				curPos.y += m_charHeight;
+				curPos.x = 0;
+			}
+
 			curPos.x += desc.Width + 1;
 		}
 
 		size.x = std::max(curPos.x, size.x);
-		size.y = std::max(curPos.y, size.y);
+		size.y = curPos.y;
 	}
 
 	return size;

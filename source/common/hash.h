@@ -11,7 +11,7 @@
 #include <functional>
 #include <type_traits>
 
-size_t hash_combiner(size_t left, size_t right) {
+inline size_t hash_combiner(size_t left, size_t right) {
 	// FNV hash
 	return ((2166136261 * 16777619) ^ left) * 16777619 ^ right;
 }

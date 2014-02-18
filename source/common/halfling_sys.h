@@ -20,20 +20,25 @@
 
 // Un-define min and max from the windows headers
 #ifdef min
-#undef min
+	#undef min
 #endif
 
 #ifdef max
-#undef max
+	#undef max
 #endif
 
+#include <sstream>
 #define AssertMsg(condition, message) \
-	do {                                                                        \
-		if (!(condition)) {                                                     \
-			std::cerr << "Assertion `" #condition "` failed in " << __FILE__    \
-			          << " line " << __LINE__ << ": " << message << std::endl;            \
-			std::exit(EXIT_FAILURE);                                            \
-		}                                                                       \
+	do {                                                                                                                                         \
+		if (!(condition)) {                                                                                                                      \
+			std::wstringstream debugStream;                                                                                                      \
+			debugStream << "Assertion `" #condition "` failed in " << __FILE__  << " line " << __LINE__ << ": "                                  \
+			            << message << std::endl << std::endl << "Do you want to debug the application?";                                         \
+			std::wstring debugMessage(debugStream.str());                                                                                        \
+			int nResult = MessageBoxW(GetForegroundWindow(), debugMessage.c_str(), L"Unexpected error encountered", MB_YESNO | MB_ICONERROR );   \
+			if (nResult == IDYES)                                                                                                                \
+			DebugBreak();                                                                                                                        \
+		}                                                                                                                                        \
 	} while (false)
 
 

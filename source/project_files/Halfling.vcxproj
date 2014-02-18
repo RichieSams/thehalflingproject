@@ -28,12 +28,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\common\camera.h" />
+    <ClInclude Include="..\common\console.h" />
     <ClInclude Include="..\common\d3d_util.h" />
     <ClInclude Include="..\common\device_states.h" />
     <ClInclude Include="..\common\dxerr.h" />
     <ClInclude Include="..\common\file_io_util.h" />
     <ClInclude Include="..\common\geometry_generator.h" />
     <ClInclude Include="..\common\halfling_sys.h" />
+    <ClInclude Include="..\common\hash.h" />
     <ClInclude Include="..\common\lights.h" />
     <ClInclude Include="..\common\light_animator.h" />
     <ClInclude Include="..\common\materials.h" />

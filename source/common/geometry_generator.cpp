@@ -407,9 +407,8 @@ bool GeometryGenerator::LoadFromOBJ(const wchar *fileName,  MeshData *meshData, 
 				}
 
 				profiler.EndEvent("vertPos");
-			}
-			// vt - vert tex coords
-			if (nextChar == 't') {
+			} else if (nextChar == 't') {
+				// vt - vert tex coords
 				profiler.StartEvent("vertTexCoord");
 
 				float vtcu, vtcv;
@@ -422,9 +421,8 @@ bool GeometryGenerator::LoadFromOBJ(const wchar *fileName,  MeshData *meshData, 
 				}
 
 				profiler.EndEvent("vertTexCoord");
-			}
-			// vn - vert normal
-			if (nextChar == 'n') {
+			} else if (nextChar == 'n') {
+				// vn - vert normal
 				profiler.StartEvent("vertNormal");
 
 				float vnx, vny, vnz;

@@ -7,10 +7,32 @@
 #ifndef COMMON_FILE_IO_UTIL_H
 #define COMMON_FILE_IO_UTIL_H
 
+#include "common/halfling_sys.h"
+
 #include <fstream>
 
 
 namespace Common {
+
+char *ReadWholeFile(const wchar *name, DWORD *bytesRead) {
+	HANDLE hFile = CreateFile(name, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	if (hFile == INVALID_HANDLE_VALUE)
+		return NULL; // error condition, could call GetLastError to find out more
+
+	LARGE_INTEGER size;
+	if (!GetFileSizeEx(hFile, &size)) {
+		CloseHandle(hFile);
+		return NULL; // error condition, could call GetLastError to find out more
+	}
+
+	DWORD fileSize = (DWORD)size.QuadPart;
+	char *fileBuffer = new char[fileSize];
+	ReadFile(hFile, fileBuffer, fileSize, bytesRead, NULL);
+
+	CloseHandle(hFile);
+
+	return fileBuffer;
+}
 
 /**
  * Reads a line from an istream using /r, /r/n, and /n as line delimiters

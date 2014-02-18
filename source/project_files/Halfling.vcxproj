@@ -17,6 +17,7 @@
     <ClCompile Include="..\common\dxerr.cpp" />
     <ClCompile Include="..\common\geometry_generator.cpp" />
     <ClCompile Include="..\common\light_animator.cpp" />
+    <ClCompile Include="..\common\profiler.cpp" />
     <ClCompile Include="..\common\sprite_font.cpp" />
     <ClCompile Include="..\common\sprite_renderer.cpp" />
     <ClCompile Include="..\common\texture2d.cpp" />
@@ -38,6 +39,7 @@
     <ClInclude Include="..\common\materials.h" />
     <ClInclude Include="..\common\math.h" />
     <ClInclude Include="..\common\model.h" />
+    <ClInclude Include="..\common\profiler.h" />
     <ClInclude Include="..\common\sprite_font.h" />
     <ClInclude Include="..\common\sprite_renderer.h" />
     <ClInclude Include="..\common\string_util.h" />

@@ -43,6 +43,7 @@
     <ClInclude Include="..\common\memory_stream.h" />
     <ClInclude Include="..\common\model.h" />
     <ClInclude Include="..\common\profiler.h" />
+    <ClInclude Include="..\common\rect.h" />
     <ClInclude Include="..\common\sprite_font.h" />
     <ClInclude Include="..\common\sprite_renderer.h" />
     <ClInclude Include="..\common\string_util.h" />

@@ -134,6 +134,9 @@
     <ClInclude Include="..\common\hash.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="..\common\rect.h">
+      <Filter>Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\common\shaders\lights.hlsli">

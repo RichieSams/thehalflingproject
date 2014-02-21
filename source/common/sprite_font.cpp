@@ -284,7 +284,7 @@ DirectX::XMFLOAT2 SpriteFont::MeasureText(const wchar *text, uint maxWidth) cons
 		}
 
 		size.x = std::max(curPos.x, size.x);
-		size.y = curPos.y;
+		size.y = curPos.y + m_charHeight;
 	}
 
 	return size;

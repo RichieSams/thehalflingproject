@@ -162,6 +162,7 @@ protected:
 	 * @param zDelta    The number of units scrolled. The number of units per full circle of the wheel depends on the mouse vendor
 	 */
 	virtual void MouseWheel(int zDelta) {}
+	virtual void CharacterInput(wchar character) {}
 
 private:
 	/** Creates the window and registers it */

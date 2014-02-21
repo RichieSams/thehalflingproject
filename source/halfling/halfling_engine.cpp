@@ -291,6 +291,10 @@ LRESULT HalflingEngine::MsgProc(HWND hwnd, uint msg, WPARAM wParam, LPARAM lPara
 		return 0;
 	case WM_MOUSEWHEEL:
 		MouseWheel(GET_WHEEL_DELTA_WPARAM(wParam));
+		return 0;
+	case WM_CHAR:
+		CharacterInput(LOWORD(wParam));
+		return 0;
 	}
 
 	return DefWindowProc(hwnd, msg, wParam, lParam);

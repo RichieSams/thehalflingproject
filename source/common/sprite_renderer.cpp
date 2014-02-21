@@ -432,7 +432,7 @@ const DirectX::XMFLOAT2 SpriteRenderer::RenderText(const SpriteFont &font, const
 		RenderText(font, text + numCharsToDraw, textTransform, 0U, color);
 	}
 
-	return DirectX::XMFLOAT2(textTransform._41, textTransform._42);
+	return DirectX::XMFLOAT2(textTransform._41 + transform._41, textTransform._42 + transform._42);
 }
 
 void SpriteRenderer::End() {

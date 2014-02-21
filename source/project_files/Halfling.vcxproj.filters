@@ -54,6 +54,9 @@
     <ClCompile Include="..\common\profiler.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="..\common\console.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\common\halfling_sys.h">
@@ -132,6 +135,9 @@
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="..\common\hash.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\console.h">
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="..\common\rect.h">

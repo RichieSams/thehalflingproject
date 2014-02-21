@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\common\camera.cpp" />
+    <ClCompile Include="..\common\console.cpp" />
     <ClCompile Include="..\common\d3d_util.cpp" />
     <ClCompile Include="..\common\device_states.cpp" />
     <ClCompile Include="..\common\dxerr.cpp" />

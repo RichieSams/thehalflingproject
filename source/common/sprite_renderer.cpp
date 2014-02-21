@@ -302,7 +302,9 @@ void SpriteRenderer::Render(ID3D11ShaderResourceView *texture, const DirectX::XM
 	m_context->VSSetConstantBuffers(0, 2, buffers);
 
 	// Set the texture
-	m_context->PSSetShaderResources(0, 1, &texture);
+	if (texture) {
+		m_context->PSSetShaderResources(0, 1, &texture);
+	}
 
 	m_context->DrawIndexed(6, 0, 0);
 

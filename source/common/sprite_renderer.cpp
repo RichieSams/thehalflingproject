@@ -388,7 +388,15 @@ const DirectX::XMFLOAT2 SpriteRenderer::RenderText(const SpriteFont &font, const
 			}
 
 			textTransform._41 += spaceWidth;
-		} else if (character == '\n') {
+		} else if (character == '\t') {
+			// Check for wrapping
+			if (maxWidth != 0U && textTransform._41 + 4.0f * spaceWidth > maxWidth) {
+				textTransform._42 += font.CharHeight();
+				textTransform._41 = 0;
+			}
+
+			textTransform._41 += 4.0f * spaceWidth;
+		} else if (character == '\n' || character == '\r') {
 			textTransform._42 += font.CharHeight();
 			textTransform._41 = 0;
 		} else {

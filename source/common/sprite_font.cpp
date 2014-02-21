@@ -258,7 +258,15 @@ DirectX::XMFLOAT2 SpriteFont::MeasureText(const wchar *text, uint maxWidth) cons
 			}
 
 			curPos.x += m_spaceWidth;
-		} else if (character == '\n') {
+		} else if (character == '\t') {
+			// Check for wrapping
+			if (maxWidth != 0U && curPos.x + 4.0f * m_spaceWidth > maxWidth) {
+				curPos.y += m_charHeight;
+				curPos.x = 0;
+			}
+
+			curPos.x += 4.0f * m_spaceWidth;
+		} else if (character == '\n' || character == '\r') {
 			size.x = std::max(size.x, curPos.x);
 			curPos.y += m_charHeight;
 			curPos.x = 0;

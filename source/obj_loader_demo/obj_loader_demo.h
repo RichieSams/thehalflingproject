@@ -12,6 +12,7 @@
 #include "common/vector.h"
 #include "common/camera.h"
 #include "common/texture_manager.h"
+#include "common/console.h"
 #include "common/model.h"
 #include "common/texture2d.h"
 #include "common/structured_buffer.h"
@@ -79,6 +80,8 @@ private:
 	Common::Vector2 m_mouseLastPos;
 	Common::Camera m_camera;
 	Common::TextureManager m_textureManager;
+	Common::Console m_console;
+	bool m_showConsole;
 
 	WorldViewProjection m_worldViewProj;
 	std::vector<Common::Model<Vertex> > m_models;
@@ -160,6 +163,7 @@ private:
 
 	Common::SpriteRenderer m_spriteRenderer;
 	Common::SpriteFont m_timesNewRoman12Font;
+	Common::SpriteFont m_courierNew10Font;
 
 public:
 	// Inherited methods
@@ -178,6 +182,7 @@ private:
 	void MouseUp(WPARAM buttonState, int x, int y);
 	void MouseMove(WPARAM buttonState, int x, int y);
 	void MouseWheel(int zDelta);
+	void CharacterInput(wchar character);
 
 	// Initialization methods
 	void InitTweakBar();

@@ -22,6 +22,7 @@ LRESULT ObjLoaderDemo::MsgProc(HWND hwnd, uint msg, WPARAM wParam, LPARAM lParam
 ObjLoaderDemo::ObjLoaderDemo(HINSTANCE hinstance)
 	: Halfling::HalflingEngine(hinstance),
 	  m_camera(0.25f * DirectX::XM_PI, 0.25f * DirectX::XM_PI, 50.0f),
+	  m_showConsole(false),
 	  m_sceneLoaded(false),
 	  m_sceneIsSetup(false),
 	  m_pointLightBufferNeedsRebuild(false),
@@ -212,6 +213,12 @@ void ObjLoaderDemo::MouseMove(WPARAM buttonState, int x, int y) {
 void ObjLoaderDemo::MouseWheel(int zDelta) {
 	// Make each wheel dedent correspond to 0.01 units
 	m_camera.MoveCamera(0.0f, 0.0f, -0.01f * (float)zDelta);
+}
+
+void ObjLoaderDemo::CharacterInput(wchar character) {
+	if (m_showConsole) {
+		m_console.InputCharacter(character);
+	}
 }
 
 } // End of namespace ObjLoaderDemo

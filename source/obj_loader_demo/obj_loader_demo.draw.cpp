@@ -41,6 +41,13 @@ void ObjLoaderDemo::DrawFrame(double deltaTime) {
 	}
 	RenderHUD();
 
+	if (m_showConsole) {
+		m_immediateContext->OMSetRenderTargets(1, &m_renderTargetView, nullptr);
+		m_console.Render(m_immediateContext, deltaTime);
+		// Cleanup (aka make the runtime happy)
+		m_immediateContext->OMSetRenderTargets(0, 0, 0);
+	}
+
 	uint syncInterval = m_vsync ? 1 : 0;
 	m_swapChain->Present(syncInterval, 0);
 }
@@ -501,7 +508,7 @@ void ObjLoaderDemo::RenderHUD() {
 	m_spriteRenderer.Begin(m_immediateContext, Common::SpriteRenderer::Point);
 	std::wostringstream stream;
 	stream << L"FPS: " << m_fps << L"\nFrame Time: " << m_frameTime << L" (ms)";
-
+	
 	DirectX::XMFLOAT4X4 transform {1, 0, 0, 0,
 	                               0, 1, 0, 0,
 	                               0, 0, 1, 0,

@@ -38,6 +38,10 @@ bool ObjLoaderDemo::Initialize(LPCTSTR mainWndCaption, uint32 screenWidth, uint3
 
 	m_spriteRenderer.Initialize(m_device);
 	m_timesNewRoman12Font.Initialize(L"Times New Roman", 12, Common::SpriteFont::Regular, true, m_device);
+	m_courierNew10Font.Initialize(L"Courier New", 12, Common::SpriteFont::Regular, true, m_device);
+
+	// Initialize the console
+	m_console.Initialize(Common::Rect(20, 20, 500, 300), &m_spriteRenderer, &m_courierNew10Font);
 
 	m_blendStates.Initialize(m_device);
 	m_depthStencilStates.Initialize(m_device);
@@ -53,6 +57,7 @@ void ObjLoaderDemo::InitTweakBar() {
 	m_settingsBar = TwNewBar("settings");
 	TwDefine(" settings label='Settings' size='300 175' position='480 20' valueswidth=120 movable=true resizable=false fontresizable=false contained=true iconified=true ");
 
+	TwAddVarRW(m_settingsBar, "Show Console", TW_TYPE_BOOLCPP, &m_showConsole, "");
 	TwAddVarRW(m_settingsBar, "V-Sync", TwType::TW_TYPE_BOOLCPP, &m_vsync, "");
 	TwAddVarRW(m_settingsBar, "Wireframe", TwType::TW_TYPE_BOOLCPP, &m_wireframe, "");
 	TwAddVarRW(m_settingsBar, "Animate Lights", TW_TYPE_BOOLCPP, &m_animateLights, "");

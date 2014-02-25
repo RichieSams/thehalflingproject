@@ -23,7 +23,12 @@ Texture2D gDiffuseTexture : register(t0);
 SamplerState gDiffuseSampler : register(s0);
 
 void GBufferPS(GBufferShaderPixelIn input, out GBuffer gbuffer) {
-	gbuffer.albedoMaterialIndex = gDiffuseTexture.Sample(gDiffuseSampler, input.texCoord);
+	[flatten]
+	if (gTextureFlags & 0x01 == 0x01) {
+		gbuffer.albedoMaterialIndex = gDiffuseTexture.Sample(gDiffuseSampler, input.texCoord);
+	} else {
+		gbuffer.albedoMaterialIndex = float4(1.0f, 1.0f, 1.0f, 1.0f);
+	}
 	gbuffer.albedoMaterialIndex.w = (float)gMaterialIndex;
 
 	gbuffer.normal = CartesianToSpherical(input.normal);

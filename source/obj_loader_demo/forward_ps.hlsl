@@ -41,7 +41,13 @@ float4 ForwardPS(ForwardPixelIn input) : SV_TARGET {
 	float4 spec = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
 	// Sample the texture
-	float4 textureColor = gDiffuseTexture.Sample(gDiffuseSampler, input.texCoord);
+	float4 textureColor;
+	[flatten]
+	if (gTextureFlags & 0x01 == 0x01) {
+		textureColor = gDiffuseTexture.Sample(gDiffuseSampler, input.texCoord);
+	} else {
+		textureColor = float4(1.0f, 1.0f, 1.0f, 1.0f);
+	}
 
 	// Sum the contribution from each light source
 	uint lightIndex;

@@ -148,11 +148,13 @@ void Console::InputCharacter(wchar character) {
 	case '\r':
 	{
 		std::wstring command = m_currentInput.substr(2);
-		PrintText(command);
-		ProcessCommandString(command);
+		if (!command.empty()) {
+			PrintText(command);
+			ProcessCommandString(command);
 
-		// Reset the current input to 'empty'
-		m_currentInput = L"> ";
+			// Reset the current input to 'empty'
+			m_currentInput = L"> ";
+		}
 		break;
 	}
 	case '\b':
@@ -177,6 +179,8 @@ bool Console::RegisterCommand(const std::wstring &command, ConsoleCommandCallbac
 	}
 
 	auto iter = m_commandCallbacks.find(command);
+
+	return true;
 }
 
 void Console::ProcessCommandString(std::wstring commandString) {

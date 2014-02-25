@@ -49,10 +49,29 @@ struct FullScreenTriangleVertex {
 	DirectX::XMFLOAT3 pos;
 };
 
+struct SceneLoaderModelSubset {
+	uint VertexStart;
+	uint VertexCount;
+
+	uint IndexStart;
+	uint IndexCount;
+
+	DirectX::XMFLOAT4 Ambient; // w = SpecularIntensity
+	DirectX::XMFLOAT4 Diffuse;
+	DirectX::XMFLOAT4 Specular; // w = SpecPower
+
+	std::wstring DiffuseMapFile;
+	std::wstring AmbientMapFile;
+	std::wstring SpecularColorMapFile;
+	std::wstring SpecularHighlightMapFile;
+	std::wstring AlphaMapFile;
+	std::wstring BumpMapFile;
+};
+
 struct SceneLoaderModel {
 	Vertex *Vertices;
 	uint *Indices;
-	Common::ModelSubset *Subsets;
+	SceneLoaderModelSubset *Subsets;
 
 	uint VertexCount;
 	uint IndexCount;
@@ -75,7 +94,7 @@ public:
 	ObjLoaderDemo(HINSTANCE hinstance);
 
 private:
-	static const uint kMaxMaterialsPerFrame = 20;
+	static const uint kMaxMaterialsPerFrame = 3000;
 
 	Common::Vector2 m_mouseLastPos;
 	Common::Camera m_camera;
@@ -207,9 +226,9 @@ private:
 	void RenderHUD();
 
 	void SetForwardPixelShaderFrameConstants();
-	void SetForwardPixelShaderObjectConstants(const Common::BlinnPhongMaterial &material);
+	void SetForwardPixelShaderObjectConstants(const Common::BlinnPhongMaterial &material, uint textureFlags);
 	void SetGBufferVertexShaderConstants(DirectX::XMMATRIX &worldMatrix, DirectX::XMMATRIX &worldViewProjMatrix);
-	void SetGBufferPixelShaderConstants(uint materialIndex);
+	void SetGBufferPixelShaderConstants(uint materialIndex, uint textureFlags);
 	void SetNoCullFinalGatherShaderConstants(DirectX::XMMATRIX &projMatrix, DirectX::XMMATRIX &invViewProjMatrix);
 
 	/** Maps the point light StructuredBuffer and the spot light Structured buffer to the pixel shader */

@@ -9,6 +9,8 @@
 
 #include "common/typedefs.h"
 
+#include "common/materials.h"
+
 #include "DirectXMath.h"
 #include <vector>
 
@@ -41,8 +43,22 @@ public:
 		uint VertexStart;
 		uint VertexCount;
 
-		uint FaceStart;
-		uint FaceCount;
+		uint IndexStart;
+		uint IndexCount;
+
+		DirectX::XMFLOAT4 Ambient; // w = SpecularIntensity
+		DirectX::XMFLOAT4 Diffuse;
+		DirectX::XMFLOAT4 Specular; // w = SpecPower
+
+		std::wstring DiffuseMapFile;
+		std::wstring AmbientMapFile;
+		std::wstring SpecularColorMapFile;
+		std::wstring SpecularHighlightMapFile;
+		std::wstring AlphaMapFile;
+		std::wstring BumpMapFile;
+
+		DirectX::XMFLOAT3 AABBMin;
+		DirectX::XMFLOAT3 AABBMax;
 	};
 
 	/**
@@ -113,7 +129,7 @@ public:
 	 * @param meshData    Pointer to the MeshData object that will be filled with the quad data
 	 */
 	static void CreateFullscreenQuad(MeshData &meshData);
-	static bool LoadFromOBJ(const wchar *fileName, MeshData *meshData, std::vector<MeshSubset> *meshSubsets, bool fileIsRightHanded = false);
+	static bool LoadFromOBJ(const wchar *fileName, MeshData *meshData, std::vector<MeshSubset> *meshSubsets, bool calculateAABB = false, bool fileIsRightHanded = false, bool flipFaces = false);
 };
 
 } // End of namespace Common

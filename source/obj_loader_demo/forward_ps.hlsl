@@ -19,6 +19,7 @@ cbuffer cbPerFrame : register(b0) {
 
 cbuffer cbPerObject : register(b1) {
 	BlinnPhongMaterial gMaterial;
+	uint gTextureFlags;
 };
 
 Texture2D gDiffuseTexture : register(t0);

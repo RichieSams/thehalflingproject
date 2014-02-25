@@ -109,17 +109,17 @@ void ObjLoaderDemo::ForwardRenderingPass() {
 	}
 
 	for (uint i = 0; i < m_models.size(); ++i) {
-		m_frameMaterialList.push_back(m_models[i].GetSubsetMaterial(0));
-
 		DirectX::XMMATRIX worldViewProjection = DirectX::XMMatrixTranspose(worldMatrix * viewProj);
 
 		// GBuffer pass and Forward pass share the same Vertex cbPerFrame signature
 		SetGBufferVertexShaderConstants(DirectX::XMMatrixTranspose(worldMatrix), worldViewProjection);
 
-		SetForwardPixelShaderObjectConstants(m_models[i].GetSubsetMaterial(0));
+		for (uint j = 0; j < m_models[i].GetSubsetCount(); ++j) {
+			SetForwardPixelShaderObjectConstants(m_models[i].GetSubsetMaterial(j), m_models[0].GetSubsetTextureFlags(j));
 
-		// Draw the models
-		m_models[i].DrawSubset(m_immediateContext);
+			// Draw the models
+			m_models[i].DrawSubset(m_immediateContext, j);
+		}
 	}
 
 	// Cleanup (aka make the runtime happy)
@@ -149,7 +149,7 @@ void ObjLoaderDemo::SetForwardPixelShaderFrameConstants() {
 	m_immediateContext->PSSetConstantBuffers(0, 1, &m_forwardPixelShaderFrameConstantsBuffer);
 }
 
-void ObjLoaderDemo::SetForwardPixelShaderObjectConstants(const Common::BlinnPhongMaterial &material) {
+void ObjLoaderDemo::SetForwardPixelShaderObjectConstants(const Common::BlinnPhongMaterial &material, uint textureFlags) {
 	// Fill in object constants
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 
@@ -158,6 +158,7 @@ void ObjLoaderDemo::SetForwardPixelShaderObjectConstants(const Common::BlinnPhon
 
 	ForwardPixelShaderObjectConstants *pixelShaderObjectConstants = static_cast<ForwardPixelShaderObjectConstants *>(mappedResource.pData);
 	pixelShaderObjectConstants->Material = material;
+	pixelShaderObjectConstants->TextureFlags = textureFlags;
 
 	m_immediateContext->Unmap(m_forwardPixelShaderObjectConstantsBuffer, 0);
 	m_immediateContext->PSSetConstantBuffers(1, 1, &m_forwardPixelShaderObjectConstantsBuffer);
@@ -202,15 +203,19 @@ void ObjLoaderDemo::NoCullDeferredRenderingPass() {
 	DirectX::XMMATRIX viewProj = viewMatrix * projectionMatrix;
 
 	for (uint i = 0; i < m_models.size(); ++i) {
-		m_frameMaterialList.push_back(m_models[i].GetSubsetMaterial(0));
-
 		DirectX::XMMATRIX worldViewProjection = DirectX::XMMatrixTranspose(worldMatrix * viewProj);
 
+		// GBuffer pass and Forward pass share the same Vertex cbPerFrame signature
 		SetGBufferVertexShaderConstants(DirectX::XMMatrixTranspose(worldMatrix), worldViewProjection);
-		SetGBufferPixelShaderConstants(m_frameMaterialList.size() - 1);
 
-		// Draw the models
-		m_models[i].DrawSubset(m_immediateContext);
+		for (uint j = 0; j < m_models[i].GetSubsetCount(); ++j) {
+			m_frameMaterialList.push_back(m_models[i].GetSubsetMaterial(j));
+
+			SetGBufferPixelShaderConstants(m_frameMaterialList.size() - 1, m_models[0].GetSubsetTextureFlags(j));
+
+			// Draw the models
+			m_models[i].DrawSubset(m_immediateContext, j);
+		}
 	}
 
 	// Cleanup (aka make the runtime happy)
@@ -282,7 +287,7 @@ void ObjLoaderDemo::SetGBufferVertexShaderConstants(DirectX::XMMATRIX &worldMatr
 	m_immediateContext->VSSetConstantBuffers(1, 1, &m_gBufferVertexShaderObjectConstantsBuffer);
 }
 
-void ObjLoaderDemo::SetGBufferPixelShaderConstants(uint materialIndex) {
+void ObjLoaderDemo::SetGBufferPixelShaderConstants(uint materialIndex, uint textureFlags) {
 	// Fill in object constants
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 
@@ -291,6 +296,7 @@ void ObjLoaderDemo::SetGBufferPixelShaderConstants(uint materialIndex) {
 
 	GBufferPixelShaderObjectConstants *pixelShaderObjectConstants = static_cast<GBufferPixelShaderObjectConstants *>(mappedResource.pData);
 	pixelShaderObjectConstants->MaterialIndex = materialIndex;
+	pixelShaderObjectConstants->TextureFlags = textureFlags;
 
 	m_immediateContext->Unmap(m_gBufferPixelShaderObjectConstantsBuffer, 0);
 	m_immediateContext->PSSetConstantBuffers(1, 1, &m_gBufferPixelShaderObjectConstantsBuffer);

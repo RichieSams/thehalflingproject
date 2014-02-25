@@ -75,7 +75,7 @@ void ObjLoaderDemo::InitTweakBar() {
 void LoadScene(std::atomic<bool> *sceneIsLoaded, std::vector<SceneLoaderModel> *sceneModelList) {
 	Common::GeometryGenerator::MeshData meshData;
 	std::vector<Common::GeometryGenerator::MeshSubset> meshSubsets;
-	Common::GeometryGenerator::LoadFromOBJ(L"sponza.obj", &meshData, &meshSubsets);
+	Common::GeometryGenerator::LoadFromOBJ(L"artStudio.obj", &meshData, &meshSubsets, true);
 
 	uint vertexCount = meshData.Vertices.size();
 	uint indexCount = meshData.Indices.size();
@@ -94,17 +94,22 @@ void LoadScene(std::atomic<bool> *sceneIsLoaded, std::vector<SceneLoaderModel> *
 	}
 
 	// Create subsets
-	Common::ModelSubset *subsets = new Common::ModelSubset[subsetCount];
+	SceneLoaderModelSubset *subsets = new SceneLoaderModelSubset[subsetCount];
 
 	for (uint i = 0; i < subsetCount; ++i) {
-		subsets[i].FaceCount = meshSubsets[i].FaceCount;
-		subsets[i].FaceStart = meshSubsets[i].FaceStart;
+		subsets[i].IndexCount = meshSubsets[i].IndexCount;
+		subsets[i].IndexStart = meshSubsets[i].IndexStart;
 		subsets[i].VertexCount = meshSubsets[i].VertexCount;
 		subsets[i].VertexStart = meshSubsets[i].VertexStart;
-		subsets[i].Material = Common::BlinnPhongMaterial {DirectX::XMFLOAT4(0.2f, 0.2f, 0.2f, 0.0f),
-		                                                  DirectX::XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f),
-		                                                  DirectX::XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f)};
-		subsets[i].SRV = nullptr;
+		subsets[i].Ambient = meshSubsets[i].Ambient;
+		subsets[i].Diffuse = meshSubsets[i].Diffuse,
+		subsets[i].Specular = meshSubsets[i].Specular;
+		subsets[i].DiffuseMapFile = meshSubsets[i].DiffuseMapFile;
+		subsets[i].AmbientMapFile = meshSubsets[i].AmbientMapFile;
+		subsets[i].SpecularColorMapFile = meshSubsets[i].SpecularColorMapFile;
+		subsets[i].SpecularHighlightMapFile = meshSubsets[i].SpecularHighlightMapFile;
+		subsets[i].AlphaMapFile = meshSubsets[i].AlphaMapFile;
+		subsets[i].BumpMapFile = meshSubsets[i].BumpMapFile;
 	}
 
 	sceneModelList->push_back({vertices, indices, subsets, vertexCount, indexCount, subsetCount});
@@ -118,7 +123,28 @@ void ObjLoaderDemo::SetupScene() {
 
 		model->CreateVertexBuffer(m_device, iter->Vertices, iter->VertexCount);
 		model->CreateIndexBuffer(m_device, iter->Indices, iter->IndexCount);
-		model->CreateSubsets(iter->Subsets, iter->SubsetCount);
+
+		Common::ModelSubset *modelSubsets = new Common::ModelSubset[iter->SubsetCount];
+		// Convert from LoaderModelSubsets to Common::ModelSubsets
+		for (uint i = 0; i < iter->SubsetCount; ++i) {
+			modelSubsets[i].IndexStart = iter->Subsets[i].IndexStart;
+			modelSubsets[i].IndexCount = iter->Subsets[i].IndexCount;
+			modelSubsets[i].VertexStart = iter->Subsets[i].VertexStart;
+			modelSubsets[i].VertexCount = iter->Subsets[i].VertexCount;
+			modelSubsets[i].Material.Ambient = iter->Subsets[i].Ambient;
+			modelSubsets[i].Material.Diffuse = iter->Subsets[i].Diffuse;
+			modelSubsets[i].Material.Specular = iter->Subsets[i].Diffuse;
+
+			modelSubsets[i].TextureFlags = 0;
+			if (!iter->Subsets[i].DiffuseMapFile.empty()) {
+				modelSubsets[i].DiffuseSRV = m_textureManager.GetSRVFromFile(m_device, m_immediateContext, iter->Subsets[i].DiffuseMapFile, D3D11_USAGE_IMMUTABLE);
+				modelSubsets[i].TextureFlags |= Common::TextureFlags::DIFFUSE;
+			}
+		}
+
+		delete[] iter->Subsets;
+
+		model->CreateSubsets(modelSubsets, iter->SubsetCount);
 	}
 
 	// Cleanup

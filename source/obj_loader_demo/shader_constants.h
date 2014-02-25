@@ -28,6 +28,7 @@ struct ForwardPixelShaderFrameConstants {
 
 struct ForwardPixelShaderObjectConstants {
 	Common::BlinnPhongMaterial Material;
+	uint TextureFlags;
 };
 
 
@@ -39,6 +40,7 @@ struct GBufferVertexShaderObjectConstants {
 
 struct GBufferPixelShaderObjectConstants {
 	uint MaterialIndex;
+	uint TextureFlags;
 };
 
 // No cull final gather pass

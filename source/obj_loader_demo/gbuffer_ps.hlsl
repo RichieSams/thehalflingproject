@@ -16,6 +16,7 @@ struct GBuffer {
 
 cbuffer cbPerObject : register(b1) {
 	uint gMaterialIndex;
+	uint gTextureFlags;
 };
 
 Texture2D gDiffuseTexture : register(t0);

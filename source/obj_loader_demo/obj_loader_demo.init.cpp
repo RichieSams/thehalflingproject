@@ -41,7 +41,7 @@ bool ObjLoaderDemo::Initialize(LPCTSTR mainWndCaption, uint32 screenWidth, uint3
 	m_courierNew10Font.Initialize(L"Courier New", 12, Common::SpriteFont::Regular, true, m_device);
 
 	// Initialize the console
-	m_console.Initialize(Common::Rect(20, 20, 500, 300), &m_spriteRenderer, &m_courierNew10Font);
+	m_console.Initialize(Common::Rect(20, m_clientHeight - 320, m_clientWidth - 20, m_clientHeight - 10), &m_spriteRenderer, &m_courierNew10Font);
 
 	m_blendStates.Initialize(m_device);
 	m_depthStencilStates.Initialize(m_device);

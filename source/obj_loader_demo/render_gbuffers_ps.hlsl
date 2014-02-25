@@ -14,9 +14,10 @@ cbuffer cbPerFrame : register(b0) {
 	uint gGBufferIndex;
 }
 
-Texture2DMS<float4> gGBufferAlbedoMaterialIndex    : register(t0);
-Texture2DMS<float2> gGBufferNormal                 : register(t1);
-Texture2DMS<float> gGBufferDepth                   : register(t2);
+Texture2DMS<float3> gGBufferAlbedo       : register(t0);
+Texture2DMS<float2> gGBufferNormal       : register(t1);
+Texture2DMS<uint> gGBufferMaterialId    : register(t2);
+Texture2DMS<float> gGBufferDepth         : register(t3);
 
 float4 RenderGBuffersPS(TransformedFullScreenTrianglePixelIn input) : SV_TARGET {
 	float2 gbufferDim;
@@ -28,20 +29,13 @@ float4 RenderGBuffersPS(TransformedFullScreenTrianglePixelIn input) : SV_TARGET 
 	[branch]
 	if (gGBufferIndex == 0) {
 		// Render albedo color
-		float4 albedoMaterialIndex = gGBufferAlbedoMaterialIndex.Load(pixelCoord, 0).xyzw;
-
-		return float4(albedoMaterialIndex.xyz, 1.0f);
+		return float4(gGBufferAlbedo.Load(pixelCoord, 0).xyz, 1.0f);
 	} else if (gGBufferIndex == 1) {
 		// Render material id
-		float4 albedoMaterialIndex = gGBufferAlbedoMaterialIndex.Load(pixelCoord, 0).xyzw;
-		uint materialId = (uint)albedoMaterialIndex.w;
+		uint materialId = gGBufferMaterialId.Load(pixelCoord, 0).x;
 
-		// Interpret the material id as an 8-bit color
-		uint red = materialId & 0xFFF00000;
-		uint green = materialId & 0x000FFF00;
-		uint blue = materialId & 0x000000FF;
-
-		return float4((float)red / 8.0f, (float)green / 8.0f, (float)blue / 4.0f, 1.0f);
+		float colorValue = (float)materialId / 1000.0f;
+		return float4(colorValue, colorValue, colorValue, 1.0f);
 	} else if (gGBufferIndex == 2) {
 		// Render Spherical Coord Normal
 		return float4(gGBufferNormal.Load(pixelCoord, 0).xy, 0.0f, 1.0f);

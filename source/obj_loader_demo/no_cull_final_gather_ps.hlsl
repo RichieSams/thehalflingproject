@@ -18,14 +18,15 @@ cbuffer cbPerFrame : register(b0) {
 	uint gNumSpotLightsToDraw : packoffset(c13.y);
 }
 
-Texture2DMS<float4> gGBufferAlbedoMaterialIndex    : register(t0);
-Texture2DMS<float2> gGBufferNormal                 : register(t1);
-Texture2DMS<float> gGBufferDepth                   : register(t2);
+Texture2DMS<float3> gGBufferAlbedo       : register(t0);
+Texture2DMS<float2> gGBufferNormal       : register(t1);
+Texture2DMS<uint> gGBufferMaterialId    : register(t2);
+Texture2DMS<float> gGBufferDepth         : register(t3);
 
-StructuredBuffer<PointLight> gPointLights : register(t3);
-StructuredBuffer<SpotLight> gSpotLights : register(t4);
+StructuredBuffer<PointLight> gPointLights : register(t4);
+StructuredBuffer<SpotLight> gSpotLights : register(t5);
 
-StructuredBuffer<BlinnPhongMaterial> gMaterialList : register(t5);
+StructuredBuffer<BlinnPhongMaterial> gMaterialList : register(t6);
 
 float4 NoCullFinalGatherPS(FullScreenTrianglePixelIn input) : SV_TARGET {
 	float2 pixelCoord = input.positionClip.xy;
@@ -44,9 +45,8 @@ float4 NoCullFinalGatherPS(FullScreenTrianglePixelIn input) : SV_TARGET {
 	float3 positionWS = PositionFromDepth(zw, pixelCoord, gbufferDim, gInvViewProjection);
 
 	// Sample from the Albedo-Specular Power GBuffer
-	float4 albedoMaterialIndex = gGBufferAlbedoMaterialIndex.Load(pixelCoord, 0).xyzw;
-	float4 albedo = float4(albedoMaterialIndex.xyz, 1.0f);
-	BlinnPhongMaterial material = gMaterialList[(uint)albedoMaterialIndex.w];
+	float4 albedo = float4(gGBufferAlbedo.Load(pixelCoord, 0).xyz, 1.0f);
+	BlinnPhongMaterial material = gMaterialList[gGBufferMaterialId.Load(pixelCoord, 0).x];
 
 	// Sample from the Normal-Specular Intensity GBuffer
 	float2 normalSphericalCoords = gGBufferNormal.Load(pixelCoord, 0).xy;

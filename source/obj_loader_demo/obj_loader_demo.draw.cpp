@@ -169,11 +169,11 @@ void ObjLoaderDemo::NoCullDeferredRenderingPass() {
 	m_frameMaterialList.clear();
 
 	// Bind the gbufferRTVs and depth/stencil view to the pipeline.
-	m_immediateContext->OMSetRenderTargets(2, &m_gBufferRTVs[0], m_depthStencilBuffer->GetDepthStencil());
+	m_immediateContext->OMSetRenderTargets(3, &m_gBufferRTVs[0], m_depthStencilBuffer->GetDepthStencil());
 
 	// Clear the Render Targets and DepthStencil
-	for (auto gbufferRTV : m_gBufferRTVs) {
-		m_immediateContext->ClearRenderTargetView(gbufferRTV, DirectX::Colors::Black);
+	for (auto iter = m_gBufferRTVs.begin(); iter != m_gBufferRTVs.end(); ++iter) {
+		m_immediateContext->ClearRenderTargetView((*iter), DirectX::Colors::Black);
 	}
 	m_immediateContext->ClearDepthStencilView(m_depthStencilBuffer->GetDepthStencil(), D3D11_CLEAR_DEPTH, 0.0f, 0);
 
@@ -239,18 +239,18 @@ void ObjLoaderDemo::NoCullDeferredRenderingPass() {
 	DirectX::XMMATRIX invViewProj = DirectX::XMMatrixInverse(nullptr, viewProj);
 	SetNoCullFinalGatherShaderConstants(DirectX::XMMatrixTranspose(projectionMatrix), DirectX::XMMatrixTranspose(invViewProj));
 
-	m_immediateContext->PSSetShaderResources(0, 3, &m_gBufferSRVs.front());
+	m_immediateContext->PSSetShaderResources(0, 4, &m_gBufferSRVs.front());
 
 	// Set light buffers
 	SetLightBuffers();
 
 	if (m_pointLights.size() > 0) {
 		ID3D11ShaderResourceView *srv = m_pointLightBuffer->GetShaderResource();
-		m_immediateContext->PSSetShaderResources(3, 1, &srv);
+		m_immediateContext->PSSetShaderResources(4, 1, &srv);
 	}
 	if (m_spotLights.size() > 0) {
 		ID3D11ShaderResourceView *srv = m_spotLightBuffer->GetShaderResource();
-		m_immediateContext->PSSetShaderResources(4, 1, &srv);
+		m_immediateContext->PSSetShaderResources(5, 1, &srv);
 	}
 
 	// Set material list
@@ -267,9 +267,9 @@ void ObjLoaderDemo::NoCullDeferredRenderingPass() {
 	m_immediateContext->GSSetShader(0, 0, 0);
 	m_immediateContext->PSSetShader(0, 0, 0);
 	m_immediateContext->OMSetRenderTargets(0, 0, 0);
-	ID3D11ShaderResourceView *nullSRV[6] = {0, 0, 0, 0, 0, 0};
-	m_immediateContext->VSSetShaderResources(0, 6, nullSRV);
-	m_immediateContext->PSSetShaderResources(0, 6, nullSRV);
+	ID3D11ShaderResourceView *nullSRV[7] = {0, 0, 0, 0, 0, 0};
+	m_immediateContext->VSSetShaderResources(0, 7, nullSRV);
+	m_immediateContext->PSSetShaderResources(0, 7, nullSRV);
 }
 
 void ObjLoaderDemo::SetGBufferVertexShaderConstants(DirectX::XMMATRIX &worldMatrix, DirectX::XMMATRIX &worldViewProjMatrix) {
@@ -354,7 +354,7 @@ void ObjLoaderDemo::SetMaterialList() {
 	m_frameMaterialListBuffer->Unmap(m_immediateContext);
 
 	ID3D11ShaderResourceView *view = m_frameMaterialListBuffer->GetShaderResource();
-	m_immediateContext->PSSetShaderResources(5, 1, &view);
+	m_immediateContext->PSSetShaderResources(6, 1, &view);
 }
 
 void ObjLoaderDemo::RenderDebugGeometry() {
@@ -433,7 +433,7 @@ void ObjLoaderDemo::RenderDebugGeometry() {
 		m_immediateContext->IASetVertexBuffers(0, 0, 0, 0, 0);
 		m_immediateContext->IASetIndexBuffer(0, DXGI_FORMAT_R32_UINT, 0);
 
-		m_immediateContext->PSSetShaderResources(0, 3, &m_gBufferSRVs.front());
+		m_immediateContext->PSSetShaderResources(0, 4, &m_gBufferSRVs.front());
 
 		DirectX::XMFLOAT2 translations[6] = {DirectX::XMFLOAT2(-1.0f, -1.0f),
 		                                     DirectX::XMFLOAT2(-0.5f, -1.0f),
@@ -503,9 +503,9 @@ void ObjLoaderDemo::RenderDebugGeometry() {
 	m_immediateContext->GSSetShader(0, 0, 0);
 	m_immediateContext->PSSetShader(0, 0, 0);
 	m_immediateContext->OMSetRenderTargets(0, 0, 0);
-	ID3D11ShaderResourceView *nullSRV[6] = {0, 0, 0, 0, 0, 0};
-	m_immediateContext->VSSetShaderResources(0, 6, nullSRV);
-	m_immediateContext->PSSetShaderResources(0, 6, nullSRV);
+	ID3D11ShaderResourceView *nullSRV[7] = {0, 0, 0, 0, 0, 0};
+	m_immediateContext->VSSetShaderResources(0, 7, nullSRV);
+	m_immediateContext->PSSetShaderResources(0, 7, nullSRV);
 }
 
 void ObjLoaderDemo::RenderHUD() {

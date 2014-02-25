@@ -16,16 +16,34 @@
 
 namespace Common {
 
+namespace TextureFlags {
+
+enum Flags {
+	DIFFUSE = 0x01,
+	SPEC_COLOR = 0x02,
+	SPEC_HIGHLIGHT = 0x04,
+	ALPHA_MAP = 0x08,
+	BUMP_MAP = 0x10
+};
+
+} // End of namespace TextureFlags
+
 struct ModelSubset {
 	uint VertexStart;
 	uint VertexCount;
 
-	uint FaceStart;
-	uint FaceCount;
+	uint IndexStart;
+	uint IndexCount;
 
 	Common::BlinnPhongMaterial Material;
 
-	ID3D11ShaderResourceView *SRV;
+	ID3D11ShaderResourceView *DiffuseSRV;
+	ID3D11ShaderResourceView *SpecularColorSRV;
+	ID3D11ShaderResourceView *SpecularHighlightSRV;
+	ID3D11ShaderResourceView *AlphaSRV;
+	ID3D11ShaderResourceView *BumpSRV;
+
+	uint TextureFlags;
 };
 
 struct DefaultInstanceType {
@@ -70,7 +88,10 @@ private:
 	DisposeAfterUse::Flag m_disposeSubsetArray;
 
 public:
+	inline uint GetSubsetCount() const { return m_subsetCount; }
 	const Common::BlinnPhongMaterial &GetSubsetMaterial(uint subsetIndex) const;
+	uint GetSubsetTextureFlags(uint subsetIndex) const;
+
 	void CreateVertexBuffer(ID3D11Device *device, Vertex *vertices, uint vertexCount, DisposeAfterUse::Flag disposeAfterUse = DisposeAfterUse::YES);
 	void CreateIndexBuffer(ID3D11Device *device, uint *indices, uint indexCount, DisposeAfterUse::Flag disposeAfterUse = DisposeAfterUse::YES);
 	void CreateInstanceBuffer(ID3D11Device *device, uint maxInstanceCount);
@@ -87,6 +108,15 @@ template <typename Vertex, typename InstanceType>
 const Common::BlinnPhongMaterial &Model<Vertex, InstanceType>::GetSubsetMaterial(uint subsetIndex) const {
 	if (subsetIndex < m_subsetCount) {
 		return m_subsets[subsetIndex].Material;
+	}
+
+	throw std::out_of_range("subsetIndex out of range");
+}
+
+template <typename Vertex, typename InstanceType>
+uint Model<Vertex, InstanceType>::GetSubsetTextureFlags(uint subsetIndex) const {
+	if (subsetIndex < m_subsetCount) {
+		return m_subsets[subsetIndex].TextureFlags;
 	}
 
 	throw std::out_of_range("subsetIndex out of range");
@@ -182,16 +212,16 @@ void Common::Model<Vertex, InstanceType>::DrawSubset(ID3D11DeviceContext *device
 
 	if (subsetId == -1) {
 		for (uint i = 0; i < m_subsetCount; ++i) {
-			if (m_subsets[i].SRV) {
-				deviceContext->PSSetShaderResources(0, 1, &m_subsets[i].SRV);
+			if (m_subsets[i].TextureFlags & TextureFlags::DIFFUSE == TextureFlags::DIFFUSE) {
+				deviceContext->PSSetShaderResources(0, 1, &m_subsets[i].DiffuseSRV);
 			}
-			deviceContext->DrawIndexed(m_subsets[i].FaceCount * 3, m_subsets[i].FaceStart * 3, 0);
+			deviceContext->DrawIndexed(m_subsets[i].IndexCount, m_subsets[i].IndexStart, 0);
 		}
 	} else {
-		if (m_subsets[subsetId].SRV) {
-			deviceContext->PSSetShaderResources(0, 1, &m_subsets[subsetId].SRV);
+		if (m_subsets[subsetId].TextureFlags & TextureFlags::DIFFUSE == TextureFlags::DIFFUSE) {
+			deviceContext->PSSetShaderResources(0, 1, &m_subsets[subsetId].DiffuseSRV);
 		}
-		deviceContext->DrawIndexed(m_subsets[subsetId].FaceCount * 3, m_subsets[subsetId].FaceStart * 3, 0);
+		deviceContext->DrawIndexed(m_subsets[subsetId].IndexCount, m_subsets[subsetId].IndexStart, 0);
 	}
 }
 
@@ -208,16 +238,16 @@ void Model<Vertex, InstanceType>::DrawInstancedSubset(ID3D11DeviceContext *devic
 
 	if (subsetId == -1) {
 		for (uint i = 0; i < m_subsetCount; ++i) {
-			if (m_subsets[i].SRV) {
-				deviceContext->PSSetShaderResources(0, 1, &m_subsets[i].SRV);
+			if (m_subsets[i].TextureFlags & TextureFlags::DIFFUSE == TextureFlags::DIFFUSE) {
+				deviceContext->PSSetShaderResources(0, 1, &m_subsets[i].DiffuseSRV);
 			}
-			deviceContext->DrawIndexedInstanced(indexCountPerInstanceuint, instanceCount, m_subsets[i].FaceStart * 3, 0, 0);
+			deviceContext->DrawIndexedInstanced(indexCountPerInstance, instanceCount, m_subsets[i].IndexStart, 0, 0);
 		}
 	} else {
-		if (m_subsets[subsetId].SRV) {
-			deviceContext->PSSetShaderResources(0, 1, &m_subsets[subsetId].SRV);
+		if (m_subsets[subsetId].TextureFlags & TextureFlags::DIFFUSE == TextureFlags::DIFFUSE) {
+			deviceContext->PSSetShaderResources(0, 1, &m_subsets[subsetId].DiffuseSRV);
 		}
-		deviceContext->DrawIndexedInstanced(indexCountPerInstanceuint, instanceCount, m_subsets[subsetId].FaceStart * 3, 0, 0);
+		deviceContext->DrawIndexedInstanced(indexCountPerInstance, instanceCount, m_subsets[subsetId].IndexStart, 0, 0);
 	}
 }
 

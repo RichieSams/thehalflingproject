@@ -101,7 +101,7 @@ public:
 	void UnMapInstanceBuffer(ID3D11DeviceContext *deviceContext);
 
 	void DrawSubset(ID3D11DeviceContext *deviceContext, int subsetId = -1);
-	void DrawInstancedSubset(ID3D11DeviceContext *deviceContext, uint indexCountPerInstanceuint, uint instanceCount, uint subsetId = -1);
+	void DrawInstancedSubset(ID3D11DeviceContext *deviceContext, uint indexCountPerInstance, uint instanceCount, uint subsetId = -1);
 };
 
 template <typename Vertex, typename InstanceType>
@@ -226,7 +226,7 @@ void Common::Model<Vertex, InstanceType>::DrawSubset(ID3D11DeviceContext *device
 }
 
 template <typename Vertex, typename InstanceType>
-void Model<Vertex, InstanceType>::DrawInstancedSubset(ID3D11DeviceContext *deviceContext, uint indexCountPerInstanceuint, uint instanceCount, uint subsetId) {
+void Model<Vertex, InstanceType>::DrawInstancedSubset(ID3D11DeviceContext *deviceContext, uint indexCountPerInstance, uint instanceCount, uint subsetId) {
 	assert(m_instanceBuffer);
 	assert(instanceCount <= m_maxInstanceCount);
 

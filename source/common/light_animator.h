@@ -16,7 +16,7 @@ namespace Common {
 
 class LightAnimatorBase {
 protected:
-	LightAnimatorBase(DirectX::XMFLOAT3 velocity, DirectX::XMFLOAT3 negativeBounds, DirectX::XMFLOAT3 positiveBounds)
+	LightAnimatorBase(DirectX::XMFLOAT3 &velocity, const DirectX::XMFLOAT3 &negativeBounds, const DirectX::XMFLOAT3 &positiveBounds)
 		: m_velocity(velocity), m_negativeBounds(negativeBounds), m_positiveBounds(positiveBounds) {}
 
 protected:
@@ -29,7 +29,7 @@ protected:
 
 class PointLightAnimator : public LightAnimatorBase {
 public:
-	PointLightAnimator(DirectX::XMFLOAT3 &velocity, DirectX::XMFLOAT3 &negativeBounds, DirectX::XMFLOAT3 &positiveBounds)
+	PointLightAnimator(DirectX::XMFLOAT3 &velocity, const DirectX::XMFLOAT3 &negativeBounds, const DirectX::XMFLOAT3 &positiveBounds)
 		: LightAnimatorBase(velocity, negativeBounds, positiveBounds) {}
 
 public:
@@ -39,7 +39,7 @@ public:
 
 class SpotLightAnimator : public LightAnimatorBase {
 public:
-	SpotLightAnimator(DirectX::XMFLOAT3 &velocity, DirectX::XMFLOAT3 &angularVelocity, DirectX::XMFLOAT3 &negativeBounds, DirectX::XMFLOAT3 &positiveBounds)
+	SpotLightAnimator(DirectX::XMFLOAT3 &velocity, DirectX::XMFLOAT3 &angularVelocity, const DirectX::XMFLOAT3 &negativeBounds, const DirectX::XMFLOAT3 &positiveBounds)
 		: LightAnimatorBase(velocity, negativeBounds, positiveBounds),
 		  m_angularVelocity(angularVelocity) {
 	}

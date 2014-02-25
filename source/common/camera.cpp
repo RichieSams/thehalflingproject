@@ -6,6 +6,8 @@
 
 #include "common/camera.h"
 
+#include <algorithm>
+
 
 namespace Common {
 
@@ -32,6 +34,10 @@ void Camera::MoveCamera(float dTheta, float dPhi, float dRadius) {
 	} else {
 		m_up = -1;
 	}
+
+	// Don't let the radius go negative
+	// We can't clamp to zero, or the camera math gets weird
+	m_radius = std::max(0.01f, m_radius);
 }
 
 } // End of namespace Common

@@ -135,7 +135,7 @@
     <LinkIncremental>false</LinkIncremental>
     <OutDir>..\..\build\$(Configuration)\$(ProjectName)\</OutDir>
     <IntDir>..\..\obj\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>../;../libs/AntTweakBar/include;../libs/DirectXTK/include;$(IncludePath)</IncludePath>
+    <IncludePath>../;../libs/AntTweakBar/include;../libs/DirectXTK/include;../libs/DirectXTex/DirectXTex;$(IncludePath)</IncludePath>
     <LibraryPath>../libs/AntTweakBar/lib;../libs/DirectXTK/lib/Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

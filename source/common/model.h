@@ -212,13 +212,13 @@ void Common::Model<Vertex, InstanceType>::DrawSubset(ID3D11DeviceContext *device
 
 	if (subsetId == -1) {
 		for (uint i = 0; i < m_subsetCount; ++i) {
-			if (m_subsets[i].TextureFlags & TextureFlags::DIFFUSE == TextureFlags::DIFFUSE) {
+			if ((m_subsets[i].TextureFlags & TextureFlags::DIFFUSE) == TextureFlags::DIFFUSE) {
 				deviceContext->PSSetShaderResources(0, 1, &m_subsets[i].DiffuseSRV);
 			}
 			deviceContext->DrawIndexed(m_subsets[i].IndexCount, m_subsets[i].IndexStart, 0);
 		}
 	} else {
-		if (m_subsets[subsetId].TextureFlags & TextureFlags::DIFFUSE == TextureFlags::DIFFUSE) {
+		if ((m_subsets[subsetId].TextureFlags & TextureFlags::DIFFUSE) == TextureFlags::DIFFUSE) {
 			deviceContext->PSSetShaderResources(0, 1, &m_subsets[subsetId].DiffuseSRV);
 		}
 		deviceContext->DrawIndexed(m_subsets[subsetId].IndexCount, m_subsets[subsetId].IndexStart, 0);
@@ -238,13 +238,13 @@ void Model<Vertex, InstanceType>::DrawInstancedSubset(ID3D11DeviceContext *devic
 
 	if (subsetId == -1) {
 		for (uint i = 0; i < m_subsetCount; ++i) {
-			if (m_subsets[i].TextureFlags & TextureFlags::DIFFUSE == TextureFlags::DIFFUSE) {
+			if ((m_subsets[i].TextureFlags & TextureFlags::DIFFUSE) == TextureFlags::DIFFUSE) {
 				deviceContext->PSSetShaderResources(0, 1, &m_subsets[i].DiffuseSRV);
 			}
 			deviceContext->DrawIndexedInstanced(indexCountPerInstance, instanceCount, m_subsets[i].IndexStart, 0, 0);
 		}
 	} else {
-		if (m_subsets[subsetId].TextureFlags & TextureFlags::DIFFUSE == TextureFlags::DIFFUSE) {
+		if ((m_subsets[subsetId].TextureFlags & TextureFlags::DIFFUSE) == TextureFlags::DIFFUSE) {
 			deviceContext->PSSetShaderResources(0, 1, &m_subsets[subsetId].DiffuseSRV);
 		}
 		deviceContext->DrawIndexedInstanced(indexCountPerInstance, instanceCount, m_subsets[subsetId].IndexStart, 0, 0);

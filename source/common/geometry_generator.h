@@ -21,7 +21,7 @@ class GeometryGenerator {
 public:
 	struct Vertex {
 	public:
-		Vertex() {}
+		Vertex() { memset(this, 0, sizeof(Vertex)); }
 		Vertex(const DirectX::XMFLOAT3 &pos, const DirectX::XMFLOAT3 &normal, const DirectX::XMFLOAT2 &uv)
 			: Position(pos), Normal(normal), TexCoord(uv) {}
 		Vertex(float px, float py, float pz,

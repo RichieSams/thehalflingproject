@@ -249,22 +249,6 @@ void ObjLoaderDemo::BuildGeometryBuffers() {
 	m_debugCone.CreateInstanceBuffer(m_device, 1000);
 }
 
-float ObjLoaderDemo::GetHillHeight(float x, float z) const {
-	return 0.3f * ((z * sinf(0.1f * x)) + (x * cosf(0.1f * z)));
-}
-
-DirectX::XMFLOAT3 ObjLoaderDemo::GetHillNormal(float x, float z) const {
-	DirectX::XMFLOAT3 normal(
-	    -0.03f * z * cosf(0.1f * x) - 0.3f * cosf(0.1f * z),
-	    1.0f,
-	    0.3f * sinf(0.1f * x) + 0.03f * x * sinf(0.1f * z));
-
-	DirectX::XMVECTOR unitNormal = DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&normal));
-	DirectX::XMStoreFloat3(&normal, unitNormal);
-
-	return normal;
-}
-
 void ObjLoaderDemo::CreateLights(const DirectX::XMFLOAT3 &sceneSizeMin, const DirectX::XMFLOAT3 &sceneSizeMax) {
 	m_directionalLight.Ambient = DirectX::XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
 	m_directionalLight.Diffuse = DirectX::XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);

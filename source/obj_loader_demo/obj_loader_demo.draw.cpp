@@ -238,8 +238,9 @@ void ObjLoaderDemo::NoCullDeferredRenderingPass() {
 
 	m_immediateContext->RSSetState(m_rasterizerStates.NoCull());
 
-	DirectX::XMMATRIX invViewProj = DirectX::XMMatrixInverse(nullptr, viewProj);
-	SetNoCullFinalGatherShaderConstants(DirectX::XMMatrixTranspose(projectionMatrix), DirectX::XMMatrixTranspose(invViewProj));
+	DirectX::XMMATRIX projMatrix = DirectX::XMMatrixTranspose(projectionMatrix);
+	DirectX::XMMATRIX invViewProj = DirectX::XMMatrixTranspose(DirectX::XMMatrixInverse(nullptr, viewProj));
+	SetNoCullFinalGatherShaderConstants(projMatrix, invViewProj);
 
 	m_immediateContext->PSSetShaderResources(0, 4, &m_gBufferSRVs.front());
 

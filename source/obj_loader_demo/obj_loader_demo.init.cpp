@@ -53,7 +53,7 @@ bool ObjLoaderDemo::Initialize(LPCTSTR mainWndCaption, uint32 screenWidth, uint3
 }
 
 void ObjLoaderDemo::InitTweakBar() {
-	int success = TwInit(TW_DIRECT3D11, m_device);
+	TwInit(TW_DIRECT3D11, m_device);
 
 	m_settingsBar = TwNewBar("settings");
 	TwDefine(" settings label='Settings' size='325 350' position='480 20' valueswidth=120 movable=true resizable=false fontresizable=false contained=true iconified=true ");

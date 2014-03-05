@@ -97,7 +97,7 @@ public:
 	ObjLoaderDemo(HINSTANCE hinstance);
 
 private:
-	static const uint kMaxMaterialsPerFrame = 3000;
+	static const uint kMaxMaterialsPerFrame = 2000;
 
 	Common::Vector2 m_mouseLastPos;
 	Common::Camera m_camera;

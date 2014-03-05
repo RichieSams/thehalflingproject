@@ -88,6 +88,9 @@ private:
 	DisposeAfterUse::Flag m_disposeSubsetArray;
 
 public:
+	void *operator new(size_t size);
+	void operator delete(void *memory);
+
 	inline uint GetSubsetCount() const { return m_subsetCount; }
 	const Common::BlinnPhongMaterial &GetSubsetMaterial(uint subsetIndex) const;
 	uint GetSubsetTextureFlags(uint subsetIndex) const;
@@ -103,6 +106,16 @@ public:
 	void DrawSubset(ID3D11DeviceContext *deviceContext, int subsetId = -1);
 	void DrawInstancedSubset(ID3D11DeviceContext *deviceContext, uint indexCountPerInstance, uint instanceCount, uint subsetId = -1);
 };
+
+template <typename Vertex, typename InstanceType>
+void *Model<Vertex, InstanceType>::operator new(size_t size) {
+	return _aligned_malloc(size, 16);
+}
+
+template <typename Vertex, typename InstanceType>
+void Model<Vertex, InstanceType>::operator delete(void *memory) {
+	_aligned_free(memory);
+}
 
 template <typename Vertex, typename InstanceType>
 const Common::BlinnPhongMaterial &Model<Vertex, InstanceType>::GetSubsetMaterial(uint subsetIndex) const {

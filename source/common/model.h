@@ -61,6 +61,7 @@ public:
 		  m_subsets(nullptr),
 		  m_subsetCount(0),
 		  m_maxInstanceCount(0),
+		  m_worldTransform(DirectX::XMMatrixIdentity()),
 		  m_disposeSubsetArray(DisposeAfterUse::YES) {
 	}
 
@@ -85,6 +86,8 @@ private:
 
 	uint m_maxInstanceCount;
 
+	DirectX::XMMATRIX m_worldTransform;
+
 	DisposeAfterUse::Flag m_disposeSubsetArray;
 
 public:
@@ -94,6 +97,9 @@ public:
 	inline uint GetSubsetCount() const { return m_subsetCount; }
 	const Common::BlinnPhongMaterial &GetSubsetMaterial(uint subsetIndex) const;
 	uint GetSubsetTextureFlags(uint subsetIndex) const;
+
+	void SetWorldTransform(DirectX::XMMATRIX &worldTransform) { m_worldTransform = worldTransform; }
+	const DirectX::XMMATRIX &GetWorldTransform() { return m_worldTransform; }
 
 	void CreateVertexBuffer(ID3D11Device *device, Vertex *vertices, uint vertexCount, DisposeAfterUse::Flag disposeAfterUse = DisposeAfterUse::YES);
 	void CreateIndexBuffer(ID3D11Device *device, uint *indices, uint indexCount, DisposeAfterUse::Flag disposeAfterUse = DisposeAfterUse::YES);

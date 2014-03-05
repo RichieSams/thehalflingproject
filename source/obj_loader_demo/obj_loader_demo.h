@@ -66,6 +66,9 @@ struct SceneLoaderModelSubset {
 	std::wstring SpecularHighlightMapFile;
 	std::wstring AlphaMapFile;
 	std::wstring BumpMapFile;
+	
+	DirectX::XMFLOAT3 AABBMin;
+	DirectX::XMFLOAT3 AABBMax;
 };
 
 struct SceneLoaderModel {
@@ -110,6 +113,8 @@ private:
 	std::atomic<bool> m_sceneLoaded;
 	bool m_sceneIsSetup;
 	std::thread m_sceneLoaderThread;
+
+	float m_sceneScaleFactor;
 
 	Common::Model<DebugObjectVertex, DebugObjectInstance> m_debugSphere;
 	Common::Model<DebugObjectVertex, DebugObjectInstance> m_debugCone;
@@ -211,7 +216,7 @@ private:
 	void BuildGeometryBuffers();
 	inline float GetHillHeight(float x, float z) const;
 	inline DirectX::XMFLOAT3 GetHillNormal(float x, float z) const;
-	void CreateLights();
+	void CreateLights(const DirectX::XMFLOAT3 &sceneSizeMin, const DirectX::XMFLOAT3 &sceneSizeMax);
 
 	// Rendering methods
 	/** Renders the geometry using the ShadingType in m_shadingType */

@@ -11,6 +11,9 @@
 #include "common/geometry_generator.h"
 #include "common/math.h"
 
+#include <algorithm>
+#include <iostream>
+
 
 namespace ObjLoaderDemo {
 
@@ -113,6 +116,8 @@ void LoadScene(std::atomic<bool> *sceneIsLoaded, std::vector<SceneLoaderModel> *
 		subsets[i].SpecularHighlightMapFile = meshSubsets[i].SpecularHighlightMapFile;
 		subsets[i].AlphaMapFile = meshSubsets[i].AlphaMapFile;
 		subsets[i].BumpMapFile = meshSubsets[i].BumpMapFile;
+		subsets[i].AABBMin = meshSubsets[i].AABBMin;
+		subsets[i].AABBMax = meshSubsets[i].AABBMax;
 	}
 
 	sceneModelList->push_back({vertices, indices, subsets, vertexCount, indexCount, subsetCount});
@@ -120,6 +125,9 @@ void LoadScene(std::atomic<bool> *sceneIsLoaded, std::vector<SceneLoaderModel> *
 }
 
 void ObjLoaderDemo::SetupScene() {
+	DirectX::XMVECTOR sceneMinAABB = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+	DirectX::XMVECTOR sceneMaxAABB = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+
 	for (auto iter = m_sceneLoaderModels.begin(); iter != m_sceneLoaderModels.end(); ++iter) {
 		Common::Model<Vertex> *model = new Common::Model<Vertex>();
 
@@ -142,6 +150,9 @@ void ObjLoaderDemo::SetupScene() {
 				modelSubsets[i].DiffuseSRV = m_textureManager.GetSRVFromFile(m_device, m_immediateContext, iter->Subsets[i].DiffuseMapFile, D3D11_USAGE_IMMUTABLE);
 				modelSubsets[i].TextureFlags |= Common::TextureFlags::DIFFUSE;
 			}
+
+			sceneMinAABB = DirectX::XMVectorMin(sceneMinAABB, DirectX::XMLoadFloat3(&(iter->Subsets[i].AABBMin)));
+			sceneMaxAABB = DirectX::XMVectorMax(sceneMaxAABB, DirectX::XMLoadFloat3(&(iter->Subsets[i].AABBMax)));
 		}
 
 		delete[] iter->Subsets;
@@ -153,8 +164,27 @@ void ObjLoaderDemo::SetupScene() {
 
 	// Cleanup
 	m_sceneLoaderModels.clear();
-	CreateLights();
+
+	DirectX::XMFLOAT3 minAABB;
+	DirectX::XMFLOAT3 maxAABB;
+	DirectX::XMStoreFloat3(&minAABB, sceneMinAABB);
+	DirectX::XMStoreFloat3(&maxAABB, sceneMaxAABB);
+
+	float xRange = std::abs(maxAABB.x - minAABB.x);
+	float yRange = std::abs(maxAABB.y - minAABB.y);
+	float zRange = std::abs(maxAABB.z - minAABB.z);
+	m_sceneScaleFactor = 300.0f / std::min(std::min(xRange, yRange), zRange);
+
+	DirectX::XMStoreFloat3(&minAABB, DirectX::XMVectorScale(sceneMinAABB, m_sceneScaleFactor));
+	DirectX::XMStoreFloat3(&maxAABB, DirectX::XMVectorScale(sceneMaxAABB, m_sceneScaleFactor));
+	CreateLights(minAABB, maxAABB);
 	BuildGeometryBuffers();
+
+	DirectX::XMMATRIX scalingMatrix = DirectX::XMMatrixScaling(m_sceneScaleFactor, m_sceneScaleFactor, m_sceneScaleFactor);
+	for (auto iter = m_models.begin(); iter != m_models.end(); ++iter) {
+		(*iter)->SetWorldTransform(scalingMatrix);
+	}
+
 	m_sceneIsSetup = true;
 }
 
@@ -163,7 +193,7 @@ void ObjLoaderDemo::BuildGeometryBuffers() {
 	ZeroMemory(&meshData, sizeof(Common::GeometryGenerator::MeshData));
 
 	// Create debug sphere
-	Common::GeometryGenerator::CreateSphere(1.0f, 10, 10, &meshData);
+	Common::GeometryGenerator::CreateSphere(2.0f, 10, 10, &meshData);
 	uint vertexCount = meshData.Vertices.size();
 	uint indexCount = meshData.Indices.size();
 
@@ -186,14 +216,14 @@ void ObjLoaderDemo::BuildGeometryBuffers() {
 	};
 	m_debugSphere.CreateSubsets(debugSphereSubsets, 1);
 
-	m_debugSphere.CreateInstanceBuffer(m_device, 500);
+	m_debugSphere.CreateInstanceBuffer(m_device, 1000);
 
 
 	meshData.Indices.clear();
 	meshData.Vertices.clear();
 
 	// Create debug cone
-	Common::GeometryGenerator::CreateCone(0.8029f, 5.0f, 10, &meshData, true); // ~ 60 degrees
+	Common::GeometryGenerator::CreateCone(0.8029f, 8.0f, 10, &meshData, true); // ~ 60 degrees
 	vertexCount = meshData.Vertices.size();
 	indexCount = meshData.Indices.size();
 
@@ -216,7 +246,7 @@ void ObjLoaderDemo::BuildGeometryBuffers() {
 	};
 	m_debugCone.CreateSubsets(debugConeSubsets, 1);
 
-	m_debugCone.CreateInstanceBuffer(m_device, 500);
+	m_debugCone.CreateInstanceBuffer(m_device, 1000);
 }
 
 float ObjLoaderDemo::GetHillHeight(float x, float z) const {
@@ -235,13 +265,19 @@ DirectX::XMFLOAT3 ObjLoaderDemo::GetHillNormal(float x, float z) const {
 	return normal;
 }
 
-void ObjLoaderDemo::CreateLights() {
+void ObjLoaderDemo::CreateLights(const DirectX::XMFLOAT3 &sceneSizeMin, const DirectX::XMFLOAT3 &sceneSizeMax) {
 	m_directionalLight.Ambient = DirectX::XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
 	m_directionalLight.Diffuse = DirectX::XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
 	m_directionalLight.Specular = DirectX::XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
 	m_directionalLight.Direction = DirectX::XMFLOAT3(0.57735f, -0.57735f, 0.57735f);
 
-	for (uint i = 0; i < 500; ++i) {
+	float xRange = std::abs(sceneSizeMax.x - sceneSizeMin.x);
+	float yRange = std::abs(sceneSizeMax.y - sceneSizeMin.y);
+	float zRange = std::abs(sceneSizeMax.z - sceneSizeMin.z);
+
+	float sceneSize = std::min(std::min(xRange, yRange), zRange);
+
+	for (uint i = 0; i < 1000; ++i) {
 		Common::PointLight *pointLight = new Common::PointLight();
 
 		pointLight->Diffuse = pointLight->Specular = DirectX::XMFLOAT4(Common::RandF(), Common::RandF(), Common::RandF(), 1.0f);
@@ -263,7 +299,7 @@ void ObjLoaderDemo::CreateLights() {
 
 	m_pointLightBufferNeedsRebuild = true;
 
-	for (uint i = 0; i < 500; ++i) {
+	for (uint i = 0; i < 1000; ++i) {
 		Common::SpotLight *spotLight = new Common::SpotLight();
 
 		spotLight->Diffuse = spotLight->Specular = DirectX::XMFLOAT4(Common::RandF(), Common::RandF(), Common::RandF(), 1.0f);

@@ -109,10 +109,12 @@ void ObjLoaderDemo::ForwardRenderingPass() {
 	}
 
 	for (uint i = 0; i < m_models.size(); ++i) {
-		DirectX::XMMATRIX worldViewProjection = DirectX::XMMatrixTranspose(worldMatrix * viewProj);
+		DirectX::XMMATRIX modelWorld = m_models[i]->GetWorldTransform();
+		DirectX::XMMATRIX completeWorld = DirectX::XMMatrixTranspose(modelWorld * worldMatrix);
+		DirectX::XMMATRIX worldViewProjection = DirectX::XMMatrixTranspose(modelWorld * worldMatrix * viewProj);
 
 		// GBuffer pass and Forward pass share the same Vertex cbPerFrame signature
-		SetGBufferVertexShaderConstants(DirectX::XMMatrixTranspose(worldMatrix), worldViewProjection);
+		SetGBufferVertexShaderConstants(completeWorld, worldViewProjection);
 
 		for (uint j = 0; j < m_models[i]->GetSubsetCount(); ++j) {
 			SetForwardPixelShaderObjectConstants(m_models[i]->GetSubsetMaterial(j), m_models[0]->GetSubsetTextureFlags(j));
@@ -203,10 +205,12 @@ void ObjLoaderDemo::NoCullDeferredRenderingPass() {
 	DirectX::XMMATRIX viewProj = viewMatrix * projectionMatrix;
 
 	for (uint i = 0; i < m_models.size(); ++i) {
-		DirectX::XMMATRIX worldViewProjection = DirectX::XMMatrixTranspose(worldMatrix * viewProj);
+		DirectX::XMMATRIX modelWorld = m_models[i]->GetWorldTransform();
+		DirectX::XMMATRIX completeWorld = DirectX::XMMatrixTranspose(modelWorld * worldMatrix);
+		DirectX::XMMATRIX worldViewProjection = DirectX::XMMatrixTranspose(modelWorld * worldMatrix * viewProj);
 
 		// GBuffer pass and Forward pass share the same Vertex cbPerFrame signature
-		SetGBufferVertexShaderConstants(DirectX::XMMatrixTranspose(worldMatrix), worldViewProjection);
+		SetGBufferVertexShaderConstants(completeWorld, worldViewProjection);
 
 		for (uint j = 0; j < m_models[i]->GetSubsetCount(); ++j) {
 			m_frameMaterialList.push_back(m_models[i]->GetSubsetMaterial(j));

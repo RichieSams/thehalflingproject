@@ -31,6 +31,6 @@ void GBufferPS(GBufferShaderPixelIn input, out GBuffer gbuffer) {
 		gbuffer.albedo = float4(1.0f, 1.0f, 1.0f, 1.0f);
 	}
 
-	gbuffer.normal = CartesianToSpherical(input.normal);
+	gbuffer.normal = CartesianToSpherical(normalize(input.normal));
 	gbuffer.materialId = gMaterialIndex;
 }

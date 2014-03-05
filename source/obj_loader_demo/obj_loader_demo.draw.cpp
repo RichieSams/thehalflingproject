@@ -199,8 +199,6 @@ void ObjLoaderDemo::NoCullDeferredRenderingPass() {
 	DirectX::XMMATRIX viewMatrix = m_worldViewProj.view;
 	DirectX::XMMATRIX projectionMatrix = m_worldViewProj.projection;
 
-	uint materialIndex = 0;
-
 	// Cache the matrix multiplication
 	DirectX::XMMATRIX viewProj = viewMatrix * projectionMatrix;
 
@@ -383,9 +381,7 @@ void ObjLoaderDemo::RenderDebugGeometry() {
 
 		instances = m_debugCone.MapInstanceBuffer(m_immediateContext, &maxInstances);
 
-		DirectX::XMVECTOR xAxis = DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);
 		DirectX::XMVECTOR yAxis = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-		DirectX::XMVECTOR zAxis = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
 		for (uint i = 0; i < m_numSpotLightsToDraw; ++i) {
 			DirectX::XMMATRIX translation = DirectX::XMMatrixTranslation(m_spotLights[i]->Position.x, m_spotLights[i]->Position.y, m_spotLights[i]->Position.z);
 

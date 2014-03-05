@@ -28,7 +28,7 @@
 #endif
 
 #include <sstream>
-#define AssertMsg(condition, message) \
+#define AssertMsg(condition, message)                                                                                                            \
 	do {                                                                                                                                         \
 		if (!(condition)) {                                                                                                                      \
 			std::wstringstream debugStream;                                                                                                      \
@@ -40,6 +40,4 @@
 			DebugBreak();                                                                                                                        \
 		}                                                                                                                                        \
 	} while (false)
-
-
 #endif

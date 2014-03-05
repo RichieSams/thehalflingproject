@@ -81,7 +81,7 @@ void ObjLoaderDemo::InitTweakBar() {
 void LoadScene(std::atomic<bool> *sceneIsLoaded, std::vector<SceneLoaderModel> *sceneModelList) {
 	Common::GeometryGenerator::MeshData meshData;
 	std::vector<Common::GeometryGenerator::MeshSubset> meshSubsets;
-	Common::GeometryGenerator::LoadFromOBJ(L"artStudio.obj", &meshData, &meshSubsets, true);
+	Common::GeometryGenerator::LoadFromOBJ(L"sponza.obj", &meshData, &meshSubsets, true);
 
 	uint vertexCount = meshData.Vertices.size();
 	uint indexCount = meshData.Indices.size();

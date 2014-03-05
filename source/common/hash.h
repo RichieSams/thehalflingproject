@@ -12,8 +12,7 @@
 #include <type_traits>
 
 inline size_t hash_combiner(size_t left, size_t right) {
-	// FNV hash
-	return ((2166136261 * 16777619) ^ left) * 16777619 ^ right;
+	return left ^ right + 0x9e3779b9 + (left << 6) + (left >> 2);
 }
 
 namespace std {

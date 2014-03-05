@@ -24,8 +24,6 @@ bool ObjLoaderDemo::Initialize(LPCTSTR mainWndCaption, uint32 screenWidth, uint3
 	InitTweakBar();
 
 	m_sceneLoaderThread = std::thread(LoadScene, &m_sceneLoaded, &m_sceneLoaderModels);
-	BuildGeometryBuffers();
-	CreateLights();
 
 	LoadShaders();
 	CreateShaderBuffers();
@@ -155,6 +153,8 @@ void ObjLoaderDemo::SetupScene() {
 
 	// Cleanup
 	m_sceneLoaderModels.clear();
+	CreateLights();
+	BuildGeometryBuffers();
 	m_sceneIsSetup = true;
 }
 
@@ -291,6 +291,13 @@ void ObjLoaderDemo::CreateLights() {
 	}
 
 	m_spotLightBufferNeedsRebuild = true;
+
+	if (m_pointLights.size() > 0) {
+		m_pointLightBuffer = new Common::StructuredBuffer<Common::PointLight>(m_device, m_pointLights.size(), D3D11_BIND_SHADER_RESOURCE, true);
+	}
+	if (m_spotLights.size() > 0) {
+		m_spotLightBuffer = new Common::StructuredBuffer<Common::SpotLight>(m_device, m_spotLights.size(), D3D11_BIND_SHADER_RESOURCE, true);
+	}
 }
 
 void ObjLoaderDemo::LoadShaders() {
@@ -394,14 +401,6 @@ void ObjLoaderDemo::CreateShaderBuffers() {
 	renderGBuffersBufferDesc.StructureByteStride = 0;
 
 	m_device->CreateBuffer(&renderGBuffersBufferDesc, NULL, &m_renderGbuffersPixelShaderConstantsBuffer);
-
-
-	if (m_pointLights.size() > 0) {
-		m_pointLightBuffer = new Common::StructuredBuffer<Common::PointLight>(m_device, m_pointLights.size(), D3D11_BIND_SHADER_RESOURCE, true);
-	}
-	if (m_spotLights.size() > 0) {
-		m_spotLightBuffer = new Common::StructuredBuffer<Common::SpotLight>(m_device, m_spotLights.size(), D3D11_BIND_SHADER_RESOURCE, true);
-	}
 
 	m_frameMaterialListBuffer = new Common::StructuredBuffer<Common::BlinnPhongMaterial>(m_device, kMaxMaterialsPerFrame, D3D11_BIND_SHADER_RESOURCE, true);
 

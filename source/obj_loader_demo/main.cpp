@@ -9,6 +9,9 @@
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
 	ObjLoaderDemo::ObjLoaderDemo app(hInstance);
+	DBG_UNREFERENCED_PARAMETER(hPrevInstance);
+	DBG_UNREFERENCED_PARAMETER(lpCmdLine);
+	DBG_UNREFERENCED_PARAMETER(nCmdShow);
 
 	app.Initialize(L"OBJ Loader Demo", 800, 600, false);
 	app.Run();

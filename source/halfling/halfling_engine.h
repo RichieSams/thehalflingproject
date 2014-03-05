@@ -112,7 +112,9 @@ protected:
 	 *
 	 * @param deltaTime    The deltaTime passed since the last loop
 	 */
-	virtual void DrawFrame(double deltaTime) {}
+	virtual void DrawFrame(double deltaTime) {
+		UNREFERENCED_PARAMETER(deltaTime);
+	}
 
 	/**
 	 * Called every time the game is paused. You can also call this function to
@@ -139,7 +141,11 @@ protected:
 	 * @param x              The x position of the cursor (In window coordinates)
 	 * @param y              The y position of the cursor (In window coordinates)
 	 */
-	virtual void MouseDown(WPARAM buttonState, int x, int y) {}
+	virtual void MouseDown(WPARAM buttonState, int x, int y) {
+		UNREFERENCED_PARAMETER(buttonState);
+		UNREFERENCED_PARAMETER(x);
+		UNREFERENCED_PARAMETER(y);
+	}
 	/**
 	 * Called every time one of the mouse buttons is let go
 	 *
@@ -147,7 +153,11 @@ protected:
 	 * @param x              The x position of the cursor (In window coordinates)
 	 * @param y              The y position of the cursor (In window coordinates)
 	 */
-	virtual void MouseUp(WPARAM buttonState, int x, int y) {}
+	virtual void MouseUp(WPARAM buttonState, int x, int y) {
+		UNREFERENCED_PARAMETER(buttonState);
+		UNREFERENCED_PARAMETER(x);
+		UNREFERENCED_PARAMETER(y);
+	}
 	/**
 	 * Called every time the mouse moves
 	 *
@@ -155,14 +165,23 @@ protected:
 	 * @param x              The x position of the cursor (In window coordinates)
 	 * @param y              The y position of the cursor (In window coordinates)
 	 */
-	virtual void MouseMove(WPARAM buttonState, int x, int y) {}
+	virtual void MouseMove(WPARAM buttonState, int x, int y) {
+		UNREFERENCED_PARAMETER(buttonState);
+		UNREFERENCED_PARAMETER(x);
+		UNREFERENCED_PARAMETER(y);
+	}
 	/**
 	 * Called every time the middle mouse wheel is scrolled
 	 *
 	 * @param zDelta    The number of units scrolled. The number of units per full circle of the wheel depends on the mouse vendor
 	 */
-	virtual void MouseWheel(int zDelta) {}
-	virtual void CharacterInput(wchar character) {}
+	virtual void MouseWheel(int zDelta) {
+		UNREFERENCED_PARAMETER(zDelta);
+	}
+
+	virtual void CharacterInput(wchar character) {
+		UNREFERENCED_PARAMETER(character);
+	}
 
 private:
 	/** Creates the window and registers it */

@@ -83,6 +83,21 @@ void ObjLoaderDemo::Shutdown() {
 	ReleaseCOM(m_gBufferInputLayout);
 	ReleaseCOM(m_debugObjectInputLayout);
 
+	for (auto iter = m_models.begin(); iter != m_models.end(); ++iter) {
+		delete *iter;
+	}
+	for (auto iter = m_pointLights.begin(); iter != m_pointLights.end(); ++iter) {
+		delete *iter;
+	}
+	for (auto iter = m_pointLightAnimators.begin(); iter != m_pointLightAnimators.end(); ++iter) {
+		delete *iter;
+	}
+	for (auto iter = m_spotLights.begin(); iter != m_spotLights.end(); ++iter) {
+		delete *iter;
+	}
+	for (auto iter = m_spotLightAnimators.begin(); iter != m_spotLightAnimators.end(); ++iter) {
+		delete *iter;
+	}
 	for (auto iter = m_gBuffers.begin(); iter != m_gBuffers.end(); ++iter) {
 		delete *iter;
 	}

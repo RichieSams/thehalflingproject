@@ -123,8 +123,7 @@ void LoadScene(std::atomic<bool> *sceneIsLoaded, std::vector<SceneLoaderModel> *
 
 void ObjLoaderDemo::SetupScene() {
 	for (auto iter = m_sceneLoaderModels.begin(); iter != m_sceneLoaderModels.end(); ++iter) {
-		m_models.push_back(Common::Model<Vertex>());
-		Common::Model<Vertex> *model = &m_models.back();
+		Common::Model<Vertex> *model = new Common::Model<Vertex>();
 
 		model->CreateVertexBuffer(m_device, iter->Vertices, iter->VertexCount);
 		model->CreateIndexBuffer(m_device, iter->Indices, iter->IndexCount);
@@ -150,6 +149,8 @@ void ObjLoaderDemo::SetupScene() {
 		delete[] iter->Subsets;
 
 		model->CreateSubsets(modelSubsets, iter->SubsetCount);
+
+		m_models.push_back(model);
 	}
 
 	// Cleanup
@@ -159,6 +160,7 @@ void ObjLoaderDemo::SetupScene() {
 
 void ObjLoaderDemo::BuildGeometryBuffers() {
 	Common::GeometryGenerator::MeshData meshData;
+	ZeroMemory(&meshData, sizeof(Common::GeometryGenerator::MeshData));
 
 	// Create debug sphere
 	Common::GeometryGenerator::CreateSphere(1.0f, 10, 10, &meshData);
@@ -240,41 +242,52 @@ void ObjLoaderDemo::CreateLights() {
 	m_directionalLight.Direction = DirectX::XMFLOAT3(0.57735f, -0.57735f, 0.57735f);
 
 	for (uint i = 0; i < 500; ++i) {
-		Common::PointLight pointLight;
-		pointLight.Diffuse = pointLight.Specular = DirectX::XMFLOAT4(Common::RandF(), Common::RandF(), Common::RandF(), 1.0f);
-		pointLight.AttenuationDistanceUNorm = 0.75;
-		pointLight.Range = 25.0f;
-		pointLight.Position = DirectX::XMFLOAT3(Common::RandF(-80.0f, 80.0f), Common::RandF(-40.0f, 40.0f), Common::RandF(-80.0f, 80.0f));
+		Common::PointLight *pointLight = new Common::PointLight();
+
+		pointLight->Diffuse = pointLight->Specular = DirectX::XMFLOAT4(Common::RandF(), Common::RandF(), Common::RandF(), 1.0f);
+		pointLight->AttenuationDistanceUNorm = 0.75;
+		pointLight->Range = 0.15f * sceneSize;
+		pointLight->Position = DirectX::XMFLOAT3(Common::RandF(sceneSizeMin.x - xRange * 0.1f, sceneSizeMax.x + xRange * 0.1f), 
+		                                         Common::RandF(sceneSizeMin.y - yRange * 0.1f, sceneSizeMax.y + yRange * 0.1f), 
+		                                         Common::RandF(sceneSizeMin.z - zRange * 0.1f, sceneSizeMax.z + zRange * 0.1f));
 
 		m_pointLights.push_back(pointLight);
 
-		m_pointLightAnimators.emplace_back(DirectX::XMFLOAT3(Common::RandF(-0.006f, 0.006f), Common::RandF(-0.006f, 0.006f), Common::RandF(-0.006f, 0.006f)),
-		                                   DirectX::XMFLOAT3(-80.0f, -40.0f, -80.0f),
-		                                   DirectX::XMFLOAT3(80.0f, 40.0f, 80.0f));
+		Common::PointLightAnimator *pointLightAnimator = new Common::PointLightAnimator(DirectX::XMFLOAT3(Common::RandF(-0.00006f * sceneSize, 0.00006f * sceneSize), 
+		                                                                                Common::RandF(-0.00006f * sceneSize, 0.00006f * sceneSize), Common::RandF(-0.00006f * sceneSize, 0.00006f * sceneSize)),
+		                                                                                sceneSizeMin,
+		                                                                                sceneSizeMax);
+
+		m_pointLightAnimators.push_back(pointLightAnimator);
 	}
 
 	m_pointLightBufferNeedsRebuild = true;
 
 	for (uint i = 0; i < 500; ++i) {
-		Common::SpotLight spotLight;
-		spotLight.Diffuse = spotLight.Specular = DirectX::XMFLOAT4(Common::RandF(), Common::RandF(), Common::RandF(), 1.0f);
-		spotLight.AttenuationDistanceUNorm = 0.75;
-		spotLight.Range = 35.0f;
-		spotLight.Position = DirectX::XMFLOAT3(Common::RandF(-80.0f, 80.0f), Common::RandF(-40.0f, 40.0f), Common::RandF(-80.0f, 80.0f));
+		Common::SpotLight *spotLight = new Common::SpotLight();
+
+		spotLight->Diffuse = spotLight->Specular = DirectX::XMFLOAT4(Common::RandF(), Common::RandF(), Common::RandF(), 1.0f);
+		spotLight->AttenuationDistanceUNorm = 0.75;
+		spotLight->Range = 0.2f * sceneSize;
+		spotLight->Position = DirectX::XMFLOAT3(Common::RandF(sceneSizeMin.x - xRange * 0.1f, sceneSizeMax.x + xRange * 0.1f), 
+		                                       Common::RandF(sceneSizeMin.y - yRange * 0.1f, sceneSizeMax.y + yRange * 0.1f), 
+		                                       Common::RandF(sceneSizeMin.z - zRange * 0.1f, sceneSizeMax.z + zRange * 0.1f));
 		float outerConeAngle = Common::RandF(0.2967f, 0.7854f); // ~ 35 - 90 degrees
-		spotLight.CosOuterConeAngle = cos(outerConeAngle);
-		spotLight.CosInnerConeAngle = cos(outerConeAngle - 0.17f); // ~ 10 degrees
-		spotLight.Direction = DirectX::XMFLOAT3(Common::RandF(), Common::RandF(), Common::RandF());
+		spotLight->CosOuterConeAngle = cos(outerConeAngle);
+		spotLight->CosInnerConeAngle = cos(outerConeAngle - 0.17f); // ~ 10 degrees
+		spotLight->Direction = DirectX::XMFLOAT3(Common::RandF(), Common::RandF(), Common::RandF());
 		// Normalize
-		DirectX::XMVECTOR normalizedDirection = DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&spotLight.Direction));
-		DirectX::XMStoreFloat3(&spotLight.Direction, normalizedDirection);
+		DirectX::XMVECTOR normalizedDirection = DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&spotLight->Direction));
+		DirectX::XMStoreFloat3(&spotLight->Direction, normalizedDirection);
 
 		m_spotLights.push_back(spotLight);
 
-		m_spotLightAnimators.emplace_back(DirectX::XMFLOAT3(Common::RandF(-0.006f, 0.006f), Common::RandF(-0.006f, 0.006f), Common::RandF(-0.006f, 0.006f)),
-		                                  DirectX::XMFLOAT3(Common::RandF(-0.125f, 0.125f), Common::RandF(-0.125f, 0.125f), Common::RandF(-0.125f, 0.125f)),
-		                                  DirectX::XMFLOAT3(-80.0f, -40.0f, -80.0f),
-		                                  DirectX::XMFLOAT3(80.0f, 40.0f, 80.0f));
+		Common::SpotLightAnimator *spotLightAnimator = new Common::SpotLightAnimator(DirectX::XMFLOAT3(Common::RandF(-0.00006f * sceneSize, 0.00006f * sceneSize), Common::RandF(-0.00006f * sceneSize, 0.00006f * sceneSize), Common::RandF(-0.00006f * sceneSize, 0.00006f * sceneSize)),
+		                                                                             DirectX::XMFLOAT3(Common::RandF(-0.125f, 0.125f), Common::RandF(-0.125f, 0.125f), Common::RandF(-0.125f, 0.125f)),
+		                                                                             sceneSizeMin,
+		                                                                             sceneSizeMax);
+
+		m_spotLightAnimators.push_back(spotLightAnimator);
 	}
 
 	m_spotLightBufferNeedsRebuild = true;

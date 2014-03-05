@@ -579,9 +579,10 @@ bool GeometryGenerator::LoadFromOBJ(const wchar *fileName, MeshData *meshData, s
 					lastSubset->IndexCount = meshData->Indices.size() - lastSubset->IndexStart;
 				}
 
-				meshSubsets->push_back(GeometryGenerator::MeshSubset());
-				GeometryGenerator::MeshSubset *subset = &meshSubsets->back();
-				subset->IndexStart = meshData->Indices.size();
+				GeometryGenerator::MeshSubset subset;
+				memset(&subset, 0, sizeof(GeometryGenerator::MeshSubset));
+				subset.IndexStart = meshData->Indices.size();
+				meshSubsets->push_back(subset);
 			}
 			break;
 
@@ -664,6 +665,9 @@ bool GeometryGenerator::LoadFromOBJ(const wchar *fileName, MeshData *meshData, s
 					currentMaterial->Specular.y = sy;
 					currentMaterial->Specular.z = sz;
 					currentMaterial->Specular.w = 8.0f;
+					// Set the Specular Intensity
+					// TODO: Disabled for now. For some reason, the specular component is over-saturating the scene.
+					//currentMaterial->Ambient.w = 1.0f;
 				}
 				break;
 

@@ -143,7 +143,7 @@ void ObjLoaderDemo::SetupScene() {
 			modelSubsets[i].VertexCount = iter->Subsets[i].VertexCount;
 			modelSubsets[i].Material.Ambient = iter->Subsets[i].Ambient;
 			modelSubsets[i].Material.Diffuse = iter->Subsets[i].Diffuse;
-			modelSubsets[i].Material.Specular = iter->Subsets[i].Diffuse;
+			modelSubsets[i].Material.Specular = iter->Subsets[i].Specular;
 
 			modelSubsets[i].TextureFlags = 0;
 			if (!iter->Subsets[i].DiffuseMapFile.empty()) {

@@ -666,8 +666,7 @@ bool GeometryGenerator::LoadFromOBJ(const wchar *fileName, MeshData *meshData, s
 					currentMaterial->Specular.z = sz;
 					currentMaterial->Specular.w = 8.0f;
 					// Set the Specular Intensity
-					// TODO: Disabled for now. For some reason, the specular component is over-saturating the scene.
-					//currentMaterial->Ambient.w = 1.0f;
+					currentMaterial->Ambient.w = 1.0f;
 				}
 				break;
 

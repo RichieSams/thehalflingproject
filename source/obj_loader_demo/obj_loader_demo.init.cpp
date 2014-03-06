@@ -423,16 +423,6 @@ void ObjLoaderDemo::CreateShaderBuffers() {
 	m_device->CreateBuffer(&renderGBuffersBufferDesc, NULL, &m_renderGbuffersPixelShaderConstantsBuffer);
 
 	m_frameMaterialListBuffer = new Common::StructuredBuffer<Common::BlinnPhongMaterial>(m_device, kMaxMaterialsPerFrame, D3D11_BIND_SHADER_RESOURCE, true);
-
-	D3D11_SAMPLER_DESC diffuseSamplerDesc;
-	memset(&diffuseSamplerDesc, 0, sizeof(D3D11_SAMPLER_DESC));
-	diffuseSamplerDesc.Filter = D3D11_FILTER_ANISOTROPIC;
-	diffuseSamplerDesc.MaxAnisotropy = 4;
-	diffuseSamplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-	diffuseSamplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-	diffuseSamplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-
-	HR(m_device->CreateSamplerState(&diffuseSamplerDesc, &m_diffuseSampleState));
 }
 
 } // End of namespace ObjLoaderDemo

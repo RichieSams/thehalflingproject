@@ -72,7 +72,10 @@ void ObjLoaderDemo::ForwardRenderingPass() {
 	m_immediateContext->ClearDepthStencilView(m_depthStencilBuffer->GetDepthStencil(), D3D11_CLEAR_DEPTH, 0.0f, 0);
 
 	// Set States
-	m_immediateContext->PSSetSamplers(0, 1, &m_diffuseSampleState);
+	ID3D11SamplerState *samplerState[1];
+	samplerState[0] = m_samplerStates.Anisotropic();
+
+	m_immediateContext->PSSetSamplers(0, 1, samplerState);
 	float blendFactor[4] = {1.0f, 1.0f, 1.0f, 1.0f};
 	m_immediateContext->OMSetBlendState(m_blendStates.BlendDisabled(), blendFactor, 0xFFFFFFFF);
 	m_immediateContext->OMSetDepthStencilState(m_depthStencilStates.ReverseDepthWriteEnabled(), 0);
@@ -180,7 +183,10 @@ void ObjLoaderDemo::NoCullDeferredRenderingPass() {
 	m_immediateContext->ClearDepthStencilView(m_depthStencilBuffer->GetDepthStencil(), D3D11_CLEAR_DEPTH, 0.0f, 0);
 
 	// Set States
-	m_immediateContext->PSSetSamplers(0, 1, &m_diffuseSampleState);
+	ID3D11SamplerState *samplerState[1];
+	samplerState[0] = m_samplerStates.Anisotropic();
+
+	m_immediateContext->PSSetSamplers(0, 1, samplerState);
 	float blendFactor[4] = {1.0f, 1.0f, 1.0f, 1.0f};
 	m_immediateContext->OMSetBlendState(m_blendStates.BlendDisabled(), blendFactor, 0xFFFFFFFF);
 	m_immediateContext->OMSetDepthStencilState(m_depthStencilStates.ReverseDepthWriteEnabled(), 0);

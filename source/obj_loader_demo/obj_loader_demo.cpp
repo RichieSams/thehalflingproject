@@ -56,8 +56,7 @@ ObjLoaderDemo::ObjLoaderDemo(HINSTANCE hinstance)
 	  m_debugObjectVertexShader(nullptr),
 	  m_debugObjectPixelShader(nullptr),
 	  m_transformedFullscreenTriangleVertexShader(nullptr),
-	  m_renderGbuffersPixelShader(nullptr),
-	  m_diffuseSampleState(nullptr) {
+	  m_renderGbuffersPixelShader(nullptr) {
 }
 
 void ObjLoaderDemo::Shutdown() {
@@ -72,7 +71,6 @@ void ObjLoaderDemo::Shutdown() {
 	delete m_pointLightBuffer;
 	delete m_spotLightBuffer;
 	delete m_frameMaterialListBuffer;
-	ReleaseCOM(m_diffuseSampleState);
 	ReleaseCOM(m_gbufferVertexShader);
 	ReleaseCOM(m_gbufferPixelShader);
 	ReleaseCOM(m_fullscreenTriangleVertexShader);

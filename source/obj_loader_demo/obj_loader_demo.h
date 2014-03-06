@@ -178,8 +178,6 @@ private:
 
 	Common::StructuredBuffer<Common::BlinnPhongMaterial> *m_frameMaterialListBuffer;
 
-	ID3D11SamplerState *m_diffuseSampleState;
-
 	Common::BlendStates m_blendStates;
 	Common::DepthStencilStates m_depthStencilStates;
 	Common::RasterizerStates m_rasterizerStates;

@@ -38,6 +38,8 @@ void ObjLoaderDemo::DrawFrame(double deltaTime) {
 		                               m_clientWidth / 2.0f - 90.0f, m_clientHeight / 2.0f - 30.0f, 0.0f, 1.0f};
 		m_spriteRenderer.RenderText(m_timesNewRoman12Font, L"Scene is loading....", transform, 0U, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f));
 		m_spriteRenderer.End();
+
+		Sleep(50);
 	}
 	RenderHUD();
 

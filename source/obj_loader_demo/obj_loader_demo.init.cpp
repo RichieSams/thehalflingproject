@@ -251,9 +251,9 @@ void ObjLoaderDemo::BuildGeometryBuffers() {
 
 void ObjLoaderDemo::CreateLights(const DirectX::XMFLOAT3 &sceneSizeMin, const DirectX::XMFLOAT3 &sceneSizeMax) {
 	m_directionalLight.Ambient = DirectX::XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
-	m_directionalLight.Diffuse = DirectX::XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-	m_directionalLight.Specular = DirectX::XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-	m_directionalLight.Direction = DirectX::XMFLOAT3(0.57735f, -0.57735f, 0.57735f);
+	m_directionalLight.Diffuse = DirectX::XMFLOAT4(0.9f, 0.9f, 0.9f, 1.0f);
+	m_directionalLight.Specular = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	m_directionalLight.Direction = DirectX::XMFLOAT3(-0.46f, -0.46f, -0.46f);
 
 	float xRange = std::abs(sceneSizeMax.x - sceneSizeMin.x);
 	float yRange = std::abs(sceneSizeMax.y - sceneSizeMin.y);

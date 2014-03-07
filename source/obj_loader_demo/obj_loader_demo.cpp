@@ -21,7 +21,7 @@ LRESULT ObjLoaderDemo::MsgProc(HWND hwnd, uint msg, WPARAM wParam, LPARAM lParam
 
 ObjLoaderDemo::ObjLoaderDemo(HINSTANCE hinstance)
 	: Halfling::HalflingEngine(hinstance),
-	  m_camera(0.25f * DirectX::XM_PI, 0.25f * DirectX::XM_PI, 100.0f),
+	  m_camera(0.5f * DirectX::XM_PI, 0.45f * DirectX::XM_PI, 100.0f),
 	  m_showConsole(false),
 	  m_sceneLoaded(false),
 	  m_sceneIsSetup(false),

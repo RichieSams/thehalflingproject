@@ -13,7 +13,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	DBG_UNREFERENCED_PARAMETER(lpCmdLine);
 	DBG_UNREFERENCED_PARAMETER(nCmdShow);
 
-	app.Initialize(L"OBJ Loader Demo", 800, 600, false);
+	app.Initialize(L"OBJ Loader Demo", 1280, 720, false);
 	app.Run();
 
 	app.Shutdown();

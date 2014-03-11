@@ -1,0 +1,53 @@
+[OPTIONS]
+Compiled file=AssimpCmdDoc.chm
+Compatibility=1.1
+Full-text search=Yes
+Contents file=index.hhc
+Default Window=main
+Default topic=index.html
+Index file=index.hhk
+Language=0x409 English (United States)
+Title=AssimpCommandLineTools
+
+[WINDOWS]
+main="AssimpCommandLineTools","index.hhc","index.hhk","index.html","index.html",,,,,0x23520,,0x10387e,,,,,,,,0
+
+[FILES]
+dox__cmd_8h.html
+version.html
+help.html
+iinfo.html
+cmpdump.html
+dump.html
+extract.html
+common.html
+index.html
+pages.html
+files.html
+tab_a.png
+tab_b.png
+tab_h.png
+tab_s.png
+nav_h.png
+nav_f.png
+bc_s.png
+doxygen.png
+closed.png
+open.png
+bdwn.png
+ftv2blank.png
+ftv2doc.png
+ftv2folderclosed.png
+ftv2folderopen.png
+ftv2ns.png
+ftv2mo.png
+ftv2cl.png
+ftv2lastnode.png
+ftv2link.png
+ftv2mlastnode.png
+ftv2mnode.png
+ftv2node.png
+ftv2plastnode.png
+ftv2pnode.png
+ftv2vertline.png
+ftv2splitbar.png

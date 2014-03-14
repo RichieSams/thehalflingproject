@@ -50,7 +50,7 @@ void ObjLoaderDemo::InitTweakBar() {
 	TwInit(TW_DIRECT3D11, m_device);
 
 	m_settingsBar = TwNewBar("settings");
-	TwDefine(" settings label='Settings' size='325 350' position='480 20' valueswidth=120 movable=true resizable=false fontresizable=false contained=true iconified=true ");
+	TwDefine(" settings label='Settings' size='325 350' position='935 20' valueswidth=120 movable=true resizable=false fontresizable=false contained=true iconified=true ");
 
 	TwAddVarRW(m_settingsBar, "Show Console", TW_TYPE_BOOLCPP, &m_showConsole, "");
 	TwAddVarRW(m_settingsBar, "V-Sync", TwType::TW_TYPE_BOOLCPP, &m_vsync, "");

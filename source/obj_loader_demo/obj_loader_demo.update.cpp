@@ -10,8 +10,6 @@
 namespace ObjLoaderDemo {
 
 void ObjLoaderDemo::Update() {
-	m_worldViewProj.view = m_camera.CreateViewMatrix(DirectX::XMVectorZero());
-
 	if (m_animateLights) {
 		for (uint i = 0; i < m_pointLightAnimators.size(); ++i) {
 			m_pointLightAnimators[i]->AnimateLight(m_pointLights[i], m_updatePeriod);

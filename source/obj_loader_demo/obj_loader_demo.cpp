@@ -118,8 +118,9 @@ void ObjLoaderDemo::OnResize() {
 		return;
 	}
 
-	// Update the aspect ratio and the projection matrix
-	m_worldViewProj.projection = DirectX::XMMatrixPerspectiveFovLH(0.25f * DirectX::XM_PI, float(m_clientWidth) / m_clientHeight, 800.0f, 1.0f);
+	// Update the projection matrix
+	// We swap near and far clip because we are using 1 - depth in our depth buffer
+	m_camera.UpdateProjectionMatrix((float)m_clientWidth, (float)m_clientHeight, 800.0f, 1.0f);
 
 	// Release the gBuffers
 	for (auto gbuffer : m_gBuffers) {
@@ -218,12 +219,20 @@ void ObjLoaderDemo::MouseUp(WPARAM buttonState, int x, int y) {
 
 void ObjLoaderDemo::MouseMove(WPARAM buttonState, int x, int y) {
 	if ((buttonState & MK_LBUTTON) != 0) {
-		// Calculate the new phi and theta based on mouse position relative to where the user clicked
-		// Four mouse pixel movements is 1 degree
-		float dPhi = ((float)(m_mouseLastPos.y - y) / 300);
-		float dTheta = ((float)(x - m_mouseLastPos.x) / 300);
+		if (GetKeyState(VK_MENU) & 0x8000) {
+			// Calculate the new phi and theta based on mouse position relative to where the user clicked
+			float dPhi = ((float)(m_mouseLastPos.y - y) / 300);
+			float dTheta = ((float)(m_mouseLastPos.x - x) / 300);
 
-		m_camera.MoveCamera(dTheta, dPhi, 0.0f);
+			m_camera.Rotate(-dTheta, dPhi);
+		}
+	} else if ((buttonState & MK_MBUTTON) != 0) {
+		if (GetKeyState(VK_MENU) & 0x8000) {
+			float dx = ((float)(m_mouseLastPos.x - x) / 10);
+			float dy = ((float)(m_mouseLastPos.y - y) / 10);
+
+			m_camera.Pan(-dx, dy);
+		}
 	}
 
 	m_mouseLastPos.x = x;
@@ -232,7 +241,7 @@ void ObjLoaderDemo::MouseMove(WPARAM buttonState, int x, int y) {
 
 void ObjLoaderDemo::MouseWheel(int zDelta) {
 	// Make each wheel dedent correspond to a size based on the scene
-	m_camera.MoveCamera(0.0f, 0.0f, -0.1f * (float)zDelta);
+	m_camera.Zoom(0.1f * (float)zDelta);
 }
 
 void ObjLoaderDemo::CharacterInput(wchar character) {

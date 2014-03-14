@@ -92,9 +92,8 @@ void ObjLoaderDemo::ForwardRenderingPass() {
 	m_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// Fetch the transpose matricies
-	DirectX::XMMATRIX worldMatrix = m_worldViewProj.world;
-	DirectX::XMMATRIX viewMatrix = m_worldViewProj.view;
-	DirectX::XMMATRIX projectionMatrix = m_worldViewProj.projection;
+	DirectX::XMMATRIX viewMatrix = m_camera.GetView();
+	DirectX::XMMATRIX projectionMatrix = m_camera.GetProj();
 
 	// Cache the matrix multiplication
 	DirectX::XMMATRIX viewProj = viewMatrix * projectionMatrix;
@@ -114,9 +113,9 @@ void ObjLoaderDemo::ForwardRenderingPass() {
 	}
 
 	for (uint i = 0; i < m_models.size(); ++i) {
-		DirectX::XMMATRIX modelWorld = m_models[i]->GetWorldTransform();
-		DirectX::XMMATRIX completeWorld = DirectX::XMMatrixTranspose(modelWorld * worldMatrix);
-		DirectX::XMMATRIX worldViewProjection = DirectX::XMMatrixTranspose(modelWorld * worldMatrix * viewProj);
+		DirectX::XMMATRIX worldMatrix = m_models[i]->GetWorldTransform();
+		DirectX::XMMATRIX completeWorld = DirectX::XMMatrixTranspose(worldMatrix);
+		DirectX::XMMATRIX worldViewProjection = DirectX::XMMatrixTranspose(worldMatrix * viewProj);
 
 		// GBuffer pass and Forward pass share the same Vertex cbPerFrame signature
 		SetGBufferVertexShaderConstants(completeWorld, worldViewProjection);
@@ -203,17 +202,16 @@ void ObjLoaderDemo::NoCullDeferredRenderingPass() {
 	m_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// Fetch the transpose matricies
-	DirectX::XMMATRIX worldMatrix = m_worldViewProj.world;
-	DirectX::XMMATRIX viewMatrix = m_worldViewProj.view;
-	DirectX::XMMATRIX projectionMatrix = m_worldViewProj.projection;
+	DirectX::XMMATRIX viewMatrix = m_camera.GetView();
+	DirectX::XMMATRIX projectionMatrix = m_camera.GetProj();
 
 	// Cache the matrix multiplication
 	DirectX::XMMATRIX viewProj = viewMatrix * projectionMatrix;
 
 	for (uint i = 0; i < m_models.size(); ++i) {
-		DirectX::XMMATRIX modelWorld = m_models[i]->GetWorldTransform();
-		DirectX::XMMATRIX completeWorld = DirectX::XMMatrixTranspose(modelWorld * worldMatrix);
-		DirectX::XMMATRIX worldViewProjection = DirectX::XMMatrixTranspose(modelWorld * worldMatrix * viewProj);
+		DirectX::XMMATRIX worldMatrix = m_models[i]->GetWorldTransform();
+		DirectX::XMMATRIX completeWorld = DirectX::XMMatrixTranspose(worldMatrix);
+		DirectX::XMMATRIX worldViewProjection = DirectX::XMMatrixTranspose(worldMatrix * viewProj);
 
 		// GBuffer pass and Forward pass share the same Vertex cbPerFrame signature
 		SetGBufferVertexShaderConstants(completeWorld, worldViewProjection);
@@ -369,8 +367,8 @@ void ObjLoaderDemo::SetMaterialList() {
 }
 
 void ObjLoaderDemo::RenderDebugGeometry() {
-	DirectX::XMMATRIX viewMatrix = m_worldViewProj.view;
-	DirectX::XMMATRIX projectionMatrix = m_worldViewProj.projection;
+	DirectX::XMMATRIX viewMatrix = m_camera.GetView();
+	DirectX::XMMATRIX projectionMatrix = m_camera.GetProj();
 
 	// Cache the matrix multiplication
 	DirectX::XMMATRIX viewProj = viewMatrix * projectionMatrix;

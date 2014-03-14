@@ -105,7 +105,6 @@ private:
 	Common::Console m_console;
 	bool m_showConsole;
 
-	WorldViewProjection m_worldViewProj;
 	std::vector<Common::Model<Vertex> *> m_models;
 	std::vector<Common::BlinnPhongMaterial> m_frameMaterialList;
 

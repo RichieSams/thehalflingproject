@@ -14,8 +14,26 @@ namespace Common {
 
 class Camera {
 public:
-	Camera() : m_theta(0.0f), m_phi(0.0f), m_radius(0.0f), m_up(1.0f) {}
-	Camera(float theta, float phi, float radius) : m_theta(theta), m_phi(phi), m_radius(radius), m_up(1.0f) {}
+	Camera() 
+		: m_theta(0.0f), 
+		  m_phi(0.0f), 
+		  m_radius(0.0f), 
+		  m_up(1.0f),
+		  m_target(DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f)),
+		  m_view(DirectX::XMMatrixIdentity()),
+		  m_proj(DirectX::XMMatrixIdentity()),
+		  m_viewNeedsUpdate(true) {
+	}
+	Camera(float theta, float phi, float radius) 
+		: m_theta(theta), 
+		  m_phi(phi), 
+		  m_radius(radius), 
+		  m_up(1.0f),
+		  m_target(DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f)),
+		  m_view(DirectX::XMMatrixIdentity()),
+		  m_proj(DirectX::XMMatrixIdentity()),
+		  m_viewNeedsUpdate(true) {
+	}
 
 private:
 	float m_theta;
@@ -23,26 +41,43 @@ private:
 	float m_radius;
 	float m_up;
 
-public:
-	void MoveCamera(float dTheta, float dPhi, float dRadius);
-	inline DirectX::XMMATRIX CreateViewMatrix(DirectX::XMVECTOR target) const {
-		DirectX::XMVECTOR pos = ToCartesianVector();
-		DirectX::XMVECTOR up = DirectX::XMVectorSet(0.0f, m_up, 0.0f, 0.0f);
+	DirectX::XMVECTOR m_target;
 
-		return DirectX::XMMatrixLookAtLH(pos, target, up);
+	DirectX::XMMATRIX m_view;
+	DirectX::XMMATRIX m_proj;
+
+	bool m_viewNeedsUpdate;
+
+public:
+	void Rotate(float dTheta, float dPhi);
+	void Zoom(float distance);
+	void Pan(float dx, float dy);
+
+	void UpdateViewMatrix();
+	void UpdateProjectionMatrix(float clientWidth, float clientHeight, float nearClip, float farClip);
+
+	inline DirectX::XMFLOAT3 GetCameraPosition() const { 
+		DirectX::XMFLOAT3 temp;
+		DirectX::XMStoreFloat3(&temp, GetCameraPositionXM());
+
+		return temp;
 	}
-	inline DirectX::XMFLOAT3 GetCameraPosition() { return ToCartesianFloat3(); }
+	inline DirectX::XMVECTOR GetCameraPositionXM() const {
+		return DirectX::XMVectorAdd(m_target, ToCartesian());
+	}
+
+	inline DirectX::XMMATRIX GetView() {
+		if (m_viewNeedsUpdate) {
+			UpdateViewMatrix();
+			m_viewNeedsUpdate = false;
+		}
+
+		return m_view;
+	}
+	inline DirectX::XMMATRIX GetProj() { return m_proj; }
 
 private:
-	inline DirectX::XMFLOAT3 ToCartesianFloat3() const {
-		float x = m_radius * sinf(m_phi) * sinf(m_theta);
-		float y = m_radius * cosf(m_phi);
-		float z = m_radius * sinf(m_phi) * cosf(m_theta);
-
-		return DirectX::XMFLOAT3(x, y, z);
-	}
-
-	inline DirectX::XMVECTOR ToCartesianVector() const {
+	inline DirectX::XMVECTOR ToCartesian() const {
 		float x = m_radius * sinf(m_phi) * sinf(m_theta);
 		float y = m_radius * cosf(m_phi);
 		float z = m_radius * sinf(m_phi) * cosf(m_theta);

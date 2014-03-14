@@ -31,12 +31,6 @@ bool ObjLoaderDemo::Initialize(LPCTSTR mainWndCaption, uint32 screenWidth, uint3
 	LoadShaders();
 	CreateShaderBuffers();
 
-	// Set the view matrices to identity
-	DirectX::XMMATRIX identity = DirectX::XMMatrixIdentity();
-	m_worldViewProj.world = identity;
-	m_worldViewProj.view = identity;
-	m_worldViewProj.view = identity;
-
 	m_spriteRenderer.Initialize(m_device);
 	m_timesNewRoman12Font.Initialize(L"Times New Roman", 12, Common::SpriteFont::Regular, true, m_device);
 	m_courierNew10Font.Initialize(L"Courier New", 12, Common::SpriteFont::Regular, true, m_device);

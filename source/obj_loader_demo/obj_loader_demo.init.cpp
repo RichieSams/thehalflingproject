@@ -167,7 +167,7 @@ void ObjLoaderDemo::SetupScene() {
 	float xRange = std::abs(maxAABB.x - minAABB.x);
 	float yRange = std::abs(maxAABB.y - minAABB.y);
 	float zRange = std::abs(maxAABB.z - minAABB.z);
-	m_sceneScaleFactor = 300.0f / std::min(std::min(xRange, yRange), zRange);
+	m_sceneScaleFactor = 300.0f / std::max(std::max(xRange, yRange), zRange);
 
 	DirectX::XMStoreFloat3(&minAABB, DirectX::XMVectorScale(sceneMinAABB, m_sceneScaleFactor));
 	DirectX::XMStoreFloat3(&maxAABB, DirectX::XMVectorScale(sceneMaxAABB, m_sceneScaleFactor));

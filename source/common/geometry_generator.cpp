@@ -342,7 +342,6 @@ void GeometryGenerator::CreateCone(float angle, float height, uint sliceCount, M
 }
 
 typedef std::tuple<uint, uint, uint> TupleUInt3;
-typedef std::tuple<TupleUInt3, TupleUInt3, TupleUInt3> FaceTuple;
 
 struct ObjMaterial {
 	DirectX::XMFLOAT4 Ambient; // w = SpecularIntensity

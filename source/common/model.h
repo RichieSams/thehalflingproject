@@ -50,7 +50,6 @@ struct DefaultInstanceType {
 	DirectX::XMFLOAT4X4 worldTransform;
 };
 
-template <typename Vertex, typename InstanceType = DefaultInstanceType>
 class Model {
 public:
 	Model()
@@ -58,6 +57,7 @@ public:
 		  m_indexBuffer(nullptr),
 		  m_instanceBuffer(nullptr),
 		  m_vertexStride(0),
+		  m_instanceStride(0),
 		  m_subsets(nullptr),
 		  m_subsetCount(0),
 		  m_maxInstanceCount(0),
@@ -79,7 +79,8 @@ private:
 	ID3D11Buffer *m_indexBuffer;
 	ID3D11Buffer *m_instanceBuffer;
 
-	uint m_vertexStride;
+	size_t m_vertexStride;
+	size_t m_instanceStride;
 
 	ModelSubset *m_subsets;
 	uint m_subsetCount;
@@ -101,30 +102,27 @@ public:
 	void SetWorldTransform(DirectX::XMMATRIX &worldTransform) { m_worldTransform = worldTransform; }
 	const DirectX::XMMATRIX &GetWorldTransform() { return m_worldTransform; }
 
-	void CreateVertexBuffer(ID3D11Device *device, Vertex *vertices, uint vertexCount, DisposeAfterUse::Flag disposeAfterUse = DisposeAfterUse::YES);
+	void CreateVertexBuffer(ID3D11Device *device, void *vertices, size_t vertexStride, uint vertexCount, DisposeAfterUse::Flag disposeAfterUse = DisposeAfterUse::YES);
 	void CreateIndexBuffer(ID3D11Device *device, uint *indices, uint indexCount, DisposeAfterUse::Flag disposeAfterUse = DisposeAfterUse::YES);
-	void CreateInstanceBuffer(ID3D11Device *device, uint maxInstanceCount);
+	void CreateInstanceBuffer(ID3D11Device *device, size_t instanceStride, uint maxInstanceCount);
 	void CreateSubsets(ModelSubset *subsetArray, uint subsetCount, DisposeAfterUse::Flag disposeAfterUse = DisposeAfterUse::YES);
 
-	InstanceType *MapInstanceBuffer(ID3D11DeviceContext *deviceContext, uint *out_maxNumInstances);
+	void *MapInstanceBuffer(ID3D11DeviceContext *deviceContext, uint *out_maxNumInstances);
 	void UnMapInstanceBuffer(ID3D11DeviceContext *deviceContext);
 
 	void DrawSubset(ID3D11DeviceContext *deviceContext, int subsetId = -1);
 	void DrawInstancedSubset(ID3D11DeviceContext *deviceContext, uint indexCountPerInstance, uint instanceCount, uint subsetId = -1);
 };
 
-template <typename Vertex, typename InstanceType>
-void *Model<Vertex, InstanceType>::operator new(size_t size) {
+void *Model::operator new(size_t size) {
 	return _aligned_malloc(size, 16);
 }
 
-template <typename Vertex, typename InstanceType>
-void Model<Vertex, InstanceType>::operator delete(void *memory) {
+void Model::operator delete(void *memory) {
 	_aligned_free(memory);
 }
 
-template <typename Vertex, typename InstanceType>
-const Common::BlinnPhongMaterial &Model<Vertex, InstanceType>::GetSubsetMaterial(uint subsetIndex) const {
+const Common::BlinnPhongMaterial &Model::GetSubsetMaterial(uint subsetIndex) const {
 	if (subsetIndex < m_subsetCount) {
 		return m_subsets[subsetIndex].Material;
 	}
@@ -132,8 +130,7 @@ const Common::BlinnPhongMaterial &Model<Vertex, InstanceType>::GetSubsetMaterial
 	throw std::out_of_range("subsetIndex out of range");
 }
 
-template <typename Vertex, typename InstanceType>
-uint Model<Vertex, InstanceType>::GetSubsetTextureFlags(uint subsetIndex) const {
+uint Model::GetSubsetTextureFlags(uint subsetIndex) const {
 	if (subsetIndex < m_subsetCount) {
 		return m_subsets[subsetIndex].TextureFlags;
 	}
@@ -141,13 +138,12 @@ uint Model<Vertex, InstanceType>::GetSubsetTextureFlags(uint subsetIndex) const 
 	throw std::out_of_range("subsetIndex out of range");
 }
 
-template <typename Vertex, typename InstanceType>
-void Model<Vertex, InstanceType>::CreateVertexBuffer(ID3D11Device *device, Vertex *vertices, uint vertexCount, DisposeAfterUse::Flag disposeAfterUse) {
-	m_vertexStride = sizeof(Vertex);
+void Model::CreateVertexBuffer(ID3D11Device *device, void *vertices, size_t vertexStride, uint vertexCount, DisposeAfterUse::Flag disposeAfterUse) {
+	m_vertexStride = vertexStride;
 
 	D3D11_BUFFER_DESC vbd;
 	vbd.Usage = D3D11_USAGE_IMMUTABLE;
-	vbd.ByteWidth = sizeof(Vertex) * vertexCount;
+	vbd.ByteWidth = vertexStride * vertexCount;
 	vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vbd.CPUAccessFlags = 0;
 	vbd.MiscFlags = 0;
@@ -163,8 +159,7 @@ void Model<Vertex, InstanceType>::CreateVertexBuffer(ID3D11Device *device, Verte
 	}
 }
 
-template <typename Vertex, typename InstanceType>
-void Model<Vertex, InstanceType>::CreateIndexBuffer(ID3D11Device *device, uint *indices, uint indexCount, DisposeAfterUse::Flag disposeAfterUse) {
+void Model::CreateIndexBuffer(ID3D11Device *device, uint *indices, uint indexCount, DisposeAfterUse::Flag disposeAfterUse) {
 	D3D11_BUFFER_DESC ibd;
 	ibd.Usage = D3D11_USAGE_IMMUTABLE;
 	ibd.ByteWidth = sizeof(uint) * indexCount;
@@ -183,13 +178,13 @@ void Model<Vertex, InstanceType>::CreateIndexBuffer(ID3D11Device *device, uint *
 	}
 }
 
-template <typename Vertex, typename InstanceType>
-void Model<Vertex, InstanceType>::CreateInstanceBuffer(ID3D11Device *device, uint maxInstanceCount) {
+void Model::CreateInstanceBuffer(ID3D11Device *device, size_t instanceStride, uint maxInstanceCount) {
+	m_instanceStride = instanceStride;
 	m_maxInstanceCount = maxInstanceCount;
 
 	D3D11_BUFFER_DESC instbd;
 	instbd.Usage = D3D11_USAGE_DYNAMIC;
-	instbd.ByteWidth = sizeof(InstanceType) * maxInstanceCount;
+	instbd.ByteWidth = instanceStride * maxInstanceCount;
 	instbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	instbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE; //needed for Map/Unmap
 	instbd.MiscFlags = 0;
@@ -198,35 +193,30 @@ void Model<Vertex, InstanceType>::CreateInstanceBuffer(ID3D11Device *device, uin
 	HR(device->CreateBuffer(&instbd, nullptr, &m_instanceBuffer));
 }
 
-template <typename Vertex, typename InstanceType>
-void Model<Vertex, InstanceType>::CreateSubsets(ModelSubset *subsetArray, uint subsetCount, DisposeAfterUse::Flag disposeAfterUse) {
+void Model::CreateSubsets(ModelSubset *subsetArray, uint subsetCount, DisposeAfterUse::Flag disposeAfterUse) {
 	m_subsets = subsetArray;
 	m_subsetCount = subsetCount;
 	m_disposeSubsetArray = disposeAfterUse;
 }
 
-template <typename Vertex, typename InstanceType>
-InstanceType *Model<Vertex, InstanceType>::MapInstanceBuffer(ID3D11DeviceContext *deviceContext, uint *out_maxNumInstances) {
+void *Model::MapInstanceBuffer(ID3D11DeviceContext *deviceContext, uint *out_maxNumInstances) {
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 	deviceContext->Map(m_instanceBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 
 	*out_maxNumInstances = m_maxInstanceCount;
-	return static_cast<InstanceType *>(mappedResource.pData);
+	return mappedResource.pData;
 }
 
-template <typename Vertex, typename InstanceType>
-void Model<Vertex, InstanceType>::UnMapInstanceBuffer(ID3D11DeviceContext *deviceContext) {
+void Model::UnMapInstanceBuffer(ID3D11DeviceContext *deviceContext) {
 	deviceContext->Unmap(m_instanceBuffer, 0);
 }
 
-template <typename Vertex, typename InstanceType>
-void Common::Model<Vertex, InstanceType>::DrawSubset(ID3D11DeviceContext *deviceContext, int subsetId) {
+void Common::Model::DrawSubset(ID3D11DeviceContext *deviceContext, int subsetId) {
 	assert(subsetId >= -1 && subsetId < (int)m_subsetCount);
 
-	uint stride = sizeof(Vertex);
 	uint offset = 0;
 
-	deviceContext->IASetVertexBuffers(0, 1, &m_vertexBuffer, &stride, &offset);
+	deviceContext->IASetVertexBuffers(0, 1, &m_vertexBuffer, &m_vertexStride, &offset);
 	deviceContext->IASetIndexBuffer(m_indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
 	if (subsetId == -1) {
@@ -244,13 +234,12 @@ void Common::Model<Vertex, InstanceType>::DrawSubset(ID3D11DeviceContext *device
 	}
 }
 
-template <typename Vertex, typename InstanceType>
-void Model<Vertex, InstanceType>::DrawInstancedSubset(ID3D11DeviceContext *deviceContext, uint indexCountPerInstance, uint instanceCount, uint subsetId) {
+void Model::DrawInstancedSubset(ID3D11DeviceContext *deviceContext, uint indexCountPerInstance, uint instanceCount, uint subsetId) {
 	assert(m_instanceBuffer);
 	assert(instanceCount <= m_maxInstanceCount);
 
 	ID3D11Buffer *vbs[] = {m_vertexBuffer, m_instanceBuffer};
-	uint strides[] = {sizeof(Vertex), sizeof(InstanceType)};
+	uint strides[] = {m_vertexStride, sizeof(m_instanceStride)};
 	uint offsets[] = {0, 0};
 	deviceContext->IASetVertexBuffers(0, 2, vbs, strides, offsets);
 	deviceContext->IASetIndexBuffer(m_indexBuffer, DXGI_FORMAT_R32_UINT, 0);

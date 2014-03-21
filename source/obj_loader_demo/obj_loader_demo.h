@@ -105,7 +105,7 @@ private:
 	Common::Console m_console;
 	bool m_showConsole;
 
-	std::vector<Common::Model<Vertex> *> m_models;
+	std::vector<Common::Model *> m_models;
 	std::vector<Common::BlinnPhongMaterial> m_frameMaterialList;
 
 	std::vector<SceneLoaderModel> m_sceneLoaderModels;
@@ -115,8 +115,8 @@ private:
 
 	float m_sceneScaleFactor;
 
-	Common::Model<DebugObjectVertex, DebugObjectInstance> m_debugSphere;
-	Common::Model<DebugObjectVertex, DebugObjectInstance> m_debugCone;
+	Common::Model m_debugSphere;
+	Common::Model m_debugCone;
 	uint m_debugSphereNumIndices;
 	uint m_debugConeNumIndices;
 

@@ -122,10 +122,12 @@ void ObjLoaderDemo::SetupScene() {
 	DirectX::XMVECTOR sceneMinAABB = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
 	DirectX::XMVECTOR sceneMaxAABB = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
 
-	for (auto iter = m_sceneLoaderModels.begin(); iter != m_sceneLoaderModels.end(); ++iter) {
-		Common::Model<Vertex> *model = new Common::Model<Vertex>();
+	size_t vertexStride = sizeof(Vertex);
 
-		model->CreateVertexBuffer(m_device, iter->Vertices, iter->VertexCount);
+	for (auto iter = m_sceneLoaderModels.begin(); iter != m_sceneLoaderModels.end(); ++iter) {
+		Common::Model *model = new Common::Model();
+
+		model->CreateVertexBuffer(m_device, iter->Vertices, vertexStride, iter->VertexCount);
 		model->CreateIndexBuffer(m_device, iter->Indices, iter->IndexCount);
 
 		Common::ModelSubset *modelSubsets = new Common::ModelSubset[iter->SubsetCount];
@@ -183,6 +185,9 @@ void ObjLoaderDemo::SetupScene() {
 }
 
 void ObjLoaderDemo::BuildGeometryBuffers() {
+	size_t vertexStride = sizeof(Vertex);
+	size_t instanceStride = sizeof(DebugObjectInstance);
+	
 	Common::GeometryGenerator::MeshData meshData;
 	ZeroMemory(&meshData, sizeof(Common::GeometryGenerator::MeshData));
 
@@ -195,7 +200,7 @@ void ObjLoaderDemo::BuildGeometryBuffers() {
 	for (uint i = 0; i < vertexCount; ++i) {
 		debugSphereVertices[i].pos = meshData.Vertices[i].Position;
 	}
-	m_debugSphere.CreateVertexBuffer(m_device, debugSphereVertices, vertexCount);
+	m_debugSphere.CreateVertexBuffer(m_device, debugSphereVertices, vertexStride, vertexCount);
 
 	uint *debugSphereIndices = new uint[indexCount];
 	for (uint i = 0; i < indexCount; ++i) {
@@ -210,7 +215,7 @@ void ObjLoaderDemo::BuildGeometryBuffers() {
 	};
 	m_debugSphere.CreateSubsets(debugSphereSubsets, 1);
 
-	m_debugSphere.CreateInstanceBuffer(m_device, 1000);
+	m_debugSphere.CreateInstanceBuffer(m_device, instanceStride, 1000);
 
 
 	meshData.Indices.clear();
@@ -225,7 +230,7 @@ void ObjLoaderDemo::BuildGeometryBuffers() {
 	for (uint i = 0; i < vertexCount; ++i) {
 		debugConeVertices[i].pos = meshData.Vertices[i].Position;
 	}
-	m_debugCone.CreateVertexBuffer(m_device, debugConeVertices, vertexCount);
+	m_debugCone.CreateVertexBuffer(m_device, debugConeVertices, vertexStride, vertexCount);
 
 	uint *debugConeIndices = new uint[indexCount];
 	for (uint i = 0; i < indexCount; ++i) {
@@ -240,7 +245,7 @@ void ObjLoaderDemo::BuildGeometryBuffers() {
 	};
 	m_debugCone.CreateSubsets(debugConeSubsets, 1);
 
-	m_debugCone.CreateInstanceBuffer(m_device, 1000);
+	m_debugCone.CreateInstanceBuffer(m_device, instanceStride, 1000);
 }
 
 void ObjLoaderDemo::CreateLights(const DirectX::XMFLOAT3 &sceneSizeMin, const DirectX::XMFLOAT3 &sceneSizeMax) {

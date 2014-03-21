@@ -376,7 +376,7 @@ void ObjLoaderDemo::RenderDebugGeometry() {
 
 	if (m_showLightLocations) {
 		uint maxInstances;
-		DebugObjectInstance *instances = m_debugSphere.MapInstanceBuffer(m_immediateContext, &maxInstances);
+		DebugObjectInstance *instances = (DebugObjectInstance *)m_debugSphere.MapInstanceBuffer(m_immediateContext, &maxInstances);
 
 		for (uint i = 0; i < m_numPointLightsToDraw; ++i) {
 			DirectX::XMMATRIX translation = DirectX::XMMatrixTranslation(m_pointLights[i]->Position.x, m_pointLights[i]->Position.y, m_pointLights[i]->Position.z);
@@ -386,7 +386,7 @@ void ObjLoaderDemo::RenderDebugGeometry() {
 
 		m_debugSphere.UnMapInstanceBuffer(m_immediateContext);
 
-		instances = m_debugCone.MapInstanceBuffer(m_immediateContext, &maxInstances);
+		instances = (DebugObjectInstance *)m_debugCone.MapInstanceBuffer(m_immediateContext, &maxInstances);
 
 		DirectX::XMVECTOR yAxis = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 		for (uint i = 0; i < m_numSpotLightsToDraw; ++i) {

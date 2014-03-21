@@ -57,6 +57,9 @@
     <ClCompile Include="..\common\console.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="..\common\model.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\common\halfling_sys.h">

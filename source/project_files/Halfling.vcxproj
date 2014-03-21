@@ -18,6 +18,7 @@
     <ClCompile Include="..\common\dxerr.cpp" />
     <ClCompile Include="..\common\geometry_generator.cpp" />
     <ClCompile Include="..\common\light_animator.cpp" />
+    <ClCompile Include="..\common\model.cpp" />
     <ClCompile Include="..\common\profiler.cpp" />
     <ClCompile Include="..\common\sprite_font.cpp" />
     <ClCompile Include="..\common\sprite_renderer.cpp" />

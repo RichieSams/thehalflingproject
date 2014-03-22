@@ -31,8 +31,11 @@ private:
 	MemoryBuffer m_buffer;
 
 public:
+	void readInt64(int64 * value) { read((char *)value, sizeof(int64)); }
 	void readUInt64(uint64 *value) { read((char *)value, sizeof(uint64)); }
+	void readInt32(int32 * value) { read((char *)value, sizeof(int32)); }
 	void readUInt32(uint32 *value) { read((char *)value, sizeof(uint32)); }
+	void readInt16(int16 * value) { read((char *)value, sizeof(int16)); }
 	void readUInt16(uint16 *value) { read((char *)value, sizeof(uint16)); }
 	void readByte(byte *value) { read((char *)value, sizeof(byte)); }
 };

@@ -135,14 +135,14 @@ void Common::Model::DrawSubset(ID3D11DeviceContext *deviceContext, int subsetId)
 
 	if (subsetId == -1) {
 		for (uint i = 0; i < m_subsetCount; ++i) {
-			if ((m_subsets[i].TextureFlags & TextureFlags::DIFFUSE) == TextureFlags::DIFFUSE) {
-				deviceContext->PSSetShaderResources(0, 1, &m_subsets[i].DiffuseSRV);
+			if ((m_subsets[i].TextureFlags & TextureFlags::DIFFUSE_COLOR) == TextureFlags::DIFFUSE_COLOR) {
+				deviceContext->PSSetShaderResources(0, 1, &m_subsets[i].DiffuseColorSRV);
 			}
 			deviceContext->DrawIndexed(m_subsets[i].IndexCount, m_subsets[i].IndexStart, 0);
 		}
 	} else {
-		if ((m_subsets[subsetId].TextureFlags & TextureFlags::DIFFUSE) == TextureFlags::DIFFUSE) {
-			deviceContext->PSSetShaderResources(0, 1, &m_subsets[subsetId].DiffuseSRV);
+		if ((m_subsets[subsetId].TextureFlags & TextureFlags::DIFFUSE_COLOR) == TextureFlags::DIFFUSE_COLOR) {
+			deviceContext->PSSetShaderResources(0, 1, &m_subsets[subsetId].DiffuseColorSRV);
 		}
 		deviceContext->DrawIndexed(m_subsets[subsetId].IndexCount, m_subsets[subsetId].IndexStart, 0);
 	}
@@ -160,14 +160,14 @@ void Model::DrawInstancedSubset(ID3D11DeviceContext *deviceContext, uint indexCo
 
 	if (subsetId == -1) {
 		for (uint i = 0; i < m_subsetCount; ++i) {
-			if ((m_subsets[i].TextureFlags & TextureFlags::DIFFUSE) == TextureFlags::DIFFUSE) {
-				deviceContext->PSSetShaderResources(0, 1, &m_subsets[i].DiffuseSRV);
+			if ((m_subsets[i].TextureFlags & TextureFlags::DIFFUSE_COLOR) == TextureFlags::DIFFUSE_COLOR) {
+				deviceContext->PSSetShaderResources(0, 1, &m_subsets[i].DiffuseColorSRV);
 			}
 			deviceContext->DrawIndexedInstanced(indexCountPerInstance, instanceCount, m_subsets[i].IndexStart, 0, 0);
 		}
 	} else {
-		if ((m_subsets[subsetId].TextureFlags & TextureFlags::DIFFUSE) == TextureFlags::DIFFUSE) {
-			deviceContext->PSSetShaderResources(0, 1, &m_subsets[subsetId].DiffuseSRV);
+		if ((m_subsets[subsetId].TextureFlags & TextureFlags::DIFFUSE_COLOR) == TextureFlags::DIFFUSE_COLOR) {
+			deviceContext->PSSetShaderResources(0, 1, &m_subsets[subsetId].DiffuseColorSRV);
 		}
 		deviceContext->DrawIndexedInstanced(indexCountPerInstance, instanceCount, m_subsets[subsetId].IndexStart, 0, 0);
 	}

@@ -19,11 +19,12 @@ namespace Common {
 namespace TextureFlags {
 
 enum Flags {
-	DIFFUSE = 0x01,
+	DIFFUSE_COLOR = 0x01,
 	SPEC_COLOR = 0x02,
-	SPEC_HIGHLIGHT = 0x04,
+	SPEC_POWER = 0x04,
 	ALPHA_MAP = 0x08,
-	BUMP_MAP = 0x10
+	DISPLACEMENT_MAP = 0x10,
+	NORMAL_MAP = 0x20
 };
 
 } // End of namespace TextureFlags
@@ -37,11 +38,12 @@ struct ModelSubset {
 
 	Common::BlinnPhongMaterial Material;
 
-	ID3D11ShaderResourceView *DiffuseSRV;
+	ID3D11ShaderResourceView *DiffuseColorSRV;
 	ID3D11ShaderResourceView *SpecularColorSRV;
-	ID3D11ShaderResourceView *SpecularHighlightSRV;
-	ID3D11ShaderResourceView *AlphaSRV;
-	ID3D11ShaderResourceView *BumpSRV;
+	ID3D11ShaderResourceView *SpecularPowerSRV;
+	ID3D11ShaderResourceView *AlphaMapSRV;
+	ID3D11ShaderResourceView *DisplacementMapSRV;
+	ID3D11ShaderResourceView *NormalMapSRV;
 
 	uint TextureFlags;
 };

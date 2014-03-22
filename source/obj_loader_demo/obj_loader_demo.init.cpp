@@ -143,8 +143,8 @@ void ObjLoaderDemo::SetupScene() {
 
 			modelSubsets[i].TextureFlags = 0;
 			if (!iter->Subsets[i].DiffuseMapFile.empty()) {
-				modelSubsets[i].DiffuseSRV = m_textureManager.GetSRVFromFile(m_device, m_immediateContext, iter->Subsets[i].DiffuseMapFile, D3D11_USAGE_IMMUTABLE);
-				modelSubsets[i].TextureFlags |= Common::TextureFlags::DIFFUSE;
+				modelSubsets[i].DiffuseColorSRV = m_textureManager.GetSRVFromFile(m_device, m_immediateContext, iter->Subsets[i].DiffuseMapFile, D3D11_USAGE_IMMUTABLE);
+				modelSubsets[i].TextureFlags |= Common::TextureFlags::DIFFUSE_COLOR;
 			}
 
 			sceneMinAABB = DirectX::XMVectorMin(sceneMinAABB, DirectX::XMLoadFloat3(&(iter->Subsets[i].AABBMin)));

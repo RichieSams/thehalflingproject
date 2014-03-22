@@ -34,6 +34,7 @@
     <ClInclude Include="..\common\d3d_util.h" />
     <ClInclude Include="..\common\device_states.h" />
     <ClInclude Include="..\common\dxerr.h" />
+    <ClInclude Include="..\common\endian.h" />
     <ClInclude Include="..\common\file_io_util.h" />
     <ClInclude Include="..\common\geometry_generator.h" />
     <ClInclude Include="..\common\halfling_sys.h" />

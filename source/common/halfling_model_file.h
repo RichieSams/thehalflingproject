@@ -24,6 +24,7 @@ private:
 		HAS_STRING_TABLE = 0x0008
 	};
 
+public:
 	struct Subset {
 		uint32 VertexStart;
 		uint32 VertexCount;
@@ -49,7 +50,15 @@ private:
 
 public:
 	static Common::Model *Load(ID3D11Device *device, ID3D11DeviceContext *context, Common::TextureManager *textureManager, const wchar *filePath);
-	
+	static void Write(const wchar *filepath, 
+	                  uint numVertices, uint numIndices, 
+	                  D3D11_BUFFER_DESC *vertexBufferDesc,
+	                  D3D11_BUFFER_DESC *indexBufferDesc,
+	                  D3D11_BUFFER_DESC *instanceBufferDesc,
+	                  void *vertexData,
+	                  void *indexData,
+	                  void *instanceData,
+	                  std::vector<Subset> &subsets, std::vector<std::string> &stringTable);
 };
 
 } // End of namespace Common

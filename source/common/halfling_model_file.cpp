@@ -11,6 +11,7 @@
 #include "common/endian.h"
 
 #include <string>
+#include <fstream>
 
 namespace Common {
 
@@ -170,6 +171,83 @@ Common::Model *Common::HalflingModelFile::Load(ID3D11Device *device, ID3D11Devic
 	model->CreateSubsets(modelSubsets, numSubsets);
 
 	return model;
+}
+
+
+void HalflingModelFile::Write(const wchar *filepath, uint numVertices, uint numIndices, D3D11_BUFFER_DESC *vertexBufferDesc, D3D11_BUFFER_DESC *indexBufferDesc, D3D11_BUFFER_DESC *instanceBufferDesc, void *vertexData, void *indexData, void *instanceData, std::vector<Subset> &subsets, std::vector<std::string> &stringTable) {
+	std::ofstream fout(filepath, std::ios::out | std::ios::binary);
+
+	// File Id
+	BinaryWriteUInt32(fout, MKTAG('\0', 'F', 'M', 'H'));
+
+	// File format version
+	BinaryWriteByte(fout, kFileFormatVersion);
+
+	// Flags placeholder
+	std::streamoff flagsPos = fout.tellp();
+	uint64 flags = 0;
+	BinaryWriteInt64(fout, flags);
+
+	// String table
+	size_t stringTableSize = stringTable.size();
+	if (stringTableSize > 0) {
+		flags |= HAS_STRING_TABLE;
+
+		BinaryWriteUInt32(fout, stringTable.size());
+		for (uint i = 0; i < stringTableSize; ++i) {
+			BinaryWriteUInt16(fout, stringTable[i].size());
+			fout.write(stringTable[i].c_str(), stringTable[i].size());
+		}
+	}
+
+	// Num vertices
+	BinaryWriteUInt32(fout, numVertices);
+
+	// Num indices 
+	BinaryWriteUInt32(fout, numIndices);
+
+	// Num vertex elements
+	// TODO: Do we want to store this?
+
+	// Vertex buffer desc
+	fout.write(reinterpret_cast<const char *>(vertexBufferDesc), sizeof(D3D11_BUFFER_DESC));
+
+	// Index buffer desc
+	fout.write(reinterpret_cast<const char *>(indexBufferDesc), sizeof(D3D11_BUFFER_DESC));
+
+	// Instance buffer desc
+	if (instanceBufferDesc != nullptr) {
+		flags |= HAS_INSTANCE_BUFFER;
+
+		fout.write(reinterpret_cast<const char *>(instanceBufferDesc), sizeof(D3D11_BUFFER_DESC));
+	}
+
+	// Vertex data
+	fout.write(reinterpret_cast<const char *>(vertexData), vertexBufferDesc->ByteWidth);
+
+	// Index data
+	fout.write(reinterpret_cast<const char *>(indexData), indexBufferDesc->ByteWidth);
+
+	// Instance data
+	if (instanceBufferDesc != nullptr && instanceData != nullptr) {
+		flags |= HAS_INSTANCE_BUFFER_DATA;
+
+		fout.write(reinterpret_cast<const char *>(instanceData), instanceBufferDesc->ByteWidth);
+	}
+
+	// Subsets
+	BinaryWriteUInt32(fout, subsets.size());
+	for (uint i = 0; i < subsets.size(); ++i) {
+		fout.write(reinterpret_cast<const char *>(&subsets[i]), sizeof(Subset));
+	}
+
+	// Go back and re-write flags
+	fout.seekp(flagsPos);
+	BinaryWriteInt64(fout, flags);
+
+	// Cleanup
+	fout.flush();
+	fout.close();
 }
 
 } // End of namespace Common

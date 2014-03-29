@@ -1,28 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="..\common\halfling_model_file.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
     <ClCompile Include="..\obj_hfm_converter\main.cpp">
       <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\common\halfling_model_file.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\common\console_progress_bar.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\common\endian.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Filter Include="Common">
-      <UniqueIdentifier>{02bbf9fe-e8e6-4427-935f-93ca97b3a7f7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core">
       <UniqueIdentifier>{d157394e-5e03-44b0-8fc1-091ca0a7b456}</UniqueIdentifier>
     </Filter>

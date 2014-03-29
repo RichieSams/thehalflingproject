@@ -60,6 +60,12 @@
     <ClCompile Include="..\common\model.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="..\common\halfling_model_file.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\file_io_util.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\common\halfling_sys.h">
@@ -147,6 +153,12 @@
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="..\common\endian.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\console_progress_bar.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\halfling_model_file.h">
       <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>

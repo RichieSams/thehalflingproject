@@ -16,7 +16,9 @@
     <ClCompile Include="..\common\d3d_util.cpp" />
     <ClCompile Include="..\common\device_states.cpp" />
     <ClCompile Include="..\common\dxerr.cpp" />
+    <ClCompile Include="..\common\file_io_util.cpp" />
     <ClCompile Include="..\common\geometry_generator.cpp" />
+    <ClCompile Include="..\common\halfling_model_file.cpp" />
     <ClCompile Include="..\common\light_animator.cpp" />
     <ClCompile Include="..\common\model.cpp" />
     <ClCompile Include="..\common\profiler.cpp" />
@@ -31,12 +33,14 @@
   <ItemGroup>
     <ClInclude Include="..\common\camera.h" />
     <ClInclude Include="..\common\console.h" />
+    <ClInclude Include="..\common\console_progress_bar.h" />
     <ClInclude Include="..\common\d3d_util.h" />
     <ClInclude Include="..\common\device_states.h" />
     <ClInclude Include="..\common\dxerr.h" />
     <ClInclude Include="..\common\endian.h" />
     <ClInclude Include="..\common\file_io_util.h" />
     <ClInclude Include="..\common\geometry_generator.h" />
+    <ClInclude Include="..\common\halfling_model_file.h" />
     <ClInclude Include="..\common\halfling_sys.h" />
     <ClInclude Include="..\common\hash.h" />
     <ClInclude Include="..\common\lights.h" />
@@ -130,7 +134,7 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>..\..\build\$(Configuration)\$(ProjectName)\</OutDir>
     <IntDir>..\..\obj\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>../;../libs/AntTweakBar/include;../libs/DirectXTK/include;$(IncludePath)</IncludePath>
+    <IncludePath>../;../libs/AntTweakBar/include;../libs/DirectXTK/include;../libs/DirectXTex/DirectXTex;$(IncludePath)</IncludePath>
     <LibraryPath>../libs/AntTweakBar/lib;../libs/DirectXTK/lib/Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -154,7 +158,7 @@
       <OutputFile>$(OutDir)$(TargetName)d$(TargetExt)</OutputFile>
     </Link>
     <Lib>
-      <AdditionalDependencies>AntTweakBar.lib;DirectXTK.lib;gdiplus.lib</AdditionalDependencies>
+      <AdditionalDependencies>AntTweakBar.lib;DirectXTK.lib;gdiplus.lib;user32.lib</AdditionalDependencies>
     </Lib>
     <FxCompile>
       <AdditionalIncludeDirectories>../</AdditionalIncludeDirectories>
@@ -182,7 +186,7 @@
       <ShaderModel>5.0</ShaderModel>
     </FxCompile>
     <Lib>
-      <AdditionalDependencies>AntTweakBar.lib;DirectXTK.lib;gdiplus.lib</AdditionalDependencies>
+      <AdditionalDependencies>AntTweakBar.lib;DirectXTK.lib;gdiplus.lib;user32.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

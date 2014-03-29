@@ -24,10 +24,10 @@ private:
 	};
 
 	struct Subset {
-		uint64 VertexStart;
-		uint64 VertexCount;
-		uint64 IndexStart;
-		uint64 IndexCount;
+		uint32 VertexStart;
+		uint32 VertexCount;
+		uint32 IndexStart;
+		uint32 IndexCount;
 
 		float MatAmbientColor[3];
 		float MatDiffuseColor[4];

@@ -75,8 +75,7 @@ Common::Model *Common::HalflingModelFile::Load(ID3D11Device *device, ID3D11Devic
 	fin.readUInt32(&numIndices);
 
 	// Num vertex elements
-	uint16 numVertexElements;
-	fin.readUInt16(&numVertexElements);
+	// TODO: Do we want to store this?
 
 	// Vertex buffer desc
 	D3D11_BUFFER_DESC vertexBufferDesc;

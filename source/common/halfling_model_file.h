@@ -36,12 +36,12 @@ private:
 		float MatSpecIntensity;
 		float MatSpecPower;
 
-		uint32 diffuseColorMapIndex;
-		uint32 specColorMapIndex;
-		uint32 specPowerMapIndex;
-		uint32 alphaMapIndex;
-		uint32 displacementMapIndex;
-		uint32 normalMapIndex;
+		int32 diffuseColorMapIndex;
+		int32 specColorMapIndex;
+		int32 specPowerMapIndex;
+		int32 alphaMapIndex;
+		int32 displacementMapIndex;
+		int32 normalMapIndex;
 	};
 
 private:

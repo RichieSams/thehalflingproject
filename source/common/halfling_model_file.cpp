@@ -6,7 +6,6 @@
 
 #include "common/halfling_model_file.h"
 
-#include "common/texture_manager.h"
 #include "common/file_io_util.h"
 #include "common/memory_stream.h"
 #include "common/endian.h"

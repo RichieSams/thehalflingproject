@@ -8,6 +8,7 @@
 #define COMMON_HALFLING_MODEL_FILE_H
 
 #include "common/model.h"
+#include "common/texture_manager.h"
 
 
 namespace Common {

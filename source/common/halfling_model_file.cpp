@@ -124,20 +124,9 @@ Common::Model *Common::HalflingModelFile::Load(ID3D11Device *device, ID3D11Devic
 		modelSubsets[i].IndexStart = subsets[i].IndexStart;
 		modelSubsets[i].IndexCount = subsets[i].IndexCount;
 
-		modelSubsets[i].Material.Ambient.x = subsets[i].MatAmbientColor[0];
-		modelSubsets[i].Material.Ambient.y = subsets[i].MatAmbientColor[1];
-		modelSubsets[i].Material.Ambient.z = subsets[i].MatAmbientColor[2];
-		modelSubsets[i].Material.Ambient.w = subsets[i].MatSpecIntensity;
-
-		modelSubsets[i].Material.Diffuse.x = subsets[i].MatDiffuseColor[0];
-		modelSubsets[i].Material.Diffuse.y = subsets[i].MatDiffuseColor[1];
-		modelSubsets[i].Material.Diffuse.z = subsets[i].MatDiffuseColor[2];
-		modelSubsets[i].Material.Diffuse.w = subsets[i].MatDiffuseColor[3];
-
-		modelSubsets[i].Material.Specular.x = subsets[i].MatSpecColor[0];
-		modelSubsets[i].Material.Specular.y = subsets[i].MatSpecColor[1];
-		modelSubsets[i].Material.Specular.z = subsets[i].MatSpecColor[2];
-		modelSubsets[i].Material.Specular.w = subsets[i].MatSpecPower;
+		modelSubsets[i].Material.Ambient = DirectX::XMFLOAT4(subsets[i].MatAmbientColor.x, subsets[i].MatAmbientColor.y, subsets[i].MatAmbientColor.z, subsets[i].MatSpecIntensity);
+		modelSubsets[i].Material.Diffuse = subsets[i].MatDiffuseColor;
+		modelSubsets[i].Material.Specular = DirectX::XMFLOAT4(subsets[i].MatSpecColor.x, subsets[i].MatSpecColor.y, subsets[i].MatSpecColor.z, subsets[i].MatSpecPower);
 
 		if (subsets[i].diffuseColorMapIndex != -1) {
 			std::wstring wideFileName(stringTable[subsets[i].diffuseColorMapIndex].begin(), stringTable[subsets[i].diffuseColorMapIndex].end());

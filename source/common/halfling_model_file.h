@@ -29,9 +29,9 @@ private:
 		uint32 IndexStart;
 		uint32 IndexCount;
 
-		float MatAmbientColor[3];
-		float MatDiffuseColor[4];
-		float MatSpecColor[3];
+		DirectX::XMFLOAT3 MatAmbientColor;
+		DirectX::XMFLOAT4 MatDiffuseColor;
+		DirectX::XMFLOAT3 MatSpecColor;
 		float MatSpecIntensity;
 		float MatSpecPower;
 

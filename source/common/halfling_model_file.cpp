@@ -166,7 +166,7 @@ Common::Model *Common::HalflingModelFile::Load(ID3D11Device *device, ID3D11Devic
 	model->CreateVertexBuffer(device, vertexData, numVertices, vertexBufferDesc);
 	model->CreateIndexBuffer(device, (uint *)indexData, numIndices, indexBufferDesc);
 	if (hasInstanceBuffer) {
-		model->CreateInstanceBuffer(device, numInstances, instanceBufferDesc, instanceData);
+		model->CreateInstanceBuffer(device, instanceBufferDesc, instanceData);
 	}
 	model->CreateSubsets(modelSubsets, numSubsets);
 

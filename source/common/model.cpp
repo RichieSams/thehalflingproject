@@ -93,10 +93,10 @@ void Model::CreateInstanceBuffer(ID3D11Device *device, size_t instanceStride, ui
 	instbd.MiscFlags = 0;
 	instbd.StructureByteStride = 0;
 
-	CreateInstanceBuffer(device, maxInstanceCount, instbd, instanceData, disposeAfterUse);
+	CreateInstanceBuffer(device, instbd, instanceData, disposeAfterUse);
 }
 
-void Model::CreateInstanceBuffer(ID3D11Device *device, uint maxInstanceCount, D3D11_BUFFER_DESC instanceBufferDesc, void *instanceData, DisposeAfterUse::Flag disposeAfterUse) {
+void Model::CreateInstanceBuffer(ID3D11Device *device, D3D11_BUFFER_DESC instanceBufferDesc, void *instanceData, DisposeAfterUse::Flag disposeAfterUse) {
 	D3D11_SUBRESOURCE_DATA iInitData;
 	iInitData.pSysMem = instanceData;
 

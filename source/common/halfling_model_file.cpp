@@ -45,6 +45,27 @@ Common::Model *Common::HalflingModelFile::Load(ID3D11Device *device, ID3D11Devic
 	bool hasInstanceBuffer = (flags & HAS_INSTANCE_BUFFER) == HAS_INSTANCE_BUFFER;
 	bool hasInstanceData = (flags & HAS_INSTANCE_BUFFER_DATA) == HAS_INSTANCE_BUFFER_DATA;
 
+	// String table
+	std::string *stringTable = nullptr;
+	if ((flags & HAS_STRING_TABLE) == HAS_STRING_TABLE) {
+		uint32 numStrings;
+		fin.readUInt32(&numStrings);
+
+		stringTable = new std::string[numStrings];
+
+		for (uint i = 0; i < numStrings; ++i) {
+			uint16 stringLength;
+			fin.readUInt16(&stringLength);
+
+			// Read in the string characters
+			stringTable[i].resize(stringLength + 1); // Allow space for the null terminator
+			fin.read(&stringTable[i][0], stringLength);
+
+			// Manually create the null terminator
+			stringTable[i][stringLength] = '\0';
+		}
+	}
+
 	// Num vertices
 	uint64 numVertices;
 	fin.readUInt64(&numVertices);
@@ -99,27 +120,6 @@ Common::Model *Common::HalflingModelFile::Load(ID3D11Device *device, ID3D11Devic
 	// Subset data
 	Subset *subsets = new Subset[numSubsets];
 	fin.read((char *)subsets, sizeof(Subset) * numSubsets);
-
-	// String table
-	std::string *stringTable = nullptr;
-	if ((flags & HAS_STRING_TABLE) == HAS_STRING_TABLE) {
-		uint32 numStrings;
-		fin.readUInt32(&numStrings);
-
-		stringTable = new std::string[numStrings];
-
-		for (uint i = 0; i < numStrings; ++i) {
-			uint16 stringLength;
-			fin.readUInt16(&stringLength);
-
-			// Read in the string characters
-			stringTable[i].reserve(stringLength + 1); // Allow space for the null terminator
-			fin.read(&stringTable[i][0], stringLength);
-
-			// Manually create the null terminator
-			stringTable[i][stringLength] = '\0';
-		}
-	}
 
 	// Process the subsets
 	ModelSubset *modelSubsets = new ModelSubset[numSubsets];

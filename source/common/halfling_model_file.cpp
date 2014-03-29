@@ -67,16 +67,12 @@ Common::Model *Common::HalflingModelFile::Load(ID3D11Device *device, ID3D11Devic
 	}
 
 	// Num vertices
-	uint64 numVertices;
-	fin.readUInt64(&numVertices);
+	uint32 numVertices;
+	fin.readUInt32(&numVertices);
 
 	// Num indices
-	uint64 numIndices;
-	fin.readUInt64(&numIndices);
-
-	// Num instances
-	uint64 numInstances;
-	fin.readUInt64(&numInstances);
+	uint32 numIndices;
+	fin.readUInt32(&numIndices);
 
 	// Num vertex elements
 	uint16 numVertexElements;

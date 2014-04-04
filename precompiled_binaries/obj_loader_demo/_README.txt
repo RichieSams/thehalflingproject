@@ -23,14 +23,31 @@ Depth            The hardware depth buffer. It stores (1 - z/w). By swapping the
 
 
 Controls:
-Hold left mouse and drag to rotate
+Alt + left mouse and drag to rotate
+Alt + middle mouse and drag to pan
 Scroll middle mouse to zoom
+
 
 Click the little arrow in the bottom left-corner to change settings
 
 
 Things I still need to add/fix:
-- A 'fly-through' camera
 - Forward and Deferred are creating slightly different colors on certain faces
     - Perhaps the normal buffer?
 - Allow users to specify their own OBJ file
+
+
+Changelog:
+
+April 3, 2014 - SHA 181b7e0387c0da2beb3002ce77d9840ec72d48c5
+- Increased the resolution to 1280 x 720
+- Changed the camera controls to "Maya-like" controls
+    - Tumble
+    - Pan
+    - Scroll
+- Created a HalflingModelFile file format
+    - All model data is now stored in this instead of in obj
+    - The format is binary, which makes reading extremely fast
+- Removed loading screen
+    - Since scene load is so fast
+    - I may add this back for people with slower systems so the program is responsive

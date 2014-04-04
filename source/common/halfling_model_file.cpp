@@ -119,10 +119,15 @@ Common::Model *Common::HalflingModelFile::Load(ID3D11Device *device, ID3D11Devic
 	// Process the subsets
 	ModelSubset *modelSubsets = new ModelSubset[numSubsets];
 	for (uint i = 0; i < numSubsets; ++i) {
+		ZeroMemory(&modelSubsets[i], sizeof(ModelSubset));
+
 		modelSubsets[i].VertexStart = subsets[i].VertexStart;
 		modelSubsets[i].VertexCount = subsets[i].VertexCount;
 		modelSubsets[i].IndexStart = subsets[i].IndexStart;
 		modelSubsets[i].IndexCount = subsets[i].IndexCount;
+
+		modelSubsets[i].AABB_min = subsets[i].AABB_min;
+		modelSubsets[i].AABB_max = subsets[i].AABB_max;
 
 		modelSubsets[i].Material.Ambient = DirectX::XMFLOAT4(subsets[i].MatAmbientColor.x, subsets[i].MatAmbientColor.y, subsets[i].MatAmbientColor.z, subsets[i].MatSpecIntensity);
 		modelSubsets[i].Material.Diffuse = subsets[i].MatDiffuseColor;

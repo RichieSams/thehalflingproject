@@ -31,6 +31,9 @@ public:
 		uint32 IndexStart;
 		uint32 IndexCount;
 
+		DirectX::XMFLOAT3 AABB_min;
+		DirectX::XMFLOAT3 AABB_max;
+
 		DirectX::XMFLOAT3 MatAmbientColor;
 		DirectX::XMFLOAT4 MatDiffuseColor;
 		DirectX::XMFLOAT3 MatSpecColor;

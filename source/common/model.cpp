@@ -48,6 +48,8 @@ void Model::CreateVertexBuffer(ID3D11Device *device, void *vertices, size_t vert
 }
 
 void Model::CreateVertexBuffer(ID3D11Device *device, void *vertices, uint vertexCount, D3D11_BUFFER_DESC vertexBufferDesc, DisposeAfterUse::Flag disposeAfterUse) {
+	m_vertexStride = vertexBufferDesc.ByteWidth / vertexCount;
+	
 	D3D11_SUBRESOURCE_DATA vInitData;
 	vInitData.pSysMem = vertices;
 

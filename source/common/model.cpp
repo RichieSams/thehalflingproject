@@ -111,6 +111,17 @@ void Model::CreateSubsets(ModelSubset *subsetArray, uint subsetCount, DisposeAft
 	m_subsets = subsetArray;
 	m_subsetCount = subsetCount;
 	m_disposeSubsetArray = disposeAfterUse;
+
+	DirectX::XMVECTOR AABB_min = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+	DirectX::XMVECTOR AABB_max = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+
+	for (uint i = 0; i < subsetCount; ++i) {
+		AABB_min = DirectX::XMVectorMin(AABB_min, DirectX::XMLoadFloat3(&subsetArray[i].AABB_min));
+		AABB_max = DirectX::XMVectorMax(AABB_max, DirectX::XMLoadFloat3(&subsetArray[i].AABB_max));
+	}
+
+	DirectX::XMStoreFloat3(&m_AABB_min, AABB_min);
+	DirectX::XMStoreFloat3(&m_AABB_max, AABB_max);
 }
 
 void *Model::MapInstanceBuffer(ID3D11DeviceContext *deviceContext, uint *out_maxNumInstances) {

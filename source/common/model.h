@@ -36,6 +36,9 @@ struct ModelSubset {
 	uint IndexStart;
 	uint IndexCount;
 
+	DirectX::XMFLOAT3 AABB_min;
+	DirectX::XMFLOAT3 AABB_max;
+
 	Common::BlinnPhongMaterial Material;
 
 	ID3D11ShaderResourceView *DiffuseColorSRV;
@@ -63,6 +66,8 @@ public:
 		  m_subsets(nullptr),
 		  m_subsetCount(0),
 		  m_maxInstanceCount(0),
+		  m_AABB_min(0.0f, 0.0f, 0.0f),
+		  m_AABB_max(0.0f, 0.0f, 0.0f),
 		  m_worldTransform(DirectX::XMMatrixIdentity()),
 		  m_disposeSubsetArray(DisposeAfterUse::YES) {
 	}
@@ -89,6 +94,9 @@ private:
 
 	uint m_maxInstanceCount;
 
+	DirectX::XMFLOAT3 m_AABB_min;
+	DirectX::XMFLOAT3 m_AABB_max;
+
 	DirectX::XMMATRIX m_worldTransform;
 
 	DisposeAfterUse::Flag m_disposeSubsetArray;
@@ -100,6 +108,9 @@ public:
 	inline uint GetSubsetCount() const { return m_subsetCount; }
 	const Common::BlinnPhongMaterial &GetSubsetMaterial(uint subsetIndex) const;
 	uint GetSubsetTextureFlags(uint subsetIndex) const;
+
+	inline DirectX::XMFLOAT3 GetAABBMin() { return m_AABB_min; }
+	inline DirectX::XMFLOAT3 GetAABBMax() { return m_AABB_max; }
 
 	void SetWorldTransform(DirectX::XMMATRIX &worldTransform) { m_worldTransform = worldTransform; }
 	const DirectX::XMMATRIX &GetWorldTransform() { return m_worldTransform; }

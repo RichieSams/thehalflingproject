@@ -69,7 +69,7 @@ int main(int argc, char *argv[]) {
 		subset.VertexCount = mesh->mNumVertices;
 		subset.VertexStart = vertices.size();
 		subset.IndexStart = indices.size();
-		subset.IndexCount = mesh->mNumFaces / 3;
+		subset.IndexCount = mesh->mNumFaces * 3;
 
 		for (uint j = 0; j < mesh->mNumVertices; ++j) {
 			Vertex vertex;

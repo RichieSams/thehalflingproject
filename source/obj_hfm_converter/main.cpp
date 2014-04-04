@@ -81,10 +81,9 @@ int main(int argc, char *argv[]) {
 			vertices.push_back(vertex);
 		}
 
-		size_t currentSize = indices.size();
 		for (uint j = 0; j < mesh->mNumFaces; ++j) {
 			for (uint k = 0; k < mesh->mFaces[j].mNumIndices; ++k) {
-				indices.push_back(mesh->mFaces[j].mIndices[k] + currentSize);
+				indices.push_back(mesh->mFaces[j].mIndices[k]);
 			}
 		}
 

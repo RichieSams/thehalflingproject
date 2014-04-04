@@ -24,8 +24,6 @@
 
 #include <vector>
 #include <AntTweakBar.h>
-#include <atomic>
-#include <thread>
 
 
 namespace ObjLoaderDemo {
@@ -34,6 +32,7 @@ struct Vertex {
 	DirectX::XMFLOAT3 pos;
 	DirectX::XMFLOAT3 normal;
 	DirectX::XMFLOAT2 texCoord;
+	DirectX::XMFLOAT3 tangent;
 };
 
 struct DebugObjectVertex {
@@ -107,11 +106,6 @@ private:
 
 	std::vector<Common::Model *> m_models;
 	std::vector<Common::BlinnPhongMaterial> m_frameMaterialList;
-
-	std::vector<SceneLoaderModel> m_sceneLoaderModels;
-	std::atomic<bool> m_sceneLoaded;
-	bool m_sceneIsSetup;
-	std::thread m_sceneLoaderThread;
 
 	float m_sceneScaleFactor;
 

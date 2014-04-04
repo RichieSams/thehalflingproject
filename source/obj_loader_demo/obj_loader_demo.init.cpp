@@ -10,14 +10,13 @@
 
 #include "common/geometry_generator.h"
 #include "common/math.h"
+#include "common/halfling_model_file.h"
 
 #include <algorithm>
 #include <iostream>
 
 
 namespace ObjLoaderDemo {
-
-void LoadScene(std::atomic<bool> *sceneIsLoaded, std::vector<SceneLoaderModel> *sceneModelList);
 
 bool ObjLoaderDemo::Initialize(LPCTSTR mainWndCaption, uint32 screenWidth, uint32 screenHeight, bool fullscreen) {
 	if (!Halfling::HalflingEngine::Initialize(mainWndCaption, screenWidth, screenHeight, fullscreen)) {
@@ -26,7 +25,7 @@ bool ObjLoaderDemo::Initialize(LPCTSTR mainWndCaption, uint32 screenWidth, uint3
 
 	InitTweakBar();
 
-	m_sceneLoaderThread = std::thread(LoadScene, &m_sceneLoaded, &m_sceneLoaderModels);
+	SetupScene();
 
 	LoadShaders();
 	CreateShaderBuffers();
@@ -72,116 +71,27 @@ void ObjLoaderDemo::InitTweakBar() {
 	TwAddVarRW(m_settingsBar, "Number of SpotLights", TW_TYPE_INT32, &m_numSpotLightsToDraw, " min=0 max=1000 ");
 }
 
-void LoadScene(std::atomic<bool> *sceneIsLoaded, std::vector<SceneLoaderModel> *sceneModelList) {
-	Common::GeometryGenerator::MeshData meshData;
-	std::vector<Common::GeometryGenerator::MeshSubset> meshSubsets;
-	Common::GeometryGenerator::LoadFromOBJ(L"sponza.obj", &meshData, &meshSubsets, true);
-
-	uint vertexCount = meshData.Vertices.size();
-	uint indexCount = meshData.Indices.size();
-	uint subsetCount = meshSubsets.size();
-
-	Vertex *vertices = new Vertex[vertexCount];
-	for (uint i = 0; i < vertexCount; ++i) {
-		vertices[i].pos = meshData.Vertices[i].Position;
-		vertices[i].normal = meshData.Vertices[i].Normal;
-		vertices[i].texCoord = meshData.Vertices[i].TexCoord;
-	}
-
-	uint *indices = new uint[indexCount];
-	for (uint i = 0; i < indexCount; ++i) {
-		indices[i] = meshData.Indices[i];
-	}
-
-	// Create subsets
-	SceneLoaderModelSubset *subsets = new SceneLoaderModelSubset[subsetCount];
-
-	for (uint i = 0; i < subsetCount; ++i) {
-		subsets[i].IndexCount = meshSubsets[i].IndexCount;
-		subsets[i].IndexStart = meshSubsets[i].IndexStart;
-		subsets[i].VertexCount = meshSubsets[i].VertexCount;
-		subsets[i].VertexStart = meshSubsets[i].VertexStart;
-		subsets[i].Ambient = meshSubsets[i].Ambient;
-		subsets[i].Diffuse = meshSubsets[i].Diffuse,
-		subsets[i].Specular = meshSubsets[i].Specular;
-		subsets[i].DiffuseMapFile = meshSubsets[i].DiffuseMapFile;
-		subsets[i].AmbientMapFile = meshSubsets[i].AmbientMapFile;
-		subsets[i].SpecularColorMapFile = meshSubsets[i].SpecularColorMapFile;
-		subsets[i].SpecularHighlightMapFile = meshSubsets[i].SpecularHighlightMapFile;
-		subsets[i].AlphaMapFile = meshSubsets[i].AlphaMapFile;
-		subsets[i].BumpMapFile = meshSubsets[i].BumpMapFile;
-		subsets[i].AABBMin = meshSubsets[i].AABBMin;
-		subsets[i].AABBMax = meshSubsets[i].AABBMax;
-	}
-
-	sceneModelList->push_back({vertices, indices, subsets, vertexCount, indexCount, subsetCount});
-	sceneIsLoaded->store(true, std::memory_order_relaxed);
-}
-
 void ObjLoaderDemo::SetupScene() {
-	DirectX::XMVECTOR sceneMinAABB = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
-	DirectX::XMVECTOR sceneMaxAABB = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+	Common::Model *sceneModel = Common::HalflingModelFile::Load(m_device, m_immediateContext, &m_textureManager, L"sponza.hmf");
+	m_models.push_back(sceneModel);
 
-	size_t vertexStride = sizeof(Vertex);
+	DirectX::XMFLOAT3 AABB_min = sceneModel->GetAABBMin();
+	DirectX::XMFLOAT3 AABB_max = sceneModel->GetAABBMax();
 
-	for (auto iter = m_sceneLoaderModels.begin(); iter != m_sceneLoaderModels.end(); ++iter) {
-		Common::Model *model = new Common::Model();
-
-		model->CreateVertexBuffer(m_device, iter->Vertices, vertexStride, iter->VertexCount);
-		model->CreateIndexBuffer(m_device, iter->Indices, iter->IndexCount);
-
-		Common::ModelSubset *modelSubsets = new Common::ModelSubset[iter->SubsetCount];
-		// Convert from LoaderModelSubsets to Common::ModelSubsets
-		for (uint i = 0; i < iter->SubsetCount; ++i) {
-			modelSubsets[i].IndexStart = iter->Subsets[i].IndexStart;
-			modelSubsets[i].IndexCount = iter->Subsets[i].IndexCount;
-			modelSubsets[i].VertexStart = iter->Subsets[i].VertexStart;
-			modelSubsets[i].VertexCount = iter->Subsets[i].VertexCount;
-			modelSubsets[i].Material.Ambient = iter->Subsets[i].Ambient;
-			modelSubsets[i].Material.Diffuse = iter->Subsets[i].Diffuse;
-			modelSubsets[i].Material.Specular = iter->Subsets[i].Specular;
-
-			modelSubsets[i].TextureFlags = 0;
-			if (!iter->Subsets[i].DiffuseMapFile.empty()) {
-				modelSubsets[i].DiffuseColorSRV = m_textureManager.GetSRVFromFile(m_device, m_immediateContext, iter->Subsets[i].DiffuseMapFile, D3D11_USAGE_IMMUTABLE);
-				modelSubsets[i].TextureFlags |= Common::TextureFlags::DIFFUSE_COLOR;
-			}
-
-			sceneMinAABB = DirectX::XMVectorMin(sceneMinAABB, DirectX::XMLoadFloat3(&(iter->Subsets[i].AABBMin)));
-			sceneMaxAABB = DirectX::XMVectorMax(sceneMaxAABB, DirectX::XMLoadFloat3(&(iter->Subsets[i].AABBMax)));
-		}
-
-		delete[] iter->Subsets;
-
-		model->CreateSubsets(modelSubsets, iter->SubsetCount);
-
-		m_models.push_back(model);
-	}
-
-	// Cleanup
-	m_sceneLoaderModels.clear();
-
-	DirectX::XMFLOAT3 minAABB;
-	DirectX::XMFLOAT3 maxAABB;
-	DirectX::XMStoreFloat3(&minAABB, sceneMinAABB);
-	DirectX::XMStoreFloat3(&maxAABB, sceneMaxAABB);
-
-	float xRange = std::abs(maxAABB.x - minAABB.x);
-	float yRange = std::abs(maxAABB.y - minAABB.y);
-	float zRange = std::abs(maxAABB.z - minAABB.z);
+	float xRange = std::abs(AABB_max.x - AABB_min.x);
+	float yRange = std::abs(AABB_max.y - AABB_min.y);
+	float zRange = std::abs(AABB_max.z - AABB_min.z);
 	m_sceneScaleFactor = 300.0f / std::max(std::max(xRange, yRange), zRange);
 
-	DirectX::XMStoreFloat3(&minAABB, DirectX::XMVectorScale(sceneMinAABB, m_sceneScaleFactor));
-	DirectX::XMStoreFloat3(&maxAABB, DirectX::XMVectorScale(sceneMaxAABB, m_sceneScaleFactor));
-	CreateLights(minAABB, maxAABB);
+	DirectX::XMStoreFloat3(&AABB_min, DirectX::XMVectorScale(DirectX::XMLoadFloat3(&AABB_min), m_sceneScaleFactor));
+	DirectX::XMStoreFloat3(&AABB_max, DirectX::XMVectorScale(DirectX::XMLoadFloat3(&AABB_max), m_sceneScaleFactor));
+	CreateLights(AABB_min, AABB_max);
 	BuildGeometryBuffers();
 
 	DirectX::XMMATRIX scalingMatrix = DirectX::XMMatrixScaling(m_sceneScaleFactor, m_sceneScaleFactor, m_sceneScaleFactor);
 	for (auto iter = m_models.begin(); iter != m_models.end(); ++iter) {
 		(*iter)->SetWorldTransform(scalingMatrix);
 	}
-
-	m_sceneIsSetup = true;
 }
 
 void ObjLoaderDemo::BuildGeometryBuffers() {
@@ -211,7 +121,7 @@ void ObjLoaderDemo::BuildGeometryBuffers() {
 
 	// Create subsets
 	Common::ModelSubset *debugSphereSubsets = new Common::ModelSubset[1] {
-		{0, vertexCount, 0, indexCount / 3, {{0.0f, 0.0f, 0.0f, 0.0f}}, nullptr}
+		{0, vertexCount, 0, indexCount, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {{0.0f, 0.0f, 0.0f, 0.0f}}, nullptr}
 	};
 	m_debugSphere.CreateSubsets(debugSphereSubsets, 1);
 
@@ -241,7 +151,7 @@ void ObjLoaderDemo::BuildGeometryBuffers() {
 
 	// Create subsets
 	Common::ModelSubset *debugConeSubsets = new Common::ModelSubset[1] {
-		{0, vertexCount, 0, indexCount / 3, {{0.0f, 0.0f, 0.0f, 0.0f}}, nullptr}
+		{0, vertexCount, 0, indexCount, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {{0.0f, 0.0f, 0.0f, 0.0f}}, nullptr}
 	};
 	m_debugCone.CreateSubsets(debugConeSubsets, 1);
 
@@ -323,7 +233,8 @@ void ObjLoaderDemo::LoadShaders() {
 	D3D11_INPUT_ELEMENT_DESC vertexDesc[] = {
 		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
 		{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0}
+		{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0}
 	};
 
 	D3D11_INPUT_ELEMENT_DESC instanceVertexDesc[] = {
@@ -340,7 +251,7 @@ void ObjLoaderDemo::LoadShaders() {
 
 	HR(Common::LoadVertexShader("forward_vs.cso", m_device, &m_forwardVertexShader, nullptr));
 	HR(Common::LoadPixelShader("forward_ps.cso", m_device, &m_forwardPixelShader));
-	HR(Common::LoadVertexShader("gbuffer_vs.cso", m_device, &m_gbufferVertexShader, &m_gBufferInputLayout, vertexDesc, 3));
+	HR(Common::LoadVertexShader("gbuffer_vs.cso", m_device, &m_gbufferVertexShader, &m_gBufferInputLayout, vertexDesc, 4));
 	HR(Common::LoadPixelShader("gbuffer_ps.cso", m_device, &m_gbufferPixelShader));
 	HR(Common::LoadVertexShader("fullscreen_triangle_vs.cso", m_device, &m_fullscreenTriangleVertexShader, nullptr));
 	HR(Common::LoadPixelShader("no_cull_final_gather_ps.cso", m_device, &m_noCullFinalGatherPixelShader));

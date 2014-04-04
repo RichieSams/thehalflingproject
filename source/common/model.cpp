@@ -151,13 +151,13 @@ void Common::Model::DrawSubset(ID3D11DeviceContext *deviceContext, int subsetId)
 			if ((m_subsets[i].TextureFlags & TextureFlags::DIFFUSE_COLOR) == TextureFlags::DIFFUSE_COLOR) {
 				deviceContext->PSSetShaderResources(0, 1, &m_subsets[i].DiffuseColorSRV);
 			}
-			deviceContext->DrawIndexed(m_subsets[i].IndexCount, m_subsets[i].IndexStart, 0);
+			deviceContext->DrawIndexed(m_subsets[i].IndexCount, m_subsets[i].IndexStart, m_subsets[i].VertexStart);
 		}
 	} else {
 		if ((m_subsets[subsetId].TextureFlags & TextureFlags::DIFFUSE_COLOR) == TextureFlags::DIFFUSE_COLOR) {
 			deviceContext->PSSetShaderResources(0, 1, &m_subsets[subsetId].DiffuseColorSRV);
 		}
-		deviceContext->DrawIndexed(m_subsets[subsetId].IndexCount, m_subsets[subsetId].IndexStart, 0);
+		deviceContext->DrawIndexed(m_subsets[subsetId].IndexCount, m_subsets[subsetId].IndexStart, m_subsets[subsetId].VertexStart);
 	}
 }
 
@@ -176,13 +176,13 @@ void Model::DrawInstancedSubset(ID3D11DeviceContext *deviceContext, uint indexCo
 			if ((m_subsets[i].TextureFlags & TextureFlags::DIFFUSE_COLOR) == TextureFlags::DIFFUSE_COLOR) {
 				deviceContext->PSSetShaderResources(0, 1, &m_subsets[i].DiffuseColorSRV);
 			}
-			deviceContext->DrawIndexedInstanced(indexCountPerInstance, instanceCount, m_subsets[i].IndexStart, 0, 0);
+			deviceContext->DrawIndexedInstanced(indexCountPerInstance, instanceCount, m_subsets[i].IndexStart, m_subsets[i].VertexStart, 0);
 		}
 	} else {
 		if ((m_subsets[subsetId].TextureFlags & TextureFlags::DIFFUSE_COLOR) == TextureFlags::DIFFUSE_COLOR) {
 			deviceContext->PSSetShaderResources(0, 1, &m_subsets[subsetId].DiffuseColorSRV);
 		}
-		deviceContext->DrawIndexedInstanced(indexCountPerInstance, instanceCount, m_subsets[subsetId].IndexStart, 0, 0);
+		deviceContext->DrawIndexedInstanced(indexCountPerInstance, instanceCount, m_subsets[subsetId].IndexStart, m_subsets[subsetId].VertexStart, 0);
 	}
 }
 

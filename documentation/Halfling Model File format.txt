@@ -1,0 +1,56 @@
+Halfling Model File format             Version 1	
+
+
+
++-------------------------------------+-------------------+----------+--------------------------------------------------------------------------------------------------------------+
+|                Item                 |       Type        | Required |                                                 Description                                                  |
++-------------------------------------+-------------------+----------+--------------------------------------------------------------------------------------------------------------+
+| File Id                             | '\0FMH'           | T        | "Little-endian ""HMF\0"""                                                                                    |
+| File format version                 | byte              | T        | Version of the HMF format that this file uses                                                                |
+| Flags                               | uint64            | T        | Bitwise-OR of flags used in the file. See the flags below                                                    |
+|                                     |                   |          |                                                                                                              |
+| String Table                        |                   | F        |                                                                                                              |
+|         Num strings                 | uint32            | T        | The number of strings in the table                                                                           |
+|         String data                 |                   | T        |                                                                                                              |
+|                 String length       | uint16            | T        | Length of the string                                                                                         |
+|                 String              | char[]            | T        | The string characters. DOES NOT HAVE A NULL TERMINATION                                                      |
+|                                     |                   |          |                                                                                                              |
+| Num Vertices                        | uint32            | T        | The number of vertices in the file                                                                           |
+| Num Indices                         | uint32            | T        | The number of indices in the file                                                                            |
+|                                     |                   |          |                                                                                                              |
+| NumVertexElements                   | uint16            | T        | The number of elements in the vertex description                                                             |
+|                                     |                   |          |                                                                                                              |
+| Vertex Buffer Desc                  | D3D11_BUFFER_DESC | T        | A hard cast of the vertex buffer description                                                                 |
+| Index Buffer Desc                   | D3D11_BUFFER_DESC | T        | A hard cast of the index buffer description                                                                  |
+| Instance Buffer Desc                | D3D11_BUFFER_DESC | F        | A hard cast of the instance buffer description                                                               |
+|                                     |                   |          |                                                                                                              |
+| Vertex data                         | void[]            | T        | Will be read in a single block using VertexBufferDesc.ByteWidth                                              |
+| Index data                          | void[]            | T        | Will be read in a single block using IndexBufferDesc.ByteWidth                                               |
+| Instance buffer data                | void[]            | F        | Will be read in a single block using InstanceBufferDesc.ByteWidth                                            |
+|                                     |                   |          |                                                                                                              |
+| Num Subsets                         | uint32            | T        | The number of subsets in the file                                                                            |
+| Subset data                         | Subset[]          | T        | Will read in a single block to a Subset[]                                                                    |
+|         Vertex Start                | uint64            | T        | The index to the first vertex used by the subset                                                             |
+|         Vertex Count                | uint64            | T        | The number of vertices used by the subset (All used vertices must be in the range VertexStart + VertexCount) |
+|         Index Start                 | uint64            | T        | The index to the first index used by the subset                                                              |
+|         Index Count                 | uint64            | T        | The number of indices used by the subset (All used indices must be in the range IndexStart + IndexCount)     |
+|         Material Ambient Color      | float[3]          | T        | The RGB ambient color values of the material                                                                 |
+|         Material Specular Intensity | float             | T        | The Specular Intensity                                                                                       |
+|         Material Diffuse Color      | float[4]          | T        | The RGBA diffuse color values of the material                                                                |
+|         Material Specular Color     | float[3]          | T        | The RGB specular color values of the material                                                                |
+|         Material Specular Power     | float             | T        | The Specular Power                                                                                           |
+|         Diffuse Color Map Filename  | int32             | T        | An index to the string table. -1 if it doesn't exist.                                                        |
+|         Specular Color Map Filename | int32             | T        | An index to the string table. -1 if it doesn't exist.                                                        |
+|         Specular Power Map Filename | int32             | T        | An index to the string table. -1 if it doesn't exist.                                                        |
+|         Alpha Map Filename          | int32             | T        | An index to the string table. -1 if it doesn't exist.                                                        |
+|         Bump Map Filename           | int32             | T        | An index to the string table. -1 if it doesn't exist. Mutually exclusive with Normal Map                     |
+|         Normal Map Filename         | int32             | T        | An index to the string table. -1 if it doesn't exist. Mutually exclusive with Bump Map                       |
++-------------------------------------+-------------------+----------+--------------------------------------------------------------------------------------------------------------+
+
++--------------------------+--------+
+|        File Flags        |        |
++--------------------------+--------+
+| HAS_INSTANCE_BUFFER      | 0x0002 |
+| HAS_INSTANCE_BUFFER_DATA | 0x0004 |
+| HAS_STRING_TABLE         | 0x0008 |
++--------------------------+--------+

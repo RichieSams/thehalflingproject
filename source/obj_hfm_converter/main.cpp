@@ -71,6 +71,9 @@ int main(int argc, char *argv[]) {
 		subset.IndexStart = indices.size();
 		subset.IndexCount = mesh->mNumFaces * 3;
 
+		DirectX::XMVECTOR AABB_min = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+		DirectX::XMVECTOR AABB_max = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+
 		for (uint j = 0; j < mesh->mNumVertices; ++j) {
 			Vertex vertex;
 			vertex.pos = DirectX::XMFLOAT3(mesh->mVertices[j].x, mesh->mVertices[j].y, mesh->mVertices[j].z);
@@ -78,8 +81,14 @@ int main(int argc, char *argv[]) {
 			vertex.texCoord = mesh->HasTextureCoords(0) ? DirectX::XMFLOAT2(mesh->mTextureCoords[0][j].x, mesh->mTextureCoords[0][j].y) : DirectX::XMFLOAT2(0.0f, 0.0f);
 			vertex.tangent = mesh->HasTangentsAndBitangents() ? DirectX::XMFLOAT3(mesh->mTangents[j].x, mesh->mTangents[j].y, mesh->mTangents[j].z) : DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
 			
+			AABB_min = DirectX::XMVectorMin(AABB_min, DirectX::XMLoadFloat3(&vertex.pos));
+			AABB_max = DirectX::XMVectorMax(AABB_max, DirectX::XMLoadFloat3(&vertex.pos));
+
 			vertices.push_back(vertex);
 		}
+
+		DirectX::XMStoreFloat3(&subset.AABB_min, AABB_min);
+		DirectX::XMStoreFloat3(&subset.AABB_max, AABB_max);
 
 		for (uint j = 0; j < mesh->mNumFaces; ++j) {
 			for (uint k = 0; k < mesh->mFaces[j].mNumIndices; ++k) {

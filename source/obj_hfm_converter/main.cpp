@@ -182,7 +182,7 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 
-	std::cout << "Done" << std::endl << "Start Processing... " << std::endl;
+	std::cout << "Done" << std::endl << "Start Processing... ";
 
 	// Extract the data from the assimp scene
 	std::vector<Vertex> vertices;
@@ -277,7 +277,7 @@ int main(int argc, char *argv[]) {
 		subsets.push_back(subset);
 	}
 
-	std::cout << "Done" << std::endl << "Writing to file... " << std::endl;
+	std::cout << "Done" << std::endl << "Writing to file... ";
 
 	D3D11_BUFFER_DESC vbd;
 	ZeroMemory(&vbd, sizeof(D3D11_BUFFER_DESC));

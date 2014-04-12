@@ -29,6 +29,8 @@
     <ClCompile Include="..\common\clock.cpp" />
     <ClCompile Include="..\common\timer.cpp" />
     <ClCompile Include="..\halfling\halfling_engine.cpp" />
+    <ClCompile Include="..\libs\inih\ini.c" />
+    <ClCompile Include="..\libs\inih\INIReader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\common\camera.h" />

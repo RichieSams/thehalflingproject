@@ -66,6 +66,12 @@
     <ClCompile Include="..\common\file_io_util.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="..\libs\inih\ini.c">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libs\inih\INIReader.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\common\halfling_sys.h">

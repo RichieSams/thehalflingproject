@@ -43,14 +43,14 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>..\..\build\$(Configuration)\$(ProjectName)\</OutDir>
     <IntDir>..\..\obj\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>../;../libs/rlutil/;../libs/assimp/include/;../libs/DirectXTK/include;$(IncludePath)</IncludePath>
+    <IncludePath>../;../libs/rlutil/;../libs/assimp/include/;../libs/DirectXTK/include;../libs/inih;$(IncludePath)</IncludePath>
     <LibraryPath>..\libs\assimp\lib\debug;../libs/DirectXTK/lib/Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>..\..\build\$(Configuration)\$(ProjectName)\</OutDir>
     <IntDir>..\..\obj\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>../;../libs/rlutil/;../libs/assimp/include/;../libs/DirectXTK/include;$(IncludePath)</IncludePath>
+    <IncludePath>../;../libs/rlutil/;../libs/assimp/include/;../libs/DirectXTK/include;../libs/inih;$(IncludePath)</IncludePath>
     <LibraryPath>..\libs\assimp\lib\release;../libs/DirectXTK/lib/Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

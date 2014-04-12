@@ -119,45 +119,31 @@ int main(int argc, char *argv[]) {
 		}
 		if (material->Get(AI_MATKEY_SHININESS_STRENGTH, value) == aiReturn_SUCCESS) {
 			subset.MatSpecIntensity = value;
-		} else {
-			subset.MatSpecIntensity = 1.0f;
 		}
 
 		if (material->GetTexture(aiTextureType_DIFFUSE, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
-			subset.diffuseColorMapIndex = stringTable.size();
+			subset.DiffuseColorMapIndex = stringTable.size();
 			stringTable.push_back(string.data);
-		} else {
-			subset.diffuseColorMapIndex = -1;
 		}
 		if (material->GetTexture(aiTextureType_NORMALS, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
-			subset.normalMapIndex = stringTable.size();
+			subset.NormalMapIndex = stringTable.size();
 			stringTable.push_back(string.data);
-		} else {
-			subset.normalMapIndex = -1;
 		}
 		if (material->GetTexture(aiTextureType_DISPLACEMENT, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
-			subset.displacementMapIndex = stringTable.size();
+			subset.DisplacementMapIndex = stringTable.size();
 			stringTable.push_back(string.data);
-		} else {
-			subset.displacementMapIndex = -1;
 		}
 		if (material->GetTexture(aiTextureType_OPACITY, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
-			subset.alphaMapIndex = stringTable.size();
+			subset.AlphaMapIndex = stringTable.size();
 			stringTable.push_back(string.data);
-		} else {
-			subset.alphaMapIndex = -1;
 		}
 		if (material->GetTexture(aiTextureType_SPECULAR, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
-			subset.specColorMapIndex = stringTable.size();
+			subset.SpecColorMapIndex = stringTable.size();
 			stringTable.push_back(string.data);
-		} else {
-			subset.specColorMapIndex = -1;
 		}
 		if (material->GetTexture(aiTextureType_SHININESS, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
-			subset.specPowerMapIndex = stringTable.size();
+			subset.SpecPowerMapIndex = stringTable.size();
 			stringTable.push_back(string.data);
-		} else {
-			subset.specPowerMapIndex = -1;
 		}
 
 		subsets.push_back(subset);

@@ -26,6 +26,26 @@ private:
 
 public:
 	struct Subset {
+		Subset()
+			: VertexStart(0),
+			  VertexCount(0),
+			  IndexStart(0),
+			  IndexCount(0),
+			  AABB_min(0.0f, 0.0f, 0.0f),
+			  AABB_max(0.0f, 0.0f, 0.0f),
+			  MatAmbientColor(0.0f, 0.0f, 0.0f),
+			  MatDiffuseColor(0.0f, 0.0f, 0.0f, 0.0f),
+			  MatSpecColor(0.0f, 0.0f, 0.0f),
+			  MatSpecIntensity(1.0f),
+			  MatSpecPower(0.0f),
+			  DiffuseColorMapIndex(-1),
+			  SpecColorMapIndex(-1),
+			  SpecPowerMapIndex(-1),
+			  AlphaMapIndex(-1),
+			  DisplacementMapIndex(-1),
+			  NormalMapIndex(-1) {
+		}
+
 		uint32 VertexStart;
 		uint32 VertexCount;
 		uint32 IndexStart;
@@ -40,12 +60,12 @@ public:
 		float MatSpecIntensity;
 		float MatSpecPower;
 
-		int32 diffuseColorMapIndex;
-		int32 specColorMapIndex;
-		int32 specPowerMapIndex;
-		int32 alphaMapIndex;
-		int32 displacementMapIndex;
-		int32 normalMapIndex;
+		int32 DiffuseColorMapIndex;
+		int32 SpecColorMapIndex;
+		int32 SpecPowerMapIndex;
+		int32 AlphaMapIndex;
+		int32 DisplacementMapIndex;
+		int32 NormalMapIndex;
 	};
 
 private:

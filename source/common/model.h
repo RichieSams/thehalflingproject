@@ -86,8 +86,8 @@ private:
 	ID3D11Buffer *m_indexBuffer;
 	ID3D11Buffer *m_instanceBuffer;
 
-	size_t m_vertexStride;
-	size_t m_instanceStride;
+	uint m_vertexStride;
+	uint m_instanceStride;
 
 	ModelSubset *m_subsets;
 	uint m_subsetCount;

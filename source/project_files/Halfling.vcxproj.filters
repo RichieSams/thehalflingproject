@@ -10,6 +10,12 @@
     <Filter Include="Common\Shaders">
       <UniqueIdentifier>{92ce2470-b55b-422e-a7dd-9c54340e2989}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Libs">
+      <UniqueIdentifier>{6d36b1e0-88a7-4410-b493-4afbdf6d3bf6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libs\inih">
+      <UniqueIdentifier>{28336238-7bb5-46f8-b1ae-64676f7fede0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\halfling\halfling_engine.cpp">
@@ -67,10 +73,10 @@
       <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="..\libs\inih\ini.c">
-      <Filter>Common</Filter>
+      <Filter>Libs\inih</Filter>
     </ClCompile>
     <ClCompile Include="..\libs\inih\INIReader.cpp">
-      <Filter>Common</Filter>
+      <Filter>Libs\inih</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -166,6 +172,12 @@
     </ClInclude>
     <ClInclude Include="..\common\halfling_model_file.h">
       <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\inih\INIReader.h">
+      <Filter>Libs\inih</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\inih\ini.h">
+      <Filter>Libs\inih</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

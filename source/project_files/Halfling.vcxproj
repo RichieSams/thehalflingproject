@@ -64,6 +64,8 @@
     <ClInclude Include="..\common\typedefs.h" />
     <ClInclude Include="..\common\vector.h" />
     <ClInclude Include="..\halfling\halfling_engine.h" />
+    <ClInclude Include="..\libs\inih\ini.h" />
+    <ClInclude Include="..\libs\inih\INIReader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\common\shaders\lights.hlsli" />

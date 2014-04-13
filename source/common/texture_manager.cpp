@@ -22,7 +22,7 @@ TextureManager::~TextureManager() {
 }
 
 ID3D11ShaderResourceView * TextureManager::GetSRVFromFile(ID3D11Device *device, const std::wstring filePath, D3D11_USAGE usage, uint bindFlags, uint cpuAccessFlags, uint miscFlags, bool forceSRGB) {
-	if (filePath.compare(filePath.length() - 4, std::string::npos, L".dds") == 0 || filePath.compare(filePath.length() - 4, std::string::npos, L".DDS") == 0) {
+	if (filePath.compare(filePath.length() - 5, 4, L".dds") == 0 || filePath.compare(filePath.length() - 5, 4, L".DDS") == 0) {
 		return GetSRVFromDDSFile(device, filePath, usage, bindFlags, cpuAccessFlags, miscFlags, forceSRGB);
 	} else {
 		return nullptr;

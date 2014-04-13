@@ -9,6 +9,7 @@ http://code.google.com/p/inih/
 
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 
 #include "ini.h"
 

@@ -20,8 +20,10 @@
 
 #include <vector>
 #include <string>
+#include <sstream>
 #include <iostream>
 #include <fstream>
+#include <filesystem>
 
 
 struct Vertex {
@@ -75,6 +77,7 @@ public:
 
 D3D11_USAGE ParseUsageFromString(std::string &inputString);
 void CreateDefaultIniFile(const char *filePath);
+std::string ConvertToDDS(const char *filePath);
 
 int main(int argc, char *argv[]) {
 	// Check the number of parameters
@@ -251,27 +254,28 @@ int main(int argc, char *argv[]) {
 
 		if (iniFile.UseDiffuseColorMap && material->GetTexture(aiTextureType_DIFFUSE, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
 			subset.DiffuseColorMapIndex = stringTable.size();
-			stringTable.push_back(string.data);
+			// Guarantee it's a dds file
+			stringTable.push_back(ConvertToDDS(string.data));
 		}
 		if (iniFile.UseNormalMap && material->GetTexture(aiTextureType_NORMALS, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
 			subset.NormalMapIndex = stringTable.size();
-			stringTable.push_back(string.data);
+			stringTable.push_back(ConvertToDDS(string.data));
 		}
-		if (iniFile.UseDisplacementMap && material->GetTexture(aiTextureType_DISPLACEMENT, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
+		if (iniFile.UseDisplacementMap && material->GetTexture(aiTextureType_HEIGHT, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
 			subset.DisplacementMapIndex = stringTable.size();
-			stringTable.push_back(string.data);
+			stringTable.push_back(ConvertToDDS(string.data));
 		}
 		if (iniFile.UseAlphaMap && material->GetTexture(aiTextureType_OPACITY, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
 			subset.AlphaMapIndex = stringTable.size();
-			stringTable.push_back(string.data);
+			stringTable.push_back(ConvertToDDS(string.data));
 		}
 		if (iniFile.UseSpecColorMap && material->GetTexture(aiTextureType_SPECULAR, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
 			subset.SpecColorMapIndex = stringTable.size();
-			stringTable.push_back(string.data);
+			stringTable.push_back(ConvertToDDS(string.data));
 		}
 		if (iniFile.UseSpecPowerMap && material->GetTexture(aiTextureType_SHININESS, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
 			subset.SpecPowerMapIndex = stringTable.size();
-			stringTable.push_back(string.data);
+			stringTable.push_back(ConvertToDDS(string.data));
 		}
 
 		subsets.push_back(subset);
@@ -303,6 +307,32 @@ int main(int argc, char *argv[]) {
 	std::cout << "Done" << std::endl << "Finished" << std::endl;
 
 	return 0;
+}
+
+std::string ConvertToDDS(const char *filePath) {
+	std::tr2::sys::path path(filePath);
+	if (_stricmp(path.extension().c_str(), "dds") == 0) {
+		return std::string(filePath);
+	}
+	
+	std::tr2::sys::path ddsPath(path);
+	ddsPath.replace_extension("dds");
+
+	if (exists(ddsPath)) {
+		return ddsPath;
+	}
+
+	std::stringstream call;
+	std::string parentDirectory;
+	if (path.has_parent_path()) {
+		parentDirectory.append("-o ");
+		parentDirectory.append(path.parent_path().file_string());
+	}
+
+	call << "texconv.exe -ft dds " << parentDirectory << " " << path.file_string() << " > NUL";
+	std::system(call.str().c_str());
+
+	return ddsPath.file_string();
 }
 
 D3D11_USAGE ParseUsageFromString(std::string &inputString) {

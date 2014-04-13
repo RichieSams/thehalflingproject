@@ -29,6 +29,7 @@
     <ClCompile Include="..\common\clock.cpp" />
     <ClCompile Include="..\common\timer.cpp" />
     <ClCompile Include="..\halfling\halfling_engine.cpp" />
+    <ClCompile Include="..\libs\DirectXTex\DDSTextureLoader.cpp" />
     <ClCompile Include="..\libs\inih\ini.c" />
     <ClCompile Include="..\libs\inih\INIReader.cpp" />
   </ItemGroup>
@@ -64,6 +65,7 @@
     <ClInclude Include="..\common\typedefs.h" />
     <ClInclude Include="..\common\vector.h" />
     <ClInclude Include="..\halfling\halfling_engine.h" />
+    <ClInclude Include="..\libs\DirectXTex\DDSTextureLoader.h" />
     <ClInclude Include="..\libs\inih\ini.h" />
     <ClInclude Include="..\libs\inih\INIReader.h" />
   </ItemGroup>
@@ -138,15 +140,15 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>..\..\build\$(Configuration)\$(ProjectName)\</OutDir>
     <IntDir>..\..\obj\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>../;../libs/AntTweakBar/include;../libs/DirectXTK/include;../libs/DirectXTex/DirectXTex;$(IncludePath)</IncludePath>
-    <LibraryPath>../libs/AntTweakBar/lib;../libs/DirectXTK/lib/Debug;$(LibraryPath)</LibraryPath>
+    <IncludePath>../;../libs/AntTweakBar/include;../libs/DirectXTex;$(IncludePath)</IncludePath>
+    <LibraryPath>../libs/AntTweakBar/lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>..\..\build\$(Configuration)\$(ProjectName)\</OutDir>
     <IntDir>..\..\obj\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>../;../libs/AntTweakBar/include;../libs/DirectXTK/include;../libs/DirectXTex/DirectXTex;$(IncludePath)</IncludePath>
-    <LibraryPath>../libs/AntTweakBar/lib;../libs/DirectXTK/lib/Release;$(LibraryPath)</LibraryPath>
+    <IncludePath>../;../libs/AntTweakBar/include;../libs/DirectXTex/;$(IncludePath)</IncludePath>
+    <LibraryPath>../libs/AntTweakBar/lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -162,7 +164,7 @@
       <OutputFile>$(OutDir)$(TargetName)d$(TargetExt)</OutputFile>
     </Link>
     <Lib>
-      <AdditionalDependencies>AntTweakBar.lib;DirectXTK.lib;gdiplus.lib;user32.lib</AdditionalDependencies>
+      <AdditionalDependencies>AntTweakBar.lib;gdiplus.lib;user32.lib</AdditionalDependencies>
     </Lib>
     <FxCompile>
       <AdditionalIncludeDirectories>../</AdditionalIncludeDirectories>
@@ -190,7 +192,7 @@
       <ShaderModel>5.0</ShaderModel>
     </FxCompile>
     <Lib>
-      <AdditionalDependencies>AntTweakBar.lib;DirectXTK.lib;gdiplus.lib;user32.lib</AdditionalDependencies>
+      <AdditionalDependencies>AntTweakBar.lib;gdiplus.lib;user32.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

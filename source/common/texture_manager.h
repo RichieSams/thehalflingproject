@@ -33,12 +33,10 @@ private:
 	std::unordered_map<std::wstring, std::vector<std::pair<TextureParams, ID3D11ShaderResourceView *> > > m_textureCache;
 
 public:
-	ID3D11ShaderResourceView *GetSRVFromFile(ID3D11Device *device, ID3D11DeviceContext *context, const std::wstring filePath, D3D11_USAGE usage, uint bindFlags = D3D11_BIND_SHADER_RESOURCE, uint cpuAccessFlags = 0, uint miscFlags = 0, bool forceSRGB = false);
+	ID3D11ShaderResourceView *GetSRVFromFile(ID3D11Device *device, const std::wstring filePath, D3D11_USAGE usage, uint bindFlags = D3D11_BIND_SHADER_RESOURCE, uint cpuAccessFlags = 0, uint miscFlags = 0, bool forceSRGB = false);
 
 private:
 	ID3D11ShaderResourceView *GetSRVFromDDSFile(ID3D11Device *device, const std::wstring filePath, D3D11_USAGE usage, uint bindFlags, uint cpuAccessFlags, uint miscFlags, bool forceSRGB);
-	ID3D11ShaderResourceView *GetSRVFromWICFile(ID3D11Device *device, ID3D11DeviceContext *context, const std::wstring filePath, D3D11_USAGE usage, uint bindFlags, uint cpuAccessFlags, uint miscFlags, bool forceSRGB);
-
 };
 
 } // End of namespace Common

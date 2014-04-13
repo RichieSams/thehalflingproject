@@ -135,32 +135,32 @@ Common::Model *Common::HalflingModelFile::Load(ID3D11Device *device, ID3D11Devic
 
 		if (subsets[i].DiffuseColorMapIndex != -1) {
 			std::wstring wideFileName(stringTable[subsets[i].DiffuseColorMapIndex].begin(), stringTable[subsets[i].DiffuseColorMapIndex].end());
-			modelSubsets[i].DiffuseColorSRV = textureManager->GetSRVFromFile(device, context, wideFileName, D3D11_USAGE_IMMUTABLE);
+			modelSubsets[i].DiffuseColorSRV = textureManager->GetSRVFromFile(device, wideFileName, D3D11_USAGE_IMMUTABLE);
 			modelSubsets[i].TextureFlags |= Common::TextureFlags::DIFFUSE_COLOR;
 		}
 		if (subsets[i].SpecColorMapIndex != -1) {
 			std::wstring wideFileName(stringTable[subsets[i].SpecColorMapIndex].begin(), stringTable[subsets[i].SpecColorMapIndex].end());
-			modelSubsets[i].SpecularColorSRV = textureManager->GetSRVFromFile(device, context, wideFileName, D3D11_USAGE_IMMUTABLE);
+			modelSubsets[i].SpecularColorSRV = textureManager->GetSRVFromFile(device, wideFileName, D3D11_USAGE_IMMUTABLE);
 			modelSubsets[i].TextureFlags |= Common::TextureFlags::SPEC_COLOR;
 		}
 		if (subsets[i].SpecPowerMapIndex != -1) {
 			std::wstring wideFileName(stringTable[subsets[i].SpecPowerMapIndex].begin(), stringTable[subsets[i].SpecPowerMapIndex].end());
-			modelSubsets[i].SpecularPowerSRV = textureManager->GetSRVFromFile(device, context, wideFileName, D3D11_USAGE_IMMUTABLE);
+			modelSubsets[i].SpecularPowerSRV = textureManager->GetSRVFromFile(device, wideFileName, D3D11_USAGE_IMMUTABLE);
 			modelSubsets[i].TextureFlags |= Common::TextureFlags::SPEC_POWER;
 		}
 		if (subsets[i].AlphaMapIndex != -1) {
 			std::wstring wideFileName(stringTable[subsets[i].AlphaMapIndex].begin(), stringTable[subsets[i].AlphaMapIndex].end());
-			modelSubsets[i].AlphaMapSRV = textureManager->GetSRVFromFile(device, context, wideFileName, D3D11_USAGE_IMMUTABLE);
+			modelSubsets[i].AlphaMapSRV = textureManager->GetSRVFromFile(device, wideFileName, D3D11_USAGE_IMMUTABLE);
 			modelSubsets[i].TextureFlags |= Common::TextureFlags::ALPHA_MAP;
 		}
 		if (subsets[i].DisplacementMapIndex != -1) {
 			std::wstring wideFileName(stringTable[subsets[i].DisplacementMapIndex].begin(), stringTable[subsets[i].DisplacementMapIndex].end());
-			modelSubsets[i].DisplacementMapSRV = textureManager->GetSRVFromFile(device, context, wideFileName, D3D11_USAGE_IMMUTABLE);
+			modelSubsets[i].DisplacementMapSRV = textureManager->GetSRVFromFile(device, wideFileName, D3D11_USAGE_IMMUTABLE);
 			modelSubsets[i].TextureFlags |= Common::TextureFlags::DISPLACEMENT_MAP;
 		}
 		if (subsets[i].NormalMapIndex != -1) {
 			std::wstring wideFileName(stringTable[subsets[i].NormalMapIndex].begin(), stringTable[subsets[i].NormalMapIndex].end());
-			modelSubsets[i].NormalMapSRV = textureManager->GetSRVFromFile(device, context, wideFileName, D3D11_USAGE_IMMUTABLE);
+			modelSubsets[i].NormalMapSRV = textureManager->GetSRVFromFile(device, wideFileName, D3D11_USAGE_IMMUTABLE);
 			modelSubsets[i].TextureFlags |= Common::TextureFlags::NORMAL_MAP;
 		}
 	}

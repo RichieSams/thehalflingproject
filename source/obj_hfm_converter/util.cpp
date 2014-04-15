@@ -61,10 +61,11 @@ void CreateDefaultIniFile(const char *filePath) {
 		return;
 	}
 
-	fout << "[Post-Processing]\n" <<
+	fout << "; Post-processing can automatically calculate the mesh normals and/or tangents"
 	        "; If normals already exist, setting GenNormals to true will do nothing\n" <<
+	        "; If tangents already exist, setting GenTangents to true will do nothing\n" <<
+	        "[Post-Processing]\n" <<
 	        "GenNormals = true\n" <<
-	        "; If tangents already exist, setting GenNormals to true will do nothing\n" <<
 	        "CalcTangents = true\n" <<
 			"\n" <<
 	        "; The booleans represent a high level override for these material properties.\n" <<

@@ -81,9 +81,9 @@ void CreateDefaultIniFile(const char *filePath) {
 	        "SpecColorMap = true\n" <<
 	        "SpecPowerMap = true\n" <<
 			"\n" <<
-	        "[BufferDesc]\n" <<
 	        "; Usages can be 'default', 'immutable', 'dynamic', or 'staging'\n" <<
 	        "; In the case of a mis-spelling, immutable is assumed\n" <<
+	        "[BufferDesc]\n" <<
 	        "VertexBufferUsage = immutable\n" <<
 	        "IndexBufferUsage = immutable\n";
 

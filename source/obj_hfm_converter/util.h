@@ -10,6 +10,8 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 
+#include <assimp/scene.h>
+
 #include <string>
 #include <filesystem>
 
@@ -24,6 +26,15 @@ namespace ObjHmfConverter {
  * @return               The usage
  */
 D3D11_USAGE ParseUsageFromString(std::string &inputString);
+/**
+ * Tries to parse a string into an aiTextureType
+ * If the parse fails, the default return is 'defaultType'
+ * 
+ * @param inputString    The string to parse into a texture type
+ * @param defaultType    The value that should be returned if the parse fails
+ * @return               The texture type
+ */
+aiTextureType ParseTextureTypeFromString(std::string &inputString, aiTextureType defaultType);
 /**
  * Creates an ini file with the default values. This is useful
  * if the user wants to know how to use the ini file.
@@ -56,21 +67,28 @@ struct ImporterIniFile {
 public:
 	ImporterIniFile()
 		: GenNormals(true),
-		CalcTangents(true),
-		UseMaterialAmbientColor(true),
-		UseMaterialDiffuseColor(true),
-		UseMaterialSpecColor(true),
-		UseMaterialOpacity(true),
-		UseMaterialSpecPower(true),
-		UseMaterialSpecIntensity(true),
-		UseDiffuseColorMap(true),
-		UseNormalMap(true),
-		UseDisplacementMap(true),
-		UseAlphaMap(true),
-		UseSpecColorMap(true),
-		UseSpecPowerMap(true),
-		VertexBufferUsage(D3D11_USAGE_IMMUTABLE),
-		IndexBufferUsage(D3D11_USAGE_IMMUTABLE) {}
+		  CalcTangents(true),
+		  UseMaterialAmbientColor(true),
+		  UseMaterialDiffuseColor(true),
+		  UseMaterialSpecColor(true),
+		  UseMaterialOpacity(true),
+		  UseMaterialSpecPower(true),
+		  UseMaterialSpecIntensity(true),
+		  UseDiffuseColorMap(true),
+		  UseNormalMap(true),
+		  UseDisplacementMap(true),
+		  UseAlphaMap(true),
+		  UseSpecColorMap(true),
+		  UseSpecPowerMap(true),
+		  VertexBufferUsage(D3D11_USAGE_IMMUTABLE),
+		  IndexBufferUsage(D3D11_USAGE_IMMUTABLE),
+		  DiffuseColorMapTextureType(aiTextureType_DIFFUSE),
+		  NormalMapTextureType(aiTextureType_NORMALS),
+		  DisplacementMapTextureType(aiTextureType_DISPLACEMENT),
+		  AlphaMapTextureType(aiTextureType_OPACITY),
+		  SpecColorMapTextureType(aiTextureType_SPECULAR),
+		  SpecPowerMapTextureType(aiTextureType_SHININESS) {
+	}
 
 	bool GenNormals;
 	bool CalcTangents;
@@ -91,6 +109,13 @@ public:
 
 	D3D11_USAGE VertexBufferUsage;
 	D3D11_USAGE IndexBufferUsage;
+
+	aiTextureType DiffuseColorMapTextureType;
+	aiTextureType NormalMapTextureType;
+	aiTextureType DisplacementMapTextureType;
+	aiTextureType AlphaMapTextureType;
+	aiTextureType SpecColorMapTextureType;
+	aiTextureType SpecPowerMapTextureType;
 };
 
 } // End of namespace ObjHmfConverter

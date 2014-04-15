@@ -28,7 +28,7 @@ std::string ConvertToDDS(const char *filePath, std::tr2::sys::path &baseDirector
 
 	// If input is already dds, but doesn't exist in the output directory, just copy the file to the output
 	std::tr2::sys::path inputFilePath(rootInputDirectory.file_string() + "\\" + relativePath.file_string());
-	if (stricmp(relativePath.extension().c_str(), "dds") == 0) {
+	if (_stricmp(relativePath.extension().c_str(), "dds") == 0) {
 		copy_file(inputFilePath, outputFilePath);
 		return relativeDDSPath;
 	}
@@ -41,14 +41,34 @@ std::string ConvertToDDS(const char *filePath, std::tr2::sys::path &baseDirector
 }
 
 D3D11_USAGE ParseUsageFromString(std::string &inputString) {
-	if (inputString.compare("default") == 0) {
+	if (stricmp(inputString.c_str(), "default") == 0) {
 		return D3D11_USAGE_DEFAULT;
-	} else if (inputString.compare("dynamic") == 0) {
+	} else if (stricmp(inputString.c_str(), "dynamic") == 0) {
 		return D3D11_USAGE_DYNAMIC;
-	} else if (inputString.compare("staging") == 0) {
+	} else if (stricmp(inputString.c_str(), "staging") == 0) {
 		return D3D11_USAGE_STAGING;
 	} else {
 		return D3D11_USAGE_IMMUTABLE;
+	}
+}
+
+aiTextureType ParseTextureTypeFromString(std::string &inputString, aiTextureType defaultType) {
+	if (stricmp(inputString.c_str(), "diffuse") == 0) {
+		return aiTextureType_DIFFUSE;
+	} else if (stricmp(inputString.c_str(), "normal") == 0) {
+		return aiTextureType_NORMALS;
+	} else if (stricmp(inputString.c_str(), "height") == 0) {
+		return aiTextureType_HEIGHT;
+	} else if (stricmp(inputString.c_str(), "displacement") == 0) {
+		return aiTextureType_DISPLACEMENT;
+	} else if (stricmp(inputString.c_str(), "alpha") == 0) {
+		return aiTextureType_OPACITY;
+	} else if (stricmp(inputString.c_str(), "specColor") == 0) {
+		return aiTextureType_SPECULAR;
+	} else if (stricmp(inputString.c_str(), "specPower") == 0) {
+		return aiTextureType_SHININESS;
+	} else {
+		return defaultType;
 	}
 }
 
@@ -94,7 +114,25 @@ void CreateDefaultIniFile(const char *filePath) {
 	        "; In the case of a mis-spelling, immutable is assumed\n" <<
 	        "[BufferDesc]\n" <<
 	        "VertexBufferUsage = immutable\n" <<
-	        "IndexBufferUsage = immutable\n";
+	        "IndexBufferUsage = immutable\n" <<
+			"\n" <<
+	        "; TextureMapRedirects allow you to interpret certain textures as other kinds\n" <<
+	        "; For example, OBJ doesn't directly support normal maps. Often, you will then see\n" <<
+	        "; the normal map in the height (bump) map slot. These options allow you to specify\n" <<
+	        "; what texture goes where.\n" <<
+	        ";\n" <<
+	        "; Any Maps that are excluded are treated as mapping to their own kind\n" <<
+	        "; IE. excluding DiffuseColorMap is interpreted as:\n" <<
+	        ";       DiffuseColorMap = diffuse\n" <<
+	        ";\n" <<
+	        "; The available kinds are: 'diffuse', 'normal', 'height', 'displacement', 'alpha', 'specColor', and 'specPower'\n" <<
+	        "[TextureMapRedirects]\n" <<
+	        "DiffuseColorMap = diffuse\n" <<
+	        "NormalMap = normal\n" <<
+	        "DisplacementMap = displacement\n" <<
+	        "AlphaMap = alpha\n" <<
+	        "SpecColorMap = specColor\n" <<
+	        "SpecPowerMap = specPower\n";
 
 	fout.flush();
 	fout.close();

@@ -75,6 +75,13 @@ bool ConvertToHMF(std::tr2::sys::path &baseDirectory, std::tr2::sys::path &input
 		iniFile.VertexBufferUsage = ParseUsageFromString(reader.Get("bufferdesc", "vertexbufferusage", "immutable"));
 		iniFile.IndexBufferUsage = ParseUsageFromString(reader.Get("bufferdesc", "indexbufferusage", "immutable"));
 
+		iniFile.DiffuseColorMapTextureType = ParseTextureTypeFromString(reader.Get("texturemapredirects", "diffusecolormap", "diffuse"), aiTextureType_DIFFUSE);
+		iniFile.NormalMapTextureType = ParseTextureTypeFromString(reader.Get("texturemapredirects", "normalmap", "normal"), aiTextureType_NORMALS);
+		iniFile.DisplacementMapTextureType = ParseTextureTypeFromString(reader.Get("texturemapredirects", "displacementmap", "displacement"), aiTextureType_DISPLACEMENT);
+		iniFile.AlphaMapTextureType = ParseTextureTypeFromString(reader.Get("texturemapredirects", "alphamap", "alpha"), aiTextureType_OPACITY);
+		iniFile.SpecColorMapTextureType = ParseTextureTypeFromString(reader.Get("texturemapredirects", "speccolormap", "specColor"), aiTextureType_SPECULAR);
+		iniFile.SpecPowerMapTextureType = ParseTextureTypeFromString(reader.Get("texturemapredirects", "specpowermap", "specPower"), aiTextureType_SHININESS);
+
 		std::cout << "Done" << std::endl;
 	}
 
@@ -110,7 +117,7 @@ bool ConvertToHMF(std::tr2::sys::path &baseDirectory, std::tr2::sys::path &input
 		return false;
 	}
 
-	std::cout << "Done" << std::endl << "Start Processing... ";
+	std::cout << "Done" << std::endl << "Converting... ";
 
 	// Extract the data from the assimp scene
 	std::vector<Vertex> vertices;
@@ -177,35 +184,35 @@ bool ConvertToHMF(std::tr2::sys::path &baseDirectory, std::tr2::sys::path &input
 			subset.MatSpecIntensity = value;
 		}
 
-		if (iniFile.UseDiffuseColorMap && material->GetTexture(aiTextureType_DIFFUSE, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
+		if (iniFile.UseDiffuseColorMap && material->GetTexture(iniFile.DiffuseColorMapTextureType, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
 			subset.DiffuseColorMapIndex = stringTable.size();
 			// Guarantee it's a dds file
 			stringTable.push_back(ConvertToDDS(string.data, baseDirectory, inputDirectory, outputDirectory));
 		}
-		if (iniFile.UseNormalMap && material->GetTexture(aiTextureType_NORMALS, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
+		if (iniFile.UseNormalMap && material->GetTexture(iniFile.NormalMapTextureType, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
 			subset.NormalMapIndex = stringTable.size();
 			stringTable.push_back(ConvertToDDS(string.data, baseDirectory, inputDirectory, outputDirectory));
 		}
-		if (iniFile.UseDisplacementMap && material->GetTexture(aiTextureType_HEIGHT, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
+		if (iniFile.UseDisplacementMap && material->GetTexture(iniFile.DisplacementMapTextureType, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
 			subset.DisplacementMapIndex = stringTable.size();
 			stringTable.push_back(ConvertToDDS(string.data, baseDirectory, inputDirectory, outputDirectory));
 		}
-		if (iniFile.UseAlphaMap && material->GetTexture(aiTextureType_OPACITY, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
+		if (iniFile.UseAlphaMap && material->GetTexture(iniFile.AlphaMapTextureType, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
 			subset.AlphaMapIndex = stringTable.size();
 			stringTable.push_back(ConvertToDDS(string.data, baseDirectory, inputDirectory, outputDirectory));
 		}
-		if (iniFile.UseSpecColorMap && material->GetTexture(aiTextureType_SPECULAR, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
+		if (iniFile.UseSpecColorMap && material->GetTexture(iniFile.SpecColorMapTextureType, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
 			subset.SpecColorMapIndex = stringTable.size();
 			stringTable.push_back(ConvertToDDS(string.data, baseDirectory, inputDirectory, outputDirectory));
 		}
-		if (iniFile.UseSpecPowerMap && material->GetTexture(aiTextureType_SHININESS, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
+		if (iniFile.UseSpecPowerMap && material->GetTexture(iniFile.SpecPowerMapTextureType, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
 			subset.SpecPowerMapIndex = stringTable.size();
 			stringTable.push_back(ConvertToDDS(string.data, baseDirectory, inputDirectory, outputDirectory));
 		}
 
 		subsets.push_back(subset);
 	}
-
+	
 	std::cout << "Done" << std::endl << "Writing to file... ";
 
 	D3D11_BUFFER_DESC vbd;
@@ -231,6 +238,8 @@ bool ConvertToHMF(std::tr2::sys::path &baseDirectory, std::tr2::sys::path &input
 	Common::HalflingModelFile::Write(wideString.c_str(), vertices.size(), indices.size(), &vbd, &ibd, nullptr, &vertices[0], &indices[0], nullptr, subsets, stringTable);
 
 	std::cout << "Done" << std::endl << "Finished" << std::endl;
+
+	return true;
 }
 
 } // End of namespace ObjHmfConverter

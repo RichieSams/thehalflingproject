@@ -366,8 +366,7 @@ int main(int argc, char *argv[]) {
 	return 0;
 }
 
-std::string ConvertToDDS(const char *filePath, std::tr2::sys::path &baseDirectory, std::tr2::sys::path &rootInputDirectory, std::tr2::sys::path &rootOutputDirectory)
-{
+std::string ConvertToDDS(const char *filePath, std::tr2::sys::path &baseDirectory, std::tr2::sys::path &rootInputDirectory, std::tr2::sys::path &rootOutputDirectory) {
 	std::tr2::sys::path relativePath(filePath);
 	std::tr2::sys::path relativeDDSPath(relativePath);
 	relativeDDSPath.replace_extension("dds");

@@ -75,10 +75,38 @@ public:
 	D3D11_USAGE IndexBufferUsage;
 };
 
+/**
+ * Tries to parse a string into a D3D11_USAGE
+ * If the parse fails, the default return is D3D11_USAGE_IMMUTABLE
+ * 
+ * @param inputString    The string to parse into a usage
+ * @return               The usage
+ */
 D3D11_USAGE ParseUsageFromString(std::string &inputString);
+/**
+ * Creates an ini file with the default values. This is useful
+ * if the user wants to know how to use the ini file.
+ * 
+ * @param filePath    The path to the new file
+ */
 void CreateDefaultIniFile(const char *filePath);
+/**
+ * Converts a texture to a dds file. 
+ * If the source file is already in dds format, it is just copied to the destination directory.
+ * If the file already exists in the destination directory, the function does nothing
+ * 
+ * @param filePath               The relative input path. Relative to rootInputDirectory
+ * @param baseDirectory          The directory of OBJ-HMFConverter.exe. This is needed to find textconv.exe
+ * @param rootInputDirectory     The directory of the input model file
+ * @param rootOutputDirectory    The directory of the output model file
+
+ * @return                       For convenience. Returns the filePath with the extension changed to .dds
+ */
 std::string ConvertToDDS(const char *filePath, std::tr2::sys::path &baseDirectory, std::tr2::sys::path &rootInputDirectory, std::tr2::sys::path &rootOutputDirectory);
 
+/**
+ * Converts a given model input into a HalflingModelFile format
+ */
 int main(int argc, char *argv[]) {
 	// Check the number of parameters
     if (argc < 2) {

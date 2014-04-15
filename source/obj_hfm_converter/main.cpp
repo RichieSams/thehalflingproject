@@ -77,7 +77,7 @@ public:
 
 D3D11_USAGE ParseUsageFromString(std::string &inputString);
 void CreateDefaultIniFile(const char *filePath);
-std::string ConvertToDDS(const char *filePath);
+std::string ConvertToDDS(std::tr2::sys::path &baseDirectory, std::tr2::sys::path &rootInputDirectory, std::tr2::sys::path &rootOutputDirectory, const char *filePath);
 
 int main(int argc, char *argv[]) {
 	// Check the number of parameters
@@ -93,8 +93,14 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 	
-	std::string inputPath;
-	std::string outputPath;
+	std::tr2::sys::path basePath(argv[0]);
+	std::tr2::sys::path baseDirectory(basePath.parent_path());
+	if (!basePath.has_parent_path()) {
+		baseDirectory = std::tr2::sys::current_path<std::tr2::sys::path>();
+	}
+	
+	std::tr2::sys::path inputPath;
+	std::tr2::sys::path outputPath;
 	std::string iniFilePath;
 
 	// Parse the command line arguments
@@ -111,10 +117,32 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
+	// If the input path doesn't exist, tell the user how to use the program
+	if (inputPath.empty()) {
+        std::cerr << "Usage: OBJ-HMFConverter.exe -f <input filePath>" << std::endl << std::endl <<
+		             "Optional parameters:" << std::endl <<
+		             "    -i <ini filePath>" << std::endl << 
+		             "    -o <output filePath>" << std::endl << std::endl <<
+					 "Other Usage:" << std::endl << std::endl <<
+					 "OBJ_HMFConverter.exe -c <iniOutput filePath>" << std::endl <<
+					 "    to generate an ini file with default values" << std::endl;
+        return 1;
+	}
+
+	std::tr2::sys::path inputDirectory(inputPath.parent_path());
+	if (!inputPath.has_parent_path()) {
+		inputDirectory = std::tr2::sys::current_path<std::tr2::sys::path>();
+	}
+
 	// If the output path doesn't exist, just use the input path with the .hmf extension
 	if (outputPath.empty()) {
 		outputPath = inputPath;
-		outputPath.append(".hmf");
+		outputPath.replace_extension("hmf");
+	}
+
+	std::tr2::sys::path outputDirectory(outputPath.parent_path());
+	if (!outputPath.has_parent_path()) {
+		outputDirectory = std::tr2::sys::current_path<std::tr2::sys::path>();
 	}
 
 	// Set default values
@@ -255,27 +283,27 @@ int main(int argc, char *argv[]) {
 		if (iniFile.UseDiffuseColorMap && material->GetTexture(aiTextureType_DIFFUSE, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
 			subset.DiffuseColorMapIndex = stringTable.size();
 			// Guarantee it's a dds file
-			stringTable.push_back(ConvertToDDS(string.data));
+			stringTable.push_back(ConvertToDDS(baseDirectory, inputDirectory, outputDirectory, string.data));
 		}
 		if (iniFile.UseNormalMap && material->GetTexture(aiTextureType_NORMALS, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
 			subset.NormalMapIndex = stringTable.size();
-			stringTable.push_back(ConvertToDDS(string.data));
+			stringTable.push_back(ConvertToDDS(baseDirectory, inputDirectory, outputDirectory, string.data));
 		}
 		if (iniFile.UseDisplacementMap && material->GetTexture(aiTextureType_HEIGHT, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
 			subset.DisplacementMapIndex = stringTable.size();
-			stringTable.push_back(ConvertToDDS(string.data));
+			stringTable.push_back(ConvertToDDS(baseDirectory, inputDirectory, outputDirectory, string.data));
 		}
 		if (iniFile.UseAlphaMap && material->GetTexture(aiTextureType_OPACITY, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
 			subset.AlphaMapIndex = stringTable.size();
-			stringTable.push_back(ConvertToDDS(string.data));
+			stringTable.push_back(ConvertToDDS(baseDirectory, inputDirectory, outputDirectory, string.data));
 		}
 		if (iniFile.UseSpecColorMap && material->GetTexture(aiTextureType_SPECULAR, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
 			subset.SpecColorMapIndex = stringTable.size();
-			stringTable.push_back(ConvertToDDS(string.data));
+			stringTable.push_back(ConvertToDDS(baseDirectory, inputDirectory, outputDirectory, string.data));
 		}
 		if (iniFile.UseSpecPowerMap && material->GetTexture(aiTextureType_SHININESS, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
 			subset.SpecPowerMapIndex = stringTable.size();
-			stringTable.push_back(ConvertToDDS(string.data));
+			stringTable.push_back(ConvertToDDS(baseDirectory, inputDirectory, outputDirectory, string.data));
 		}
 
 		subsets.push_back(subset);
@@ -301,7 +329,8 @@ int main(int argc, char *argv[]) {
 	ibd.MiscFlags = 0;
 	ibd.StructureByteStride = 0;
 
-	std::wstring wideString(outputPath.begin(), outputPath.end());
+	std::string outputPathStr(outputPath.file_string());
+	std::wstring wideString(outputPathStr.begin(), outputPathStr.end());
 	Common::HalflingModelFile::Write(wideString.c_str(), vertices.size(), indices.size(), &vbd, &ibd, nullptr, &vertices[0], &indices[0], nullptr, subsets, stringTable);
 
 	std::cout << "Done" << std::endl << "Finished" << std::endl;
@@ -309,30 +338,31 @@ int main(int argc, char *argv[]) {
 	return 0;
 }
 
-std::string ConvertToDDS(const char *filePath) {
-	std::tr2::sys::path path(filePath);
-	if (_stricmp(path.extension().c_str(), "dds") == 0) {
-		return std::string(filePath);
-	}
+std::string ConvertToDDS(std::tr2::sys::path &baseDirectory, std::tr2::sys::path &rootInputDirectory, std::tr2::sys::path &rootOutputDirectory, const char *filePath) {
+	std::tr2::sys::path relativePath(filePath);
+	std::tr2::sys::path relativeDDSPath(relativePath);
+	relativeDDSPath.replace_extension("dds");
 	
-	std::tr2::sys::path ddsPath(path);
-	ddsPath.replace_extension("dds");
-
-	if (exists(ddsPath)) {
-		return ddsPath;
+	// If the file already exist, we don't need to do anything
+	if (exists(std::tr2::sys::path(rootOutputDirectory.file_string() + "\\" + relativeDDSPath.file_string()))) {
+		return relativeDDSPath;
 	}
 
+	// Figure out the output directory
+	std::tr2::sys::path outputDirectory(rootOutputDirectory.file_string());
+	if (relativePath.has_parent_path()) {
+		outputDirectory /= relativePath.parent_path().file_string();
+	}
+
+	// Guarantee the output directory exists
+	create_directories(outputDirectory);
+
+	// Convert the file to DDS
 	std::stringstream call;
-	std::string parentDirectory;
-	if (path.has_parent_path()) {
-		parentDirectory.append("-o ");
-		parentDirectory.append(path.parent_path().file_string());
-	}
-
-	call << "texconv.exe -ft dds " << parentDirectory << " " << path.file_string() << " > NUL";
+	call << baseDirectory.file_string() << "\\texconv.exe -ft dds -o " << outputDirectory.file_string() << " " << rootInputDirectory.file_string() << "\\" << relativePath.file_string() << " > NUL";
 	std::system(call.str().c_str());
 
-	return ddsPath.file_string();
+	return relativeDDSPath;
 }
 
 D3D11_USAGE ParseUsageFromString(std::string &inputString) {

@@ -87,6 +87,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\obj_hfm_converter\main.cpp" />
+    <ClCompile Include="..\obj_hfm_converter\util.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Halfling.vcxproj">
@@ -95,8 +96,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\..\tools\texconv\texconv.exe">
-	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\obj_hfm_converter\util.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

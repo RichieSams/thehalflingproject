@@ -4,10 +4,21 @@
     <ClCompile Include="..\obj_hfm_converter\main.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="..\obj_hfm_converter\util.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
       <UniqueIdentifier>{d157394e-5e03-44b0-8fc1-091ca0a7b456}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Util">
+      <UniqueIdentifier>{77cb962b-7431-4499-945e-941e5a805998}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\obj_hfm_converter\util.h">
+      <Filter>Util</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -77,7 +77,7 @@ public:
 
 D3D11_USAGE ParseUsageFromString(std::string &inputString);
 void CreateDefaultIniFile(const char *filePath);
-std::string ConvertToDDS(std::tr2::sys::path &baseDirectory, std::tr2::sys::path &rootInputDirectory, std::tr2::sys::path &rootOutputDirectory, const char *filePath);
+std::string ConvertToDDS(const char *filePath, std::tr2::sys::path &baseDirectory, std::tr2::sys::path &rootInputDirectory, std::tr2::sys::path &rootOutputDirectory);
 
 int main(int argc, char *argv[]) {
 	// Check the number of parameters
@@ -283,27 +283,27 @@ int main(int argc, char *argv[]) {
 		if (iniFile.UseDiffuseColorMap && material->GetTexture(aiTextureType_DIFFUSE, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
 			subset.DiffuseColorMapIndex = stringTable.size();
 			// Guarantee it's a dds file
-			stringTable.push_back(ConvertToDDS(baseDirectory, inputDirectory, outputDirectory, string.data));
+			stringTable.push_back(ConvertToDDS(string.data, baseDirectory, inputDirectory, outputDirectory));
 		}
 		if (iniFile.UseNormalMap && material->GetTexture(aiTextureType_NORMALS, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
 			subset.NormalMapIndex = stringTable.size();
-			stringTable.push_back(ConvertToDDS(baseDirectory, inputDirectory, outputDirectory, string.data));
+			stringTable.push_back(ConvertToDDS(string.data, baseDirectory, inputDirectory, outputDirectory));
 		}
 		if (iniFile.UseDisplacementMap && material->GetTexture(aiTextureType_HEIGHT, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
 			subset.DisplacementMapIndex = stringTable.size();
-			stringTable.push_back(ConvertToDDS(baseDirectory, inputDirectory, outputDirectory, string.data));
+			stringTable.push_back(ConvertToDDS(string.data, baseDirectory, inputDirectory, outputDirectory));
 		}
 		if (iniFile.UseAlphaMap && material->GetTexture(aiTextureType_OPACITY, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
 			subset.AlphaMapIndex = stringTable.size();
-			stringTable.push_back(ConvertToDDS(baseDirectory, inputDirectory, outputDirectory, string.data));
+			stringTable.push_back(ConvertToDDS(string.data, baseDirectory, inputDirectory, outputDirectory));
 		}
 		if (iniFile.UseSpecColorMap && material->GetTexture(aiTextureType_SPECULAR, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
 			subset.SpecColorMapIndex = stringTable.size();
-			stringTable.push_back(ConvertToDDS(baseDirectory, inputDirectory, outputDirectory, string.data));
+			stringTable.push_back(ConvertToDDS(string.data, baseDirectory, inputDirectory, outputDirectory));
 		}
 		if (iniFile.UseSpecPowerMap && material->GetTexture(aiTextureType_SHININESS, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
 			subset.SpecPowerMapIndex = stringTable.size();
-			stringTable.push_back(ConvertToDDS(baseDirectory, inputDirectory, outputDirectory, string.data));
+			stringTable.push_back(ConvertToDDS(string.data, baseDirectory, inputDirectory, outputDirectory));
 		}
 
 		subsets.push_back(subset);
@@ -338,7 +338,8 @@ int main(int argc, char *argv[]) {
 	return 0;
 }
 
-std::string ConvertToDDS(std::tr2::sys::path &baseDirectory, std::tr2::sys::path &rootInputDirectory, std::tr2::sys::path &rootOutputDirectory, const char *filePath) {
+std::string ConvertToDDS(const char *filePath, std::tr2::sys::path &baseDirectory, std::tr2::sys::path &rootInputDirectory, std::tr2::sys::path &rootOutputDirectory)
+{
 	std::tr2::sys::path relativePath(filePath);
 	std::tr2::sys::path relativeDDSPath(relativePath);
 	relativeDDSPath.replace_extension("dds");

@@ -41,11 +41,11 @@ std::string ConvertToDDS(const char *filePath, std::tr2::sys::path &baseDirector
 }
 
 D3D11_USAGE ParseUsageFromString(std::string &inputString) {
-	if (stricmp(inputString.c_str(), "default") == 0) {
+	if (_stricmp(inputString.c_str(), "default") == 0) {
 		return D3D11_USAGE_DEFAULT;
-	} else if (stricmp(inputString.c_str(), "dynamic") == 0) {
+	} else if (_stricmp(inputString.c_str(), "dynamic") == 0) {
 		return D3D11_USAGE_DYNAMIC;
-	} else if (stricmp(inputString.c_str(), "staging") == 0) {
+	} else if (_stricmp(inputString.c_str(), "staging") == 0) {
 		return D3D11_USAGE_STAGING;
 	} else {
 		return D3D11_USAGE_IMMUTABLE;
@@ -53,19 +53,19 @@ D3D11_USAGE ParseUsageFromString(std::string &inputString) {
 }
 
 aiTextureType ParseTextureTypeFromString(std::string &inputString, aiTextureType defaultType) {
-	if (stricmp(inputString.c_str(), "diffuse") == 0) {
+	if (_stricmp(inputString.c_str(), "diffuse") == 0) {
 		return aiTextureType_DIFFUSE;
-	} else if (stricmp(inputString.c_str(), "normal") == 0) {
+	} else if (_stricmp(inputString.c_str(), "normal") == 0) {
 		return aiTextureType_NORMALS;
-	} else if (stricmp(inputString.c_str(), "height") == 0) {
+	} else if (_stricmp(inputString.c_str(), "height") == 0) {
 		return aiTextureType_HEIGHT;
-	} else if (stricmp(inputString.c_str(), "displacement") == 0) {
+	} else if (_stricmp(inputString.c_str(), "displacement") == 0) {
 		return aiTextureType_DISPLACEMENT;
-	} else if (stricmp(inputString.c_str(), "alpha") == 0) {
+	} else if (_stricmp(inputString.c_str(), "alpha") == 0) {
 		return aiTextureType_OPACITY;
-	} else if (stricmp(inputString.c_str(), "specColor") == 0) {
+	} else if (_stricmp(inputString.c_str(), "specColor") == 0) {
 		return aiTextureType_SPECULAR;
-	} else if (stricmp(inputString.c_str(), "specPower") == 0) {
+	} else if (_stricmp(inputString.c_str(), "specPower") == 0) {
 		return aiTextureType_SHININESS;
 	} else {
 		return defaultType;

@@ -31,7 +31,7 @@ std::string ConvertToDDS(const char *filePath, std::tr2::sys::path &baseDirector
 	}
 
 	// Otherwise, convert the file to DDS
-	std::string call = baseDirectory.file_string() + "\\texconv.exe -ft dds -o " + outputDirectory.file_string() + " " + outputFilePath.file_string() + " > NUL";
+	std::string call = baseDirectory.file_string() + "\\texconv.exe -ft dds -o " + outputDirectory.file_string() + " " + inputFilePath.file_string() + " > NUL";
 	std::system(call.c_str());
 
 	return relativeDDSPath;

@@ -40,14 +40,34 @@ int main(int argc, char *argv[]) {
 	// Parse the command line arguments
 	for (int i = 1; i < argc; ++i) {
 		if (strcmp(argv[i], "-c") == 0) {
-			ObjHmfConverter::CreateDefaultIniFile(argv[++i]);
+			if (++i >= argc) {
+				std::cerr << "-c requires an argument";
+				return 1;
+			}
+
+			ObjHmfConverter::CreateDefaultIniFile(argv[i]);
 			return 0;
 		} else if (strcmp(argv[i], "-f") == 0) {
-			inputPath = argv[++i];
+			if (++i >= argc) {
+				std::cerr << "-f requires an argument";
+				return 1;
+			}
+
+			inputPath = argv[i];
 		} else if (strcmp(argv[i], "-i") == 0) {
-			iniFilePath = argv[++i];
+			if (++i >= argc) {
+				std::cerr << "-i requires an argument";
+				return 1;
+			}
+
+			iniFilePath = argv[i];
 		} else if (strcmp(argv[i], "-o") == 0) {
-			outputPath = argv[++i];
+			if (++i >= argc) {
+				std::cerr << "-o requires an argument";
+				return 1;
+			}
+
+			outputPath = argv[i];
 		}
 	}
 

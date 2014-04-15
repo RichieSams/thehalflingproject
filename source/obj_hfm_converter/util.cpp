@@ -6,6 +6,8 @@
 
 #include "obj_hfm_converter/util.h"
 
+#include <iostream>
+
 
 namespace ObjHmfConverter {
 
@@ -52,6 +54,12 @@ D3D11_USAGE ParseUsageFromString(std::string &inputString) {
 
 void CreateDefaultIniFile(const char *filePath) {
 	std::ofstream fout(filePath);
+
+	// Make sure open was successful
+	if (!fout) {
+		std::cerr << "File could not be opened";
+		return;
+	}
 
 	fout << "[Post-Processing]\n" <<
 	        "; If normals already exist, setting GenNormals to true will do nothing\n" <<

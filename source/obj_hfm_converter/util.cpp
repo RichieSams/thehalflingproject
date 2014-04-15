@@ -28,6 +28,7 @@ std::string ConvertToDDS(const char *filePath, std::tr2::sys::path &baseDirector
 	std::tr2::sys::path inputFilePath(rootInputDirectory.file_string() + "\\" + relativePath.file_string());
 	if (stricmp(relativePath.extension().c_str(), "dds") == 0) {
 		copy_file(inputFilePath, outputFilePath);
+		return relativeDDSPath;
 	}
 
 	// Otherwise, convert the file to DDS

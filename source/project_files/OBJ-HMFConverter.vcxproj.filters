@@ -7,6 +7,9 @@
     <ClCompile Include="..\obj_hfm_converter\util.cpp">
       <Filter>Util</Filter>
     </ClCompile>
+    <ClCompile Include="..\obj_hfm_converter\hmf_converter.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -19,6 +22,9 @@
   <ItemGroup>
     <ClInclude Include="..\obj_hfm_converter\util.h">
       <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\obj_hfm_converter\hmf_converter.h">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

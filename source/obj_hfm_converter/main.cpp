@@ -371,23 +371,25 @@ std::string ConvertToDDS(const char *filePath, std::tr2::sys::path &baseDirector
 	std::tr2::sys::path relativeDDSPath(relativePath);
 	relativeDDSPath.replace_extension("dds");
 	
-	// If the file already exist, we don't need to do anything
-	if (exists(std::tr2::sys::path(rootOutputDirectory.file_string() + "\\" + relativeDDSPath.file_string()))) {
+	// If the file already exists in the output directory, we don't need to do anything
+	std::tr2::sys::path outputFilePath(rootOutputDirectory.file_string() + "\\" + relativeDDSPath.file_string());
+	if (exists(outputFilePath)) {
 		return relativeDDSPath;
 	}
 
-	// Figure out the output directory
-	std::tr2::sys::path outputDirectory(rootOutputDirectory.file_string());
-	if (relativePath.has_parent_path()) {
-		outputDirectory /= relativePath.parent_path().file_string();
-	}
-
 	// Guarantee the output directory exists
+	std::tr2::sys::path outputDirectory(outputFilePath.parent_path());
 	create_directories(outputDirectory);
 
-	// Convert the file to DDS
+	// If input is already dds, but doesn't exist in the output directory, just copy the file to the output
+	std::tr2::sys::path inputFilePath(rootInputDirectory.file_string() + "\\" + relativePath.file_string());
+	if (stricmp(relativePath.extension().c_str(), "dds") == 0) {
+		copy_file(inputFilePath, outputFilePath);
+	}
+
+	// Otherwise, convert the file to DDS
 	std::stringstream call;
-	call << baseDirectory.file_string() << "\\texconv.exe -ft dds -o " << outputDirectory.file_string() << " " << rootInputDirectory.file_string() << "\\" << relativePath.file_string() << " > NUL";
+	call << baseDirectory.file_string() << "\\texconv.exe -ft dds -o " << outputDirectory.file_string() << " " << outputFilePath.file_string() << " > NUL";
 	std::system(call.str().c_str());
 
 	return relativeDDSPath;

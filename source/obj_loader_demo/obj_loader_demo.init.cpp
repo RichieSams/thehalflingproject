@@ -72,7 +72,7 @@ void ObjLoaderDemo::InitTweakBar() {
 }
 
 void ObjLoaderDemo::SetupScene() {
-	Common::Model *sceneModel = Common::HalflingModelFile::Load(m_device, m_immediateContext, &m_textureManager, L"sponza.hmf");
+	Common::Model *sceneModel = Common::HalflingModelFile::Load(m_device, &m_textureManager, L"sponza.hmf");
 	m_models.push_back(sceneModel);
 
 	DirectX::XMFLOAT3 AABB_min = sceneModel->GetAABBMin();

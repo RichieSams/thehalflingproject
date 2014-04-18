@@ -15,7 +15,7 @@
 
 namespace Common {
 
-Common::Model *Common::HalflingModelFile::Load(ID3D11Device *device, ID3D11DeviceContext *context, Common::TextureManager *textureManager, const wchar *filePath) {
+Common::Model *Common::HalflingModelFile::Load(ID3D11Device *device, Common::TextureManager *textureManager, const wchar *filePath) {
 	// Read the entire file into memory
 	DWORD bytesRead;
 	char *fileBuffer = ReadWholeFile(filePath, &bytesRead);

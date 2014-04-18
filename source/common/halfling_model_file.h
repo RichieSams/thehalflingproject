@@ -72,7 +72,7 @@ private:
 	static const byte kFileFormatVersion = 1;
 
 public:
-	static Common::Model *Load(ID3D11Device *device, ID3D11DeviceContext *context, Common::TextureManager *textureManager, const wchar *filePath);
+	static Common::Model *Load(ID3D11Device *device, Common::TextureManager *textureManager, const wchar *filePath);
 	static void Write(const wchar *filepath, 
 	                  uint numVertices, uint numIndices, 
 	                  D3D11_BUFFER_DESC *vertexBufferDesc,

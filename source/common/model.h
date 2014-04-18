@@ -111,6 +111,8 @@ public:
 
 	inline DirectX::XMFLOAT3 GetAABBMin() { return m_AABB_min; }
 	inline DirectX::XMFLOAT3 GetAABBMax() { return m_AABB_max; }
+	inline DirectX::XMVECTOR GetAABBMin_XM() { return DirectX::XMLoadFloat3(&m_AABB_min); }
+	inline DirectX::XMVECTOR GetAABBMax_XM() { return DirectX::XMLoadFloat3(&m_AABB_max); }
 
 	void SetWorldTransform(DirectX::XMMATRIX &worldTransform) { m_worldTransform = worldTransform; }
 	const DirectX::XMMATRIX &GetWorldTransform() { return m_worldTransform; }

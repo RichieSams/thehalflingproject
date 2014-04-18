@@ -124,6 +124,7 @@ bool ConvertToHMF(std::tr2::sys::path &baseDirectory, std::tr2::sys::path &input
 	std::vector<uint> indices;
 	std::vector<Common::HalflingModelFile::Subset> subsets;
 	std::vector<std::string> stringTable;
+	std::unordered_map<std::string, size_t> stringLookup; 
 
 	for (uint i = 0; i < scene->mNumMeshes; ++i) {
 		aiMesh *mesh = scene->mMeshes[i];
@@ -185,29 +186,94 @@ bool ConvertToHMF(std::tr2::sys::path &baseDirectory, std::tr2::sys::path &input
 		}
 
 		if (iniFile.UseDiffuseColorMap && material->GetTexture(iniFile.DiffuseColorMapTextureType, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
-			subset.DiffuseColorMapIndex = stringTable.size();
 			// Guarantee it's a dds file
-			stringTable.push_back(ConvertToDDS(string.data, baseDirectory, inputDirectory, outputDirectory));
+			std::string fileString(ConvertToDDS(string.data, baseDirectory, inputDirectory, outputDirectory));
+			
+			// See if it already exists
+			auto iter = stringLookup.find(fileString);
+			if (iter != stringLookup.end()) {
+				subset.DiffuseColorMapIndex = iter->second;
+			} else {
+				size_t size = stringTable.size();
+				subset.DiffuseColorMapIndex = size;
+				stringLookup[fileString] = size;
+				stringTable.push_back(fileString);
+			}
 		}
 		if (iniFile.UseNormalMap && material->GetTexture(iniFile.NormalMapTextureType, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
-			subset.NormalMapIndex = stringTable.size();
-			stringTable.push_back(ConvertToDDS(string.data, baseDirectory, inputDirectory, outputDirectory));
+			// Guarantee it's a dds file
+			std::string fileString(ConvertToDDS(string.data, baseDirectory, inputDirectory, outputDirectory));
+
+			// See if it already exists
+			auto iter = stringLookup.find(fileString);
+			if (iter != stringLookup.end()) {
+				subset.NormalMapIndex = iter->second;
+			} else {
+				size_t size = stringTable.size();
+				subset.NormalMapIndex = size;
+				stringLookup[fileString] = size;
+				stringTable.push_back(fileString);
+			}
 		}
 		if (iniFile.UseDisplacementMap && material->GetTexture(iniFile.DisplacementMapTextureType, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
-			subset.DisplacementMapIndex = stringTable.size();
-			stringTable.push_back(ConvertToDDS(string.data, baseDirectory, inputDirectory, outputDirectory));
+			// Guarantee it's a dds file
+			std::string fileString(ConvertToDDS(string.data, baseDirectory, inputDirectory, outputDirectory));
+
+			// See if it already exists
+			auto iter = stringLookup.find(fileString);
+			if (iter != stringLookup.end()) {
+				subset.DisplacementMapIndex = iter->second;
+			} else {
+				size_t size = stringTable.size();
+				subset.DisplacementMapIndex = size;
+				stringLookup[fileString] = size;
+				stringTable.push_back(fileString);
+			}
 		}
 		if (iniFile.UseAlphaMap && material->GetTexture(iniFile.AlphaMapTextureType, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
-			subset.AlphaMapIndex = stringTable.size();
-			stringTable.push_back(ConvertToDDS(string.data, baseDirectory, inputDirectory, outputDirectory));
+			// Guarantee it's a dds file
+			std::string fileString(ConvertToDDS(string.data, baseDirectory, inputDirectory, outputDirectory));
+
+			// See if it already exists
+			auto iter = stringLookup.find(fileString);
+			if (iter != stringLookup.end()) {
+				subset.AlphaMapIndex = iter->second;
+			} else {
+				size_t size = stringTable.size();
+				subset.AlphaMapIndex = size;
+				stringLookup[fileString] = size;
+				stringTable.push_back(fileString);
+			}
 		}
 		if (iniFile.UseSpecColorMap && material->GetTexture(iniFile.SpecColorMapTextureType, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
-			subset.SpecColorMapIndex = stringTable.size();
-			stringTable.push_back(ConvertToDDS(string.data, baseDirectory, inputDirectory, outputDirectory));
+			// Guarantee it's a dds file
+			std::string fileString(ConvertToDDS(string.data, baseDirectory, inputDirectory, outputDirectory));
+
+			// See if it already exists
+			auto iter = stringLookup.find(fileString);
+			if (iter != stringLookup.end()) {
+				subset.SpecColorMapIndex = iter->second;
+			} else {
+				size_t size = stringTable.size();
+				subset.SpecColorMapIndex = size;
+				stringLookup[fileString] = size;
+				stringTable.push_back(fileString);
+			}
 		}
 		if (iniFile.UseSpecPowerMap && material->GetTexture(iniFile.SpecPowerMapTextureType, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
-			subset.SpecPowerMapIndex = stringTable.size();
-			stringTable.push_back(ConvertToDDS(string.data, baseDirectory, inputDirectory, outputDirectory));
+			// Guarantee it's a dds file
+			std::string fileString(ConvertToDDS(string.data, baseDirectory, inputDirectory, outputDirectory));
+
+			// See if it already exists
+			auto iter = stringLookup.find(fileString);
+			if (iter != stringLookup.end()) {
+				subset.SpecPowerMapIndex = iter->second;
+			} else {
+				size_t size = stringTable.size();
+				subset.SpecPowerMapIndex = size;
+				stringLookup[fileString] = size;
+				stringTable.push_back(fileString);
+			}
 		}
 
 		subsets.push_back(subset);

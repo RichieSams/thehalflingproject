@@ -121,7 +121,7 @@ void ObjLoaderDemo::BuildGeometryBuffers() {
 
 	// Create subsets
 	Common::ModelSubset *debugSphereSubsets = new Common::ModelSubset[1] {
-		{0, vertexCount, 0, indexCount, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {{0.0f, 0.0f, 0.0f, 0.0f}}, nullptr}
+		{0, vertexCount, 0, indexCount, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {{0.0f, 0.0f, 0.0f, 0.0f}}, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, 0}
 	};
 	m_debugSphere.CreateSubsets(debugSphereSubsets, 1);
 
@@ -151,7 +151,7 @@ void ObjLoaderDemo::BuildGeometryBuffers() {
 
 	// Create subsets
 	Common::ModelSubset *debugConeSubsets = new Common::ModelSubset[1] {
-		{0, vertexCount, 0, indexCount, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {{0.0f, 0.0f, 0.0f, 0.0f}}, nullptr}
+		{0, vertexCount, 0, indexCount, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {{0.0f, 0.0f, 0.0f, 0.0f}}, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, 0}
 	};
 	m_debugCone.CreateSubsets(debugConeSubsets, 1);
 

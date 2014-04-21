@@ -164,7 +164,7 @@ void Model::DrawInstancedSubset(ID3D11DeviceContext *deviceContext, uint indexCo
 	assert(instanceCount <= m_maxInstanceCount);
 
 	ID3D11Buffer *vbs[] = {m_vertexBuffer, m_instanceBuffer};
-	uint strides[] = {m_vertexStride, sizeof(m_instanceStride)};
+	uint strides[] = {m_vertexStride, m_instanceStride};
 	uint offsets[] = {0, 0};
 	deviceContext->IASetVertexBuffers(0, 2, vbs, strides, offsets);
 	deviceContext->IASetIndexBuffer(m_indexBuffer, DXGI_FORMAT_R32_UINT, 0);

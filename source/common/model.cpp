@@ -34,8 +34,6 @@ uint Model::GetSubsetTextureFlags(uint subsetIndex) const {
 }
 
 void Model::CreateVertexBuffer(ID3D11Device *device, void *vertices, size_t vertexStride, uint vertexCount, DisposeAfterUse::Flag disposeAfterUse) {
-	m_vertexStride = vertexStride;
-
 	D3D11_BUFFER_DESC vbd;
 	vbd.Usage = D3D11_USAGE_IMMUTABLE;
 	vbd.ByteWidth = vertexStride * vertexCount;

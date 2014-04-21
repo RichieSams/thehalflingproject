@@ -95,7 +95,7 @@ void ObjLoaderDemo::SetupScene() {
 }
 
 void ObjLoaderDemo::BuildGeometryBuffers() {
-	size_t vertexStride = sizeof(Vertex);
+	size_t vertexStride = sizeof(DebugObjectVertex);
 	size_t instanceStride = sizeof(DebugObjectInstance);
 	
 	Common::GeometryGenerator::MeshData meshData;

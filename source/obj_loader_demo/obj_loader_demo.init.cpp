@@ -162,7 +162,7 @@ void ObjLoaderDemo::CreateLights(const DirectX::XMFLOAT3 &sceneSizeMin, const Di
 	m_directionalLight.Ambient = DirectX::XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
 	m_directionalLight.Diffuse = DirectX::XMFLOAT4(0.9f, 0.9f, 0.9f, 1.0f);
 	m_directionalLight.Specular = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_directionalLight.Direction = DirectX::XMFLOAT3(-0.46f, -0.46f, -0.46f);
+	m_directionalLight.Direction = DirectX::XMFLOAT3(-0.57735f, -0.57735f, -0.57735f);
 
 	float xRange = std::abs(sceneSizeMax.x - sceneSizeMin.x);
 	float yRange = std::abs(sceneSizeMax.y - sceneSizeMin.y);

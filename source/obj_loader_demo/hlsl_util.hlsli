@@ -13,8 +13,15 @@
 float2 CartesianToSpherical(float3 cartesian) {
 	float2 spherical;
 
-	spherical.x = atan2(cartesian.y, cartesian.x);
-	spherical.y = acos(cartesian.z);
+	// atan2 is not defined for (0, 0)
+	// Therefore, we need to explicitly define it ourselves
+	[flatten]
+	if (any(cartesian.xy)) {
+		spherical.x = atan2(cartesian.y, cartesian.x);
+		spherical.y = acos(cartesian.z);
+	} else {
+		spherical.x = float2(0.0f, 0.0f);
+	}
 
 	return spherical;
 }

@@ -4,10 +4,10 @@
  * Copyright Adrian Astley 2013
  */
 
-#include "deferred_shading_demo/types.hlsli"
+#include "obj_loader_demo/types.hlsli"
 #include "common/shaders/lights.hlsli"
 #include "common/shaders/light_functions.hlsli"
-#include "deferred_shading_demo/hlsl_util.hlsli"
+#include "obj_loader_demo/hlsl_util.hlsli"
 
 cbuffer cbPerFrame : register(b0) {
 	float4x4 gProjection : packoffset(c0);

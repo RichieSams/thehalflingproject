@@ -22,12 +22,14 @@ float2 CartesianToSpherical(float3 cartesian) {
 // Converts a spherical coordinate to a normalized
 // cartesian direction vector.
 float3 SphericalToCartesian(float2 spherical) {
-	float2 sinCosTheta, sinCosPhi;
+	float2 sinValue, cosValue;
 
-	sincos(spherical.x, sinCosTheta.x, sinCosTheta.y);
-	sincos(spherical.y, sinCosPhi.x, sinCosPhi.y);
+	// spherical.x = theta
+	// spherical.y = phi
 
-	return float3(sinCosTheta.y * sinCosPhi.x, sinCosTheta.x * sinCosPhi.x, sinCosPhi.y);
+	sincos(spherical, sinValue, cosValue);
+
+	return float3(cosValue.x * sinValue.y, sinValue.x * sinValue.y, cosValue.y);
 }
 
 // Converts a z-buffer depth to linear depth

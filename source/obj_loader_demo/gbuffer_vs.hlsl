@@ -16,7 +16,7 @@ GBufferShaderPixelIn GBufferVS(VertexIn input) {
 	GBufferShaderPixelIn output;
 
 	output.positionClip = mul(float4(input.position, 1.0f), gWorldViewProjMatrix);
-	output.normal   = mul(float4(input.normal, 0.0f), gWorldMatrix).xyz;
+	output.normal   = normalize(mul(float4(input.normal, 0.0f), gWorldMatrix).xyz);
 	output.texCoord = input.texCoord;
 	
 	return output;

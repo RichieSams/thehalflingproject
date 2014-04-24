@@ -29,7 +29,11 @@ StructuredBuffer<SpotLight> gSpotLights : register(t5);
 StructuredBuffer<BlinnPhongMaterial> gMaterialList : register(t6);
 
 float4 NoCullFinalGatherPS(FullScreenTrianglePixelIn input) : SV_TARGET {
-	float2 pixelCoord = input.positionClip.xy;
+	float2 gbufferDim;
+	uint dummy;
+	gGBufferDepth.GetDimensions(gbufferDim.x, gbufferDim.y, dummy);
+
+	float2 pixelCoord = input.texCoord * gbufferDim;
 
 	// Sample from the Depth GBuffer and calculate position
 	float zw = (float)(gGBufferDepth.Load(pixelCoord, 0));
@@ -37,10 +41,6 @@ float4 NoCullFinalGatherPS(FullScreenTrianglePixelIn input) : SV_TARGET {
 	// Discard pixels that have infinite depth.
 	if (zw == 0.0f)
 		discard;
-
-	float2 gbufferDim;
-	uint dummy;
-	gGBufferDepth.GetDimensions(gbufferDim.x, gbufferDim.y, dummy);
 
 	float3 positionWS = PositionFromDepth(zw, pixelCoord, gbufferDim, gInvViewProjection);
 

@@ -38,11 +38,21 @@ float4 RenderGBuffersPS(TransformedFullScreenTrianglePixelIn input) : SV_TARGET 
 		return float4(colorValue, colorValue, colorValue, 1.0f);
 	} else if (gGBufferIndex == 2) {
 		// Render Spherical Coord Normal
-		return float4(gGBufferNormal.Load(pixelCoord, 0).xy, 0.0f, 1.0f);
+		float2 sphericalCoord = gGBufferNormal.Load(pixelCoord, 0).xy;
+		
+		// Normalize to renderable values
+		sphericalCoord.x = (sphericalCoord.x / 3.141592f) * 0.5f + 0.5f;
+		sphericalCoord.y = sphericalCoord.y / 3.141592f;
+
+		return float4(sphericalCoord, 0.0f, 1.0f);
 	} else if (gGBufferIndex == 3) {
 		// Render Cartesian Coord Normal
-		float2 normalSphericalCoords = gGBufferNormal.Load(pixelCoord, 0).xy;
-		return float4(SphericalToCartesian(normalSphericalCoords), 1.0f);
+		float3 cartesianCoords = SphericalToCartesian(gGBufferNormal.Load(pixelCoord, 0).xy);
+
+		// Normalize to renderable values
+		cartesianCoords = cartesianCoords * 0.5f + 0.5f;
+
+		return float4(cartesianCoords, 1.0f);
 
 	} else if (gGBufferIndex == 4) {
 		// Render depth

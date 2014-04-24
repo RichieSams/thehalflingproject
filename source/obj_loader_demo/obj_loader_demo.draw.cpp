@@ -50,10 +50,13 @@ void ObjLoaderDemo::ForwardRenderingPass() {
 	m_immediateContext->ClearDepthStencilView(m_depthStencilBuffer->GetDepthStencil(), D3D11_CLEAR_DEPTH, 0.0f, 0);
 
 	// Set States
-	ID3D11SamplerState *samplerState[1];
-	samplerState[0] = m_samplerStates.Anisotropic();
-
-	m_immediateContext->PSSetSamplers(0, 1, samplerState);
+	ID3D11SamplerState *samplerState[6] {m_samplerStates.Anisotropic(),  // Diffuse
+	                                     m_samplerStates.Anisotropic(),  // Spec color
+	                                     m_samplerStates.Linear(),       // Spec power
+	                                     m_samplerStates.Linear(),       // Alpha
+	                                     m_samplerStates.Linear(),       // Displacement
+	                                     m_samplerStates.Linear()};      // Normal
+	m_immediateContext->PSSetSamplers(0, 6, samplerState);
 	float blendFactor[4] = {1.0f, 1.0f, 1.0f, 1.0f};
 	m_immediateContext->OMSetBlendState(m_blendStates.BlendDisabled(), blendFactor, 0xFFFFFFFF);
 	m_immediateContext->OMSetDepthStencilState(m_depthStencilStates.ReverseDepthWriteEnabled(), 0);
@@ -160,8 +163,13 @@ void ObjLoaderDemo::NoCullDeferredRenderingPass() {
 	m_immediateContext->ClearDepthStencilView(m_depthStencilBuffer->GetDepthStencil(), D3D11_CLEAR_DEPTH, 0.0f, 0);
 
 	// Set States
-	ID3D11SamplerState *samplerState[1];
-	samplerState[0] = m_samplerStates.Anisotropic();
+	ID3D11SamplerState *samplerState[6] {m_samplerStates.Anisotropic(),  // Diffuse
+	                                     m_samplerStates.Anisotropic(),  // Spec color
+	                                     m_samplerStates.Linear(),       // Spec power
+	                                     m_samplerStates.Linear(),       // Alpha
+	                                     m_samplerStates.Linear(),       // Displacement
+	                                     m_samplerStates.Linear()};      // Normal
+	m_immediateContext->PSSetSamplers(0, 6, samplerState);
 
 	m_immediateContext->PSSetSamplers(0, 1, samplerState);
 	float blendFactor[4] = {1.0f, 1.0f, 1.0f, 1.0f};
@@ -205,7 +213,6 @@ void ObjLoaderDemo::NoCullDeferredRenderingPass() {
 	// Cleanup (aka make the runtime happy)
 	m_immediateContext->OMSetRenderTargets(0, 0, 0);
 
-
 	// Final gather pass
 	m_immediateContext->OMSetRenderTargets(1, &m_renderTargetView, nullptr);
 	m_immediateContext->ClearRenderTargetView(m_renderTargetView, DirectX::Colors::LightGray);
@@ -216,30 +223,38 @@ void ObjLoaderDemo::NoCullDeferredRenderingPass() {
 
 	m_immediateContext->VSSetShader(m_fullscreenTriangleVertexShader, nullptr, 0);
 	m_immediateContext->GSSetShader(0, 0, 0);
-	m_immediateContext->PSSetShader(m_noCullFinalGatherPixelShader, nullptr, 0);
-
-	m_immediateContext->RSSetState(m_rasterizerStates.NoCull());
-
-	DirectX::XMMATRIX projMatrix = DirectX::XMMatrixTranspose(projectionMatrix);
-	DirectX::XMMATRIX invViewProj = DirectX::XMMatrixTranspose(DirectX::XMMatrixInverse(nullptr, viewProj));
-	SetNoCullFinalGatherShaderConstants(projMatrix, invViewProj);
 
 	m_immediateContext->PSSetShaderResources(0, 4, &m_gBufferSRVs.front());
 
-	// Set light buffers
-	SetLightBuffers();
+	DirectX::XMMATRIX projMatrix = DirectX::XMMatrixTranspose(projectionMatrix);
+	DirectX::XMMATRIX invViewProj = DirectX::XMMatrixTranspose(DirectX::XMMatrixInverse(nullptr, viewProj));
 
-	if (m_pointLights.size() > 0) {
-		ID3D11ShaderResourceView *srv = m_pointLightBuffer->GetShaderResource();
-		m_immediateContext->PSSetShaderResources(4, 1, &srv);
-	}
-	if (m_spotLights.size() > 0) {
-		ID3D11ShaderResourceView *srv = m_spotLightBuffer->GetShaderResource();
-		m_immediateContext->PSSetShaderResources(5, 1, &srv);
+	if (m_gbufferSelector == None) {
+		m_immediateContext->PSSetShader(m_noCullFinalGatherPixelShader, nullptr, 0);
+
+		SetNoCullFinalGatherShaderConstants(projMatrix, invViewProj);
+
+		// Set light buffers
+		SetLightBuffers();
+
+		if (m_pointLights.size() > 0) {
+			ID3D11ShaderResourceView *srv = m_pointLightBuffer->GetShaderResource();
+			m_immediateContext->PSSetShaderResources(4, 1, &srv);
+		}
+		if (m_spotLights.size() > 0) {
+			ID3D11ShaderResourceView *srv = m_spotLightBuffer->GetShaderResource();
+			m_immediateContext->PSSetShaderResources(5, 1, &srv);
+		}
+
+		// Set material list
+		SetMaterialList();
+	} else {
+		m_immediateContext->PSSetShader(m_renderGbuffersPixelShader, nullptr, 0);
+
+		SetRenderGBuffersPixelShaderConstants(projMatrix, invViewProj, m_gbufferSelector);
 	}
 
-	// Set material list
-	SetMaterialList();
+	m_immediateContext->RSSetState(m_rasterizerStates.NoCull());
 
 	m_immediateContext->IASetVertexBuffers(0, 0, 0, 0, 0);
 	m_immediateContext->IASetIndexBuffer(0, DXGI_FORMAT_R32_UINT, 0);
@@ -426,18 +441,7 @@ void ObjLoaderDemo::RenderDebugGeometry() {
 		                                     DirectX::XMFLOAT2(0.5f, 0.0f)};
 
 		for (uint i = 0; i < 6; ++i) {
-			// Fill in object constants
 			D3D11_MAPPED_SUBRESOURCE mappedResource;
-
-			HR(m_immediateContext->Map(m_renderGbuffersPixelShaderConstantsBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
-
-			RenderGBuffersPixelShaderConstants *pixelShaderConstantsBuffer = static_cast<RenderGBuffersPixelShaderConstants *>(mappedResource.pData);
-			pixelShaderConstantsBuffer->gProj = DirectX::XMMatrixTranspose(projectionMatrix);
-			pixelShaderConstantsBuffer->gInvViewProjection = DirectX::XMMatrixTranspose(invViewProj);
-			pixelShaderConstantsBuffer->gGBufferIndex = i;
-
-			m_immediateContext->Unmap(m_renderGbuffersPixelShaderConstantsBuffer, 0);
-			m_immediateContext->PSSetConstantBuffers(0, 1, &m_renderGbuffersPixelShaderConstantsBuffer);
 
 			// Lock the constant buffer so it can be written to.
 			HR(m_immediateContext->Map(m_transformedFullscreenTriangleVertexShaderConstantsBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
@@ -448,6 +452,8 @@ void ObjLoaderDemo::RenderDebugGeometry() {
 
 			m_immediateContext->Unmap(m_transformedFullscreenTriangleVertexShaderConstantsBuffer, 0);
 			m_immediateContext->VSSetConstantBuffers(1, 1, &m_transformedFullscreenTriangleVertexShaderConstantsBuffer);
+
+			SetRenderGBuffersPixelShaderConstants(projectionMatrix, invViewProj, i);
 
 			m_immediateContext->Draw(6, 0);
 		}
@@ -489,6 +495,21 @@ void ObjLoaderDemo::RenderDebugGeometry() {
 	ID3D11ShaderResourceView *nullSRV[7] = {0, 0, 0, 0, 0, 0};
 	m_immediateContext->VSSetShaderResources(0, 7, nullSRV);
 	m_immediateContext->PSSetShaderResources(0, 7, nullSRV);
+}
+
+void ObjLoaderDemo::SetRenderGBuffersPixelShaderConstants(DirectX::XMMATRIX &projMatrix, DirectX::XMMATRIX &invViewProjMatrix, uint gBufferId) {
+	// Fill in object constants
+	D3D11_MAPPED_SUBRESOURCE mappedResource;
+
+	HR(m_immediateContext->Map(m_renderGbuffersPixelShaderConstantsBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
+
+	RenderGBuffersPixelShaderConstants *pixelShaderConstantsBuffer = static_cast<RenderGBuffersPixelShaderConstants *>(mappedResource.pData);
+	pixelShaderConstantsBuffer->gProj = DirectX::XMMatrixTranspose(projMatrix);
+	pixelShaderConstantsBuffer->gInvViewProjection = DirectX::XMMatrixTranspose(invViewProjMatrix);
+	pixelShaderConstantsBuffer->gGBufferIndex = gBufferId;
+
+	m_immediateContext->Unmap(m_renderGbuffersPixelShaderConstantsBuffer, 0);
+	m_immediateContext->PSSetConstantBuffers(0, 1, &m_renderGbuffersPixelShaderConstantsBuffer);
 }
 
 void ObjLoaderDemo::RenderHUD() {

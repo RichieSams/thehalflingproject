@@ -30,6 +30,7 @@ ObjLoaderDemo::ObjLoaderDemo(HINSTANCE hinstance)
 	  m_wireframe(false),
 	  m_animateLights(true),
 	  m_shadingType(ShadingType::NoCullDeferred),
+	  m_gbufferSelector(GBufferSelector::None),
 	  m_showLightLocations(false),
 	  m_showGBuffers(false),
 	  m_numPointLightsToDraw(100),

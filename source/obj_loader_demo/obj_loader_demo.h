@@ -91,6 +91,16 @@ enum ShadingType {
 	NoCullDeferred
 };
 
+enum GBufferSelector {
+	Diffuse = 0,
+	Material = 1,
+	Normal_Spherical = 2,
+	Normal_Cartesian = 3,
+	Depth = 4,
+	Position = 5,
+	None = 6
+};
+
 class ObjLoaderDemo : public Halfling::HalflingEngine {
 public:
 	ObjLoaderDemo(HINSTANCE hinstance);
@@ -127,6 +137,7 @@ private:
 	bool m_wireframe;
 	bool m_animateLights;
 	ShadingType m_shadingType;
+	GBufferSelector m_gbufferSelector;
 	bool m_showLightLocations;
 	bool m_showGBuffers;
 	uint32 m_numSpotLightsToDraw;
@@ -224,6 +235,7 @@ private:
 	void SetGBufferVertexShaderConstants(DirectX::XMMATRIX &worldMatrix, DirectX::XMMATRIX &worldViewProjMatrix);
 	void SetGBufferPixelShaderConstants(uint materialIndex, uint textureFlags);
 	void SetNoCullFinalGatherShaderConstants(DirectX::XMMATRIX &projMatrix, DirectX::XMMATRIX &invViewProjMatrix);
+	void SetRenderGBuffersPixelShaderConstants(DirectX::XMMATRIX &projMatrix, DirectX::XMMATRIX &invViewProjMatrix, uint gBufferId);
 
 	/** Maps the point light StructuredBuffer and the spot light Structured buffer to the pixel shader */
 	void SetLightBuffers();

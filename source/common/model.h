@@ -101,6 +101,9 @@ private:
 
 	DisposeAfterUse::Flag m_disposeSubsetArray;
 
+private:
+	static void SetTextureResources(ID3D11DeviceContext *context, ModelSubset &subset);
+
 public:
 	void *operator new(size_t size);
 	void operator delete(void *memory);

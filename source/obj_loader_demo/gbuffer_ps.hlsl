@@ -25,7 +25,7 @@ SamplerState gDiffuseSampler : register(s0);
 
 void GBufferPS(GBufferShaderPixelIn input, out GBuffer gbuffer) {
 	[flatten]
-	if (gTextureFlags & 0x01 == 0x01) {
+	if ((gTextureFlags & 0x01) == 0x01) {
 		gbuffer.albedo = gDiffuseTexture.Sample(gDiffuseSampler, input.texCoord).xyz;
 	} else {
 		gbuffer.albedo = float3(1.0f, 1.0f, 1.0f);

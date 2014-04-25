@@ -21,7 +21,18 @@ cbuffer cbPerObject : register(b1) {
 };
 
 Texture2D gDiffuseTexture : register(t0);
+Texture2D gSpecColorTexture : register(t1);
+Texture2D gSpecPowerTexture : register(t2);
+Texture2D gAlphaTexture : register(t3);
+Texture2D gDisplacementTexture : register(t4);
+Texture2D gNormalTexture : register(t5);
+
+SamplerState gSpecColorSampler : register(s1);
 SamplerState gDiffuseSampler : register(s0);
+SamplerState gSpecPowerSampler : register(s2);
+SamplerState gAlphaSampler : register(s3);
+SamplerState gDisplacementSampler : register(s4);
+SamplerState gNormalSampler : register(s5);
 
 void GBufferPS(GBufferShaderPixelIn input, out GBuffer gbuffer) {
 	[flatten]
@@ -31,6 +42,17 @@ void GBufferPS(GBufferShaderPixelIn input, out GBuffer gbuffer) {
 		gbuffer.albedo = float3(1.0f, 1.0f, 1.0f);
 	}
 
-	gbuffer.normal = CartesianToSpherical(normalize(input.normal));
+	float3 cartesianNormal;
+
+	[flatten]
+	if ((gTextureFlags & 0x20) == 0x20) {
+		float3 normalMapSample = gNormalTexture.Sample(gNormalSampler, input.texCoord).xyz;
+
+		cartesianNormal = PerturbNormal(normalize(input.normal), normalMapSample, input.tangent);
+	} else {
+		cartesianNormal = normalize(input.normal);
+	}
+	
+	gbuffer.normal = CartesianToSpherical(cartesianNormal);
 	gbuffer.materialId = gMaterialIndex;
 }

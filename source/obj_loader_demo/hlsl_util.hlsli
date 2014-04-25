@@ -54,5 +54,24 @@ float3 PositionFromDepth(in float zw, in uint2 pixelCoord, in float2 displaySize
     return positionWS.xyz / positionWS.w;
 }
 
+// Perturbs a pixel normal given a normal map sample and the tangent
+float3 PerturbNormal(float3 pixelNormal, float3 normalMapSample, float3 tangent)
+{
+	// Uncompress each component from [0,1] to [-1,1].
+	// Add a negative because negating is free and MAD is faster than MUL & SUB
+	float3 normalizedSample = normalMapSample * 2.0f + -1.0f;
+
+	// Build orthonormal basis.
+	float3 T = normalize(tangent - dot(tangent, pixelNormal) * pixelNormal);
+	float3 B = cross(pixelNormal, T);
+
+	float3x3 TBN = float3x3(T, B, pixelNormal);
+
+	// Transform from tangent space to world space.
+	float3 perturbedNormal = mul(normalizedSample, TBN);
+
+	return normalize(perturbedNormal);
+}
+
 
 #endif

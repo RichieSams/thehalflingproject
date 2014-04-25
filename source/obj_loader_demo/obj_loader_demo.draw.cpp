@@ -57,6 +57,7 @@ void ObjLoaderDemo::ForwardRenderingPass() {
 	                                     m_samplerStates.Linear(),       // Displacement
 	                                     m_samplerStates.Linear()};      // Normal
 	m_immediateContext->PSSetSamplers(0, 6, samplerState);
+
 	float blendFactor[4] = {1.0f, 1.0f, 1.0f, 1.0f};
 	m_immediateContext->OMSetBlendState(m_blendStates.BlendDisabled(), blendFactor, 0xFFFFFFFF);
 	m_immediateContext->OMSetDepthStencilState(m_depthStencilStates.ReverseDepthWriteEnabled(), 0);

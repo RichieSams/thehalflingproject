@@ -85,11 +85,11 @@ void ObjLoaderDemo::ForwardRenderingPass() {
 
 	if (m_pointLights.size() > 0) {
 		ID3D11ShaderResourceView *srv = m_pointLightBuffer->GetShaderResource();
-		m_immediateContext->PSSetShaderResources(3, 1, &srv);
+		m_immediateContext->PSSetShaderResources(8, 1, &srv);
 	}
 	if (m_spotLights.size() > 0) {
 		ID3D11ShaderResourceView *srv = m_spotLightBuffer->GetShaderResource();
-		m_immediateContext->PSSetShaderResources(4, 1, &srv);
+		m_immediateContext->PSSetShaderResources(9, 1, &srv);
 	}
 
 	for (uint i = 0; i < m_models.size(); ++i) {

@@ -18,6 +18,7 @@ struct ForwardPixelIn {
 	float4 positionClip   : SV_POSITION;
 	float3 positionWorld  : POSITION_WORLD;
 	float3 normal         : NORMAL;
+	float3 tangent        : TANGENT;
 	float2 texCoord       : TEXCOORD;
 };
 

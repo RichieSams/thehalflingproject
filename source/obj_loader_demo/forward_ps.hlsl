@@ -5,6 +5,8 @@
  */
 
 #include "types.hlsli"
+#include "hlsl_util.hlsli"
+
 #include "common/shaders/materials.hlsli"
 #include "common/shaders/lights.hlsli"
 #include "common/shaders/light_functions.hlsli"
@@ -23,15 +25,33 @@ cbuffer cbPerObject : register(b1) {
 };
 
 Texture2D gDiffuseTexture : register(t0);
-SamplerState gDiffuseSampler : register(s0);
+Texture2D gSpecColorTexture : register(t1);
+Texture2D gSpecPowerTexture : register(t2);
+Texture2D gAlphaTexture : register(t3);
+Texture2D gDisplacementTexture : register(t4);
+Texture2D gNormalTexture : register(t5);
 
-StructuredBuffer<PointLight> gPointLights : register(t3);
-StructuredBuffer<SpotLight> gSpotLights : register(t4);
+SamplerState gSpecColorSampler : register(s1);
+SamplerState gDiffuseSampler : register(s0);
+SamplerState gSpecPowerSampler : register(s2);
+SamplerState gAlphaSampler : register(s3);
+SamplerState gDisplacementSampler : register(s4);
+SamplerState gNormalSampler : register(s5);
+
+StructuredBuffer<PointLight> gPointLights : register(t8);
+StructuredBuffer<SpotLight> gSpotLights : register(t9);
 
 
 float4 ForwardPS(ForwardPixelIn input) : SV_TARGET {
 	// Interpolating can unnormalize
-	input.normal = normalize(input.normal);
+	float3 cartesianNormal = normalize(input.normal);
+
+	[flatten]
+	if ((gTextureFlags & 0x20) == 0x20) {
+		float3 normalMapSample = gNormalTexture.Sample(gNormalSampler, input.texCoord).xyz;
+
+		cartesianNormal = PerturbNormal(cartesianNormal, normalMapSample, input.tangent);
+	}
 
 	float3 toEye = normalize(gEyePosition - input.positionWorld);
 
@@ -52,16 +72,16 @@ float4 ForwardPS(ForwardPixelIn input) : SV_TARGET {
 	// Sum the contribution from each light source
 	uint lightIndex;
 
-	AccumulateBlinnPhongDirectionalLight(gMaterial, gDirectionalLight, input.normal, toEye, ambient, diffuse, spec);
+	AccumulateBlinnPhongDirectionalLight(gMaterial, gDirectionalLight, cartesianNormal, toEye, ambient, diffuse, spec);
 
 	for (lightIndex = 0; lightIndex < gNumPointLightsToDraw; ++lightIndex) {
 		PointLight light = gPointLights[lightIndex];
-		AccumulateBlinnPhongPointLight(gMaterial, light, input.positionWorld, input.normal, toEye, diffuse, spec);
+		AccumulateBlinnPhongPointLight(gMaterial, light, input.positionWorld, cartesianNormal, toEye, diffuse, spec);
 	}
 
 	for (lightIndex = 0; lightIndex < gNumSpotLightsToDraw; ++lightIndex) {
 		SpotLight light = gSpotLights[lightIndex];
-		AccumulateBlinnPhongSpotLight(gMaterial, light, input.positionWorld, input.normal, toEye, diffuse, spec);
+		AccumulateBlinnPhongSpotLight(gMaterial, light, input.positionWorld, cartesianNormal, toEye, diffuse, spec);
 	}
 
 	// Combine

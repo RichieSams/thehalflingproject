@@ -42,15 +42,13 @@ void GBufferPS(GBufferShaderPixelIn input, out GBuffer gbuffer) {
 		gbuffer.albedo = float3(1.0f, 1.0f, 1.0f);
 	}
 
-	float3 cartesianNormal;
+	float3 cartesianNormal = normalize(input.normal);
 
 	[flatten]
 	if ((gTextureFlags & 0x20) == 0x20) {
 		float3 normalMapSample = gNormalTexture.Sample(gNormalSampler, input.texCoord).xyz;
 
-		cartesianNormal = PerturbNormal(normalize(input.normal), normalMapSample, input.tangent);
-	} else {
-		cartesianNormal = normalize(input.normal);
+		cartesianNormal = PerturbNormal(cartesianNormal, normalMapSample, input.tangent);
 	}
 	
 	gbuffer.normal = CartesianToSpherical(cartesianNormal);

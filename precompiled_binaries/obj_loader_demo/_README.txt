@@ -1,5 +1,5 @@
-This demo is the current (March 06, 2014) build of ObjLoaderDemo
-As this project is still in progress, if you want to most up-to-date version of the demo, download the full source and compile.
+This demo is the current (April 28, 2014) build of ObjLoaderDemo
+As this demo is still in progress, if you want to most up-to-date version of the demo, download the full source and compile.
 
 
 Overview:
@@ -11,10 +11,10 @@ As of now, it is hardcoded to only load the supplied Sponza Atrium Scene. The co
 The actual rendering is very similar to the DeferredShadingDemo. Most of the modifications were actually bug fixes.
 
 The GBuffers are laid out as follows:
-Albedo-MaterialIndex    DXGI_FORMAT_R10G10B11_UNORM
-Normal                  DXGI_FORMAT_R16G16_FLOAT
-MaterialIndex           DXGI_FORMAT_R16_FLOAT
-Depth                   DXGI_FORMAT_R32_FLOAT
+Albedo           DXGI_FORMAT_R10G10B11_UNORM
+Normal           DXGI_FORMAT_R16G16_FLOAT
+MaterialIndex    DXGI_FORMAT_R16_FLOAT
+Depth            DXGI_FORMAT_R32_FLOAT
 
 Albedo           Stores the RGB diffuse color read from texture mapping
 Normal           The fragment surface unit normal stored in spherical coordinates. (We don't store r since we know it's 1 for a unit normal)
@@ -38,6 +38,15 @@ Things I still need to add/fix:
 
 
 Changelog:
+
+April 28, 2014 SHA bb42984aba144c2ce393ea3d92ad1ef11c483530
+- All textures are now required to be DDS files (but added a tool to auto-convert them during HMF creation).
+  WIC was allowing us to load some other image formats, but the library required an ImmediateContext in order to generate MipMaps. 
+    - As of right now, this tool isn't included because sponza.hmf is provided and is hardcoded to be the only scene to run
+- Fixed the bug causing lighting to be incorrectly calculated on surfaces with normal (0, 0, 1)
+    - It had to do with the spherical encoding. See SHA bb5bb68c5558e7dfaf292a91c16ae17a22b37edb
+- Added normal mapping to forward and deferred shading
+- Added an option in the Settings bar to show a GBuffer full screen
 
 April 3, 2014 - SHA 181b7e0387c0da2beb3002ce77d9840ec72d48c5
 - Increased the resolution to 1280 x 720

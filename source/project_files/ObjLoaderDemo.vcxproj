@@ -78,6 +78,9 @@ XCOPY "$(OutDir)..\Halfling\sprite_instanced_vertex_shader.cso" "$(OutDir)" /D /
 XCOPY "$(OutDir)..\Halfling\sprite_pixel_shader.cso" "$(OutDir)" /D /K /Y
 XCOPY "$(OutDir)..\Halfling\sprite_sampled_pixel_shader.cso" "$(OutDir)" /D /K /Y</Command>
     </PostBuildEvent>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -108,6 +111,9 @@ XCOPY "$(OutDir)..\Halfling\sprite_instanced_vertex_shader.cso" "$(OutDir)" /D /
 XCOPY "$(OutDir)..\Halfling\sprite_pixel_shader.cso" "$(OutDir)" /D /K /Y
 XCOPY "$(OutDir)..\Halfling\sprite_sampled_pixel_shader.cso" "$(OutDir)" /D /K /Y</Command>
     </PostBuildEvent>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ProjectReference Include="Halfling.vcxproj">
@@ -190,6 +196,12 @@ XCOPY "$(OutDir)..\Halfling\sprite_sampled_pixel_shader.cso" "$(OutDir)" /D /K /
   <ItemGroup>
     <ClInclude Include="..\obj_loader_demo\obj_loader_demo.h" />
     <ClInclude Include="..\obj_loader_demo\shader_constants.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\obj_loader_demo\tempIcon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ObjLoaderDemo.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

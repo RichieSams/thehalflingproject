@@ -10,6 +10,9 @@
     <Filter Include="Shader Logic">
       <UniqueIdentifier>{a868b9a9-f314-46b4-bece-bdb6434f171b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{fa1f7417-ec9a-4bba-ad20-b434c968d060}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\obj_loader_demo\debug_object_ps.hlsl">
@@ -50,6 +53,9 @@
     <None Include="..\obj_loader_demo\types.hlsli">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="..\obj_loader_demo\tempIcon.ico">
+      <Filter>Resources</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\obj_loader_demo\main.cpp">
@@ -75,5 +81,10 @@
     <ClInclude Include="..\obj_loader_demo\shader_constants.h">
       <Filter>Shader Logic</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ObjLoaderDemo.rc">
+      <Filter>Resources</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

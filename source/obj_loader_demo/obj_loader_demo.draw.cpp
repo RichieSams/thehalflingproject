@@ -15,8 +15,32 @@
 namespace ObjLoaderDemo {
 
 void ObjLoaderDemo::DrawFrame(double deltaTime) {
-	RenderMainPass();
-	RenderDebugGeometry();
+	if (m_sceneLoaded.load(std::memory_order_relaxed)) {
+		if (!m_sceneIsSetup) {
+			// Clean-up the thread
+			m_sceneLoaderThread.join();
+
+			SetupScene();
+		}
+		RenderMainPass();
+		RenderDebugGeometry();
+	} else {
+		// Set the backbuffer as the main render target
+		m_immediateContext->OMSetRenderTargets(1, &m_renderTargetView, nullptr);
+
+		// Clear the render target view
+		m_immediateContext->ClearRenderTargetView(m_renderTargetView, DirectX::Colors::LightGray);
+
+		m_spriteRenderer.Begin(m_immediateContext);
+		DirectX::XMFLOAT4X4 transform {2.0f, 0.0f, 0.0f, 0.0f,
+		                               0.0f, 2.0f, 0.0f, 0.0f,
+		                               0.0f, 0.0f, 2.0f, 0.0f,
+		                               m_clientWidth / 2.0f - 90.0f, m_clientHeight / 2.0f - 30.0f, 0.0f, 1.0f};
+		m_spriteRenderer.RenderText(m_timesNewRoman12Font, L"Scene is loading....", transform, 0U, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f));
+		m_spriteRenderer.End();
+
+		Sleep(50);
+	}
 	RenderHUD();
 
 	if (m_showConsole) {

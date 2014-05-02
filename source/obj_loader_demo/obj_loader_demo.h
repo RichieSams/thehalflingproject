@@ -24,6 +24,8 @@
 
 #include <vector>
 #include <AntTweakBar.h>
+#include <atomic>
+#include <thread>
 
 
 namespace ObjLoaderDemo {
@@ -116,6 +118,10 @@ private:
 
 	std::vector<Common::Model *> m_models;
 	std::vector<Common::BlinnPhongMaterial> m_frameMaterialList;
+
+	std::atomic<bool> m_sceneLoaded;
+	bool m_sceneIsSetup;
+	std::thread m_sceneLoaderThread;
 
 	float m_sceneScaleFactor;
 

@@ -23,6 +23,8 @@ ObjLoaderDemo::ObjLoaderDemo(HINSTANCE hinstance)
 	: Halfling::HalflingEngine(hinstance),
 	  m_camera(0.5f * DirectX::XM_PI, 0.45f * DirectX::XM_PI, 100.0f),
 	  m_showConsole(false),
+	  m_sceneLoaded(false),
+	  m_sceneIsSetup(false),
 	  m_sceneScaleFactor(0.0f),
 	  m_pointLightBufferNeedsRebuild(false),
 	  m_spotLightBufferNeedsRebuild(false),
@@ -102,6 +104,10 @@ void ObjLoaderDemo::Shutdown() {
 
 	delete m_depthStencilBuffer;
 	ReleaseCOM(m_renderTargetView);
+
+	if (m_sceneLoaderThread.joinable()) {
+		m_sceneLoaderThread.detach();
+	}
 
 	TwTerminate();
 

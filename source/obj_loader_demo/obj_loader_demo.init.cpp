@@ -18,6 +18,8 @@
 
 namespace ObjLoaderDemo {
 
+void LoadScene(std::atomic<bool> *sceneIsLoaded, ID3D11Device *device, Common::TextureManager *textureManager, std::vector<Common::Model *> *modelList);
+
 bool ObjLoaderDemo::Initialize(LPCTSTR mainWndCaption, uint32 screenWidth, uint32 screenHeight, bool fullscreen) {
 	if (!Halfling::HalflingEngine::Initialize(mainWndCaption, screenWidth, screenHeight, fullscreen)) {
 		return false;
@@ -25,7 +27,10 @@ bool ObjLoaderDemo::Initialize(LPCTSTR mainWndCaption, uint32 screenWidth, uint3
 
 	InitTweakBar();
 
-	SetupScene();
+	// HACK: TextureManager isn't thread safe. It works right now because we can guarantee the
+	//       main thread won't access TextureManager. Also LoadScene() is completely serial.
+	// TODO: Make TextureManager thread safe
+	m_sceneLoaderThread = std::thread(LoadScene, &m_sceneLoaded, m_device, &m_textureManager, &m_models);
 
 	LoadShaders();
 	CreateShaderBuffers();
@@ -80,20 +85,31 @@ void ObjLoaderDemo::InitTweakBar() {
 	TwAddVarRW(m_settingsBar, "Number of SpotLights", TW_TYPE_INT32, &m_numSpotLightsToDraw, " min=0 max=1000 ");
 }
 
+void LoadScene(std::atomic<bool> *sceneIsLoaded,  ID3D11Device *device, Common::TextureManager *textureManager, std::vector<Common::Model *> *modelList) {
+	modelList->push_back(Common::HalflingModelFile::Load(device, textureManager, L"sponza.hmf"));
+
+	sceneIsLoaded->store(true, std::memory_order_relaxed);
+}
+
 void ObjLoaderDemo::SetupScene() {
-	Common::Model *sceneModel = Common::HalflingModelFile::Load(m_device, &m_textureManager, L"sponza.hmf");
-	m_models.push_back(sceneModel);
+	DirectX::XMVECTOR AABB_minXM = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+	DirectX::XMVECTOR AABB_maxXM = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
 
-	DirectX::XMFLOAT3 AABB_min = sceneModel->GetAABBMin();
-	DirectX::XMFLOAT3 AABB_max = sceneModel->GetAABBMax();
+	for (auto iter = m_models.begin(); iter != m_models.end(); ++iter) {
+		AABB_minXM = DirectX::XMVectorMin(AABB_minXM, (*iter)->GetAABBMin_XM());
+		AABB_maxXM = DirectX::XMVectorMax(AABB_maxXM, (*iter)->GetAABBMax_XM());
+	}
 
-	float xRange = std::abs(AABB_max.x - AABB_min.x);
-	float yRange = std::abs(AABB_max.y - AABB_min.y);
-	float zRange = std::abs(AABB_max.z - AABB_min.z);
-	m_sceneScaleFactor = 300.0f / std::max(std::max(xRange, yRange), zRange);
+	DirectX::XMVECTOR rangeXM = DirectX::XMVectorSubtract(AABB_maxXM, AABB_minXM);
+	DirectX::XMFLOAT3 range;
+	DirectX::XMStoreFloat3(&range, rangeXM);
 
-	DirectX::XMStoreFloat3(&AABB_min, DirectX::XMVectorScale(DirectX::XMLoadFloat3(&AABB_min), m_sceneScaleFactor));
-	DirectX::XMStoreFloat3(&AABB_max, DirectX::XMVectorScale(DirectX::XMLoadFloat3(&AABB_max), m_sceneScaleFactor));
+	m_sceneScaleFactor = 300.0f / std::max(std::max(range.x, range.y), range.z);
+
+	DirectX::XMFLOAT3 AABB_min;
+	DirectX::XMFLOAT3 AABB_max;
+	DirectX::XMStoreFloat3(&AABB_min, DirectX::XMVectorScale(AABB_minXM, m_sceneScaleFactor));
+	DirectX::XMStoreFloat3(&AABB_max, DirectX::XMVectorScale(AABB_maxXM, m_sceneScaleFactor));
 	CreateLights(AABB_min, AABB_max);
 	BuildGeometryBuffers();
 
@@ -101,6 +117,8 @@ void ObjLoaderDemo::SetupScene() {
 	for (auto iter = m_models.begin(); iter != m_models.end(); ++iter) {
 		(*iter)->SetWorldTransform(scalingMatrix);
 	}
+
+	m_sceneIsSetup = true;
 }
 
 void ObjLoaderDemo::BuildGeometryBuffers() {

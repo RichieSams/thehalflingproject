@@ -17,12 +17,12 @@ int main(int argc, char *argv[]) {
 	// Check the number of parameters
     if (argc < 2) {
         // Tell the user how to run the program
-        std::cerr << "Usage: OBJ-HMFConverter.exe -f <input filePath>" << std::endl << std::endl <<
+        std::cerr << "Usage: HMFConverter.exe -f <input filePath>" << std::endl << std::endl <<
 		             "Optional parameters:" << std::endl <<
 		             "    -i <ini filePath>" << std::endl << 
 		             "    -o <output filePath>" << std::endl << std::endl <<
 					 "Other Usage:" << std::endl << std::endl <<
-					 "OBJ_HMFConverter.exe -c <iniOutput filePath>" << std::endl <<
+					 "HMFConverter.exe -c <iniOutput filePath>" << std::endl <<
 					 "    to generate an ini file with default values" << std::endl;
         return 1;
     }
@@ -73,7 +73,7 @@ int main(int argc, char *argv[]) {
 
 	// If the input path doesn't exist, tell the user how to use the program
 	if (inputPath.empty()) {
-        std::cerr << "Usage: OBJ-HMFConverter.exe -f <input filePath>" << std::endl << std::endl <<
+        std::cerr << "Usage: HMFConverter.exe -f <input filePath>" << std::endl << std::endl <<
 		             "Optional parameters:" << std::endl <<
 		             "    -i <ini filePath>" << std::endl << 
 		             "    -o <output filePath>" << std::endl << std::endl <<

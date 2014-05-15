@@ -24,7 +24,12 @@
 
 namespace ObjLoaderDemo {
 
-void LoadScene(std::atomic<bool> *sceneIsLoaded, ID3D11Device *device, Common::TextureManager *textureManager, Common::ModelManager *modelManager, std::vector<ModelToLoad> *modelsToLoad, std::vector<std::pair<Common::Model *, DirectX::XMMATRIX> > *modelList, std::vector<std::pair<Common::Model *, std::vector<DirectX::XMMATRIX> *> > *instancedModelList);
+void LoadScene(std::atomic<bool> *sceneIsLoaded, 
+               ID3D11Device *device, 
+               Common::TextureManager *textureManager, Common::ModelManager *modelManager, 
+               std::vector<ModelToLoad> *modelsToLoad, 
+               std::vector<std::pair<Common::Model *, DirectX::XMMATRIX>, Common::Allocator16Aligned<std::pair<Common::Model *, DirectX::XMMATRIX> > > *modelList, 
+               std::vector<std::pair<Common::Model *, std::vector<DirectX::XMMATRIX, Common::Allocator16Aligned<DirectX::XMMATRIX> > *> > *instancedModelList);
 
 bool ObjLoaderDemo::Initialize(LPCTSTR mainWndCaption, uint32 screenWidth, uint32 screenHeight, bool fullscreen) {
 	LoadSceneJson();
@@ -96,7 +101,7 @@ void ObjLoaderDemo::LoadSceneJson() {
 		std::string filePath = models[i]["FilePath"].asString();
 
 		Json::Value instances = models[i]["Instances"];
-		std::vector<DirectX::XMMATRIX> *instanceVector = new std::vector<DirectX::XMMATRIX>();
+		auto *instanceVector = new std::vector<DirectX::XMMATRIX, Common::Allocator16Aligned<DirectX::XMMATRIX> >();
 		for (uint j = 0; j < instances.size(); ++j) {
 			instanceVector->push_back(DirectX::XMMatrixSet(instances[j][0u].asSingle(), instances[j][1u].asSingle(), instances[j][2u].asSingle(), instances[j][3u].asSingle(), 
 			                                               instances[j][4u].asSingle(), instances[j][5u].asSingle(), instances[j][6u].asSingle(), instances[j][7u].asSingle(), 
@@ -221,7 +226,12 @@ void ObjLoaderDemo::InitTweakBar() {
 	TwAddVarRW(m_settingsBar, "Number of SpotLights", TW_TYPE_INT32, &m_numSpotLightsToDraw, " min=0 max=1000 ");
 }
 
-void LoadScene(std::atomic<bool> *sceneIsLoaded, ID3D11Device *device, Common::TextureManager *textureManager, Common::ModelManager *modelManager, std::vector<ModelToLoad> *modelsToLoad, std::vector<std::pair<Common::Model *, DirectX::XMMATRIX> > *modelList, std::vector<std::pair<Common::Model *, std::vector<DirectX::XMMATRIX> *> > *instancedModelList) {
+void LoadScene(std::atomic<bool> *sceneIsLoaded, 
+               ID3D11Device *device, 
+               Common::TextureManager *textureManager, Common::ModelManager *modelManager, 
+               std::vector<ModelToLoad> *modelsToLoad, 
+               std::vector<std::pair<Common::Model *, DirectX::XMMATRIX>, Common::Allocator16Aligned<std::pair<Common::Model *, DirectX::XMMATRIX> > > *modelList, 
+               std::vector<std::pair<Common::Model *, std::vector<DirectX::XMMATRIX, Common::Allocator16Aligned<DirectX::XMMATRIX> > *> > *instancedModelList) {
 	// WARNING: Do not parallelize this code until you make TextureManager and ModelManager thread safe
 	for (auto iter = modelsToLoad->begin(); iter != modelsToLoad->end(); ++iter) {
 		std::wstring wideFilePath(iter->FilePath.begin(), iter->FilePath.end());

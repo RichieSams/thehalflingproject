@@ -22,6 +22,7 @@
 #include "common/sprite_font.h"
 #include "common/lights.h"
 #include "common/light_animator.h"
+#include "common/allocator_aligned16.h"
 
 #include <vector>
 #include <AntTweakBar.h>
@@ -105,13 +106,13 @@ enum GBufferSelector {
 };
 
 struct ModelToLoad {
-	ModelToLoad(std::string filePath, std::vector<DirectX::XMMATRIX> *instances)
+	ModelToLoad(std::string filePath, std::vector<DirectX::XMMATRIX, Common::Allocator16Aligned<DirectX::XMMATRIX> > *instances)
 		: FilePath(filePath),
 		  Instances(instances) {
 	}
 
 	std::string FilePath;
-	std::vector<DirectX::XMMATRIX> *Instances;
+	std::vector<DirectX::XMMATRIX, Common::Allocator16Aligned<DirectX::XMMATRIX> > *Instances;
 };
 
 class ObjLoaderDemo : public Halfling::HalflingEngine {
@@ -133,8 +134,8 @@ private:
 
 	DirectX::XMMATRIX m_globalWorldTransform;
 
-	std::vector<std::pair<Common::Model *, DirectX::XMMATRIX> > m_models;
-	std::vector<std::pair<Common::Model *, std::vector<DirectX::XMMATRIX> *> > m_instancedModels;
+	std::vector<std::pair<Common::Model *, DirectX::XMMATRIX>, Common::Allocator16Aligned<std::pair<Common::Model *, DirectX::XMMATRIX> > > m_models;
+	std::vector<std::pair<Common::Model *, std::vector<DirectX::XMMATRIX, Common::Allocator16Aligned<DirectX::XMMATRIX> > *> > m_instancedModels;
 
 	std::vector<Common::BlinnPhongMaterial> m_frameMaterialList;
 

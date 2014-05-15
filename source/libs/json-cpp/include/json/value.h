@@ -232,6 +232,7 @@ namespace Json {
       Int asInt() const;
       UInt asUInt() const;
       double asDouble() const;
+	  float asSingle() const;
       bool asBool() const;
 
       bool isNull() const;

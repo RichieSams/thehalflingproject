@@ -791,6 +791,30 @@ Value::asDouble() const
    return 0; // unreachable;
 }
 
+float
+Value::asSingle() const
+{
+	switch (type_) {
+	case nullValue:
+		return 0.0f;
+	case intValue:
+		return static_cast<float>(value_.int_);
+	case uintValue:
+		return static_cast<float>(value_.uint_);
+	case realValue:
+		return static_cast<float>(value_.real_);
+	case booleanValue:
+		return value_.bool_ ? 1.0f : 0.0f;
+	case stringValue:
+	case arrayValue:
+	case objectValue:
+		JSON_ASSERT_MESSAGE(false, "Type is not convertible to single");
+	default:
+		JSON_ASSERT_UNREACHABLE;
+	}
+	return 0; // unreachable;
+}
+
 bool 
 Value::asBool() const
 {

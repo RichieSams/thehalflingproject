@@ -20,7 +20,7 @@ float2 CartesianToSpherical(float3 cartesian) {
 		spherical.x = atan2(cartesian.y, cartesian.x);
 		spherical.y = acos(cartesian.z);
 	} else {
-		spherical.x = float2(0.0f, 0.0f);
+		spherical = float2(0.0f, 0.0f);
 	}
 
 	return spherical;

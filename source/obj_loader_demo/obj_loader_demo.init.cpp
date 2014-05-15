@@ -11,16 +11,25 @@
 #include "common/geometry_generator.h"
 #include "common/math.h"
 #include "common/halfling_model_file.h"
+#include "common/string_util.h"
+#include "common/file_io_util.h"
+#include "common/memory_stream.h"
 
 #include <algorithm>
 #include <iostream>
+#include <list>
+#include <json/reader.h>
+#include <json/value.h>
 
 
 namespace ObjLoaderDemo {
 
-void LoadScene(std::atomic<bool> *sceneIsLoaded, ID3D11Device *device, Common::TextureManager *textureManager, std::vector<Common::Model *> *modelList);
+void LoadScene(std::atomic<bool> *sceneIsLoaded, ID3D11Device *device, Common::TextureManager *textureManager, Common::ModelManager *modelManager, std::vector<ModelToLoad> *modelsToLoad, std::vector<std::pair<Common::Model *, DirectX::XMMATRIX> > *modelList, std::vector<std::pair<Common::Model *, std::vector<DirectX::XMMATRIX> *> > *instancedModelList);
 
 bool ObjLoaderDemo::Initialize(LPCTSTR mainWndCaption, uint32 screenWidth, uint32 screenHeight, bool fullscreen) {
+	LoadSceneJson();
+
+	// Initialize the Engine
 	if (!Halfling::HalflingEngine::Initialize(mainWndCaption, screenWidth, screenHeight, fullscreen)) {
 		return false;
 	}
@@ -30,10 +39,23 @@ bool ObjLoaderDemo::Initialize(LPCTSTR mainWndCaption, uint32 screenWidth, uint3
 	// HACK: TextureManager isn't thread safe. It works right now because we can guarantee the
 	//       main thread won't access TextureManager. Also LoadScene() is completely serial.
 	// TODO: Make TextureManager thread safe
-	m_sceneLoaderThread = std::thread(LoadScene, &m_sceneLoaded, m_device, &m_textureManager, &m_models);
+	// HACK: ModelManager isn't thread safe. Same argument as TextureManager
+	// TODO: Make ModelManager thread safe
+	m_sceneLoaderThread = std::thread(LoadScene, &m_sceneLoaded, m_device, &m_textureManager, &m_modelManager, &m_modelsToLoad, &m_models, &m_instancedModels);
+
+	BuildGeometryBuffers();
 
 	LoadShaders();
 	CreateShaderBuffers();
+
+	// Create light buffers
+	// This has to be done after the Engine has been Initialized so we have a valid m_device
+	if (m_pointLights.size() > 0) {
+		m_pointLightBuffer = new Common::StructuredBuffer<Common::PointLight>(m_device, m_pointLights.size(), D3D11_BIND_SHADER_RESOURCE, true);
+	}
+	if (m_spotLights.size() > 0) {
+		m_spotLightBuffer = new Common::StructuredBuffer<Common::SpotLight>(m_device, m_spotLights.size(), D3D11_BIND_SHADER_RESOURCE, true);
+	}
 
 	m_spriteRenderer.Initialize(m_device);
 	m_timesNewRoman12Font.Initialize(L"Times New Roman", 12, Common::SpriteFont::Regular, true, m_device);
@@ -48,6 +70,120 @@ bool ObjLoaderDemo::Initialize(LPCTSTR mainWndCaption, uint32 screenWidth, uint3
 	m_samplerStates.Initialize(m_device);
 
 	return true;
+}
+
+void ObjLoaderDemo::LoadSceneJson() {
+	// Read the entire file into memory
+	DWORD bytesRead;
+	char *fileBuffer = Common::ReadWholeFile(L"scene.json", &bytesRead);
+	
+	// TODO: Add error handling
+	assert(fileBuffer != NULL);
+
+	Common::MemoryInputStream fin(fileBuffer, bytesRead);
+	
+	Json::Reader reader;
+	Json::Value root;
+	reader.parse(fin, root, false);
+
+	m_nearClip = root.get("NearClip", m_nearClip).asSingle();
+	m_farClip = root.get("FarClip", m_farClip).asSingle();
+	m_sceneScaleFactor = root.get("SceneScaleFactor", 1.0).asSingle();
+	m_globalWorldTransform = DirectX::XMMatrixScaling(m_sceneScaleFactor, m_sceneScaleFactor, m_sceneScaleFactor);
+
+	Json::Value models = root["Models"];
+	for (uint i = 0; i < models.size(); ++i) {
+		std::string filePath = models[i]["FilePath"].asString();
+
+		Json::Value instances = models[i]["Instances"];
+		std::vector<DirectX::XMMATRIX> *instanceVector = new std::vector<DirectX::XMMATRIX>();
+		for (uint j = 0; j < instances.size(); ++j) {
+			instanceVector->push_back(DirectX::XMMatrixSet(instances[j][0u].asSingle(), instances[j][1u].asSingle(), instances[j][2u].asSingle(), instances[j][3u].asSingle(), 
+			                                               instances[j][4u].asSingle(), instances[j][5u].asSingle(), instances[j][6u].asSingle(), instances[j][7u].asSingle(), 
+			                                               instances[j][8u].asSingle(), instances[j][9u].asSingle(), instances[j][10u].asSingle(), instances[j][11u].asSingle(), 
+			                                               instances[j][12u].asSingle(), instances[j][13u].asSingle(), instances[j][14u].asSingle(), instances[j][15u].asSingle()));
+		}
+
+		m_modelsToLoad.emplace_back(filePath, instanceVector);
+	}
+
+	Json::Value directionalLight = root["DirectionalLight"];
+	if (!directionalLight.isNull()) {
+		m_directionalLight.Ambient = DirectX::XMFLOAT4(directionalLight["Ambient"][0u].asSingle(), directionalLight["Ambient"][1u].asSingle(), directionalLight["Ambient"][2u].asSingle(), 1.0f);
+		m_directionalLight.Diffuse = DirectX::XMFLOAT4(directionalLight["Diffuse"][0u].asSingle(), directionalLight["Diffuse"][1u].asSingle(), directionalLight["Diffuse"][2u].asSingle(), 1.0f);
+		m_directionalLight.Specular = DirectX::XMFLOAT4(directionalLight["Specular"][0u].asSingle(), directionalLight["Specular"][1u].asSingle(), directionalLight["Specular"][2u].asSingle(), 1.0f);
+		m_directionalLight.Direction = DirectX::XMFLOAT3(directionalLight["Direction"][0u].asSingle(), directionalLight["Direction"][1u].asSingle(), directionalLight["Direction"][2u].asSingle());
+	}
+
+	Json::Value pointLights = root["PointLights"];
+	for (uint i = 0; i < pointLights.size(); ++i) {
+		
+		if (pointLights[i]["NumberOfLights"].isNull()) {
+			m_pointLights.emplace_back(DirectX::XMFLOAT4(pointLights[i]["Diffuse"][0u].asSingle(), pointLights[i]["Diffuse"][1u].asSingle(), pointLights[i]["Diffuse"][2u].asSingle(), 1.0f),
+			                           DirectX::XMFLOAT4(pointLights[i]["Specular"][0u].asSingle(), pointLights[i]["Specular"][1u].asSingle(), pointLights[i]["Specular"][2u].asSingle(), 1.0f),
+			                           DirectX::XMFLOAT3(pointLights[i]["Position"][0u].asSingle(), pointLights[i]["Position"][1u].asSingle(), pointLights[i]["Position"][2u].asSingle()),
+			                           pointLights[i]["Range"].asSingle(),
+			                           pointLights[i]["AttenuationDistanceUNorm"].asSingle());
+		} else {
+			uint numPointLights = pointLights[i]["NumberOfLights"].asUInt();
+			for (uint j = 0; j < numPointLights; ++j) {
+				DirectX::XMFLOAT3 AABB_min(pointLights[i]["AABB_min"][0u].asSingle(), pointLights[i]["AABB_min"][1u].asSingle(), pointLights[i]["AABB_min"][2u].asSingle());
+				DirectX::XMFLOAT3 AABB_max(pointLights[i]["AABB_max"][0u].asSingle(), pointLights[i]["AABB_max"][1u].asSingle(), pointLights[i]["AABB_max"][2u].asSingle());
+
+				float xRange = AABB_max.x - AABB_min.x;
+				float yRange = AABB_max.y - AABB_min.y;
+				float zRange = AABB_max.z - AABB_min.z;
+
+				DirectX::XMFLOAT2 rangeRange(pointLights[i]["RangeRange"][0u].asSingle(), pointLights[i]["RangeRange"][1u].asSingle());
+
+				m_pointLights.emplace_back(DirectX::XMFLOAT4(Common::RandF(), Common::RandF(), Common::RandF(), 1.0f),
+										   DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+										   DirectX::XMFLOAT3(Common::RandF(AABB_min.x - xRange * 0.1f, AABB_max.x + xRange * 0.1f), Common::RandF(AABB_min.y - yRange * 0.1f, AABB_max.y + yRange * 0.1f), Common::RandF(AABB_min.z - zRange * 0.1f, AABB_max.z + zRange * 0.1f)),
+										   Common::RandF(rangeRange.x, rangeRange.y),
+										   pointLights[i]["AttenuationDistanceUNorm"].asSingle());
+			}
+		}
+	}
+
+	Json::Value spotLights = root["SpotLights"];
+	for (uint i = 0; i < spotLights.size(); ++i) {
+		if (spotLights[i]["NumberOfLights"] == Json::Value::null) {
+			m_spotLights.emplace_back(DirectX::XMFLOAT4(spotLights[i]["Diffuse"][0u].asSingle(), spotLights[i]["Diffuse"][1u].asSingle(), spotLights[i]["Diffuse"][2u].asSingle(), 1.0f),
+			                          DirectX::XMFLOAT4(spotLights[i]["Specular"][0u].asSingle(), spotLights[i]["Specular"][1u].asSingle(), spotLights[i]["Specular"][2u].asSingle(), 1.0f),
+			                          DirectX::XMFLOAT3(spotLights[i]["Position"][0u].asSingle(), spotLights[i]["Position"][1u].asSingle(), spotLights[i]["Position"][2u].asSingle()),
+			                          spotLights[i]["Range"].asSingle(),
+			                          DirectX::XMFLOAT3(spotLights[i]["Direction"][0u].asSingle(), spotLights[i]["Direction"][1u].asSingle(), spotLights[i]["Direction"][2u].asSingle()),
+			                          spotLights[i]["AttenuationDistanceUNorm"].asSingle(),
+			                          std::cos(spotLights[i]["InnerConeAngle"].asSingle()),
+			                          std::cos(spotLights[i]["OuterConeAngle"].asSingle()));
+		} else {
+			uint numSpotLights = spotLights[i]["NumberOfLights"].asUInt();
+			for (uint j = 0; j < numSpotLights; ++j) {
+				DirectX::XMFLOAT3 AABB_min(spotLights[i]["AABB_min"][0u].asSingle(), spotLights[i]["AABB_min"][1u].asSingle(), spotLights[i]["AABB_min"][2u].asSingle());
+				DirectX::XMFLOAT3 AABB_max(spotLights[i]["AABB_max"][0u].asSingle(), spotLights[i]["AABB_max"][1u].asSingle(), spotLights[i]["AABB_max"][2u].asSingle());
+
+				float xRange = AABB_max.x - AABB_min.x;
+				float yRange = AABB_max.y - AABB_min.y;
+				float zRange = AABB_max.z - AABB_min.z;
+
+				DirectX::XMFLOAT2 rangeRange(spotLights[i]["RangeRange"][0u].asSingle(), spotLights[i]["RangeRange"][1u].asSingle());
+				DirectX::XMFLOAT2 outerAngleRange(spotLights[i]["OuterAngleRange"][0u].asSingle(), spotLights[i]["OuterAngleRange"][1u].asSingle());
+				float outerAngle = Common::RandF(outerAngleRange.x, outerAngleRange.y);
+				float innerAngle = outerAngle - spotLights[i]["InnerAngleDifference"].asSingle();
+				float cosOuterAngle = std::cos(outerAngle);
+				float cosInnerAngle = std::cos(innerAngle);
+
+				m_spotLights.emplace_back(DirectX::XMFLOAT4(Common::RandF(), Common::RandF(), Common::RandF(), 1.0f),
+				                          DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+				                          DirectX::XMFLOAT3(Common::RandF(AABB_min.x - xRange * 0.1f, AABB_max.x + xRange * 0.1f), Common::RandF(AABB_min.y - yRange * 0.1f, AABB_max.y + yRange * 0.1f), Common::RandF(AABB_min.z - zRange * 0.1f, AABB_max.z + zRange * 0.1f)),
+				                          Common::RandF(rangeRange.x, rangeRange.y),
+				                          DirectX::XMFLOAT3(Common::RandF(-1.0f, 1.0f), Common::RandF(-1.0f, 1.0f), Common::RandF(-1.0f, 1.0f)),
+				                          spotLights[i]["AttenuationDistanceUNorm"].asSingle(),
+				                          cosInnerAngle,
+				                          cosOuterAngle);
+			}
+		}
+	}
 }
 
 void ObjLoaderDemo::InitTweakBar() {
@@ -85,40 +221,20 @@ void ObjLoaderDemo::InitTweakBar() {
 	TwAddVarRW(m_settingsBar, "Number of SpotLights", TW_TYPE_INT32, &m_numSpotLightsToDraw, " min=0 max=1000 ");
 }
 
-void LoadScene(std::atomic<bool> *sceneIsLoaded,  ID3D11Device *device, Common::TextureManager *textureManager, std::vector<Common::Model *> *modelList) {
-	modelList->push_back(Common::HalflingModelFile::Load(device, textureManager, L"sponza.hmf"));
+void LoadScene(std::atomic<bool> *sceneIsLoaded, ID3D11Device *device, Common::TextureManager *textureManager, Common::ModelManager *modelManager, std::vector<ModelToLoad> *modelsToLoad, std::vector<std::pair<Common::Model *, DirectX::XMMATRIX> > *modelList, std::vector<std::pair<Common::Model *, std::vector<DirectX::XMMATRIX> *> > *instancedModelList) {
+	// WARNING: Do not parallelize this code until you make TextureManager and ModelManager thread safe
+	for (auto iter = modelsToLoad->begin(); iter != modelsToLoad->end(); ++iter) {
+		std::wstring wideFilePath(iter->FilePath.begin(), iter->FilePath.end());
+		Common::Model *newModel = Common::HalflingModelFile::Load(device, textureManager, wideFilePath.c_str());
+		
+		if (iter->Instances->size() > 1) {
+			instancedModelList->emplace_back(newModel, iter->Instances);
+		} else {
+			modelList->emplace_back(newModel, (*iter->Instances)[0]);
+		}
+	}
 
 	sceneIsLoaded->store(true, std::memory_order_relaxed);
-}
-
-void ObjLoaderDemo::SetupScene() {
-	DirectX::XMVECTOR AABB_minXM = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
-	DirectX::XMVECTOR AABB_maxXM = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
-
-	for (auto iter = m_models.begin(); iter != m_models.end(); ++iter) {
-		AABB_minXM = DirectX::XMVectorMin(AABB_minXM, (*iter)->GetAABBMin_XM());
-		AABB_maxXM = DirectX::XMVectorMax(AABB_maxXM, (*iter)->GetAABBMax_XM());
-	}
-
-	DirectX::XMVECTOR rangeXM = DirectX::XMVectorSubtract(AABB_maxXM, AABB_minXM);
-	DirectX::XMFLOAT3 range;
-	DirectX::XMStoreFloat3(&range, rangeXM);
-
-	m_sceneScaleFactor = 300.0f / std::max(std::max(range.x, range.y), range.z);
-
-	DirectX::XMFLOAT3 AABB_min;
-	DirectX::XMFLOAT3 AABB_max;
-	DirectX::XMStoreFloat3(&AABB_min, DirectX::XMVectorScale(AABB_minXM, m_sceneScaleFactor));
-	DirectX::XMStoreFloat3(&AABB_max, DirectX::XMVectorScale(AABB_maxXM, m_sceneScaleFactor));
-	CreateLights(AABB_min, AABB_max);
-	BuildGeometryBuffers();
-
-	DirectX::XMMATRIX scalingMatrix = DirectX::XMMatrixScaling(m_sceneScaleFactor, m_sceneScaleFactor, m_sceneScaleFactor);
-	for (auto iter = m_models.begin(); iter != m_models.end(); ++iter) {
-		(*iter)->SetWorldTransform(scalingMatrix);
-	}
-
-	m_sceneIsSetup = true;
 }
 
 void ObjLoaderDemo::BuildGeometryBuffers() {
@@ -144,7 +260,6 @@ void ObjLoaderDemo::BuildGeometryBuffers() {
 		debugSphereIndices[i] = meshData.Indices[i];
 	}
 	m_debugSphere.CreateIndexBuffer(m_device, debugSphereIndices, indexCount);
-	m_debugSphereNumIndices = indexCount;
 
 	// Create subsets
 	Common::ModelSubset *debugSphereSubsets = new Common::ModelSubset[1] {
@@ -174,7 +289,6 @@ void ObjLoaderDemo::BuildGeometryBuffers() {
 		debugConeIndices[i] = meshData.Indices[i];
 	}
 	m_debugCone.CreateIndexBuffer(m_device, debugConeIndices, indexCount);
-	m_debugConeNumIndices = indexCount;
 
 	// Create subsets
 	Common::ModelSubset *debugConeSubsets = new Common::ModelSubset[1] {
@@ -183,77 +297,6 @@ void ObjLoaderDemo::BuildGeometryBuffers() {
 	m_debugCone.CreateSubsets(debugConeSubsets, 1);
 
 	m_debugCone.CreateInstanceBuffer(m_device, instanceStride, 1000);
-}
-
-void ObjLoaderDemo::CreateLights(const DirectX::XMFLOAT3 &sceneSizeMin, const DirectX::XMFLOAT3 &sceneSizeMax) {
-	m_directionalLight.Ambient = DirectX::XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
-	m_directionalLight.Diffuse = DirectX::XMFLOAT4(0.9f, 0.9f, 0.9f, 1.0f);
-	m_directionalLight.Specular = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_directionalLight.Direction = DirectX::XMFLOAT3(-0.57735f, -0.57735f, -0.57735f);
-
-	float xRange = std::abs(sceneSizeMax.x - sceneSizeMin.x);
-	float yRange = std::abs(sceneSizeMax.y - sceneSizeMin.y);
-	float zRange = std::abs(sceneSizeMax.z - sceneSizeMin.z);
-
-	float sceneSize = std::min(std::min(xRange, yRange), zRange);
-
-	for (uint i = 0; i < 1000; ++i) {
-		Common::PointLight *pointLight = new Common::PointLight();
-
-		pointLight->Diffuse = pointLight->Specular = DirectX::XMFLOAT4(Common::RandF(), Common::RandF(), Common::RandF(), 1.0f);
-		pointLight->AttenuationDistanceUNorm = 0.75;
-		pointLight->Range = 0.15f * sceneSize;
-		pointLight->Position = DirectX::XMFLOAT3(Common::RandF(sceneSizeMin.x - xRange * 0.1f, sceneSizeMax.x + xRange * 0.1f), 
-		                                         Common::RandF(sceneSizeMin.y - yRange * 0.1f, sceneSizeMax.y + yRange * 0.1f), 
-		                                         Common::RandF(sceneSizeMin.z - zRange * 0.1f, sceneSizeMax.z + zRange * 0.1f));
-
-		m_pointLights.push_back(pointLight);
-
-		Common::PointLightAnimator *pointLightAnimator = new Common::PointLightAnimator(DirectX::XMFLOAT3(Common::RandF(-0.00006f * sceneSize, 0.00006f * sceneSize), 
-		                                                                                Common::RandF(-0.00006f * sceneSize, 0.00006f * sceneSize), Common::RandF(-0.00006f * sceneSize, 0.00006f * sceneSize)),
-		                                                                                sceneSizeMin,
-		                                                                                sceneSizeMax);
-
-		m_pointLightAnimators.push_back(pointLightAnimator);
-	}
-
-	m_pointLightBufferNeedsRebuild = true;
-
-	for (uint i = 0; i < 1000; ++i) {
-		Common::SpotLight *spotLight = new Common::SpotLight();
-
-		spotLight->Diffuse = spotLight->Specular = DirectX::XMFLOAT4(Common::RandF(), Common::RandF(), Common::RandF(), 1.0f);
-		spotLight->AttenuationDistanceUNorm = 0.75;
-		spotLight->Range = 0.2f * sceneSize;
-		spotLight->Position = DirectX::XMFLOAT3(Common::RandF(sceneSizeMin.x - xRange * 0.1f, sceneSizeMax.x + xRange * 0.1f), 
-		                                       Common::RandF(sceneSizeMin.y - yRange * 0.1f, sceneSizeMax.y + yRange * 0.1f), 
-		                                       Common::RandF(sceneSizeMin.z - zRange * 0.1f, sceneSizeMax.z + zRange * 0.1f));
-		float outerConeAngle = Common::RandF(0.2967f, 0.7854f); // ~ 35 - 90 degrees
-		spotLight->CosOuterConeAngle = cos(outerConeAngle);
-		spotLight->CosInnerConeAngle = cos(outerConeAngle - 0.17f); // ~ 10 degrees
-		spotLight->Direction = DirectX::XMFLOAT3(Common::RandF(), Common::RandF(), Common::RandF());
-		// Normalize
-		DirectX::XMVECTOR normalizedDirection = DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&spotLight->Direction));
-		DirectX::XMStoreFloat3(&spotLight->Direction, normalizedDirection);
-
-		m_spotLights.push_back(spotLight);
-
-		Common::SpotLightAnimator *spotLightAnimator = new Common::SpotLightAnimator(DirectX::XMFLOAT3(Common::RandF(-0.00006f * sceneSize, 0.00006f * sceneSize), Common::RandF(-0.00006f * sceneSize, 0.00006f * sceneSize), Common::RandF(-0.00006f * sceneSize, 0.00006f * sceneSize)),
-		                                                                             DirectX::XMFLOAT3(Common::RandF(-0.125f, 0.125f), Common::RandF(-0.125f, 0.125f), Common::RandF(-0.125f, 0.125f)),
-		                                                                             sceneSizeMin,
-		                                                                             sceneSizeMax);
-
-		m_spotLightAnimators.push_back(spotLightAnimator);
-	}
-
-	m_spotLightBufferNeedsRebuild = true;
-
-	if (m_pointLights.size() > 0) {
-		m_pointLightBuffer = new Common::StructuredBuffer<Common::PointLight>(m_device, m_pointLights.size(), D3D11_BIND_SHADER_RESOURCE, true);
-	}
-	if (m_spotLights.size() > 0) {
-		m_spotLightBuffer = new Common::StructuredBuffer<Common::SpotLight>(m_device, m_spotLights.size(), D3D11_BIND_SHADER_RESOURCE, true);
-	}
 }
 
 void ObjLoaderDemo::LoadShaders() {

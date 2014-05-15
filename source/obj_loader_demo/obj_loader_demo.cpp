@@ -21,6 +21,9 @@ LRESULT ObjLoaderDemo::MsgProc(HWND hwnd, uint msg, WPARAM wParam, LPARAM lParam
 
 ObjLoaderDemo::ObjLoaderDemo(HINSTANCE hinstance)
 	: Halfling::HalflingEngine(hinstance),
+	  m_nearClip(0.1f),
+	  m_farClip(5000.0f),
+	  m_globalWorldTransform(DirectX::XMMatrixIdentity()),
 	  m_camera(0.5f * DirectX::XM_PI, 0.45f * DirectX::XM_PI, 100.0f),
 	  m_showConsole(false),
 	  m_sceneLoaded(false),
@@ -83,16 +86,7 @@ void ObjLoaderDemo::Shutdown() {
 	ReleaseCOM(m_gBufferInputLayout);
 	ReleaseCOM(m_debugObjectInputLayout);
 
-	for (auto iter = m_models.begin(); iter != m_models.end(); ++iter) {
-		delete *iter;
-	}
-	for (auto iter = m_pointLights.begin(); iter != m_pointLights.end(); ++iter) {
-		delete *iter;
-	}
 	for (auto iter = m_pointLightAnimators.begin(); iter != m_pointLightAnimators.end(); ++iter) {
-		delete *iter;
-	}
-	for (auto iter = m_spotLights.begin(); iter != m_spotLights.end(); ++iter) {
 		delete *iter;
 	}
 	for (auto iter = m_spotLightAnimators.begin(); iter != m_spotLightAnimators.end(); ++iter) {
@@ -121,7 +115,7 @@ void ObjLoaderDemo::OnResize() {
 
 	// Update the projection matrix
 	// We swap near and far clip because we are using 1 - depth in our depth buffer
-	m_camera.UpdateProjectionMatrix((float)m_clientWidth, (float)m_clientHeight, 800.0f, 1.0f);
+	m_camera.UpdateProjectionMatrix((float)m_clientWidth, (float)m_clientHeight, m_farClip, m_nearClip);
 
 	// Release the gBuffers
 	for (auto gbuffer : m_gBuffers) {

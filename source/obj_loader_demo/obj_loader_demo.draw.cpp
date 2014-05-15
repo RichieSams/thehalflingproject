@@ -20,7 +20,7 @@ void ObjLoaderDemo::DrawFrame(double deltaTime) {
 			// Clean-up the thread
 			m_sceneLoaderThread.join();
 
-			SetupScene();
+			m_sceneIsSetup = true;
 		}
 		RenderMainPass();
 		RenderDebugGeometry();
@@ -92,7 +92,6 @@ void ObjLoaderDemo::ForwardRenderingPass() {
 	m_immediateContext->VSSetShader(m_forwardVertexShader, nullptr, 0);
 	m_immediateContext->PSSetShader(m_forwardPixelShader, nullptr, 0);
 
-	m_immediateContext->IASetInputLayout(m_gBufferInputLayout);
 	m_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// Fetch the transpose matricies
@@ -116,19 +115,23 @@ void ObjLoaderDemo::ForwardRenderingPass() {
 		m_immediateContext->PSSetShaderResources(9, 1, &srv);
 	}
 
-	for (uint i = 0; i < m_models.size(); ++i) {
-		DirectX::XMMATRIX worldMatrix = m_models[i]->GetWorldTransform();
-		DirectX::XMMATRIX completeWorld = DirectX::XMMatrixTranspose(worldMatrix);
-		DirectX::XMMATRIX worldViewProjection = DirectX::XMMatrixTranspose(worldMatrix * viewProj);
+
+	m_immediateContext->IASetInputLayout(m_gBufferInputLayout);
+
+	for (auto iter = m_models.begin(); iter != m_models.end(); ++iter) {
+		DirectX::XMMATRIX combinedWorld = iter->second * m_globalWorldTransform;
+		DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranspose(combinedWorld);
+
+		DirectX::XMMATRIX worldViewProjection = DirectX::XMMatrixTranspose(combinedWorld * viewProj);
 
 		// GBuffer pass and Forward pass share the same Vertex cbPerFrame signature
-		SetGBufferVertexShaderConstants(completeWorld, worldViewProjection);
+		SetGBufferVertexShaderConstants(worldMatrix, worldViewProjection);
 
-		for (uint j = 0; j < m_models[i]->GetSubsetCount(); ++j) {
-			SetForwardPixelShaderObjectConstants(m_models[i]->GetSubsetMaterial(j), m_models[0]->GetSubsetTextureFlags(j));
+		for (uint j = 0; j < iter->first->GetSubsetCount(); ++j) {
+			SetForwardPixelShaderObjectConstants(iter->first->GetSubsetMaterial(j), iter->first->GetSubsetTextureFlags(j));
 
 			// Draw the models
-			m_models[i]->DrawSubset(m_immediateContext, j);
+			iter->first->DrawSubset(m_immediateContext, j);
 		}
 	}
 
@@ -216,21 +219,22 @@ void ObjLoaderDemo::NoCullDeferredRenderingPass() {
 	// Cache the matrix multiplication
 	DirectX::XMMATRIX viewProj = viewMatrix * projectionMatrix;
 
-	for (uint i = 0; i < m_models.size(); ++i) {
-		DirectX::XMMATRIX worldMatrix = m_models[i]->GetWorldTransform();
-		DirectX::XMMATRIX completeWorld = DirectX::XMMatrixTranspose(worldMatrix);
-		DirectX::XMMATRIX worldViewProjection = DirectX::XMMatrixTranspose(worldMatrix * viewProj);
+	for (auto iter = m_models.begin(); iter != m_models.end(); ++iter) {
+		DirectX::XMMATRIX combinedWorld = iter->second * m_globalWorldTransform;
+		DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranspose(combinedWorld);
+			
+		DirectX::XMMATRIX worldViewProjection = DirectX::XMMatrixTranspose(combinedWorld * viewProj);
 
 		// GBuffer pass and Forward pass share the same Vertex cbPerFrame signature
-		SetGBufferVertexShaderConstants(completeWorld, worldViewProjection);
+		SetGBufferVertexShaderConstants(worldMatrix, worldViewProjection);
 
-		for (uint j = 0; j < m_models[i]->GetSubsetCount(); ++j) {
-			m_frameMaterialList.push_back(m_models[i]->GetSubsetMaterial(j));
+		for (uint j = 0; j < iter->first->GetSubsetCount(); ++j) {
+			m_frameMaterialList.push_back(iter->first->GetSubsetMaterial(j));
 
-			SetGBufferPixelShaderConstants(m_frameMaterialList.size() - 1, m_models[0]->GetSubsetTextureFlags(j));
+			SetGBufferPixelShaderConstants(m_frameMaterialList.size() - 1, iter->first->GetSubsetTextureFlags(j));
 
 			// Draw the models
-			m_models[i]->DrawSubset(m_immediateContext, j);
+			iter->first->DrawSubset(m_immediateContext, j);
 		}
 	}
 
@@ -351,7 +355,7 @@ void ObjLoaderDemo::SetLightBuffers() {
 
 		Common::PointLight *pointLightArray = m_pointLightBuffer->MapDiscard(m_immediateContext);
 		for (unsigned int i = 0; i < m_numPointLightsToDraw; ++i) {
-			pointLightArray[i] = *m_pointLights[i];
+			pointLightArray[i] = m_pointLights[i];
 		}
 		m_pointLightBuffer->Unmap(m_immediateContext);
 	}
@@ -361,7 +365,7 @@ void ObjLoaderDemo::SetLightBuffers() {
 
 		Common::SpotLight *spotLightArray = m_spotLightBuffer->MapDiscard(m_immediateContext);
 		for (unsigned int i = 0; i < m_numSpotLightsToDraw; ++i) {
-			spotLightArray[i] = *m_spotLights[i];
+			spotLightArray[i] = m_spotLights[i];
 		}
 		m_spotLightBuffer->Unmap(m_immediateContext);
 	}
@@ -394,9 +398,9 @@ void ObjLoaderDemo::RenderDebugGeometry() {
 		DebugObjectInstance *instances = (DebugObjectInstance *)m_debugSphere.MapInstanceBuffer(m_immediateContext, &maxInstances);
 
 		for (uint i = 0; i < m_numPointLightsToDraw; ++i) {
-			DirectX::XMMATRIX translation = DirectX::XMMatrixTranslation(m_pointLights[i]->Position.x, m_pointLights[i]->Position.y, m_pointLights[i]->Position.z);
+			DirectX::XMMATRIX translation = DirectX::XMMatrixTranslation(m_pointLights[i].Position.x, m_pointLights[i].Position.y, m_pointLights[i].Position.z);
 			instances[i].worldViewProj = DirectX::XMMatrixTranspose(translation * viewProj);
-			instances[i].color = m_pointLights[i]->Diffuse;
+			instances[i].color = m_pointLights[i].Diffuse;
 		}
 
 		m_debugSphere.UnMapInstanceBuffer(m_immediateContext);
@@ -405,16 +409,16 @@ void ObjLoaderDemo::RenderDebugGeometry() {
 
 		DirectX::XMVECTOR yAxis = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 		for (uint i = 0; i < m_numSpotLightsToDraw; ++i) {
-			DirectX::XMMATRIX translation = DirectX::XMMatrixTranslation(m_spotLights[i]->Position.x, m_spotLights[i]->Position.y, m_spotLights[i]->Position.z);
+			DirectX::XMMATRIX translation = DirectX::XMMatrixTranslation(m_spotLights[i].Position.x, m_spotLights[i].Position.y, m_spotLights[i].Position.z);
 
-			DirectX::XMVECTOR direction = DirectX::XMLoadFloat3(&m_spotLights[i]->Direction);
+			DirectX::XMVECTOR direction = DirectX::XMLoadFloat3(&m_spotLights[i].Direction);
 
 			DirectX::XMVECTOR crossProduct = DirectX::XMVector3Normalize(DirectX::XMVector3Cross(direction, yAxis));
 			float angle = acos(DirectX::XMVector3Dot(direction, yAxis).m128_f32[0]);
 			DirectX::XMVECTOR quaternion = DirectX::XMQuaternionRotationNormal(crossProduct, -angle);
 
 			instances[i].worldViewProj = DirectX::XMMatrixTranspose(DirectX::XMMatrixRotationQuaternion(quaternion) * translation * viewProj);
-			instances[i].color = m_spotLights[i]->Diffuse;
+			instances[i].color = m_spotLights[i].Diffuse;
 		}
 
 		m_debugCone.UnMapInstanceBuffer(m_immediateContext);
@@ -433,8 +437,8 @@ void ObjLoaderDemo::RenderDebugGeometry() {
 		m_immediateContext->IASetInputLayout(m_debugObjectInputLayout);
 		m_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-		m_debugSphere.DrawInstancedSubset(m_immediateContext, m_debugSphereNumIndices, m_numPointLightsToDraw);
-		m_debugCone.DrawInstancedSubset(m_immediateContext, m_debugConeNumIndices, m_numSpotLightsToDraw);
+		m_debugSphere.DrawInstancedSubset(m_immediateContext, m_numPointLightsToDraw);
+		m_debugCone.DrawInstancedSubset(m_immediateContext, m_numSpotLightsToDraw);
 	}
 
 	if (m_showGBuffers && m_shadingType == ShadingType::NoCullDeferred) {

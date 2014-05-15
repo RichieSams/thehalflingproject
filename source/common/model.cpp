@@ -155,12 +155,16 @@ void Common::Model::DrawSubset(ID3D11DeviceContext *deviceContext, int subsetId)
 	}
 }
 
-void Model::DrawInstancedSubset(ID3D11DeviceContext *deviceContext, uint indexCountPerInstance, uint instanceCount, uint subsetId) {
-	assert(m_instanceBuffer);
+void Model::DrawInstancedSubset(ID3D11DeviceContext *deviceContext, uint instanceCount, uint indexCountPerInstance, uint subsetId) {
+	DrawInstancedSubset(deviceContext, instanceCount, m_instanceBuffer, m_instanceStride,  indexCountPerInstance, subsetId);
+}
+
+void Model::DrawInstancedSubset(ID3D11DeviceContext *deviceContext, uint instanceCount, ID3D11Buffer *instanceBuffer, size_t instanceStride, uint indexCountPerInstance, uint subsetId) {
+	assert(instanceBuffer);
 	assert(instanceCount <= m_maxInstanceCount);
 
-	ID3D11Buffer *vbs[] = {m_vertexBuffer, m_instanceBuffer};
-	uint strides[] = {m_vertexStride, m_instanceStride};
+	ID3D11Buffer *vbs[] = {m_vertexBuffer, instanceBuffer};
+	uint strides[] = {m_vertexStride, instanceStride};
 	uint offsets[] = {0, 0};
 	deviceContext->IASetVertexBuffers(0, 2, vbs, strides, offsets);
 	deviceContext->IASetIndexBuffer(m_indexBuffer, DXGI_FORMAT_R32_UINT, 0);
@@ -168,11 +172,11 @@ void Model::DrawInstancedSubset(ID3D11DeviceContext *deviceContext, uint indexCo
 	if (subsetId == -1) {
 		for (uint i = 0; i < m_subsetCount; ++i) {
 			SetTextureResources(deviceContext, m_subsets[i]);
-			deviceContext->DrawIndexedInstanced(indexCountPerInstance, instanceCount, m_subsets[i].IndexStart, m_subsets[i].VertexStart, 0);
+			deviceContext->DrawIndexedInstanced(indexCountPerInstance == 0 ? m_subsets[i].IndexCount : indexCountPerInstance, instanceCount, m_subsets[i].IndexStart, m_subsets[i].VertexStart, 0);
 		}
 	} else {
 		SetTextureResources(deviceContext, m_subsets[subsetId]);
-		deviceContext->DrawIndexedInstanced(indexCountPerInstance, instanceCount, m_subsets[subsetId].IndexStart, m_subsets[subsetId].VertexStart, 0);
+		deviceContext->DrawIndexedInstanced(indexCountPerInstance == 0 ? m_subsets[subsetId].IndexCount : indexCountPerInstance, instanceCount, m_subsets[subsetId].IndexStart, m_subsets[subsetId].VertexStart, 0);
 	}
 }
 

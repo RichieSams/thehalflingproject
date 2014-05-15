@@ -68,7 +68,6 @@ public:
 		  m_maxInstanceCount(0),
 		  m_AABB_min(0.0f, 0.0f, 0.0f),
 		  m_AABB_max(0.0f, 0.0f, 0.0f),
-		  m_worldTransform(DirectX::XMMatrixIdentity()),
 		  m_disposeSubsetArray(DisposeAfterUse::YES) {
 	}
 
@@ -97,8 +96,6 @@ private:
 	DirectX::XMFLOAT3 m_AABB_min;
 	DirectX::XMFLOAT3 m_AABB_max;
 
-	DirectX::XMMATRIX m_worldTransform;
-
 	DisposeAfterUse::Flag m_disposeSubsetArray;
 
 private:
@@ -117,9 +114,6 @@ public:
 	inline DirectX::XMVECTOR GetAABBMin_XM() { return DirectX::XMLoadFloat3(&m_AABB_min); }
 	inline DirectX::XMVECTOR GetAABBMax_XM() { return DirectX::XMLoadFloat3(&m_AABB_max); }
 
-	void SetWorldTransform(DirectX::XMMATRIX &worldTransform) { m_worldTransform = worldTransform; }
-	const DirectX::XMMATRIX &GetWorldTransform() { return m_worldTransform; }
-
 	void CreateVertexBuffer(ID3D11Device *device, void *vertices, size_t vertexStride, uint vertexCount, DisposeAfterUse::Flag disposeAfterUse = DisposeAfterUse::YES);
 	void CreateVertexBuffer(ID3D11Device *device, void *vertices, uint vertexCount, D3D11_BUFFER_DESC vertexBufferDesc, DisposeAfterUse::Flag disposeAfterUse = DisposeAfterUse::YES);
 	void CreateIndexBuffer(ID3D11Device *device, uint *indices, uint indexCount, DisposeAfterUse::Flag disposeAfterUse = DisposeAfterUse::YES);
@@ -132,7 +126,8 @@ public:
 	void UnMapInstanceBuffer(ID3D11DeviceContext *deviceContext);
 
 	void DrawSubset(ID3D11DeviceContext *deviceContext, int subsetId = -1);
-	void DrawInstancedSubset(ID3D11DeviceContext *deviceContext, uint indexCountPerInstance, uint instanceCount, uint subsetId = -1);
+	void DrawInstancedSubset(ID3D11DeviceContext *deviceContext, uint instanceCount, uint indexCountPerInstance = 0,uint subsetId = -1);
+	void DrawInstancedSubset(ID3D11DeviceContext *deviceContext, uint instanceCount, ID3D11Buffer *instanceBuffer, size_t instanceStride, uint indexCountPerInstance = 0, uint subsetId = -1);
 };
 
 } // End of namespace Common

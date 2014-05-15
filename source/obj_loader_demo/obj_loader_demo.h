@@ -12,6 +12,7 @@
 #include "common/vector.h"
 #include "common/camera.h"
 #include "common/texture_manager.h"
+#include "common/model_manager.h"
 #include "common/console.h"
 #include "common/model.h"
 #include "common/texture2d.h"
@@ -103,6 +104,16 @@ enum GBufferSelector {
 	None = 6
 };
 
+struct ModelToLoad {
+	ModelToLoad(std::string filePath, std::vector<DirectX::XMMATRIX> *instances)
+		: FilePath(filePath),
+		  Instances(instances) {
+	}
+
+	std::string FilePath;
+	std::vector<DirectX::XMMATRIX> *Instances;
+};
+
 class ObjLoaderDemo : public Halfling::HalflingEngine {
 public:
 	ObjLoaderDemo(HINSTANCE hinstance);
@@ -110,15 +121,24 @@ public:
 private:
 	static const uint kMaxMaterialsPerFrame = 2000;
 
+	float m_nearClip;
+	float m_farClip;
+
 	Common::Vector2 m_mouseLastPos;
 	Common::Camera m_camera;
 	Common::TextureManager m_textureManager;
+	Common::ModelManager m_modelManager;
 	Common::Console m_console;
 	bool m_showConsole;
 
-	std::vector<Common::Model *> m_models;
+	DirectX::XMMATRIX m_globalWorldTransform;
+
+	std::vector<std::pair<Common::Model *, DirectX::XMMATRIX> > m_models;
+	std::vector<std::pair<Common::Model *, std::vector<DirectX::XMMATRIX> *> > m_instancedModels;
+
 	std::vector<Common::BlinnPhongMaterial> m_frameMaterialList;
 
+	std::vector<ModelToLoad> m_modelsToLoad;
 	std::atomic<bool> m_sceneLoaded;
 	bool m_sceneIsSetup;
 	std::thread m_sceneLoaderThread;
@@ -127,13 +147,11 @@ private:
 
 	Common::Model m_debugSphere;
 	Common::Model m_debugCone;
-	uint m_debugSphereNumIndices;
-	uint m_debugConeNumIndices;
 
 	Common::DirectionalLight m_directionalLight;
-	std::vector<Common::PointLight *> m_pointLights;
+	std::vector<Common::PointLight> m_pointLights;
 	std::vector<Common::PointLightAnimator *> m_pointLightAnimators;
-	std::vector<Common::SpotLight *> m_spotLights;
+	std::vector<Common::SpotLight> m_spotLights;
 	std::vector<Common::SpotLightAnimator *> m_spotLightAnimators;
 
 	bool m_pointLightBufferNeedsRebuild;
@@ -217,10 +235,10 @@ private:
 	void CharacterInput(wchar character);
 
 	// Initialization methods
+	void LoadSceneJson();
 	void InitTweakBar();
 	void LoadShaders();
 	void CreateShaderBuffers();
-	void SetupScene();
 	void BuildGeometryBuffers();
 	void CreateLights(const DirectX::XMFLOAT3 &sceneSizeMin, const DirectX::XMFLOAT3 &sceneSizeMax);
 

@@ -38,10 +38,8 @@ struct SpotLight {
 
 	float CosInnerConeAngle;
 	float CosOuterConeAngle;
-	
-	float SpotLightFactor;
 
-	float pad;
+	float2 pad;
 };
 
 #endif

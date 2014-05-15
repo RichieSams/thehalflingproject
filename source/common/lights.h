@@ -58,10 +58,8 @@ struct SpotLight {
 	float CosInnerConeAngle;
 	float CosOuterConeAngle;
 
-	float SpotLightFactor;
-
 private:
-	float pad; // To pad the last float3 to a float4
+	float pad[2]; // To pad the last float3 to a float4
 };
 
 } // End of namespace Common

@@ -40,7 +40,7 @@ void Console::Render(ID3D11DeviceContext *context, double deltaTime) {
 	
 	// Draw the background rectangle
 	DirectX::XMFLOAT4X4 backgroundTransform;
-	DirectX::XMStoreFloat4x4(&backgroundTransform, DirectX::XMMatrixScaling(m_rect.GetWidth() + 20.0f, m_rect.GetHeight(), 0.0f));
+	DirectX::XMStoreFloat4x4(&backgroundTransform, DirectX::XMMatrixScaling(m_rect.GetWidth() + 20.0f, static_cast<float>(m_rect.GetHeight()), 0.0f));
 	backgroundTransform._41 = (float)m_rect.Left - 10.0f;
 	backgroundTransform._42 = (float)m_rect.Top;
 

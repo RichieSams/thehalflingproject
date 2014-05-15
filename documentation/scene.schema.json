@@ -1,0 +1,329 @@
+{
+	"$schema" : "http://json-schema.org/draft-04/schema#",
+	"title" : "Scene Definition Schema",
+	"type" : "object",
+	"required" : ["NearClip", "FarClip", "ModelInstanceThreshold", "Models"],
+	"properties" : {
+		"NearClip" : {
+			"description" : "",
+			"type" : "number"
+		},
+		"FarClip" : {
+			"description" : "",
+			"type" : "number"
+		},
+		"SceneScaleFactor" : {
+			"description" : "",
+			"type" : "number"
+		},
+		"ModelInstanceThreshold" : {
+			"description" : "",
+			"type" : "number"
+		},
+		"Models" : {
+			"description" : "",
+			"type" : "array",
+			"items" : {
+				"type" : "object",
+                "required" : ["FilePath", "Instances"],
+				"properties" : {
+					"FilePath" : {
+						"description" : "",
+						"type" : "string"
+					},
+					"Instances" : {
+						"description" : "",
+						"type" : "array",
+						"items" : {
+							"type" : "array",
+                            "items" : {
+                                "type" : "number"
+                            },
+                            "minItems" : 16,
+                            "maxItems" : 16,
+                            "additionalItems" : false
+						},
+                        "minItems" : 1,
+                        "additionalItems" : false
+					}
+				},
+                "additionalProperties" : false
+			},
+            "minItems" : 1,
+            "additionalItems" : false
+		},
+        "DirectionalLight" : {
+            "description" : "",
+			"type" : "object",
+            "required" : ["Ambient", "Diffuse", "Specular", "Direction"],
+            "properties" : {
+                "Ambient" : {
+                    "description" : "",
+					"type" : "array",
+					"items" : {
+                        "type" : "number"
+                    },
+                    "minItems" : 3,
+                    "maxItems" : 3,
+                    "additionalItems" : false
+                },
+                "Diffuse" : {
+                    "description" : "",
+					"type" : "array",
+					"items" : {
+                        "type" : "number"
+                    },
+                    "minItems" : 3,
+                    "maxItems" : 3,
+                    "additionalItems" : false
+                },
+                "Specular" : {
+                    "description" : "",
+					"type" : "array",
+					"items" : {
+                        "type" : "number"
+                    },
+                    "minItems" : 3,
+                    "maxItems" : 3,
+                    "additionalItems" : false
+                },
+                "Direction" : {
+                    "description" : "",
+					"type" : "array",
+					"items" : {
+                        "type" : "number"
+                    },
+                    "minItems" : 3,
+                    "maxItems" : 3,
+                    "additionalItems" : false
+                }
+            },
+            "additionalProperties" : false
+        },
+        "PointLights" : {
+            "description" : "",
+			"type" : "array",
+            "items" : {
+                "oneOf": [
+                    {
+                        "type" : "object",
+                        "required" : ["Diffuse", "Specular", "Position", "Range", "AttenuationDistanceUNorm"],
+                        "properties" : {
+                            "Diffuse" : {
+                                "description" : "",
+					            "type" : "array",
+					            "items" : {
+                                    "type" : "number"
+                                },
+                                "minItems" : 3,
+                                "maxItems" : 3,
+                                "additionalItems" : false
+                            },
+                            "Specular" : {
+                                "description" : "",
+					            "type" : "array",
+					            "items" : {
+                                    "type" : "number"
+                                },
+                                "minItems" : 3,
+                                "maxItems" : 3,
+                                "additionalItems" : false
+                            },
+                            "Position" : {
+                                "description" : "",
+					            "type" : "array",
+					            "items" : {
+                                    "type" : "number"
+                                },
+                                "minItems" : 3,
+                                "maxItems" : 3,
+                                "additionalItems" : false
+                            },
+                            "Range" : {
+                                "description" : "",
+                                "type" : "number"
+                            },
+                            "AttenuationDistanceUNorm" : {
+                                "description" : "",
+                                "type" : "number"
+                            }
+                        }
+                    },
+                    {
+                        "type" : "object",
+                        "required" : ["NumberOfLights", "AABB_min", "AABB_max", "RangeRange", "AttenuationDistanceUNorm"],
+                        "properties" : {
+                            "NumberOfLights" : {
+                                "description" : "",
+                                "type" : "number"
+                            },
+                            "AABB_min" : {
+                                "description" : "",
+					            "type" : "array",
+					            "items" : {
+                                    "type" : "number"
+                                },
+                                "minItems" : 3,
+                                "maxItems" : 3,
+                                "additionalItems" : false
+                            },
+                            "AABB_max" : {
+                                "description" : "",
+					            "type" : "array",
+					            "items" : {
+                                    "type" : "number"
+                                },
+                                "minItems" : 3,
+                                "maxItems" : 3,
+                                "additionalItems" : false
+                            },
+                            "RangeRange" : {
+                                "description" : "",
+					            "type" : "array",
+					            "items" : {
+                                    "type" : "number"
+                                },
+                                "minItems" : 2,
+                                "maxItems" : 2,
+                                "additionalItems" : false
+                            },
+                            "AttenuationDistanceUNorm" : {
+                                "description" : "",
+                                "type" : "number"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        "SpotLights" : {
+            "description" : "",
+			"type" : "array",
+            "items" : {
+                "oneOf": [
+                    {
+                        "type" : "object",
+                        "required" : ["Diffuse", "Specular", "Position", "Range", "Direction", "AttenuationDistanceUNorm", "InnerConeAngle", "OuterConeAngle"],
+                        "properties" : {
+                            "Diffuse" : {
+                                "description" : "",
+					            "type" : "array",
+					            "items" : {
+                                    "type" : "number"
+                                },
+                                "minItems" : 3,
+                                "maxItems" : 3,
+                                "additionalItems" : false
+                            },
+                            "Specular" : {
+                                "description" : "",
+					            "type" : "array",
+					            "items" : {
+                                    "type" : "number"
+                                },
+                                "minItems" : 3,
+                                "maxItems" : 3,
+                                "additionalItems" : false
+                            },
+                            "Position" : {
+                                "description" : "",
+					            "type" : "array",
+					            "items" : {
+                                    "type" : "number"
+                                },
+                                "minItems" : 3,
+                                "maxItems" : 3,
+                                "additionalItems" : false
+                            },
+                            "Range" : {
+                                "description" : "",
+                                "type" : "number"
+                            },
+                            "Direction" : {
+                                "description" : "",
+					            "type" : "array",
+					            "items" : {
+                                    "type" : "number"
+                                },
+                                "minItems" : 3,
+                                "maxItems" : 3,
+                                "additionalItems" : false
+                            },
+                            "AttenuationDistanceUNorm" : {
+                                "description" : "",
+                                "type" : "number"
+                            },
+                            "InnerConeAngle" : {
+                                "description" : "",
+                                "type" : "number"
+                            },
+                            "OuterConeAngle" : {
+                                "description" : "",
+                                "type" : "number"
+                            }
+                        }
+                    },
+                    {
+                        "type" : "object",
+                        "required" : ["NumberOfLights", "AABB_min", "AABB_max", "RangeRange", "AttenuationDistanceUNorm", "OuterAngleRange", "InnerAngleDifference"],
+                        "properties" : {
+                            "NumberOfLights" : {
+                                "description" : "",
+                                "type" : "number"
+                            },
+                            "AABB_min" : {
+                                "description" : "",
+					            "type" : "array",
+					            "items" : {
+                                    "type" : "number"
+                                },
+                                "minItems" : 3,
+                                "maxItems" : 3,
+                                "additionalItems" : false
+                            },
+                            "AABB_max" : {
+                                "description" : "",
+					            "type" : "array",
+					            "items" : {
+                                    "type" : "number"
+                                },
+                                "minItems" : 3,
+                                "maxItems" : 3,
+                                "additionalItems" : false
+                            },
+                            "RangeRange" : {
+                                "description" : "",
+					            "type" : "array",
+					            "items" : {
+                                    "type" : "number"
+                                },
+                                "minItems" : 2,
+                                "maxItems" : 2,
+                                "additionalItems" : false
+                            },
+                            "AttenuationDistanceUNorm" : {
+                                "description" : "",
+                                "type" : "number"
+                            },
+                            "OuterAngleRange" : {
+                                "description" : "",
+					            "type" : "array",
+					            "items" : {
+                                    "type" : "number"
+                                },
+                                "minItems" : 2,
+                                "maxItems" : 2,
+                                "additionalItems" : false
+                            },
+                            "InnerAngleDifference" : {
+                                "description" : "",
+                                "type" : "number"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+	},
+    "additionalProperties" : false
+}

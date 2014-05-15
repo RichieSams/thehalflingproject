@@ -30,6 +30,13 @@ private:
 struct PointLight {
 public:
 	PointLight() { ZeroMemory(this, sizeof(this)); }
+	PointLight(DirectX::XMFLOAT4 diffuse, DirectX::XMFLOAT4 specular, DirectX::XMFLOAT3 position, float range, float attenuationDistanceUNorm)
+		: Diffuse(diffuse),
+		  Specular(specular),
+		  Position(position),
+		  Range(range),
+		  AttenuationDistanceUNorm(attenuationDistanceUNorm) {
+	}
 
 	DirectX::XMFLOAT4 Diffuse;
 	DirectX::XMFLOAT4 Specular;
@@ -45,6 +52,16 @@ private:
 
 struct SpotLight {
 	SpotLight() { ZeroMemory(this, sizeof(this)); }
+	SpotLight(DirectX::XMFLOAT4 diffuse, DirectX::XMFLOAT4 specular, DirectX::XMFLOAT3 position, float range, DirectX::XMFLOAT3 direction, float attenuationDistanceUNorm, float cosInnerConeAngle, float cosOuterConeAngle)
+		: Diffuse(diffuse),
+		  Specular(specular),
+		  Position(position),
+		  Range(range),
+		  Direction(direction),
+		  AttenuationDistanceUNorm(attenuationDistanceUNorm),
+		  CosInnerConeAngle(cosInnerConeAngle),
+		  CosOuterConeAngle(cosOuterConeAngle) {
+	}
 
 	DirectX::XMFLOAT4 Diffuse;
 	DirectX::XMFLOAT4 Specular;

@@ -10,9 +10,9 @@
 namespace Common {
 
 void PointLightAnimator::AnimateLight(Common::PointLight *light, double deltaTime) {
-	float xPosition = m_velocity.x * deltaTime + light->Position.x;
-	float yPosition = m_velocity.y * deltaTime + light->Position.y;
-	float zPosition = m_velocity.z * deltaTime + light->Position.z;
+	float xPosition = m_velocity.x * static_cast<float>(deltaTime) + light->Position.x;
+	float yPosition = m_velocity.y * static_cast<float>(deltaTime) + light->Position.y;
+	float zPosition = m_velocity.z * static_cast<float>(deltaTime) + light->Position.z;
 
 	// Check x for out of bounds
 	if (xPosition > m_positiveBounds.x) {
@@ -47,9 +47,9 @@ void PointLightAnimator::AnimateLight(Common::PointLight *light, double deltaTim
 
 void SpotLightAnimator::AnimateLight(Common::SpotLight *light, double deltaTime) {
 	// Move the light
-	float xPosition = m_velocity.x * deltaTime + light->Position.x;
-	float yPosition = m_velocity.y * deltaTime + light->Position.y;
-	float zPosition = m_velocity.z * deltaTime + light->Position.z;
+	float xPosition = m_velocity.x * static_cast<float>(deltaTime) + light->Position.x;
+	float yPosition = m_velocity.y * static_cast<float>(deltaTime) + light->Position.y;
+	float zPosition = m_velocity.z * static_cast<float>(deltaTime) + light->Position.z;
 
 	// Check x for out of bounds
 	if (xPosition > m_positiveBounds.x) {

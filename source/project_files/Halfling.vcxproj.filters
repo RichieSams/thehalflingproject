@@ -84,6 +84,9 @@
     <ClCompile Include="..\libs\DirectXTex\DDSTextureLoader.cpp">
       <Filter>Libs\DirectXTex</Filter>
     </ClCompile>
+    <ClCompile Include="..\common\model_manager.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\common\halfling_sys.h">
@@ -187,6 +190,9 @@
     </ClInclude>
     <ClInclude Include="..\libs\DirectXTex\DDSTextureLoader.h">
       <Filter>Libs\DirectXTex</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\model_manager.h">
+      <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

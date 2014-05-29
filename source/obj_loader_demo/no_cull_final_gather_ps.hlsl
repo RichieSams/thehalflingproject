@@ -28,7 +28,7 @@ StructuredBuffer<SpotLight> gSpotLights : register(t5);
 
 StructuredBuffer<BlinnPhongMaterial> gMaterialList : register(t6);
 
-float4 NoCullFinalGatherPS(FullScreenTrianglePixelIn input) : SV_TARGET {
+float4 NoCullFinalGatherPS(CalculatedTrianglePixelIn input) : SV_TARGET {
 	float2 gbufferDim;
 	uint dummy;
 	gGBufferDepth.GetDimensions(gbufferDim.x, gbufferDim.y, dummy);

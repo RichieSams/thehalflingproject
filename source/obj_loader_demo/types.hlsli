@@ -29,12 +29,7 @@ struct GBufferShaderPixelIn {
 	float2 texCoord       : TEXCOORD;
 };
 
-struct FullScreenTrianglePixelIn {
-	float4 positionClip  : SV_POSITION;
-	float2 texCoord      : TEXCOORD;
-};
-
-struct TransformedFullScreenTrianglePixelIn {
+struct CalculatedTrianglePixelIn {
 	float4 positionClip  : SV_POSITION;
 	float2 texCoord      : TEXCOORD;
 };

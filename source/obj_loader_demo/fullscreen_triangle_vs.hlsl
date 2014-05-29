@@ -21,8 +21,8 @@
 #include "types.hlsli"
 
 
-FullScreenTrianglePixelIn FullScreenTriangleVS(uint vertexID : SV_VertexID) {
-	FullScreenTrianglePixelIn output;
+CalculatedTrianglePixelIn FullScreenTriangleVS(uint vertexID : SV_VertexID) {
+	CalculatedTrianglePixelIn output;
 
 	// Parametrically work out vertex location for full screen triangle
 	output.positionClip.x = (float)(vertexID / 2) * 4.0f - 1.0f;

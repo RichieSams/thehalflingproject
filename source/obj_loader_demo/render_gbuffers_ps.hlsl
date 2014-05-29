@@ -19,7 +19,7 @@ Texture2DMS<float2> gGBufferNormal       : register(t1);
 Texture2DMS<uint> gGBufferMaterialId    : register(t2);
 Texture2DMS<float> gGBufferDepth         : register(t3);
 
-float4 RenderGBuffersPS(TransformedFullScreenTrianglePixelIn input) : SV_TARGET {
+float4 RenderGBuffersPS(CalculatedTrianglePixelIn input) : SV_TARGET {
 	float2 gbufferDim;
 	uint dummy;
 	gGBufferDepth.GetDimensions(gbufferDim.x, gbufferDim.y, dummy);

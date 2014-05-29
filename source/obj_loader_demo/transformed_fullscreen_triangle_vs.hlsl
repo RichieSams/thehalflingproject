@@ -18,8 +18,8 @@ cbuffer cbPerObject : register(b1) {
     float gClipScale         : packoffset(c0.z);
 };
 
-TransformedFullScreenTrianglePixelIn FullScreenTriangleVS(uint vertexID : SV_VertexID) {
-	TransformedFullScreenTrianglePixelIn output;
+CalculatedTrianglePixelIn FullScreenTriangleVS(uint vertexID : SV_VertexID) {
+	CalculatedTrianglePixelIn output;
 
 	uint vertexNumber = vertexID - ((vertexID + 1 & 4) / 2);
 

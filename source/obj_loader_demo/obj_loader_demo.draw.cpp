@@ -46,8 +46,6 @@ void ObjLoaderDemo::DrawFrame(double deltaTime) {
 	if (m_showConsole) {
 		m_immediateContext->OMSetRenderTargets(1, &m_renderTargetView, nullptr);
 		m_console.Render(m_immediateContext, deltaTime);
-		// Cleanup (aka make the runtime happy)
-		m_immediateContext->OMSetRenderTargets(0, 0, 0);
 	}
 
 	uint syncInterval = m_vsync ? 1 : 0;
@@ -134,15 +132,6 @@ void ObjLoaderDemo::ForwardRenderingPass() {
 			iter->first->DrawSubset(m_immediateContext, j);
 		}
 	}
-
-	// Cleanup (aka make the runtime happy)
-	m_immediateContext->VSSetShader(0, 0, 0);
-	m_immediateContext->GSSetShader(0, 0, 0);
-	m_immediateContext->PSSetShader(0, 0, 0);
-	m_immediateContext->OMSetRenderTargets(0, 0, 0);
-	ID3D11ShaderResourceView *nullSRV[6] = {0, 0, 0, 0, 0, 0};
-	m_immediateContext->VSSetShaderResources(0, 6, nullSRV);
-	m_immediateContext->PSSetShaderResources(0, 6, nullSRV);
 }
 
 void ObjLoaderDemo::SetForwardPixelShaderFrameConstants() {
@@ -238,9 +227,6 @@ void ObjLoaderDemo::NoCullDeferredRenderingPass() {
 		}
 	}
 
-	// Cleanup (aka make the runtime happy)
-	m_immediateContext->OMSetRenderTargets(0, 0, 0);
-
 	// Final gather pass
 	m_immediateContext->OMSetRenderTargets(1, &m_renderTargetView, nullptr);
 	m_immediateContext->ClearRenderTargetView(m_renderTargetView, DirectX::Colors::LightGray);
@@ -288,16 +274,6 @@ void ObjLoaderDemo::NoCullDeferredRenderingPass() {
 	m_immediateContext->IASetIndexBuffer(0, DXGI_FORMAT_R32_UINT, 0);
 
 	m_immediateContext->Draw(3, 0);
-
-
-	// Cleanup (aka make the runtime happy)
-	m_immediateContext->VSSetShader(0, 0, 0);
-	m_immediateContext->GSSetShader(0, 0, 0);
-	m_immediateContext->PSSetShader(0, 0, 0);
-	m_immediateContext->OMSetRenderTargets(0, 0, 0);
-	ID3D11ShaderResourceView *nullSRV[7] = {0, 0, 0, 0, 0, 0};
-	m_immediateContext->VSSetShaderResources(0, 7, nullSRV);
-	m_immediateContext->PSSetShaderResources(0, 7, nullSRV);
 }
 
 void ObjLoaderDemo::SetGBufferVertexShaderConstants(DirectX::XMMATRIX &worldMatrix, DirectX::XMMATRIX &worldViewProjMatrix) {
@@ -514,15 +490,6 @@ void ObjLoaderDemo::RenderDebugGeometry() {
 
 		m_spriteRenderer.End();
 	}
-
-	// Cleanup (aka make the runtime happy)
-	m_immediateContext->VSSetShader(0, 0, 0);
-	m_immediateContext->GSSetShader(0, 0, 0);
-	m_immediateContext->PSSetShader(0, 0, 0);
-	m_immediateContext->OMSetRenderTargets(0, 0, 0);
-	ID3D11ShaderResourceView *nullSRV[7] = {0, 0, 0, 0, 0, 0};
-	m_immediateContext->VSSetShaderResources(0, 7, nullSRV);
-	m_immediateContext->PSSetShaderResources(0, 7, nullSRV);
 }
 
 void ObjLoaderDemo::SetRenderGBuffersPixelShaderConstants(DirectX::XMMATRIX &projMatrix, DirectX::XMMATRIX &invViewProjMatrix, uint gBufferId) {
@@ -555,9 +522,6 @@ void ObjLoaderDemo::RenderHUD() {
 	m_spriteRenderer.End();
 
 	TwDraw();
-
-	// Cleanup (aka make the runtime happy)
-	m_immediateContext->OMSetRenderTargets(0, 0, 0);
 }
 
 } // End of namespace ObjLoaderDemo

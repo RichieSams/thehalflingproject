@@ -51,7 +51,9 @@ bool ObjLoaderDemo::Initialize(LPCTSTR mainWndCaption, uint32 screenWidth, uint3
 	BuildGeometryBuffers();
 
 	LoadShaders();
-	CreateShaderBuffers();
+	m_frameMaterialListBuffer = new Common::StructuredBuffer<Common::BlinnPhongMaterial>(m_device, kMaxMaterialsPerFrame, D3D11_BIND_SHADER_RESOURCE, true);
+
+	m_instanceBuffer = new Common::StructuredBuffer<DirectX::XMVECTOR>(m_device, kMaxInstanceVectorsPerFrame, D3D11_BIND_SHADER_RESOURCE, true);
 
 	// Create light buffers
 	// This has to be done after the Engine has been Initialized so we have a valid m_device
@@ -329,90 +331,16 @@ void ObjLoaderDemo::LoadShaders() {
 		{"INSTANCE_COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 64, D3D11_INPUT_PER_INSTANCE_DATA, 1}
 	};
 
-	HR(Common::LoadVertexShader(L"forward_vs.cso", m_device, &m_forwardVertexShader, nullptr));
-	HR(Common::LoadPixelShader(L"forward_ps.cso", m_device, &m_forwardPixelShader));
-	HR(Common::LoadVertexShader(L"gbuffer_vs.cso", m_device, &m_gbufferVertexShader, &m_gBufferInputLayout, vertexDesc, 4));
-	HR(Common::LoadPixelShader(L"gbuffer_ps.cso", m_device, &m_gbufferPixelShader));
-	HR(Common::LoadVertexShader(L"fullscreen_triangle_vs.cso", m_device, &m_fullscreenTriangleVertexShader, nullptr));
-	HR(Common::LoadPixelShader(L"no_cull_final_gather_ps.cso", m_device, &m_noCullFinalGatherPixelShader));
-	HR(Common::LoadVertexShader(L"debug_object_vs.cso", m_device, &m_debugObjectVertexShader, &m_debugObjectInputLayout, instanceVertexDesc, 6));
-	HR(Common::LoadPixelShader(L"debug_object_ps.cso", m_device, &m_debugObjectPixelShader));
-	HR(Common::LoadVertexShader(L"transformed_fullscreen_triangle_vs.cso", m_device, &m_transformedFullscreenTriangleVertexShader, nullptr));
-	HR(Common::LoadPixelShader(L"render_gbuffers_ps.cso", m_device, &m_renderGbuffersPixelShader));
-}
-
-void ObjLoaderDemo::CreateShaderBuffers() {
-	D3D11_BUFFER_DESC forwardPixelShaderFrameBufferDesc;
-	forwardPixelShaderFrameBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	forwardPixelShaderFrameBufferDesc.ByteWidth = Common::CBSize(sizeof(ForwardPixelShaderFrameConstants));
-	forwardPixelShaderFrameBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	forwardPixelShaderFrameBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	forwardPixelShaderFrameBufferDesc.MiscFlags = 0;
-	forwardPixelShaderFrameBufferDesc.StructureByteStride = 0;
-
-	m_device->CreateBuffer(&forwardPixelShaderFrameBufferDesc, NULL, &m_forwardPixelShaderFrameConstantsBuffer);
-
-	D3D11_BUFFER_DESC forwardPixelShaderObjectBufferDesc;
-	forwardPixelShaderObjectBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	forwardPixelShaderObjectBufferDesc.ByteWidth = Common::CBSize(sizeof(ForwardPixelShaderObjectConstants));
-	forwardPixelShaderObjectBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	forwardPixelShaderObjectBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	forwardPixelShaderObjectBufferDesc.MiscFlags = 0;
-	forwardPixelShaderObjectBufferDesc.StructureByteStride = 0;
-
-	m_device->CreateBuffer(&forwardPixelShaderObjectBufferDesc, NULL, &m_forwardPixelShaderObjectConstantsBuffer);
-
-	D3D11_BUFFER_DESC vertexShaderObjectBufferDesc;
-	vertexShaderObjectBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	vertexShaderObjectBufferDesc.ByteWidth = Common::CBSize(sizeof(GBufferVertexShaderObjectConstants));
-	vertexShaderObjectBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	vertexShaderObjectBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	vertexShaderObjectBufferDesc.MiscFlags = 0;
-	vertexShaderObjectBufferDesc.StructureByteStride = 0;
-
-	m_device->CreateBuffer(&vertexShaderObjectBufferDesc, NULL, &m_gBufferVertexShaderObjectConstantsBuffer);
-
-	D3D11_BUFFER_DESC pixelShaderFrameBufferDesc;
-	pixelShaderFrameBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	pixelShaderFrameBufferDesc.ByteWidth = Common::CBSize(sizeof(GBufferPixelShaderObjectConstants));
-	pixelShaderFrameBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	pixelShaderFrameBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	pixelShaderFrameBufferDesc.MiscFlags = 0;
-	pixelShaderFrameBufferDesc.StructureByteStride = 0;
-
-	m_device->CreateBuffer(&pixelShaderFrameBufferDesc, NULL, &m_gBufferPixelShaderObjectConstantsBuffer);
-
-	D3D11_BUFFER_DESC noCullFinalGatherPixelShaderFrameBufferDesc;
-	noCullFinalGatherPixelShaderFrameBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	noCullFinalGatherPixelShaderFrameBufferDesc.ByteWidth = Common::CBSize(sizeof(NoCullFinalGatherPixelShaderFrameConstants));
-	noCullFinalGatherPixelShaderFrameBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	noCullFinalGatherPixelShaderFrameBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	noCullFinalGatherPixelShaderFrameBufferDesc.MiscFlags = 0;
-	noCullFinalGatherPixelShaderFrameBufferDesc.StructureByteStride = 0;
-
-	m_device->CreateBuffer(&noCullFinalGatherPixelShaderFrameBufferDesc, NULL, &m_noCullFinalGatherPixelShaderConstantsBuffer);
-
-	D3D11_BUFFER_DESC transformedFullScreenTriangleBufferDesc;
-	transformedFullScreenTriangleBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	transformedFullScreenTriangleBufferDesc.ByteWidth = Common::CBSize(sizeof(TransformedFullScreenTriangleVertexShaderConstants));
-	transformedFullScreenTriangleBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	transformedFullScreenTriangleBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	transformedFullScreenTriangleBufferDesc.MiscFlags = 0;
-	transformedFullScreenTriangleBufferDesc.StructureByteStride = 0;
-
-	m_device->CreateBuffer(&transformedFullScreenTriangleBufferDesc, NULL, &m_transformedFullscreenTriangleVertexShaderConstantsBuffer);
-
-	D3D11_BUFFER_DESC renderGBuffersBufferDesc;
-	renderGBuffersBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	renderGBuffersBufferDesc.ByteWidth = Common::CBSize(sizeof(RenderGBuffersPixelShaderConstants));
-	renderGBuffersBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	renderGBuffersBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	renderGBuffersBufferDesc.MiscFlags = 0;
-	renderGBuffersBufferDesc.StructureByteStride = 0;
-
-	m_device->CreateBuffer(&renderGBuffersBufferDesc, NULL, &m_renderGbuffersPixelShaderConstantsBuffer);
-
-	m_frameMaterialListBuffer = new Common::StructuredBuffer<Common::BlinnPhongMaterial>(m_device, kMaxMaterialsPerFrame, D3D11_BIND_SHADER_RESOURCE, true);
+	m_forwardVertexShader = new Common::VertexShader<>(L"forward_vs.cso", m_device, false, false);
+	m_forwardPixelShader = new Common::PixelShader<ForwardPixelShaderFrameConstants, ForwardPixelShaderObjectConstants>(L"forward_ps.cso", m_device, true, true);
+	m_gbufferVertexShader = new Common::VertexShader<Common::DefaultShaderConstantType, GBufferVertexShaderObjectConstants>(L"gbuffer_vs.cso", m_device, false, true, &m_gBufferInputLayout, vertexDesc, 4);
+	m_gbufferPixelShader = new Common::PixelShader<Common::DefaultShaderConstantType, GBufferPixelShaderObjectConstants>(L"gbuffer_ps.cso", m_device, false, true);
+	m_fullscreenTriangleVertexShader = new Common::VertexShader<>(L"fullscreen_triangle_vs.cso", m_device, false, false);
+	m_noCullFinalGatherPixelShader = new Common::PixelShader<NoCullFinalGatherPixelShaderFrameConstants, Common::DefaultShaderConstantType>(L"no_cull_final_gather_ps.cso", m_device, true, false);
+	m_debugObjectVertexShader = new Common::VertexShader<>(L"debug_object_vs.cso", m_device, false, false, &m_debugObjectInputLayout, instanceVertexDesc, 6);
+	m_debugObjectPixelShader = new Common::PixelShader<>(L"debug_object_ps.cso", m_device, false, false);
+	m_transformedFullscreenTriangleVertexShader = new Common::VertexShader<Common::DefaultShaderConstantType, TransformedFullScreenTriangleVertexShaderConstants>(L"transformed_fullscreen_triangle_vs.cso", m_device, false, true);
+	m_renderGbuffersPixelShader = new Common::PixelShader<RenderGBuffersPixelShaderConstants, Common::DefaultShaderConstantType>(L"render_gbuffers_ps.cso", m_device, true, false);
 }
 
 } // End of namespace ObjLoaderDemo

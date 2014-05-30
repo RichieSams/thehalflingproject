@@ -87,8 +87,8 @@ void ObjLoaderDemo::ForwardRenderingPass() {
 	m_immediateContext->RSSetState(rasterState);
 
 	// Set the vertex and pixel shaders that will be used to render this triangle.
-	m_immediateContext->VSSetShader(m_forwardVertexShader, nullptr, 0);
-	m_immediateContext->PSSetShader(m_forwardPixelShader, nullptr, 0);
+	m_forwardVertexShader->BindToPipeline(m_immediateContext);
+	m_forwardPixelShader->BindToPipeline(m_immediateContext);
 
 	m_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
@@ -135,35 +135,21 @@ void ObjLoaderDemo::ForwardRenderingPass() {
 }
 
 void ObjLoaderDemo::SetForwardPixelShaderFrameConstants() {
-	// Fill in object constants
-	D3D11_MAPPED_SUBRESOURCE mappedResource;
+	ForwardPixelShaderFrameConstants pixelShaderFrameConstants;
+	pixelShaderFrameConstants.gDirectionalLight = m_directionalLight;
+	pixelShaderFrameConstants.gEyePosition = m_camera.GetCameraPosition();
+	pixelShaderFrameConstants.gNumPointLightsToDraw = m_numPointLightsToDraw;
+	pixelShaderFrameConstants.gNumSpotLightsToDraw = m_numSpotLightsToDraw;
 
-	// Lock the constant buffer so it can be written to.
-	HR(m_immediateContext->Map(m_forwardPixelShaderFrameConstantsBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
-
-	ForwardPixelShaderFrameConstants *pixelShaderFrameConstants = static_cast<ForwardPixelShaderFrameConstants *>(mappedResource.pData);
-	pixelShaderFrameConstants->gDirectionalLight = m_directionalLight;
-	pixelShaderFrameConstants->gEyePosition = m_camera.GetCameraPosition();
-	pixelShaderFrameConstants->gNumPointLightsToDraw = m_numPointLightsToDraw;
-	pixelShaderFrameConstants->gNumSpotLightsToDraw = m_numSpotLightsToDraw;
-
-	m_immediateContext->Unmap(m_forwardPixelShaderFrameConstantsBuffer, 0);
-	m_immediateContext->PSSetConstantBuffers(0, 1, &m_forwardPixelShaderFrameConstantsBuffer);
+	m_forwardPixelShader->SetPerFrameConstants(m_immediateContext, &pixelShaderFrameConstants, 0u);
 }
 
 void ObjLoaderDemo::SetForwardPixelShaderObjectConstants(const Common::BlinnPhongMaterial &material, uint textureFlags) {
-	// Fill in object constants
-	D3D11_MAPPED_SUBRESOURCE mappedResource;
+	ForwardPixelShaderObjectConstants pixelShaderObjectConstants;
+	pixelShaderObjectConstants.Material = material;
+	pixelShaderObjectConstants.TextureFlags = textureFlags;
 
-	// Lock the constant buffer so it can be written to.
-	HR(m_immediateContext->Map(m_forwardPixelShaderObjectConstantsBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
-
-	ForwardPixelShaderObjectConstants *pixelShaderObjectConstants = static_cast<ForwardPixelShaderObjectConstants *>(mappedResource.pData);
-	pixelShaderObjectConstants->Material = material;
-	pixelShaderObjectConstants->TextureFlags = textureFlags;
-
-	m_immediateContext->Unmap(m_forwardPixelShaderObjectConstantsBuffer, 0);
-	m_immediateContext->PSSetConstantBuffers(1, 1, &m_forwardPixelShaderObjectConstantsBuffer);
+	m_forwardPixelShader->SetPerObjectConstants(m_immediateContext, &pixelShaderObjectConstants, 1u);
 }
 
 void ObjLoaderDemo::NoCullDeferredRenderingPass() {
@@ -195,8 +181,8 @@ void ObjLoaderDemo::NoCullDeferredRenderingPass() {
 	m_immediateContext->RSSetState(rasterState);
 
 	// Set the vertex and pixel shaders that will be used to render this triangle.
-	m_immediateContext->VSSetShader(m_gbufferVertexShader, nullptr, 0);
-	m_immediateContext->PSSetShader(m_gbufferPixelShader, nullptr, 0);
+	m_gbufferVertexShader->BindToPipeline(m_immediateContext);
+	m_gbufferPixelShader->BindToPipeline(m_immediateContext);
 
 	m_immediateContext->IASetInputLayout(m_gBufferInputLayout);
 	m_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -235,7 +221,7 @@ void ObjLoaderDemo::NoCullDeferredRenderingPass() {
 	m_immediateContext->IASetInputLayout(nullptr);
 	m_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	m_immediateContext->VSSetShader(m_fullscreenTriangleVertexShader, nullptr, 0);
+	m_fullscreenTriangleVertexShader->BindToPipeline(m_immediateContext);
 	m_immediateContext->GSSetShader(0, 0, 0);
 
 	m_immediateContext->PSSetShaderResources(0, 4, &m_gBufferSRVs.front());
@@ -244,7 +230,7 @@ void ObjLoaderDemo::NoCullDeferredRenderingPass() {
 	DirectX::XMMATRIX invViewProj = DirectX::XMMatrixTranspose(DirectX::XMMatrixInverse(nullptr, viewProj));
 
 	if (m_gbufferSelector == None) {
-		m_immediateContext->PSSetShader(m_noCullFinalGatherPixelShader, nullptr, 0);
+		m_noCullFinalGatherPixelShader->BindToPipeline(m_immediateContext);
 
 		SetNoCullFinalGatherShaderConstants(projMatrix, invViewProj);
 
@@ -263,7 +249,7 @@ void ObjLoaderDemo::NoCullDeferredRenderingPass() {
 		// Set material list
 		SetMaterialList();
 	} else {
-		m_immediateContext->PSSetShader(m_renderGbuffersPixelShader, nullptr, 0);
+		m_renderGbuffersPixelShader->BindToPipeline(m_immediateContext);
 
 		SetRenderGBuffersPixelShaderConstants(projMatrix, invViewProj, m_gbufferSelector);
 	}
@@ -277,52 +263,31 @@ void ObjLoaderDemo::NoCullDeferredRenderingPass() {
 }
 
 void ObjLoaderDemo::SetGBufferVertexShaderConstants(DirectX::XMMATRIX &worldMatrix, DirectX::XMMATRIX &worldViewProjMatrix) {
-	// Fill in object constants
-	D3D11_MAPPED_SUBRESOURCE mappedResource;
+	GBufferVertexShaderObjectConstants vertexShaderObjectConstants;
+	vertexShaderObjectConstants.World = worldMatrix;
+	vertexShaderObjectConstants.WorldViewProj = worldViewProjMatrix;
 
-	// Lock the constant buffer so it can be written to.
-	HR(m_immediateContext->Map(m_gBufferVertexShaderObjectConstantsBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
-
-	GBufferVertexShaderObjectConstants *vertexShaderObjectConstants = static_cast<GBufferVertexShaderObjectConstants *>(mappedResource.pData);
-	vertexShaderObjectConstants->World = worldMatrix;
-	vertexShaderObjectConstants->WorldViewProj = worldViewProjMatrix;
-
-	m_immediateContext->Unmap(m_gBufferVertexShaderObjectConstantsBuffer, 0);
-	m_immediateContext->VSSetConstantBuffers(1, 1, &m_gBufferVertexShaderObjectConstantsBuffer);
+	m_gbufferVertexShader->SetPerObjectConstants(m_immediateContext, &vertexShaderObjectConstants, 1u);
 }
 
 void ObjLoaderDemo::SetGBufferPixelShaderConstants(uint materialIndex, uint textureFlags) {
-	// Fill in object constants
-	D3D11_MAPPED_SUBRESOURCE mappedResource;
+	GBufferPixelShaderObjectConstants pixelShaderObjectConstants;
+	pixelShaderObjectConstants.MaterialIndex = materialIndex;
+	pixelShaderObjectConstants.TextureFlags = textureFlags;
 
-	// Lock the constant buffer so it can be written to.
-	HR(m_immediateContext->Map(m_gBufferPixelShaderObjectConstantsBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
-
-	GBufferPixelShaderObjectConstants *pixelShaderObjectConstants = static_cast<GBufferPixelShaderObjectConstants *>(mappedResource.pData);
-	pixelShaderObjectConstants->MaterialIndex = materialIndex;
-	pixelShaderObjectConstants->TextureFlags = textureFlags;
-
-	m_immediateContext->Unmap(m_gBufferPixelShaderObjectConstantsBuffer, 0);
-	m_immediateContext->PSSetConstantBuffers(1, 1, &m_gBufferPixelShaderObjectConstantsBuffer);
+	m_gbufferPixelShader->SetPerObjectConstants(m_immediateContext, &pixelShaderObjectConstants, 1u);
 }
 
 void ObjLoaderDemo::SetNoCullFinalGatherShaderConstants(DirectX::XMMATRIX &projMatrix, DirectX::XMMATRIX &invViewProjMatrix) {
-	// Fill in object constants
-	D3D11_MAPPED_SUBRESOURCE mappedResource;
+	NoCullFinalGatherPixelShaderFrameConstants pixelShaderFrameConstants;
+	pixelShaderFrameConstants.gProjection = projMatrix;
+	pixelShaderFrameConstants.gInvViewProjection = invViewProjMatrix;
+	pixelShaderFrameConstants.gDirectionalLight = m_directionalLight;
+	pixelShaderFrameConstants.gEyePosition = m_camera.GetCameraPosition();
+	pixelShaderFrameConstants.gNumPointLightsToDraw = m_numPointLightsToDraw;
+	pixelShaderFrameConstants.gNumSpotLightsToDraw = m_numSpotLightsToDraw;
 
-	// Lock the constant buffer so it can be written to.
-	HR(m_immediateContext->Map(m_noCullFinalGatherPixelShaderConstantsBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
-
-	NoCullFinalGatherPixelShaderFrameConstants *pixelShaderFrameConstants = static_cast<NoCullFinalGatherPixelShaderFrameConstants *>(mappedResource.pData);
-	pixelShaderFrameConstants->gProjection = projMatrix;
-	pixelShaderFrameConstants->gInvViewProjection = invViewProjMatrix;
-	pixelShaderFrameConstants->gDirectionalLight = m_directionalLight;
-	pixelShaderFrameConstants->gEyePosition = m_camera.GetCameraPosition();
-	pixelShaderFrameConstants->gNumPointLightsToDraw = m_numPointLightsToDraw;
-	pixelShaderFrameConstants->gNumSpotLightsToDraw = m_numSpotLightsToDraw;
-
-	m_immediateContext->Unmap(m_noCullFinalGatherPixelShaderConstantsBuffer, 0);
-	m_immediateContext->PSSetConstantBuffers(0, 1, &m_noCullFinalGatherPixelShaderConstantsBuffer);
+	m_noCullFinalGatherPixelShader->SetPerFrameConstants(m_immediateContext, &pixelShaderFrameConstants, 0u);
 }
 
 void ObjLoaderDemo::SetLightBuffers() {
@@ -407,8 +372,8 @@ void ObjLoaderDemo::RenderDebugGeometry() {
 		m_immediateContext->RSSetState(m_rasterizerStates.BackFaceCull());
 
 		// Set the vertex and pixel shaders that will be used to render this triangle.
-		m_immediateContext->VSSetShader(m_debugObjectVertexShader, nullptr, 0);
-		m_immediateContext->PSSetShader(m_debugObjectPixelShader, nullptr, 0);
+		m_debugObjectVertexShader->BindToPipeline(m_immediateContext);
+		m_debugObjectPixelShader->BindToPipeline(m_immediateContext);
 
 		m_immediateContext->IASetInputLayout(m_debugObjectInputLayout);
 		m_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -428,9 +393,8 @@ void ObjLoaderDemo::RenderDebugGeometry() {
 		m_immediateContext->IASetInputLayout(nullptr);
 		m_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-		m_immediateContext->VSSetShader(m_transformedFullscreenTriangleVertexShader, nullptr, 0);
-		m_immediateContext->GSSetShader(0, 0, 0);
-		m_immediateContext->PSSetShader(m_renderGbuffersPixelShader, nullptr, 0);
+		m_transformedFullscreenTriangleVertexShader->BindToPipeline(m_immediateContext);
+		m_renderGbuffersPixelShader->BindToPipeline(m_immediateContext);
 
 		m_immediateContext->IASetVertexBuffers(0, 0, 0, 0, 0);
 		m_immediateContext->IASetIndexBuffer(0, DXGI_FORMAT_R32_UINT, 0);
@@ -445,17 +409,11 @@ void ObjLoaderDemo::RenderDebugGeometry() {
 		                                     DirectX::XMFLOAT2(0.5f, 0.0f)};
 
 		for (uint i = 0; i < 6; ++i) {
-			D3D11_MAPPED_SUBRESOURCE mappedResource;
+			TransformedFullScreenTriangleVertexShaderConstants vertexShaderConstantsBuffer;
+			vertexShaderConstantsBuffer.gClipTranslation = translations[i];
+			vertexShaderConstantsBuffer.gClipScale = 0.25f;
 
-			// Lock the constant buffer so it can be written to.
-			HR(m_immediateContext->Map(m_transformedFullscreenTriangleVertexShaderConstantsBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
-
-			TransformedFullScreenTriangleVertexShaderConstants *vertexShaderConstantsBuffer = static_cast<TransformedFullScreenTriangleVertexShaderConstants *>(mappedResource.pData);
-			vertexShaderConstantsBuffer->gClipTranslation = translations[i];
-			vertexShaderConstantsBuffer->gClipScale = 0.25f;
-
-			m_immediateContext->Unmap(m_transformedFullscreenTriangleVertexShaderConstantsBuffer, 0);
-			m_immediateContext->VSSetConstantBuffers(1, 1, &m_transformedFullscreenTriangleVertexShaderConstantsBuffer);
+			m_transformedFullscreenTriangleVertexShader->SetPerObjectConstants(m_immediateContext, &vertexShaderConstantsBuffer, 1u);
 
 			SetRenderGBuffersPixelShaderConstants(projectionMatrix, invViewProj, i);
 
@@ -493,18 +451,12 @@ void ObjLoaderDemo::RenderDebugGeometry() {
 }
 
 void ObjLoaderDemo::SetRenderGBuffersPixelShaderConstants(DirectX::XMMATRIX &projMatrix, DirectX::XMMATRIX &invViewProjMatrix, uint gBufferId) {
-	// Fill in object constants
-	D3D11_MAPPED_SUBRESOURCE mappedResource;
+	RenderGBuffersPixelShaderConstants pixelShaderConstantsBuffer;
+	pixelShaderConstantsBuffer.gProj = DirectX::XMMatrixTranspose(projMatrix);
+	pixelShaderConstantsBuffer.gInvViewProjection = DirectX::XMMatrixTranspose(invViewProjMatrix);
+	pixelShaderConstantsBuffer.gGBufferIndex = gBufferId;
 
-	HR(m_immediateContext->Map(m_renderGbuffersPixelShaderConstantsBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
-
-	RenderGBuffersPixelShaderConstants *pixelShaderConstantsBuffer = static_cast<RenderGBuffersPixelShaderConstants *>(mappedResource.pData);
-	pixelShaderConstantsBuffer->gProj = DirectX::XMMatrixTranspose(projMatrix);
-	pixelShaderConstantsBuffer->gInvViewProjection = DirectX::XMMatrixTranspose(invViewProjMatrix);
-	pixelShaderConstantsBuffer->gGBufferIndex = gBufferId;
-
-	m_immediateContext->Unmap(m_renderGbuffersPixelShaderConstantsBuffer, 0);
-	m_immediateContext->PSSetConstantBuffers(0, 1, &m_renderGbuffersPixelShaderConstantsBuffer);
+	m_renderGbuffersPixelShader->SetPerFrameConstants(m_immediateContext, &pixelShaderConstantsBuffer, 0u);
 }
 
 void ObjLoaderDemo::RenderHUD() {

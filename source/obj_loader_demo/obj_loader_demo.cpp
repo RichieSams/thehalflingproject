@@ -44,13 +44,6 @@ ObjLoaderDemo::ObjLoaderDemo(HINSTANCE hinstance)
 	  m_depthStencilBuffer(nullptr),
 	  m_gBufferInputLayout(nullptr),
 	  m_debugObjectInputLayout(nullptr),
-	  m_forwardPixelShaderFrameConstantsBuffer(nullptr),
-	  m_forwardPixelShaderObjectConstantsBuffer(nullptr),
-	  m_gBufferVertexShaderObjectConstantsBuffer(nullptr),
-	  m_gBufferPixelShaderObjectConstantsBuffer(nullptr),
-	  m_noCullFinalGatherPixelShaderConstantsBuffer(nullptr),
-	  m_transformedFullscreenTriangleVertexShaderConstantsBuffer(nullptr),
-	  m_renderGbuffersPixelShaderConstantsBuffer(nullptr),
 	  m_pointLightBuffer(nullptr),
 	  m_spotLightBuffer(nullptr),
 	  m_gbufferVertexShader(nullptr),
@@ -65,24 +58,17 @@ ObjLoaderDemo::ObjLoaderDemo(HINSTANCE hinstance)
 
 void ObjLoaderDemo::Shutdown() {
 	// Release in the opposite order we initialized in
-	ReleaseCOM(m_forwardPixelShaderFrameConstantsBuffer);
-	ReleaseCOM(m_forwardPixelShaderObjectConstantsBuffer);
-	ReleaseCOM(m_gBufferVertexShaderObjectConstantsBuffer);
-	ReleaseCOM(m_gBufferPixelShaderObjectConstantsBuffer);
-	ReleaseCOM(m_noCullFinalGatherPixelShaderConstantsBuffer);
-	ReleaseCOM(m_transformedFullscreenTriangleVertexShaderConstantsBuffer);
-	ReleaseCOM(m_renderGbuffersPixelShaderConstantsBuffer);
 	delete m_pointLightBuffer;
 	delete m_spotLightBuffer;
 	delete m_frameMaterialListBuffer;
-	ReleaseCOM(m_gbufferVertexShader);
-	ReleaseCOM(m_gbufferPixelShader);
-	ReleaseCOM(m_fullscreenTriangleVertexShader);
-	ReleaseCOM(m_noCullFinalGatherPixelShader);
-	ReleaseCOM(m_debugObjectVertexShader);
-	ReleaseCOM(m_debugObjectPixelShader);
-	ReleaseCOM(m_transformedFullscreenTriangleVertexShader);
-	ReleaseCOM(m_renderGbuffersPixelShader);
+	delete(m_gbufferVertexShader);
+	delete(m_gbufferPixelShader);
+	delete(m_fullscreenTriangleVertexShader);
+	delete(m_noCullFinalGatherPixelShader);
+	delete(m_debugObjectVertexShader);
+	delete(m_debugObjectPixelShader);
+	delete(m_transformedFullscreenTriangleVertexShader);
+	delete(m_renderGbuffersPixelShader);
 	ReleaseCOM(m_gBufferInputLayout);
 	ReleaseCOM(m_debugObjectInputLayout);
 

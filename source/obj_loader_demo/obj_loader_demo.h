@@ -9,6 +9,8 @@
 
 #include "halfling/halfling_engine.h"
 
+#include "obj_loader_demo/shader_constants.h"
+
 #include "common/vector.h"
 #include "common/camera.h"
 #include "common/texture_manager.h"
@@ -23,6 +25,7 @@
 #include "common/lights.h"
 #include "common/light_animator.h"
 #include "common/allocator_aligned16.h"
+#include "common/shader.h"
 
 #include <vector>
 #include <AntTweakBar.h>
@@ -182,24 +185,16 @@ private:
 	TwBar *m_settingsBar;
 
 	// Shaders
-	ID3D11VertexShader *m_forwardVertexShader;
-	ID3D11PixelShader *m_forwardPixelShader;
-	ID3D11VertexShader *m_gbufferVertexShader;
-	ID3D11PixelShader *m_gbufferPixelShader;
-	ID3D11VertexShader *m_fullscreenTriangleVertexShader;
-	ID3D11PixelShader *m_noCullFinalGatherPixelShader;
-	ID3D11VertexShader *m_debugObjectVertexShader;
-	ID3D11PixelShader *m_debugObjectPixelShader;
-	ID3D11VertexShader *m_transformedFullscreenTriangleVertexShader;
-	ID3D11PixelShader *m_renderGbuffersPixelShader;
-
-	ID3D11Buffer *m_forwardPixelShaderFrameConstantsBuffer;
-	ID3D11Buffer *m_forwardPixelShaderObjectConstantsBuffer;
-	ID3D11Buffer *m_gBufferVertexShaderObjectConstantsBuffer;
-	ID3D11Buffer *m_gBufferPixelShaderObjectConstantsBuffer;
-	ID3D11Buffer *m_noCullFinalGatherPixelShaderConstantsBuffer;
-	ID3D11Buffer *m_transformedFullscreenTriangleVertexShaderConstantsBuffer;
-	ID3D11Buffer *m_renderGbuffersPixelShaderConstantsBuffer;
+	Common::VertexShader<> *m_forwardVertexShader;
+	Common::PixelShader<ForwardPixelShaderFrameConstants, ForwardPixelShaderObjectConstants> *m_forwardPixelShader;
+	Common::VertexShader<Common::DefaultShaderConstantType, GBufferVertexShaderObjectConstants> *m_gbufferVertexShader;
+	Common::PixelShader<Common::DefaultShaderConstantType, GBufferPixelShaderObjectConstants> *m_gbufferPixelShader;
+	Common::VertexShader<> *m_fullscreenTriangleVertexShader;
+	Common::PixelShader<NoCullFinalGatherPixelShaderFrameConstants, Common::DefaultShaderConstantType> *m_noCullFinalGatherPixelShader;
+	Common::VertexShader<> *m_debugObjectVertexShader;
+	Common::PixelShader<> *m_debugObjectPixelShader;
+	Common::VertexShader<Common::DefaultShaderConstantType, TransformedFullScreenTriangleVertexShaderConstants> *m_transformedFullscreenTriangleVertexShader;
+	Common::PixelShader<RenderGBuffersPixelShaderConstants, Common::DefaultShaderConstantType> *m_renderGbuffersPixelShader;
 
 	// We assume there is only one directional light. Therefore, it is stored in a cbuffer
 	Common::StructuredBuffer<Common::PointLight> *m_pointLightBuffer;
@@ -239,7 +234,6 @@ private:
 	void LoadSceneJson();
 	void InitTweakBar();
 	void LoadShaders();
-	void CreateShaderBuffers();
 	void BuildGeometryBuffers();
 	void CreateLights(const DirectX::XMFLOAT3 &sceneSizeMin, const DirectX::XMFLOAT3 &sceneSizeMax);
 

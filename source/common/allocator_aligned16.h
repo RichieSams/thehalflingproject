@@ -27,21 +27,22 @@
 
 namespace Common {
 
-template <typename T> class Allocator16Aligned {
+template <typename T> 
+class Allocator16Aligned {
 public:
-	typedef T * pointer;
-	typedef const T * const_pointer;
-	typedef T& reference;
-	typedef const T& const_reference;
+	typedef T *pointer;
+	typedef const T *const_pointer;
+	typedef T &reference;
+	typedef const T &const_reference;
 	typedef T value_type;
 	typedef size_t size_type;
 	typedef ptrdiff_t difference_type;
 
-	T *address(T& r) const {
+	T *address(T &r) const {
 		return &r;
 	}
 
-	const T *address(const T& s) const {
+	const T *address(const T &s) const {
 		return &s;
 	}
 
@@ -53,7 +54,8 @@ public:
 
 
 	// The following must be the same for all allocators.
-	template <typename U> struct rebind {
+	template <typename U> 
+	struct rebind {
 		typedef Allocator16Aligned<U> other;
 	};
 
@@ -67,7 +69,7 @@ public:
 		new (pv)T(t);
 	}
 
-	void destroy(T * const p) const {
+	void destroy(T *const p) const {
 		p->~T();
 	}
 
@@ -105,7 +107,7 @@ public:
 			throw std::length_error("Mallocator<T>::allocate() - Integer overflow.");
 		}
 
-		void * const pv = _aligned_malloc(n * sizeof(T), 16);
+		void *const pv = _aligned_malloc(n * sizeof(T), 16);
 
 		// Allocators should throw std::bad_alloc in the case of memory allocation failure.
 		if (pv == NULL) {
@@ -115,7 +117,7 @@ public:
 		return static_cast<T *>(pv);
 	}
 
-	void deallocate(T * const p, const size_t n) const {
+	void deallocate(T *const p, const size_t n) const {
 		_aligned_free(p);
 	}
 
@@ -133,7 +135,7 @@ private:
 	// "assignment operator could not be generated because a
 	// base class assignment operator is inaccessible" within
 	// the STL headers, but that warning is useless.
-	Allocator16Aligned& operator=(const Allocator16Aligned&);
+	Allocator16Aligned &operator=(const Allocator16Aligned &);
 };
 
 } // End of namespace Common

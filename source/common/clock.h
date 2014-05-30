@@ -45,6 +45,12 @@ public:
 	 */
 	void Stop();
 
+	/**
+	 * Returns the total time that has passed since the Clock was started. This subtracts
+	 * off any time when the Clock was stopped.
+	 *
+	 * @return    The total time the Clock has been running
+	 */
 	double TotalTime() const;
 
 private:

@@ -66,10 +66,10 @@ void SpriteRenderer::Initialize(ID3D11Device *device) {
 	};
 
 	// Load the shaders
-	HR(Common::LoadVertexShader("sprite_vertex_shader.cso", device, &m_vertexShader, &m_inputLayout, layout, 2));
-	HR(Common::LoadVertexShader("sprite_instanced_vertex_shader.cso", device, &m_vertexShaderInstanced, &m_inputLayoutInstanced, layoutInstanced, 8));
-	HR(Common::LoadPixelShader("sprite_pixel_shader.cso", device, &m_pixelShader));
-	HR(Common::LoadPixelShader("sprite_sampled_pixel_shader.cso", device, &m_sampledPixelShader));
+	HR(Common::LoadVertexShader(L"sprite_vertex_shader.cso", device, &m_vertexShader, &m_inputLayout, layout, 2));
+	HR(Common::LoadVertexShader(L"sprite_instanced_vertex_shader.cso", device, &m_vertexShaderInstanced, &m_inputLayoutInstanced, layoutInstanced, 8));
+	HR(Common::LoadPixelShader(L"sprite_pixel_shader.cso", device, &m_pixelShader));
+	HR(Common::LoadPixelShader(L"sprite_sampled_pixel_shader.cso", device, &m_sampledPixelShader));
 
 	// Create the vertex buffer
 	SpriteVertex verts[] = {

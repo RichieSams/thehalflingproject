@@ -13,8 +13,8 @@
  */
 
 
-#ifndef COMMON_ALLOCATOR_ALIGNED16_H
-#define COMMON_ALLOCATOR_ALIGNED16_H
+#ifndef COMMON_ALLOCATOR_16_BYTE_ALIGNED_H
+#define COMMON_ALLOCATOR_16_BYTE_ALIGNED_H
 
 #include <stddef.h>  // Required for size_t and ptrdiff_t and NULL
 #include <new>       // Required for placement new and std::bad_alloc
@@ -28,7 +28,7 @@
 namespace Common {
 
 template <typename T> 
-class Allocator16Aligned {
+class Allocator16ByteAligned {
 public:
 	typedef T *pointer;
 	typedef const T *const_pointer;
@@ -56,10 +56,10 @@ public:
 	// The following must be the same for all allocators.
 	template <typename U> 
 	struct rebind {
-		typedef Allocator16Aligned<U> other;
+		typedef Allocator16ByteAligned<U> other;
 	};
 
-	bool operator!=(const Allocator16Aligned &other) const {
+	bool operator!=(const Allocator16ByteAligned &other) const {
 		return !(*this == other);
 	}
 
@@ -77,16 +77,16 @@ public:
 	// Returns true if and only if storage allocated from *this
 	// can be deallocated from other, and vice versa.
 	// Always returns true for stateless allocators.
-	bool operator==(const Allocator16Aligned& other) const {
+	bool operator==(const Allocator16ByteAligned& other) const {
 		return true;
 	}
 
 	// Default constructor, copy constructor, rebinding constructor, and destructor.
 	// Empty for stateless allocators.
-	Allocator16Aligned() {}
-	Allocator16Aligned(const Allocator16Aligned &) {}
-	template <typename U> Allocator16Aligned(const Allocator16Aligned<U> &) {}
-	~Allocator16Aligned() {}
+	Allocator16ByteAligned() {}
+	Allocator16ByteAligned(const Allocator16ByteAligned &) {}
+	template <typename U> Allocator16ByteAligned(const Allocator16ByteAligned<U> &) {}
+	~Allocator16ByteAligned() {}
 
 	// The following will be different for each allocator.
 	T *allocate(const size_t n) const {
@@ -135,7 +135,7 @@ private:
 	// "assignment operator could not be generated because a
 	// base class assignment operator is inaccessible" within
 	// the STL headers, but that warning is useless.
-	Allocator16Aligned &operator=(const Allocator16Aligned &);
+	Allocator16ByteAligned &operator=(const Allocator16ByteAligned &);
 };
 
 } // End of namespace Common

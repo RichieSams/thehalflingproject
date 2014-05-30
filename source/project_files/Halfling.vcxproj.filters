@@ -197,10 +197,10 @@
     <ClInclude Include="..\common\model_manager.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\allocator_aligned16.h">
+    <ClInclude Include="..\common\shader.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\shader.h">
+    <ClInclude Include="..\common\allocator_16_byte_aligned.h">
       <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>

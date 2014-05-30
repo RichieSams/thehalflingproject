@@ -35,13 +35,6 @@
 
 namespace ObjLoaderDemo {
 
-struct Vertex {
-	DirectX::XMFLOAT3 pos;
-	DirectX::XMFLOAT3 normal;
-	DirectX::XMFLOAT2 texCoord;
-	DirectX::XMFLOAT3 tangent;
-};
-
 struct DebugObjectVertex {
 	DirectX::XMFLOAT3 pos;
 };
@@ -49,48 +42,6 @@ struct DebugObjectVertex {
 struct DebugObjectInstance {
 	DirectX::XMMATRIX worldViewProj;
 	DirectX::XMFLOAT4 color;
-};
-
-struct FullScreenTriangleVertex {
-	DirectX::XMFLOAT3 pos;
-};
-
-struct SceneLoaderModelSubset {
-	uint VertexStart;
-	uint VertexCount;
-
-	uint IndexStart;
-	uint IndexCount;
-
-	DirectX::XMFLOAT4 Ambient; // w = SpecularIntensity
-	DirectX::XMFLOAT4 Diffuse;
-	DirectX::XMFLOAT4 Specular; // w = SpecPower
-
-	std::wstring DiffuseMapFile;
-	std::wstring AmbientMapFile;
-	std::wstring SpecularColorMapFile;
-	std::wstring SpecularHighlightMapFile;
-	std::wstring AlphaMapFile;
-	std::wstring BumpMapFile;
-	
-	DirectX::XMFLOAT3 AABBMin;
-	DirectX::XMFLOAT3 AABBMax;
-};
-
-struct SceneLoaderModel {
-	Vertex *Vertices;
-	uint *Indices;
-	SceneLoaderModelSubset *Subsets;
-
-	uint VertexCount;
-	uint IndexCount;
-	uint SubsetCount;
-};
-
-struct WorldViewProjection {
-	DirectX::XMMATRIX world;
-	DirectX::XMMATRIX view;
-	DirectX::XMMATRIX projection;
 };
 
 enum ShadingType {

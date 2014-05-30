@@ -12,6 +12,11 @@
 
 namespace Common {
 
+/** 
+ * A class for emulating a camera looking into the scene. 
+ * It stores the view matrix and projection matrix for use by the renderer
+ * and provides methods for moving the camera around the scene
+ */
 class Camera {
 public:
 	Camera() 

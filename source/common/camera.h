@@ -53,7 +53,6 @@ public:
 	void Zoom(float distance);
 	void Pan(float dx, float dy);
 
-	void UpdateViewMatrix();
 	void UpdateProjectionMatrix(float clientWidth, float clientHeight, float nearClip, float farClip);
 
 	inline DirectX::XMFLOAT3 GetCameraPosition() const { 
@@ -77,6 +76,7 @@ public:
 	inline DirectX::XMMATRIX GetProj() { return m_proj; }
 
 private:
+	void UpdateViewMatrix();
 	inline DirectX::XMVECTOR ToCartesian() const {
 		float x = m_radius * sinf(m_phi) * sinf(m_theta);
 		float y = m_radius * cosf(m_phi);

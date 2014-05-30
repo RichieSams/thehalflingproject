@@ -23,6 +23,7 @@
     <ClCompile Include="..\common\model.cpp" />
     <ClCompile Include="..\common\model_manager.cpp" />
     <ClCompile Include="..\common\profiler.cpp" />
+    <ClCompile Include="..\common\shader.cpp" />
     <ClCompile Include="..\common\sprite_font.cpp" />
     <ClCompile Include="..\common\sprite_renderer.cpp" />
     <ClCompile Include="..\common\texture2d.cpp" />
@@ -57,6 +58,7 @@
     <ClInclude Include="..\common\model_manager.h" />
     <ClInclude Include="..\common\profiler.h" />
     <ClInclude Include="..\common\rect.h" />
+    <ClInclude Include="..\common\shader.h" />
     <ClInclude Include="..\common\sprite_font.h" />
     <ClInclude Include="..\common\sprite_renderer.h" />
     <ClInclude Include="..\common\string_util.h" />

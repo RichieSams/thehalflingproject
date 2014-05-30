@@ -23,7 +23,7 @@ HRESULT LoadVertexShader(const wchar *fileName, ID3D11Device *device, ID3D11Vert
 		return result;
 	}
 
-	if (numElements != 0) {
+	if (inputLayout != nullptr) {
 		// Create the vertex input layout.
 		result = device->CreateInputLayout(vertexDesc, numElements, fileBuffer, bytesRead, inputLayout);
 	}

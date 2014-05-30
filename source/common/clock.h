@@ -12,16 +12,38 @@
 
 namespace Common {
 
+/**
+ * A class for tracking the passage of time
+ */
 class Clock {
 public:
 	Clock();
 
+	/**
+	 * Returns the time (in ms) that has passed between the last two calls to Tick()
+	 *
+	 * Tick();            --+
+	 * // Stuff             +-- delta time 
+	 * Tick();            --+
+	 *
+	 * @return    The delta time in ms 
+	 */
 	double DeltaTime() const { return m_deltaTime; }
 
+	/**
+	 * Call this once every game loop. This will calculate and update m_deltaTime
+	 */
 	void Tick();
+	/**
+	 * Starts the clock. If the clock is not started, DeltaTime() will be zero.
+	 *
+	 * @return        
+	 */
 	void Start();
+	/**
+	 * Stops the clock. While the clock is stopped, DeltaTime() will be zero.
+	 */
 	void Stop();
-	void Reset();
 
 	double TotalTime() const;
 

@@ -71,16 +71,6 @@ void Clock::Stop() {
 	}
 }
 
-void Clock::Reset() {
-	int64 currTime;
-	QueryPerformanceCounter((LARGE_INTEGER *)&currTime);
-
-	m_baseTime = currTime;
-	m_prevTime = currTime;
-	m_stopTime = 0;
-	m_isStopped = false;
-}
-
 double Clock::TotalTime() const {
 	if (m_isStopped) {
 		return ((m_stopTime - m_pausedTime) - m_baseTime) * m_milliSecondsPerCount;

@@ -18,6 +18,15 @@
                  0.0, 0.0, 0.0, 1.0]
                 // Append more instances here
             ]
+        },
+        {
+            "FilePath" :  "cube.hmf",
+            "Instances" :  [
+                [100.0, 0.0, 0.0, 0.0,
+                 0.0, 100.0, 0.0, 0.0,
+                 0.0, 0.0, 100.0, 0.0,
+                 0.0, 0.0, 0.0, 1.0]
+            ]
         }
         // Append more models here
     ],

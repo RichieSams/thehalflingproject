@@ -98,6 +98,12 @@ public:
 	 */
 	virtual LRESULT MsgProc(HWND hwnd, uint msg, WPARAM wParam, LPARAM lParam);
 
+#ifdef _DEBUG
+	inline void CreateDebugInterface(ID3D11Debug **debugInterface) {
+		m_device->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void**>(debugInterface));
+	}
+#endif
+
 protected:
 	/**
 	 * Called every time the window is resized

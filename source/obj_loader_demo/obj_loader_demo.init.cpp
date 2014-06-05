@@ -237,7 +237,7 @@ void LoadScene(std::atomic<bool> *sceneIsLoaded,
 	// WARNING: Do not parallelize this code until you make TextureManager and ModelManager thread safe
 	for (auto iter = modelsToLoad->begin(); iter != modelsToLoad->end(); ++iter) {
 		std::wstring wideFilePath(iter->FilePath.begin(), iter->FilePath.end());
-		Common::Model *newModel = Common::HalflingModelFile::Load(device, textureManager, wideFilePath.c_str());
+		Common::Model *newModel = modelManager->GetModel(device, textureManager, wideFilePath.c_str());
 		
 		if (iter->Instances->size() > 1) {
 			instancedModelList->emplace_back(newModel, iter->Instances);

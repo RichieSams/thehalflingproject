@@ -31,7 +31,7 @@ void ObjLoaderDemo::DrawFrame(double deltaTime) {
 		// Clear the render target view
 		m_immediateContext->ClearRenderTargetView(m_renderTargetView, DirectX::Colors::LightGray);
 
-		m_spriteRenderer.Begin(m_immediateContext);
+		m_spriteRenderer.Begin(m_immediateContext, Common::SpriteRenderer::Point);
 		DirectX::XMFLOAT4X4 transform {2.0f, 0.0f, 0.0f, 0.0f,
 		                               0.0f, 2.0f, 0.0f, 0.0f,
 		                               0.0f, 0.0f, 2.0f, 0.0f,
@@ -399,7 +399,7 @@ void ObjLoaderDemo::RenderDebugGeometry() {
 		}
 
 		// Render labels for each GBuffer part
-		m_spriteRenderer.Begin(m_immediateContext);
+		m_spriteRenderer.Begin(m_immediateContext, Common::SpriteRenderer::Point);
 
 		float quarterWidth = (float)m_clientWidth / 4.0f;
 		float quarterHeight = (float)m_clientHeight / 4.0f;

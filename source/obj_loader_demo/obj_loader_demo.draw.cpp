@@ -209,7 +209,8 @@ void ObjLoaderDemo::NoCullDeferredRenderingPass() {
 	}
 
 	// Final gather pass
-	m_immediateContext->OMSetRenderTargets(1, &m_renderTargetView, nullptr);
+	ID3D11RenderTargetView *targets[3] = {m_renderTargetView, nullptr, nullptr};
+	m_immediateContext->OMSetRenderTargets(3, targets, nullptr);
 	m_immediateContext->ClearRenderTargetView(m_renderTargetView, DirectX::Colors::LightGray);
 
 	// Full screen triangle setup
@@ -252,6 +253,10 @@ void ObjLoaderDemo::NoCullDeferredRenderingPass() {
 	m_immediateContext->IASetIndexBuffer(0, DXGI_FORMAT_R32_UINT, 0);
 
 	m_immediateContext->Draw(3, 0);
+
+	// Clear gBuffer resource bindings so they can be used as render targets next frame
+	ID3D11ShaderResourceView *views[4] = {nullptr, nullptr, nullptr, nullptr};
+	m_immediateContext->PSSetShaderResources(0, 4, views);
 }
 
 void ObjLoaderDemo::SetGBufferVertexShaderConstants(DirectX::XMMATRIX &worldMatrix, DirectX::XMMATRIX &worldViewProjMatrix) {

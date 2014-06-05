@@ -31,7 +31,8 @@ SpriteFont::SpriteFont()
 }
 
 SpriteFont::~SpriteFont() {
-
+	ReleaseCOM(m_SRV);
+	ReleaseCOM(m_texture);
 }
 
 void SpriteFont::Initialize(const wchar *fontName, float fontSize, UINT fontStyle, bool antiAliased, ID3D11Device *device) {

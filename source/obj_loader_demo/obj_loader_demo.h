@@ -91,7 +91,6 @@ private:
 	std::vector<std::pair<Common::Model *, DirectX::XMMATRIX>, Common::Allocator16ByteAligned<std::pair<Common::Model *, DirectX::XMMATRIX> > > m_models;
 	std::vector<std::pair<Common::Model *, std::vector<DirectX::XMMATRIX, Common::Allocator16ByteAligned<DirectX::XMMATRIX> > *> > m_instancedModels;
 
-	std::vector<Common::BlinnPhongMaterial> m_frameMaterialList;
 
 	std::vector<ModelToLoad> m_modelsToLoad;
 	std::atomic<bool> m_sceneLoaded;
@@ -203,14 +202,12 @@ private:
 	void SetForwardPixelShaderFrameConstants();
 	void SetForwardPixelShaderObjectConstants(const Common::BlinnPhongMaterial &material, uint textureFlags);
 	void SetGBufferVertexShaderConstants(DirectX::XMMATRIX &worldMatrix, DirectX::XMMATRIX &worldViewProjMatrix);
-	void SetGBufferPixelShaderConstants(uint materialIndex, uint textureFlags);
+	void SetGBufferPixelShaderConstants(const Common::BlinnPhongMaterial &material, uint textureFlags);
 	void SetNoCullFinalGatherShaderConstants(DirectX::XMMATRIX &projMatrix, DirectX::XMMATRIX &invViewProjMatrix);
 	void SetRenderGBuffersPixelShaderConstants(DirectX::XMMATRIX &projMatrix, DirectX::XMMATRIX &invViewProjMatrix, uint gBufferId);
 
 	/** Maps the point light StructuredBuffer and the spot light Structured buffer to the pixel shader */
 	void SetLightBuffers();
-	/** Maps a list of Materials used in the frame to the pixel shader. This is only used for deferred shading */
-	void SetMaterialList();
 };
 
 } // End of namespace ObjLoaderDemo

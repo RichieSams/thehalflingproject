@@ -129,7 +129,6 @@ Common::Model *Common::HalflingModelFile::Load(ID3D11Device *device, Common::Tex
 		modelSubsets[i].AABB_min = subsets[i].AABB_min;
 		modelSubsets[i].AABB_max = subsets[i].AABB_max;
 
-		modelSubsets[i].Material.Ambient = DirectX::XMFLOAT4(subsets[i].MatAmbientColor.x, subsets[i].MatAmbientColor.y, subsets[i].MatAmbientColor.z, subsets[i].MatSpecIntensity);
 		modelSubsets[i].Material.Diffuse = subsets[i].MatDiffuseColor;
 		modelSubsets[i].Material.Specular = DirectX::XMFLOAT4(subsets[i].MatSpecColor.x, subsets[i].MatSpecColor.y, subsets[i].MatSpecColor.z, subsets[i].MatSpecPower);
 

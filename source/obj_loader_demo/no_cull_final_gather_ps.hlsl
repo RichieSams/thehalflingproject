@@ -18,10 +18,10 @@ cbuffer cbPerFrame : register(b0) {
 	uint gNumSpotLightsToDraw : packoffset(c13.y);
 }
 
-Texture2DMS<float3> gGBufferAlbedo       : register(t0);
-Texture2DMS<float2> gGBufferNormal       : register(t1);
-Texture2DMS<uint> gGBufferMaterialId    : register(t2);
-Texture2DMS<float> gGBufferDepth         : register(t3);
+Texture2DMS<float3> gBufferDiffuse         : register(t0);
+Texture2DMS<float4> gBufferSpecAndPower    : register(t1);
+Texture2DMS<float2> gGBufferNormal         : register(t2);
+Texture2DMS<float> gGBufferDepth           : register(t3);
 
 StructuredBuffer<PointLight> gPointLights : register(t4);
 StructuredBuffer<SpotLight> gSpotLights : register(t5);
@@ -42,43 +42,42 @@ float4 NoCullFinalGatherPS(CalculatedTrianglePixelIn input) : SV_TARGET {
 	if (zw == 0.0f)
 		discard;
 
-	float3 positionWS = PositionFromDepth(zw, pixelCoord, gbufferDim, gInvViewProjection);
+	SurfaceProperties surfProps;
+	surfProps.position = PositionFromDepth(zw, pixelCoord, gbufferDim, gInvViewProjection);
 
-	// Sample from the Albedo-Specular Power GBuffer
-	float4 albedo = float4(gGBufferAlbedo.Load(pixelCoord, 0).xyz, 1.0f);
-	BlinnPhongMaterial material = gMaterialList[gGBufferMaterialId.Load(pixelCoord, 0).x];
+	// Sample from the diffuse albedo GBuffer
+	surfProps.diffuseAlbedo = float4(gBufferDiffuse.Load(pixelCoord, 0).xyz, 1.0f);
 
-	// Sample from the Normal-Specular Intensity GBuffer
+	// Sample from the specular albedo GBuffer
+	surfProps.specAlbedoAndPower = gBufferSpecAndPower.Load(pixelCoord, 0);
+	// Decode the specular power
+	surfProps.specAlbedoAndPower.w *= MAX_SPEC_POWER;
+
+	// Sample from the Normal GBuffer
 	float2 normalSphericalCoords = gGBufferNormal.Load(pixelCoord, 0).xy;
-	float3 normal = SphericalToCartesian(normalSphericalCoords);
+	surfProps.normal = SphericalToCartesian(normalSphericalCoords);
 
-	float3 toEye = normalize(gEyePosition - positionWS);
+	float3 toEye = normalize(gEyePosition - surfProps.position);
 
 	// Initialize
-	float4 ambient = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	float4 diffuse = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	float4 spec = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
 	// Sum the contribution from each light source
 	uint lightIndex;
 
-	AccumulateBlinnPhongDirectionalLight(material, gDirectionalLight, normal, toEye, ambient, diffuse, spec);
+	AccumulateBlinnPhongDirectionalLight(gDirectionalLight, surfProps, toEye, diffuse, spec);
 
 	for (lightIndex = 0; lightIndex < gNumPointLightsToDraw; ++lightIndex) {
         PointLight light = gPointLights[lightIndex];
-		AccumulateBlinnPhongPointLight(material, light, positionWS, normal, toEye, diffuse, spec);
+		AccumulateBlinnPhongPointLight(light, surfProps, toEye, diffuse, spec);
     }
 
 	for (lightIndex = 0; lightIndex < gNumSpotLightsToDraw; ++lightIndex) {
         SpotLight light = gSpotLights[lightIndex];
-		AccumulateBlinnPhongSpotLight(material, light, positionWS, normal, toEye, diffuse, spec);
+		AccumulateBlinnPhongSpotLight(light, surfProps, toEye, diffuse, spec);
     }
 
 	// Combine
-	float4 litColor = albedo * (ambient + diffuse) + spec;
-
-	// Take alpha from diffuse material
-	litColor.a = material.Diffuse.a;
-
-	return litColor;
+	return diffuse + spec;
 }

@@ -153,9 +153,6 @@ void ObjLoaderDemo::SetForwardPixelShaderObjectConstants(const Common::BlinnPhon
 }
 
 void ObjLoaderDemo::NoCullDeferredRenderingPass() {
-	// Clear the material list
-	m_frameMaterialList.clear();
-
 	// Bind the gbufferRTVs and depth/stencil view to the pipeline.
 	m_immediateContext->OMSetRenderTargets(3, &m_gBufferRTVs[0], m_depthStencilBuffer->GetDepthStencil());
 
@@ -204,9 +201,7 @@ void ObjLoaderDemo::NoCullDeferredRenderingPass() {
 		SetGBufferVertexShaderConstants(worldMatrix, worldViewProjection);
 
 		for (uint j = 0; j < iter->first->GetSubsetCount(); ++j) {
-			m_frameMaterialList.push_back(iter->first->GetSubsetMaterial(j));
-
-			SetGBufferPixelShaderConstants(m_frameMaterialList.size() - 1, iter->first->GetSubsetTextureFlags(j));
+			SetGBufferPixelShaderConstants(iter->first->GetSubsetMaterial(j), iter->first->GetSubsetTextureFlags(j));
 
 			// Draw the models
 			iter->first->DrawSubset(m_immediateContext, j);
@@ -245,9 +240,6 @@ void ObjLoaderDemo::NoCullDeferredRenderingPass() {
 			ID3D11ShaderResourceView *srv = m_spotLightBuffer->GetShaderResource();
 			m_immediateContext->PSSetShaderResources(5, 1, &srv);
 		}
-
-		// Set material list
-		SetMaterialList();
 	} else {
 		m_renderGbuffersPixelShader->BindToPipeline(m_immediateContext);
 
@@ -270,9 +262,9 @@ void ObjLoaderDemo::SetGBufferVertexShaderConstants(DirectX::XMMATRIX &worldMatr
 	m_gbufferVertexShader->SetPerObjectConstants(m_immediateContext, &vertexShaderObjectConstants, 1u);
 }
 
-void ObjLoaderDemo::SetGBufferPixelShaderConstants(uint materialIndex, uint textureFlags) {
+void ObjLoaderDemo::SetGBufferPixelShaderConstants(const Common::BlinnPhongMaterial &material, uint textureFlags) {
 	GBufferPixelShaderObjectConstants pixelShaderObjectConstants;
-	pixelShaderObjectConstants.MaterialIndex = materialIndex;
+	pixelShaderObjectConstants.Material = material;
 	pixelShaderObjectConstants.TextureFlags = textureFlags;
 
 	m_gbufferPixelShader->SetPerObjectConstants(m_immediateContext, &pixelShaderObjectConstants, 1u);
@@ -310,20 +302,6 @@ void ObjLoaderDemo::SetLightBuffers() {
 		}
 		m_spotLightBuffer->Unmap(m_immediateContext);
 	}
-}
-
-void ObjLoaderDemo::SetMaterialList() {
-	uint numMaterials = m_frameMaterialList.size();
-	assert(numMaterials <= kMaxMaterialsPerFrame);
-
-	Common::BlinnPhongMaterial *materialArray = m_frameMaterialListBuffer->MapDiscard(m_immediateContext);
-	for (uint i = 0; i < numMaterials; ++i) {
-		materialArray[i] = m_frameMaterialList[i];
-	}
-	m_frameMaterialListBuffer->Unmap(m_immediateContext);
-
-	ID3D11ShaderResourceView *view = m_frameMaterialListBuffer->GetShaderResource();
-	m_immediateContext->PSSetShaderResources(6, 1, &view);
 }
 
 void ObjLoaderDemo::RenderDebugGeometry() {
@@ -432,7 +410,7 @@ void ObjLoaderDemo::RenderDebugGeometry() {
 		m_spriteRenderer.RenderText(m_timesNewRoman12Font, L"Diffuse Albedo", transform, 0U, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) /* Yellow */);
 
 		transform._41 = quarterWidth;
-		m_spriteRenderer.RenderText(m_timesNewRoman12Font, L"MaterialId", transform, 0U, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) /* Yellow */);
+		m_spriteRenderer.RenderText(m_timesNewRoman12Font, L"Specular Albedo", transform, 0U, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) /* Yellow */);
 
 		transform._41 = 2.0f * quarterWidth;
 		m_spriteRenderer.RenderText(m_timesNewRoman12Font, L"Spherical Coord Normal", transform, 0U, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) /* Yellow */);

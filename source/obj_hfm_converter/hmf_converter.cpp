@@ -166,9 +166,6 @@ bool ConvertToHMF(std::tr2::sys::path &baseDirectory, std::tr2::sys::path &input
 		float value;
 		aiString string;
 
-		if (iniFile.UseMaterialAmbientColor && material->Get(AI_MATKEY_COLOR_AMBIENT, color) == aiReturn_SUCCESS) {
-			subset.MatAmbientColor = DirectX::XMFLOAT3(color.r, color.g, color.b);
-		}
 		if (iniFile.UseMaterialDiffuseColor && material->Get(AI_MATKEY_COLOR_DIFFUSE, color) == aiReturn_SUCCESS) {
 			subset.MatDiffuseColor = DirectX::XMFLOAT4(color.r, color.g, color.b, 1.0f);
 		}
@@ -180,9 +177,6 @@ bool ConvertToHMF(std::tr2::sys::path &baseDirectory, std::tr2::sys::path &input
 		}
 		if (iniFile.UseMaterialSpecPower && material->Get(AI_MATKEY_SHININESS, value) == aiReturn_SUCCESS) {
 			subset.MatSpecPower = value;
-		}
-		if (iniFile.UseMaterialSpecIntensity && material->Get(AI_MATKEY_SHININESS_STRENGTH, value) == aiReturn_SUCCESS) {
-			subset.MatSpecIntensity = value;
 		}
 
 		if (iniFile.UseDiffuseColorMap && material->GetTexture(iniFile.DiffuseColorMapTextureType, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {

@@ -33,10 +33,8 @@ public:
 			  IndexCount(0),
 			  AABB_min(0.0f, 0.0f, 0.0f),
 			  AABB_max(0.0f, 0.0f, 0.0f),
-			  MatAmbientColor(0.0f, 0.0f, 0.0f),
 			  MatDiffuseColor(0.0f, 0.0f, 0.0f, 0.0f),
 			  MatSpecColor(0.0f, 0.0f, 0.0f),
-			  MatSpecIntensity(1.0f),
 			  MatSpecPower(0.0f),
 			  DiffuseColorMapIndex(-1),
 			  SpecColorMapIndex(-1),
@@ -54,10 +52,8 @@ public:
 		DirectX::XMFLOAT3 AABB_min;
 		DirectX::XMFLOAT3 AABB_max;
 
-		DirectX::XMFLOAT3 MatAmbientColor;
 		DirectX::XMFLOAT4 MatDiffuseColor;
 		DirectX::XMFLOAT3 MatSpecColor;
-		float MatSpecIntensity;
 		float MatSpecPower;
 
 		int32 DiffuseColorMapIndex;

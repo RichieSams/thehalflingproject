@@ -7,6 +7,9 @@
 #ifndef OBJ_LOADER_DEMO_TYPES_H
 #define OBJ_LOADER_DEMO_TYPES_H
 
+
+#define MAX_SPEC_POWER 512
+
 struct VertexIn {
 	float3 position  : POSITION;
 	float3 normal    : NORMAL;

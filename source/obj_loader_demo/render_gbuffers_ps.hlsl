@@ -14,10 +14,10 @@ cbuffer cbPerFrame : register(b0) {
 	uint gGBufferIndex;
 }
 
-Texture2DMS<float3> gGBufferAlbedo       : register(t0);
-Texture2DMS<float2> gGBufferNormal       : register(t1);
-Texture2DMS<uint> gGBufferMaterialId    : register(t2);
-Texture2DMS<float> gGBufferDepth         : register(t3);
+Texture2DMS<float3> gBufferDiffuse         : register(t0);
+Texture2DMS<float4> gBufferSpecAndPower    : register(t1);
+Texture2DMS<float2> gGBufferNormal         : register(t2);
+Texture2DMS<float> gGBufferDepth           : register(t3);
 
 float4 RenderGBuffersPS(CalculatedTrianglePixelIn input) : SV_TARGET {
 	float2 gbufferDim;
@@ -29,13 +29,10 @@ float4 RenderGBuffersPS(CalculatedTrianglePixelIn input) : SV_TARGET {
 	[branch]
 	if (gGBufferIndex == 0) {
 		// Render albedo color
-		return float4(gGBufferAlbedo.Load(pixelCoord, 0).xyz, 1.0f);
+		return float4(gBufferDiffuse.Load(pixelCoord, 0).xyz, 1.0f);
 	} else if (gGBufferIndex == 1) {
-		// Render material id
-		uint materialId = gGBufferMaterialId.Load(pixelCoord, 0).x;
-
-		float colorValue = (float)materialId / 1000.0f;
-		return float4(colorValue, colorValue, colorValue, 1.0f);
+		// Render spec color
+		return float4(gBufferSpecAndPower.Load(pixelCoord, 0).xyz, 1.0f);
 	} else if (gGBufferIndex == 2) {
 		// Render Spherical Coord Normal
 		float2 sphericalCoord = gGBufferNormal.Load(pixelCoord, 0).xy;

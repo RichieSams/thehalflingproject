@@ -39,7 +39,7 @@ struct GBufferVertexShaderObjectConstants {
 };
 
 struct GBufferPixelShaderObjectConstants {
-	uint MaterialIndex;
+	Common::BlinnPhongMaterial Material;
 	uint TextureFlags;
 };
 

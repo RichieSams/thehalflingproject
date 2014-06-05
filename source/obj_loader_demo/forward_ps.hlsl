@@ -43,49 +43,57 @@ StructuredBuffer<SpotLight> gSpotLights : register(t9);
 
 
 float4 ForwardPS(ForwardPixelIn input) : SV_TARGET {
+	SurfaceProperties surfProps;
+	surfProps.position = input.positionWorld;
+	
+	// Sample diffuse albedo
+	surfProps.diffuseAlbedo = float4(gMaterial.Diffuse.xyz, 1.0f);
+	[flatten]
+	if ((gTextureFlags & 0x01) == 0x01) {
+		surfProps.diffuseAlbedo *= float4(gDiffuseTexture.Sample(gDiffuseSampler, input.texCoord).xyz, 1.0f);
+	}
+
+	// Sample spec albedo
+	surfProps.specAlbedoAndPower.xyz = gMaterial.Specular.xyz;
+	[flatten]
+	if ((gTextureFlags & 0x02) == 0x02) {
+		surfProps.specAlbedoAndPower.xyz *= gSpecColorTexture.Sample(gSpecColorSampler, input.texCoord).xyz;
+	}
+	surfProps.specAlbedoAndPower.w = gMaterial.Specular.w / MAX_SPEC_POWER;
+
 	// Interpolating can unnormalize
-	float3 cartesianNormal = normalize(input.normal);
+	surfProps.normal = normalize(input.normal);
 
 	[flatten]
 	if ((gTextureFlags & 0x20) == 0x20) {
 		float3 normalMapSample = gNormalTexture.Sample(gNormalSampler, input.texCoord).xyz;
 
-		cartesianNormal = PerturbNormal(cartesianNormal, normalMapSample, input.tangent);
+		surfProps.normal = PerturbNormal(surfProps.normal, normalMapSample, input.tangent);
 	}
 
 	float3 toEye = normalize(gEyePosition - input.positionWorld);
 
 	// Initialize
-	float4 ambient = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	float4 diffuse = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	float4 spec = float4(0.0f, 0.0f, 0.0f, 0.0f);
-
-	// Sample the texture
-	float4 textureColor;
-	[flatten]
-	if (gTextureFlags & 0x01 == 0x01) {
-		textureColor = gDiffuseTexture.Sample(gDiffuseSampler, input.texCoord);
-	} else {
-		textureColor = float4(1.0f, 1.0f, 1.0f, 1.0f);
-	}
 
 	// Sum the contribution from each light source
 	uint lightIndex;
 
-	AccumulateBlinnPhongDirectionalLight(gMaterial, gDirectionalLight, cartesianNormal, toEye, ambient, diffuse, spec);
+	AccumulateBlinnPhongDirectionalLight(gDirectionalLight, surfProps, toEye, diffuse, spec);
 
 	for (lightIndex = 0; lightIndex < gNumPointLightsToDraw; ++lightIndex) {
 		PointLight light = gPointLights[lightIndex];
-		AccumulateBlinnPhongPointLight(gMaterial, light, input.positionWorld, cartesianNormal, toEye, diffuse, spec);
+		AccumulateBlinnPhongPointLight(light, surfProps, toEye, diffuse, spec);
 	}
 
 	for (lightIndex = 0; lightIndex < gNumSpotLightsToDraw; ++lightIndex) {
 		SpotLight light = gSpotLights[lightIndex];
-		AccumulateBlinnPhongSpotLight(gMaterial, light, input.positionWorld, cartesianNormal, toEye, diffuse, spec);
+		AccumulateBlinnPhongSpotLight(light, surfProps, toEye, diffuse, spec);
 	}
 
 	// Combine
-	float4 litColor = textureColor * (ambient + diffuse) + spec;
+	float4 litColor = diffuse + spec;
 
 	// Take alpha from diffuse material
 	litColor.a = gMaterial.Diffuse.a;

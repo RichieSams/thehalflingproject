@@ -12,6 +12,7 @@
 
 #include <d3d11.h>
 
+
 namespace Common {
 
 void SetConstants(ID3D11DeviceContext *context, ID3D11Buffer *buffer, void *data, size_t dataSize, uint slotNumber);

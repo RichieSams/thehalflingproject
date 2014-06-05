@@ -102,9 +102,6 @@ private:
 	static void SetTextureResources(ID3D11DeviceContext *context, ModelSubset &subset);
 
 public:
-	void *operator new(size_t size);
-	void operator delete(void *memory);
-
 	inline uint GetSubsetCount() const { return m_subsetCount; }
 	const Common::BlinnPhongMaterial &GetSubsetMaterial(uint subsetIndex) const;
 	uint GetSubsetTextureFlags(uint subsetIndex) const;

@@ -9,14 +9,6 @@
 
 namespace Common {
 
-void *Model::operator new(size_t size) {
-	return _aligned_malloc(size, 16);
-}
-
-void Model::operator delete(void *memory) {
-	_aligned_free(memory);
-}
-
 const Common::BlinnPhongMaterial &Model::GetSubsetMaterial(uint subsetIndex) const {
 	if (subsetIndex < m_subsetCount) {
 		return m_subsets[subsetIndex].Material;

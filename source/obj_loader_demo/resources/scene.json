@@ -28,17 +28,9 @@
         "Direction" : [-0.57735, -0.57735, -0.57735]
     },
     "PointLights" : [
-        // Create one light with these specific properties
+        // Create 1000 random lights in the area defined by the AABB
         {
-            "Diffuse" : [1.0, 0.0, 0.0],
-            "Specular" : [1.0, 1.0, 1.0],
-            "Position" : [0.0, 100.0, 0.0],
-            "Range" : 200.0,
-            "AttenuationDistanceUNorm" : 0.75
-        },
-        // Create 999 random lights in the area defined by the AABB
-        {
-            "NumberOfLights" : 999,
+            "NumberOfLights" : 1000,
             "AABB_min" : [-500, -500, -500],
             "AABB_max" : [500, 500, 500],
             "RangeRange" : [75.0, 200.0],
@@ -47,20 +39,9 @@
         // Append more point lights here
     ],
     "SpotLights" : [
-        // Create one light with these specific properties
+        // Create 1000 random lights in the area defined by the AABB
         {
-            "Diffuse" : [0.0, 0.0, 1.0],
-            "Specular" : [1.0, 1.0, 1.0],
-            "Position" : [200.0, 100.0, 0.0],
-            "Range" : 200.0,
-            "Direction" : [1.0, 0.0, 0.0],
-            "AttenuationDistanceUNorm" : 0.75,
-            "InnerConeAngle" : 1.570796,
-            "OuterConeAngle" : 1.396263
-        },
-        // Create 999 random lights in the area defined by the AABB
-        {
-            "NumberOfLights" : 999,
+            "NumberOfLights" : 1000,
             "AABB_min" : [-500, -500, -500],
             "AABB_max" : [500, 500, 500],
             "RangeRange" : [75.0, 200.0],

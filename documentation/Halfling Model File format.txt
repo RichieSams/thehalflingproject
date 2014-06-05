@@ -34,8 +34,6 @@ Halfling Model File format             Version 1
 |         Vertex Count                | uint64            | T        | The number of vertices used by the subset (All used vertices must be in the range VertexStart + VertexCount) |
 |         Index Start                 | uint64            | T        | The index to the first index used by the subset                                                              |
 |         Index Count                 | uint64            | T        | The number of indices used by the subset (All used indices must be in the range IndexStart + IndexCount)     |
-|         Material Ambient Color      | float[3]          | T        | The RGB ambient color values of the material                                                                 |
-|         Material Specular Intensity | float             | T        | The Specular Intensity                                                                                       |
 |         Material Diffuse Color      | float[4]          | T        | The RGBA diffuse color values of the material                                                                |
 |         Material Specular Color     | float[3]          | T        | The RGB specular color values of the material                                                                |
 |         Material Specular Power     | float             | T        | The Specular Power                                                                                           |

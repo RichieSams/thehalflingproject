@@ -237,6 +237,9 @@ D3D11_TEXTURE2D_DESC SpriteRenderer::SetPerBatchData(ID3D11ShaderResourceView *t
 		texResource->GetDesc(&desc);
 		perBatch.TextureSize = DirectX::XMFLOAT2(static_cast<float>(desc.Width), static_cast<float>(desc.Height));
 
+		// Cleanup
+		ReleaseCOM(texResource);
+
 		m_context->PSSetShader(m_sampledPixelShader, nullptr, 0);
 	} else {
 		perBatch.TextureSize = DirectX::XMFLOAT2(1.0f, 1.0f);

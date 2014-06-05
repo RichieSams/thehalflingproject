@@ -165,6 +165,9 @@ Common::Model *Common::HalflingModelFile::Load(ID3D11Device *device, Common::Tex
 		}
 	}
 
+	// Cleanup
+	delete[] subsets;
+
 	// Create the model with the read data
 	Common::Model *model = new Common::Model();
 

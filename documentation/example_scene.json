@@ -3,7 +3,7 @@
     "FarClip" : 5000.0,
     // Scales the entire scene by the specified amount
     "SceneScaleFactor" : 1.0,
-    // If the number of instances is less than this number,
+    // If the number of instances is less than or equal to this number,
     // the model will just be drawn multiple times.
     // However, if the number of instances is greater than this number,
     // we will add to the instance buffer and use DrawIndexedInstanced

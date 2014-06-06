@@ -99,8 +99,8 @@ private:
 
 	float m_sceneScaleFactor;
 
-	Common::Model m_debugSphere;
-	Common::Model m_debugCone;
+	Common::InstancedModel m_debugSphere;
+	Common::InstancedModel m_debugCone;
 
 	Common::DirectionalLight m_directionalLight;
 	std::vector<Common::PointLight> m_pointLights;

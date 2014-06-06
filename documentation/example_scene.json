@@ -30,7 +30,10 @@
         "Ambient" : [0.2, 0.2, 0.2],
         "Diffuse" : [0.9, 0.9, 0.9],
         "Specular" : [1.0, 1.0, 1.0],
-        "Direction" : [-0.57735, -0.57735, -0.57735]
+        "Direction" : [-0.57735, -0.57735, -0.57735],
+        // Velocities are all optional
+        // If a velocity is not specified, it is assumed zero
+        "AngularVelocity" : [-0.1, 0.05, 0.01]
     },
     "PointLights" : [
         // Create one light with these specific properties
@@ -39,7 +42,10 @@
             "Specular" : [1.0, 1.0, 1.0],
             "Position" : [0.0, 100.0, 0.0],
             "Range" : 200.0,
-            "AttenuationDistanceUNorm" : 0.75
+            "AttenuationDistanceUNorm" : 0.75,
+            // Velocities are all optional
+            // If a velocity is not specified, it is assumed zero
+            "LinearVelocity" : [75.0, -200.0, 150.0]
         },
         // Create 999 random lights in the area defined by the AABB
         {
@@ -47,7 +53,11 @@
             "AABB_min" : [-500, -500, -500],
             "AABB_max" : [500, 500, 500],
             "RangeRange" : [75.0, 200.0],
-            "AttenuationDistanceUNorm" : 0.75
+            "AttenuationDistanceUNorm" : 0.75,
+            // Velocities are all optional
+            // If a velocity is not specified, it is assumed zero
+            "VelocityMinRange" :  [-300.0, -300.0, -300.0],
+            "VelocityMaxRange" :  [300.0, 300.0, 300.0]
         }
         // Append more point lights here
     ],
@@ -61,7 +71,11 @@
             "Direction" : [1.0, 0.0, 0.0],
             "AttenuationDistanceUNorm" : 0.75,
             "InnerConeAngle" : 1.570796,
-            "OuterConeAngle" : 1.396263
+            "OuterConeAngle" : 1.396263,
+            // Velocities are all optional
+            // If a velocity is not specified, it is assumed zero
+            "LinearVelocity" : [75.0, -200.0, 150.0],
+            "AngularVelocity" : [-0.1, 0.05, 0.01]
         },
         // Create 999 random lights in the area defined by the AABB
         {
@@ -71,7 +85,13 @@
             "RangeRange" : [75.0, 200.0],
             "AttenuationDistanceUNorm" : 0.75,
             "OuterAngleRange" : [0.785398, 2.094395], // In radians
-            "InnerAngleDifference" : 0.17 // InnerAngle = OuterAngle - InnerAngleDifference
+            "InnerAngleDifference" : 0.17, // InnerAngle = OuterAngle - InnerAngleDifference
+            // Velocities are all optional
+            // If a velocity is not specified, it is assumed zero
+            "LinearVelocityMinRange" :  [-300.0, -300.0, -300.0],
+            "LinearVelocityMaxRange" :  [300.0, 300.0, 300.0],
+            "AngularVelocityMinRange" : [-0.125, -0.125, -0.125], // In radians
+            "AngularVelocityMaxRange" : [0.125, 0.125, 0.125] // In radians
         }
         // Append more spot lights here
     ]

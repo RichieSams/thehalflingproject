@@ -96,6 +96,16 @@
                     "minItems" : 3,
                     "maxItems" : 3,
                     "additionalItems" : false
+                },
+                "AngularVelocity" : {
+                    "description" : "",
+					"type" : "array",
+					"items" : {
+                        "type" : "number"
+                    },
+                    "minItems" : 3,
+                    "maxItems" : 3,
+                    "additionalItems" : false
                 }
             },
             "additionalProperties" : false
@@ -146,6 +156,16 @@
                             "AttenuationDistanceUNorm" : {
                                 "description" : "",
                                 "type" : "number"
+                            },
+                            "LinearVelocity" : {
+                                "description" : "",
+					            "type" : "array",
+					            "items" : {
+                                    "type" : "number"
+                                },
+                                "minItems" : 3,
+                                "maxItems" : 3,
+                                "additionalItems" : false
                             }
                         }
                     },
@@ -190,6 +210,26 @@
                             "AttenuationDistanceUNorm" : {
                                 "description" : "",
                                 "type" : "number"
+                            },
+                            "LinearVelocityMinRange" : {
+                                "description" : "",
+					            "type" : "array",
+					            "items" : {
+                                    "type" : "number"
+                                },
+                                "minItems" : 3,
+                                "maxItems" : 3,
+                                "additionalItems" : false
+                            },
+                            "LinearVelocityMaxRange" : {
+                                "description" : "",
+					            "type" : "array",
+					            "items" : {
+                                    "type" : "number"
+                                },
+                                "minItems" : 3,
+                                "maxItems" : 3,
+                                "additionalItems" : false
                             }
                         }
                     }
@@ -260,6 +300,26 @@
                             "OuterConeAngle" : {
                                 "description" : "",
                                 "type" : "number"
+                            },
+                            "LinearVelocity" : {
+                                "description" : "",
+					            "type" : "array",
+					            "items" : {
+                                    "type" : "number"
+                                },
+                                "minItems" : 3,
+                                "maxItems" : 3,
+                                "additionalItems" : false
+                            },
+                            "AngularVelocity" : {
+                                "description" : "",
+					            "type" : "array",
+					            "items" : {
+                                    "type" : "number"
+                                },
+                                "minItems" : 3,
+                                "maxItems" : 3,
+                                "additionalItems" : false
                             }
                         }
                     },
@@ -318,6 +378,46 @@
                             "InnerAngleDifference" : {
                                 "description" : "",
                                 "type" : "number"
+                            },
+                            "LinearVelocityMinRange" : {
+                                "description" : "",
+					            "type" : "array",
+					            "items" : {
+                                    "type" : "number"
+                                },
+                                "minItems" : 3,
+                                "maxItems" : 3,
+                                "additionalItems" : false
+                            },
+                            "LinearVelocityMaxRange" : {
+                                "description" : "",
+					            "type" : "array",
+					            "items" : {
+                                    "type" : "number"
+                                },
+                                "minItems" : 3,
+                                "maxItems" : 3,
+                                "additionalItems" : false
+                            },
+                            "AngularVelocityMinRange" : {
+                                "description" : "",
+					            "type" : "array",
+					            "items" : {
+                                    "type" : "number"
+                                },
+                                "minItems" : 3,
+                                "maxItems" : 3,
+                                "additionalItems" : false
+                            },
+                            "AngularVelocityMaxRange" : {
+                                "description" : "",
+					            "type" : "array",
+					            "items" : {
+                                    "type" : "number"
+                                },
+                                "minItems" : 3,
+                                "maxItems" : 3,
+                                "additionalItems" : false
                             }
                         }
                     }

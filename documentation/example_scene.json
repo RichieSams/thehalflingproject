@@ -1,3 +1,8 @@
+// The json-cpp library allows us to use C-style comments
+// However, comments are not allowed in *true* json. So if you want to test your
+// scene against the scene.schema.json, using a standard schema validator, you
+// will need to remove all the comments before running the validator.
+
 {
     "NearClip" : 0.1,
     "FarClip" : 5000.0,

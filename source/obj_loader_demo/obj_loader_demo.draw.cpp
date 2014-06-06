@@ -122,16 +122,22 @@ void ObjLoaderDemo::ForwardRenderingPass() {
 
 		DirectX::XMMATRIX worldViewProjection = DirectX::XMMatrixTranspose(combinedWorld * viewProj);
 
-		// GBuffer pass and Forward pass share the same Vertex cbPerFrame signature
-		SetGBufferVertexShaderConstants(worldMatrix, worldViewProjection);
-
 		for (uint j = 0; j < iter->first->GetSubsetCount(); ++j) {
+			SetForwardVertexShaderObjectConstants(worldMatrix, worldViewProjection);
 			SetForwardPixelShaderObjectConstants(iter->first->GetSubsetMaterial(j), iter->first->GetSubsetTextureFlags(j));
 
 			// Draw the models
 			iter->first->DrawSubset(m_immediateContext, j);
 		}
 	}
+}
+
+void ObjLoaderDemo::SetForwardVertexShaderObjectConstants(DirectX::XMMATRIX &worldMatrix, DirectX::XMMATRIX &worldViewProjMatrix) {
+	ForwardVertexShaderObjectConstants vertexShaderObjectConstants;
+	vertexShaderObjectConstants.World = worldMatrix;
+	vertexShaderObjectConstants.WorldViewProj = worldViewProjMatrix;
+
+	m_forwardVertexShader->SetPerObjectConstants(m_immediateContext, &vertexShaderObjectConstants, 1u);
 }
 
 void ObjLoaderDemo::SetForwardPixelShaderFrameConstants() {

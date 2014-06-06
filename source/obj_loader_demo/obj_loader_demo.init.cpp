@@ -329,7 +329,7 @@ void ObjLoaderDemo::LoadShaders() {
 		{"INSTANCE_COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 64, D3D11_INPUT_PER_INSTANCE_DATA, 1}
 	};
 
-	m_forwardVertexShader = new Common::VertexShader<>(L"forward_vs.cso", m_device, false, false);
+	m_forwardVertexShader = new Common::VertexShader<Common::DefaultShaderConstantType, ForwardVertexShaderObjectConstants>(L"forward_vs.cso", m_device, false, true);
 	m_forwardPixelShader = new Common::PixelShader<ForwardPixelShaderFrameConstants, ForwardPixelShaderObjectConstants>(L"forward_ps.cso", m_device, true, true);
 	m_gbufferVertexShader = new Common::VertexShader<Common::DefaultShaderConstantType, GBufferVertexShaderObjectConstants>(L"gbuffer_vs.cso", m_device, false, true, &m_defaultInputLayout, vertexDesc, 4);
 	m_gbufferPixelShader = new Common::PixelShader<Common::DefaultShaderConstantType, GBufferPixelShaderObjectConstants>(L"gbuffer_ps.cso", m_device, false, true);

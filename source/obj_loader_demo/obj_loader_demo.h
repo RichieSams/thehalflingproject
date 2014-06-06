@@ -135,7 +135,7 @@ private:
 	TwBar *m_settingsBar;
 
 	// Shaders
-	Common::VertexShader<> *m_forwardVertexShader;
+	Common::VertexShader<Common::DefaultShaderConstantType, ForwardVertexShaderObjectConstants> *m_forwardVertexShader;
 	Common::PixelShader<ForwardPixelShaderFrameConstants, ForwardPixelShaderObjectConstants> *m_forwardPixelShader;
 	Common::VertexShader<Common::DefaultShaderConstantType, GBufferVertexShaderObjectConstants> *m_gbufferVertexShader;
 	Common::PixelShader<Common::DefaultShaderConstantType, GBufferPixelShaderObjectConstants> *m_gbufferPixelShader;
@@ -199,6 +199,7 @@ private:
 	/** Renders the frame statistics and the settings bar */
 	void RenderHUD();
 
+	void SetForwardVertexShaderObjectConstants(DirectX::XMMATRIX &worldMatrix, DirectX::XMMATRIX &worldViewProjMatrix);
 	void SetForwardPixelShaderFrameConstants();
 	void SetForwardPixelShaderObjectConstants(const Common::BlinnPhongMaterial &material, uint textureFlags);
 	void SetGBufferVertexShaderConstants(DirectX::XMMATRIX &worldMatrix, DirectX::XMMATRIX &worldViewProjMatrix);

@@ -16,6 +16,11 @@
 namespace ObjLoaderDemo {
 
 // Forward Shading
+struct ForwardVertexShaderObjectConstants {
+	DirectX::XMMATRIX WorldViewProj;
+	DirectX::XMMATRIX World;
+};
+
 struct ForwardPixelShaderFrameConstants {
 	Common::DirectionalLight gDirectionalLight;
 	DirectX::XMFLOAT3 gEyePosition;

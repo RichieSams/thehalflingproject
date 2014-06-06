@@ -42,9 +42,6 @@ Common::Model *Common::HalflingModelFile::Load(ID3D11Device *device, Common::Tex
 	uint64 flags;
 	fin.readUInt64(&flags);
 
-	bool hasInstanceBuffer = (flags & HAS_INSTANCE_BUFFER) == HAS_INSTANCE_BUFFER;
-	bool hasInstanceData = (flags & HAS_INSTANCE_BUFFER_DATA) == HAS_INSTANCE_BUFFER_DATA;
-
 	// String table
 	std::string *stringTable = nullptr;
 	if ((flags & HAS_STRING_TABLE) == HAS_STRING_TABLE) {
@@ -85,14 +82,6 @@ Common::Model *Common::HalflingModelFile::Load(ID3D11Device *device, Common::Tex
 	D3D11_BUFFER_DESC indexBufferDesc;
 	fin.read((char *)&indexBufferDesc, sizeof(D3D11_BUFFER_DESC));
 
-	// Instance buffer desc
-	D3D11_BUFFER_DESC instanceBufferDesc;
-	ZeroMemory(&instanceBufferDesc, sizeof(D3D11_BUFFER_DESC));
-
-	if (hasInstanceBuffer) {
-		fin.read((char *)&instanceBufferDesc, sizeof(D3D11_BUFFER_DESC));
-	}
-
 	// Vertex data
 	char *vertexData = new char[vertexBufferDesc.ByteWidth];
 	fin.read(vertexData, vertexBufferDesc.ByteWidth);
@@ -100,13 +89,6 @@ Common::Model *Common::HalflingModelFile::Load(ID3D11Device *device, Common::Tex
 	// Index data
 	char *indexData = new char[indexBufferDesc.ByteWidth];
 	fin.read(indexData, indexBufferDesc.ByteWidth);
-
-	// Instance data
-	char *instanceData = nullptr;
-	if (hasInstanceData) {
-		instanceData = new char[instanceBufferDesc.ByteWidth];
-		fin.read(instanceData, instanceBufferDesc.ByteWidth);
-	}
 
 	// Num subsets
 	uint32 numSubsets;
@@ -172,9 +154,6 @@ Common::Model *Common::HalflingModelFile::Load(ID3D11Device *device, Common::Tex
 
 	model->CreateVertexBuffer(device, vertexData, numVertices, vertexBufferDesc);
 	model->CreateIndexBuffer(device, (uint *)indexData, numIndices, indexBufferDesc);
-	if (hasInstanceBuffer) {
-		model->CreateInstanceBuffer(device, instanceBufferDesc, instanceData);
-	}
 	model->CreateSubsets(modelSubsets, numSubsets);
 
 	return model;
@@ -222,25 +201,11 @@ void HalflingModelFile::Write(const wchar *filepath, uint numVertices, uint numI
 	// Index buffer desc
 	fout.write(reinterpret_cast<const char *>(indexBufferDesc), sizeof(D3D11_BUFFER_DESC));
 
-	// Instance buffer desc
-	if (instanceBufferDesc != nullptr) {
-		flags |= HAS_INSTANCE_BUFFER;
-
-		fout.write(reinterpret_cast<const char *>(instanceBufferDesc), sizeof(D3D11_BUFFER_DESC));
-	}
-
 	// Vertex data
 	fout.write(reinterpret_cast<const char *>(vertexData), vertexBufferDesc->ByteWidth);
 
 	// Index data
 	fout.write(reinterpret_cast<const char *>(indexData), indexBufferDesc->ByteWidth);
-
-	// Instance data
-	if (instanceBufferDesc != nullptr && instanceData != nullptr) {
-		flags |= HAS_INSTANCE_BUFFER_DATA;
-
-		fout.write(reinterpret_cast<const char *>(instanceData), instanceBufferDesc->ByteWidth);
-	}
 
 	// Subsets
 	BinaryWriteUInt32(fout, subsets.size());

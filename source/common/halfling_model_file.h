@@ -19,9 +19,7 @@ private:
 
 private:
 	enum Flags {
-		HAS_INSTANCE_BUFFER = 0x0002,
-		HAS_INSTANCE_BUFFER_DATA = 0x0004,
-		HAS_STRING_TABLE = 0x0008
+		HAS_STRING_TABLE = 0x0001
 	};
 
 public:
@@ -65,7 +63,7 @@ public:
 	};
 
 private:
-	static const byte kFileFormatVersion = 1;
+	static const byte kFileFormatVersion = 2;
 
 public:
 	static Common::Model *Load(ID3D11Device *device, Common::TextureManager *textureManager, const wchar *filePath);

@@ -1,4 +1,4 @@
-Halfling Model File format             Version 1	
+Halfling Model File format             Version 2	
 
 
 
@@ -22,11 +22,9 @@ Halfling Model File format             Version 1
 |                                     |                   |          |                                                                                                              |
 | Vertex Buffer Desc                  | D3D11_BUFFER_DESC | T        | A hard cast of the vertex buffer description                                                                 |
 | Index Buffer Desc                   | D3D11_BUFFER_DESC | T        | A hard cast of the index buffer description                                                                  |
-| Instance Buffer Desc                | D3D11_BUFFER_DESC | F        | A hard cast of the instance buffer description                                                               |
 |                                     |                   |          |                                                                                                              |
 | Vertex data                         | void[]            | T        | Will be read in a single block using VertexBufferDesc.ByteWidth                                              |
 | Index data                          | void[]            | T        | Will be read in a single block using IndexBufferDesc.ByteWidth                                               |
-| Instance buffer data                | void[]            | F        | Will be read in a single block using InstanceBufferDesc.ByteWidth                                            |
 |                                     |                   |          |                                                                                                              |
 | Num Subsets                         | uint32            | T        | The number of subsets in the file                                                                            |
 | Subset data                         | Subset[]          | T        | Will read in a single block to a Subset[]                                                                    |
@@ -48,7 +46,5 @@ Halfling Model File format             Version 1
 +--------------------------+--------+
 |        File Flags        |        |
 +--------------------------+--------+
-| HAS_INSTANCE_BUFFER      | 0x0002 |
-| HAS_INSTANCE_BUFFER_DATA | 0x0004 |
-| HAS_STRING_TABLE         | 0x0008 |
+| HAS_STRING_TABLE         | 0x0001 |
 +--------------------------+--------+

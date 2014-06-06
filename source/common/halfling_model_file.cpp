@@ -37,6 +37,7 @@ Common::Model *Common::HalflingModelFile::Load(ID3D11Device *device, Common::Tex
 	// File format version
 	byte fileFormatVersion;
 	fin.readByte(&fileFormatVersion);
+	assert(fileFormatVersion == kFileFormatVersion);
 
 	// Flags
 	uint64 flags;

@@ -113,8 +113,8 @@ void ObjLoaderDemo::ForwardRenderingPass() {
 		m_immediateContext->PSSetShaderResources(9, 1, &srv);
 	}
 
+	m_immediateContext->IASetInputLayout(m_defaultInputLayout);
 
-	m_immediateContext->IASetInputLayout(m_gBufferInputLayout);
 
 	for (auto iter = m_models.begin(); iter != m_models.end(); ++iter) {
 		DirectX::XMMATRIX combinedWorld = iter->second * m_globalWorldTransform;
@@ -181,7 +181,7 @@ void ObjLoaderDemo::NoCullDeferredRenderingPass() {
 	m_gbufferVertexShader->BindToPipeline(m_immediateContext);
 	m_gbufferPixelShader->BindToPipeline(m_immediateContext);
 
-	m_immediateContext->IASetInputLayout(m_gBufferInputLayout);
+	m_immediateContext->IASetInputLayout(m_defaultInputLayout);
 	m_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// Fetch the transpose matricies

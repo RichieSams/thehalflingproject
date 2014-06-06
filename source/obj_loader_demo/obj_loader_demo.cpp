@@ -42,7 +42,7 @@ ObjLoaderDemo::ObjLoaderDemo(HINSTANCE hinstance)
 	  m_numSpotLightsToDraw(100),
 	  m_renderTargetView(nullptr),
 	  m_depthStencilBuffer(nullptr),
-	  m_gBufferInputLayout(nullptr),
+	  m_defaultInputLayout(nullptr),
 	  m_debugObjectInputLayout(nullptr),
 	  m_pointLightBuffer(nullptr),
 	  m_spotLightBuffer(nullptr),
@@ -71,7 +71,7 @@ void ObjLoaderDemo::Shutdown() {
 	delete(m_debugObjectPixelShader);
 	delete(m_transformedFullscreenTriangleVertexShader);
 	delete(m_renderGbuffersPixelShader);
-	ReleaseCOM(m_gBufferInputLayout);
+	ReleaseCOM(m_defaultInputLayout);
 	ReleaseCOM(m_debugObjectInputLayout);
 
 	for (auto iter = m_pointLightAnimators.begin(); iter != m_pointLightAnimators.end(); ++iter) {

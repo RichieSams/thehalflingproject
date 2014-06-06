@@ -122,7 +122,7 @@ private:
 	uint32 m_numPointLightsToDraw;
 
 	ID3D11RenderTargetView *m_renderTargetView;
-	ID3D11InputLayout *m_gBufferInputLayout;
+	ID3D11InputLayout *m_defaultInputLayout;
 	ID3D11InputLayout *m_debugObjectInputLayout;
 
 	Common::Depth2D *m_depthStencilBuffer;

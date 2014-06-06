@@ -57,9 +57,9 @@
         // Create 1000 random lights in the area defined by the AABB
         {
             "NumberOfLights" : 1000,
-            "AABB_min" : [-500, -500, -500],
-            "AABB_max" : [500, 500, 500],
-            "RangeRange" : [75.0, 200.0],
+            "AABB_min" : [-2000, -150, -1200],
+            "AABB_max" : [1900, 1500, 1200],
+            "RangeRange" : [150.0, 400.0],
             "AttenuationDistanceUNorm" : 0.75
         }
         // Append more point lights here
@@ -68,9 +68,9 @@
         // Create 1000 random lights in the area defined by the AABB
         {
             "NumberOfLights" : 1000,
-            "AABB_min" : [-500, -500, -500],
-            "AABB_max" : [500, 500, 500],
-            "RangeRange" : [75.0, 200.0],
+            "AABB_min" : [-2000, -150, -1200],
+            "AABB_max" : [1900, 1500, 1200],
+            "RangeRange" : [150.0, 400.0],
             "AttenuationDistanceUNorm" : 0.75,
             "OuterAngleRange" : [0.785398, 2.094395], // In radians
             "InnerAngleDifference" : 0.17 // InnerAngle = OuterAngle - InnerAngleDifference

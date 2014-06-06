@@ -21,6 +21,14 @@ struct ForwardVertexShaderObjectConstants {
 	DirectX::XMMATRIX World;
 };
 
+struct InstancedForwardVertexShaderFrameConstants {
+	DirectX::XMMATRIX ViewProj;
+};
+
+struct InstancedForwardVertexShaderObjectConstants {
+	uint StartVector;
+};
+
 struct ForwardPixelShaderFrameConstants {
 	Common::DirectionalLight gDirectionalLight;
 	DirectX::XMFLOAT3 gEyePosition;

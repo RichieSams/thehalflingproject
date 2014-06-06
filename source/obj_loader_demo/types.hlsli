@@ -17,6 +17,14 @@ struct VertexIn {
 	float3 tangent   : TANGENT;
 };
 
+struct InstancedVertexIn {
+	float3 position  : POSITION;
+	float3 normal    : NORMAL;
+	float2 texCoord  : TEXCOORD;
+	float3 tangent   : TANGENT;
+	uint instanceId  : SV_INSTANCEID;
+};
+
 struct ForwardPixelIn {
 	float4 positionClip   : SV_POSITION;
 	float3 positionWorld  : POSITION_WORLD;

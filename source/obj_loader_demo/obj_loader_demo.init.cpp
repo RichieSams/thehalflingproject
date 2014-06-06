@@ -54,6 +54,8 @@ bool ObjLoaderDemo::Initialize(LPCTSTR mainWndCaption, uint32 screenWidth, uint3
 	LoadShaders();
 	m_frameMaterialListBuffer = new Common::StructuredBuffer<Common::BlinnPhongMaterial>(m_device, kMaxMaterialsPerFrame, D3D11_BIND_SHADER_RESOURCE, true);
 
+	m_instanceBuffer = new Common::StructuredBuffer<DirectX::XMVECTOR>(m_device, kMaxInstanceVectorsPerFrame, D3D11_BIND_SHADER_RESOURCE, true);
+
 	// Create light buffers
 	// This has to be done after the Engine has been Initialized so we have a valid m_device
 	if (m_pointLights.size() > 0) {
@@ -333,6 +335,7 @@ void ObjLoaderDemo::LoadShaders() {
 	};
 
 	m_forwardVertexShader = new Common::VertexShader<Common::DefaultShaderConstantType, ForwardVertexShaderObjectConstants>(L"forward_vs.cso", m_device, false, true);
+	m_instancedForwardVertexShader = new Common::VertexShader<InstancedForwardVertexShaderFrameConstants, InstancedForwardVertexShaderObjectConstants>(L"instanced_forward_vs.cso", m_device, true, true);
 	m_forwardPixelShader = new Common::PixelShader<ForwardPixelShaderFrameConstants, ForwardPixelShaderObjectConstants>(L"forward_ps.cso", m_device, true, true);
 	m_gbufferVertexShader = new Common::VertexShader<Common::DefaultShaderConstantType, GBufferVertexShaderObjectConstants>(L"gbuffer_vs.cso", m_device, false, true, &m_defaultInputLayout, vertexDesc, 4);
 	m_gbufferPixelShader = new Common::PixelShader<Common::DefaultShaderConstantType, GBufferPixelShaderObjectConstants>(L"gbuffer_ps.cso", m_device, false, true);

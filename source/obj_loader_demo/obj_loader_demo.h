@@ -75,6 +75,7 @@ public:
 
 private:
 	static const uint kMaxMaterialsPerFrame = 2000;
+	static const uint kMaxInstanceVectorsPerFrame = 5000;
 
 	float m_nearClip;
 	float m_farClip;
@@ -91,6 +92,7 @@ private:
 	std::vector<std::pair<Common::Model *, DirectX::XMMATRIX>, Common::Allocator16ByteAligned<std::pair<Common::Model *, DirectX::XMMATRIX> > > m_models;
 	std::vector<std::pair<Common::Model *, std::vector<DirectX::XMMATRIX, Common::Allocator16ByteAligned<DirectX::XMMATRIX> > *> > m_instancedModels;
 
+	Common::StructuredBuffer<DirectX::XMVECTOR> *m_instanceBuffer;
 
 	std::vector<ModelToLoad> m_modelsToLoad;
 	std::atomic<bool> m_sceneLoaded;
@@ -137,6 +139,7 @@ private:
 
 	// Shaders
 	Common::VertexShader<Common::DefaultShaderConstantType, ForwardVertexShaderObjectConstants> *m_forwardVertexShader;
+	Common::VertexShader<InstancedForwardVertexShaderFrameConstants, InstancedForwardVertexShaderObjectConstants> *m_instancedForwardVertexShader;
 	Common::PixelShader<ForwardPixelShaderFrameConstants, ForwardPixelShaderObjectConstants> *m_forwardPixelShader;
 	Common::VertexShader<Common::DefaultShaderConstantType, GBufferVertexShaderObjectConstants> *m_gbufferVertexShader;
 	Common::PixelShader<Common::DefaultShaderConstantType, GBufferPixelShaderObjectConstants> *m_gbufferPixelShader;
@@ -201,6 +204,8 @@ private:
 	void RenderHUD();
 
 	void SetForwardVertexShaderObjectConstants(DirectX::XMMATRIX &worldMatrix, DirectX::XMMATRIX &worldViewProjMatrix);
+	void SetInstancedForwardVertexShaderFrameConstants(DirectX::XMMATRIX &viewProjMatrix);
+	void SetInstancedForwardVertexShaderObjectConstants(uint startIndex);
 	void SetForwardPixelShaderFrameConstants();
 	void SetForwardPixelShaderObjectConstants(const Common::BlinnPhongMaterial &material, uint textureFlags);
 	void SetGBufferVertexShaderObjectConstants(DirectX::XMMATRIX &worldMatrix, DirectX::XMMATRIX &worldViewProjMatrix);

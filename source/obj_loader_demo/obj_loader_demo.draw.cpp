@@ -86,8 +86,7 @@ void ObjLoaderDemo::ForwardRenderingPass() {
 	ID3D11RasterizerState *rasterState = m_wireframe ? m_rasterizerStates.Wireframe() : m_rasterizerStates.BackFaceCull();
 	m_immediateContext->RSSetState(rasterState);
 
-	// Set the vertex and pixel shaders that will be used to render this triangle.
-	m_forwardVertexShader->BindToPipeline(m_immediateContext);
+	// Set the pixel shader
 	m_forwardPixelShader->BindToPipeline(m_immediateContext);
 
 	m_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -115,19 +114,73 @@ void ObjLoaderDemo::ForwardRenderingPass() {
 
 	m_immediateContext->IASetInputLayout(m_defaultInputLayout);
 
+	if (m_instancedModels.size() > 0) {
+		DirectX::XMVECTOR *instanceBuffer = m_instanceBuffer->MapDiscard(m_immediateContext);
+		std::vector<uint> offsets;
+		uint bufferOffset = 0;
+		for (auto iter = m_instancedModels.begin(); iter != m_instancedModels.end(); ++iter) {
+			assert(bufferOffset < static_cast<uint>(m_instanceBuffer->NumElements()));
 
-	for (auto iter = m_models.begin(); iter != m_models.end(); ++iter) {
-		DirectX::XMMATRIX combinedWorld = iter->second * m_globalWorldTransform;
-		DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranspose(combinedWorld);
+			// In the future when we support more complicated instancing, this could be something like:
+			//
+			// uint offset = bufferOffset;
+			// std::vector<DirectX::XMVECTOR, Common::AllocatorAligned16<DirectX::XMVECTOR> > instanceVectors = iter->second.InstanceVectors();
+			// for (auto vectorIter = instanceVectors.begin(); vectorIter != instanceVectors.end(); ++vectorIter) {
+			//     instanceBuffer[bufferOffset++] = *vectorIter;
+			// }
+			// 
+			// offsetAndLengths.emplace_back(offset);
 
-		DirectX::XMMATRIX worldViewProjection = DirectX::XMMatrixTranspose(combinedWorld * viewProj);
+			uint offset = bufferOffset;
+			for (auto instanceIter = iter->second->begin(); instanceIter != iter->second->end(); ++instanceIter) {
+				DirectX::XMMATRIX columnOrderMatrix = DirectX::XMMatrixTranspose(m_globalWorldTransform * (*instanceIter));
+				instanceBuffer[bufferOffset++] = columnOrderMatrix.r[0];
+				instanceBuffer[bufferOffset++] = columnOrderMatrix.r[1];
+				instanceBuffer[bufferOffset++] = columnOrderMatrix.r[2];
+			}
 
-		for (uint j = 0; j < iter->first->GetSubsetCount(); ++j) {
-			SetForwardVertexShaderObjectConstants(worldMatrix, worldViewProjection);
-			SetForwardPixelShaderObjectConstants(iter->first->GetSubsetMaterial(j), iter->first->GetSubsetTextureFlags(j));
+			offsets.emplace_back(offset);
+		}
 
-			// Draw the models
-			iter->first->DrawSubset(m_immediateContext, j);
+		m_instanceBuffer->Unmap(m_immediateContext);
+
+		// Set the vertex shader and bind the instance buffer to it
+		m_instancedForwardVertexShader->BindToPipeline(m_immediateContext);
+		ID3D11ShaderResourceView *srv = m_instanceBuffer->GetShaderResource();
+		m_immediateContext->VSSetShaderResources(0, 1, &srv);
+
+		// Set the vertex shader frame constants
+		SetInstancedForwardVertexShaderFrameConstants(DirectX::XMMatrixTranspose(viewProj));
+
+		for (uint i = 0; i < m_instancedModels.size(); ++i) {
+			SetInstancedForwardVertexShaderObjectConstants(offsets[i]);
+
+			for (uint j = 0; j < m_instancedModels[i].first->GetSubsetCount(); ++j) {
+				SetForwardPixelShaderObjectConstants(m_instancedModels[i].first->GetSubsetMaterial(j), m_instancedModels[i].first->GetSubsetTextureFlags(j));
+
+				// Draw the models
+				m_instancedModels[i].first->DrawInstancedSubset(m_immediateContext, m_instancedModels[i].second->size(), j);
+			}
+		}
+	}
+
+	// Draw non-instanced models
+	if (m_models.size() > 0) {
+		m_forwardVertexShader->BindToPipeline(m_immediateContext);
+
+		for (auto iter = m_models.begin(); iter != m_models.end(); ++iter) {
+			DirectX::XMMATRIX combinedWorld = iter->second * m_globalWorldTransform;
+			DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranspose(combinedWorld);
+
+			DirectX::XMMATRIX worldViewProjection = DirectX::XMMatrixTranspose(combinedWorld * viewProj);
+
+			for (uint j = 0; j < iter->first->GetSubsetCount(); ++j) {
+				SetForwardVertexShaderObjectConstants(worldMatrix, worldViewProjection);
+				SetForwardPixelShaderObjectConstants(iter->first->GetSubsetMaterial(j), iter->first->GetSubsetTextureFlags(j));
+
+				// Draw the models
+				iter->first->DrawSubset(m_immediateContext, j);
+			}
 		}
 	}
 }
@@ -138,6 +191,20 @@ void ObjLoaderDemo::SetForwardVertexShaderObjectConstants(DirectX::XMMATRIX &wor
 	vertexShaderObjectConstants.WorldViewProj = worldViewProjMatrix;
 
 	m_forwardVertexShader->SetPerObjectConstants(m_immediateContext, &vertexShaderObjectConstants, 1u);
+}
+
+void ObjLoaderDemo::SetInstancedForwardVertexShaderFrameConstants(DirectX::XMMATRIX &viewProjMatrix) {
+	InstancedForwardVertexShaderFrameConstants vertexShaderFrameConstants;
+	vertexShaderFrameConstants.ViewProj = viewProjMatrix;
+
+	m_instancedForwardVertexShader->SetPerFrameConstants(m_immediateContext, &vertexShaderFrameConstants, 0u);
+}
+
+void ObjLoaderDemo::SetInstancedForwardVertexShaderObjectConstants(uint startIndex) {
+	InstancedForwardVertexShaderObjectConstants vertexShaderObjectConstants;
+	vertexShaderObjectConstants.StartVector = startIndex;
+
+	m_instancedForwardVertexShader->SetPerObjectConstants(m_immediateContext, &vertexShaderObjectConstants, 1u);
 }
 
 void ObjLoaderDemo::SetForwardPixelShaderFrameConstants() {

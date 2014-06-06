@@ -29,7 +29,8 @@ void LoadScene(std::atomic<bool> *sceneIsLoaded,
                Common::TextureManager *textureManager, Common::ModelManager *modelManager, 
                std::vector<ModelToLoad> *modelsToLoad, 
                std::vector<std::pair<Common::Model *, DirectX::XMMATRIX>, Common::Allocator16ByteAligned<std::pair<Common::Model *, DirectX::XMMATRIX> > > *modelList, 
-               std::vector<std::pair<Common::Model *, std::vector<DirectX::XMMATRIX, Common::Allocator16ByteAligned<DirectX::XMMATRIX> > *> > *instancedModelList);
+               std::vector<std::pair<Common::Model *, std::vector<DirectX::XMMATRIX, Common::Allocator16ByteAligned<DirectX::XMMATRIX> > *> > *instancedModelList,
+			   uint modelInstanceThreshold);
 
 bool ObjLoaderDemo::Initialize(LPCTSTR mainWndCaption, uint32 screenWidth, uint32 screenHeight, bool fullscreen) {
 	LoadSceneJson();
@@ -46,7 +47,7 @@ bool ObjLoaderDemo::Initialize(LPCTSTR mainWndCaption, uint32 screenWidth, uint3
 	// TODO: Make TextureManager thread safe
 	// HACK: ModelManager isn't thread safe. Same argument as TextureManager
 	// TODO: Make ModelManager thread safe
-	m_sceneLoaderThread = std::thread(LoadScene, &m_sceneLoaded, m_device, &m_textureManager, &m_modelManager, &m_modelsToLoad, &m_models, &m_instancedModels);
+	m_sceneLoaderThread = std::thread(LoadScene, &m_sceneLoaded, m_device, &m_textureManager, &m_modelManager, &m_modelsToLoad, &m_models, &m_instancedModels, m_modelInstanceThreshold);
 
 	BuildGeometryBuffers();
 
@@ -95,6 +96,7 @@ void ObjLoaderDemo::LoadSceneJson() {
 	m_farClip = root.get("FarClip", m_farClip).asSingle();
 	m_sceneScaleFactor = root.get("SceneScaleFactor", 1.0).asSingle();
 	m_globalWorldTransform = DirectX::XMMatrixScaling(m_sceneScaleFactor, m_sceneScaleFactor, m_sceneScaleFactor);
+	m_modelInstanceThreshold = root.get("ModelInstanceThreshold", m_modelInstanceThreshold).asUInt();
 
 	Json::Value models = root["Models"];
 	for (uint i = 0; i < models.size(); ++i) {
@@ -231,13 +233,14 @@ void LoadScene(std::atomic<bool> *sceneIsLoaded,
                Common::TextureManager *textureManager, Common::ModelManager *modelManager, 
                std::vector<ModelToLoad> *modelsToLoad, 
                std::vector<std::pair<Common::Model *, DirectX::XMMATRIX>, Common::Allocator16ByteAligned<std::pair<Common::Model *, DirectX::XMMATRIX> > > *modelList, 
-               std::vector<std::pair<Common::Model *, std::vector<DirectX::XMMATRIX, Common::Allocator16ByteAligned<DirectX::XMMATRIX> > *> > *instancedModelList) {
+               std::vector<std::pair<Common::Model *, std::vector<DirectX::XMMATRIX, Common::Allocator16ByteAligned<DirectX::XMMATRIX> > *> > *instancedModelList,
+			   uint modelInstanceThreshold) {
 	// WARNING: Do not parallelize this code until you make TextureManager and ModelManager thread safe
 	for (auto iter = modelsToLoad->begin(); iter != modelsToLoad->end(); ++iter) {
 		std::wstring wideFilePath(iter->FilePath.begin(), iter->FilePath.end());
 		Common::Model *newModel = modelManager->GetModel(device, textureManager, wideFilePath.c_str());
 		
-		if (iter->Instances->size() > 1) {
+		if (iter->Instances->size() > modelInstanceThreshold) {
 			instancedModelList->emplace_back(newModel, iter->Instances);
 		} else {
 			modelList->emplace_back(newModel, (*iter->Instances)[0]);

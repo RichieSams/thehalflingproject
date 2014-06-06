@@ -29,6 +29,7 @@ ObjLoaderDemo::ObjLoaderDemo(HINSTANCE hinstance)
 	  m_sceneLoaded(false),
 	  m_sceneIsSetup(false),
 	  m_sceneScaleFactor(0.0f),
+	  m_modelInstanceThreshold(100u),
 	  m_pointLightBufferNeedsRebuild(false),
 	  m_spotLightBufferNeedsRebuild(false),
 	  m_vsync(false),

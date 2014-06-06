@@ -98,6 +98,7 @@ private:
 	std::thread m_sceneLoaderThread;
 
 	float m_sceneScaleFactor;
+	uint m_modelInstanceThreshold;
 
 	Common::InstancedModel m_debugSphere;
 	Common::InstancedModel m_debugCone;

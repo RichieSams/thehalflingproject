@@ -139,15 +139,11 @@ void ObjLoaderDemo::LoadSceneJson() {
 				DirectX::XMFLOAT3 AABB_min(pointLights[i]["AABB_min"][0u].asSingle(), pointLights[i]["AABB_min"][1u].asSingle(), pointLights[i]["AABB_min"][2u].asSingle());
 				DirectX::XMFLOAT3 AABB_max(pointLights[i]["AABB_max"][0u].asSingle(), pointLights[i]["AABB_max"][1u].asSingle(), pointLights[i]["AABB_max"][2u].asSingle());
 
-				float xRange = AABB_max.x - AABB_min.x;
-				float yRange = AABB_max.y - AABB_min.y;
-				float zRange = AABB_max.z - AABB_min.z;
-
 				DirectX::XMFLOAT2 rangeRange(pointLights[i]["RangeRange"][0u].asSingle(), pointLights[i]["RangeRange"][1u].asSingle());
 
 				m_pointLights.emplace_back(DirectX::XMFLOAT4(Common::RandF(), Common::RandF(), Common::RandF(), 1.0f),
 										   DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
-										   DirectX::XMFLOAT3(Common::RandF(AABB_min.x - xRange * 0.1f, AABB_max.x + xRange * 0.1f), Common::RandF(AABB_min.y - yRange * 0.1f, AABB_max.y + yRange * 0.1f), Common::RandF(AABB_min.z - zRange * 0.1f, AABB_max.z + zRange * 0.1f)),
+										   DirectX::XMFLOAT3(Common::RandF(AABB_min.x, AABB_max.x), Common::RandF(AABB_min.y, AABB_max.y), Common::RandF(AABB_min.z, AABB_max.z)),
 										   Common::RandF(rangeRange.x, rangeRange.y),
 										   pointLights[i]["AttenuationDistanceUNorm"].asSingle());
 			}
@@ -171,10 +167,6 @@ void ObjLoaderDemo::LoadSceneJson() {
 				DirectX::XMFLOAT3 AABB_min(spotLights[i]["AABB_min"][0u].asSingle(), spotLights[i]["AABB_min"][1u].asSingle(), spotLights[i]["AABB_min"][2u].asSingle());
 				DirectX::XMFLOAT3 AABB_max(spotLights[i]["AABB_max"][0u].asSingle(), spotLights[i]["AABB_max"][1u].asSingle(), spotLights[i]["AABB_max"][2u].asSingle());
 
-				float xRange = AABB_max.x - AABB_min.x;
-				float yRange = AABB_max.y - AABB_min.y;
-				float zRange = AABB_max.z - AABB_min.z;
-
 				DirectX::XMFLOAT2 rangeRange(spotLights[i]["RangeRange"][0u].asSingle(), spotLights[i]["RangeRange"][1u].asSingle());
 				DirectX::XMFLOAT2 outerAngleRange(spotLights[i]["OuterAngleRange"][0u].asSingle(), spotLights[i]["OuterAngleRange"][1u].asSingle());
 				float outerAngle = Common::RandF(outerAngleRange.x, outerAngleRange.y);
@@ -184,7 +176,7 @@ void ObjLoaderDemo::LoadSceneJson() {
 
 				m_spotLights.emplace_back(DirectX::XMFLOAT4(Common::RandF(), Common::RandF(), Common::RandF(), 1.0f),
 				                          DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
-				                          DirectX::XMFLOAT3(Common::RandF(AABB_min.x - xRange * 0.1f, AABB_max.x + xRange * 0.1f), Common::RandF(AABB_min.y - yRange * 0.1f, AABB_max.y + yRange * 0.1f), Common::RandF(AABB_min.z - zRange * 0.1f, AABB_max.z + zRange * 0.1f)),
+				                          DirectX::XMFLOAT3(Common::RandF(AABB_min.x, AABB_max.x), Common::RandF(AABB_min.y, AABB_max.y), Common::RandF(AABB_min.z, AABB_max.z)),
 				                          Common::RandF(rangeRange.x, rangeRange.y),
 				                          DirectX::XMFLOAT3(Common::RandF(-1.0f, 1.0f), Common::RandF(-1.0f, 1.0f), Common::RandF(-1.0f, 1.0f)),
 				                          spotLights[i]["AttenuationDistanceUNorm"].asSingle(),

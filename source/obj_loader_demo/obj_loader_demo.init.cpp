@@ -213,7 +213,7 @@ void ObjLoaderDemo::InitTweakBar() {
 	TwType shaderType = TwDefineEnum("ShaderType", shaderEV, 2);
 	TwAddVarRW(m_settingsBar, "Shader Type", shaderType, &m_shadingType, NULL);
 
-	TwEnumVal gbufferEV[] = {{GBufferSelector::None, "None"}, {GBufferSelector::Diffuse, "Diffuse"}, {GBufferSelector::Material, "Material"}, {GBufferSelector::Normal_Spherical, "Normal Spherical"}, {GBufferSelector::Normal_Cartesian, "Normal Cartesian"}, {GBufferSelector::Depth, "Depth"}, {GBufferSelector::Position, "Position"}};
+	TwEnumVal gbufferEV[] = {{GBufferSelector::None, "None"}, {GBufferSelector::Diffuse, "Diffuse"}, {GBufferSelector::Specular, "Specular"}, {GBufferSelector::Normal_Spherical, "Normal Spherical"}, {GBufferSelector::Normal_Cartesian, "Normal Cartesian"}, {GBufferSelector::Depth, "Depth"}, {GBufferSelector::Position, "Position"}};
 	TwType gbufferViewType = TwDefineEnum("GBufferViewType", gbufferEV, 7);
 	TwAddVarRW(m_settingsBar, "GBuffer View", gbufferViewType, &m_gbufferSelector, NULL);
 

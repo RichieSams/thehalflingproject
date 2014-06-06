@@ -51,7 +51,7 @@ enum ShadingType {
 
 enum GBufferSelector {
 	Diffuse = 0,
-	Material = 1,
+	Specular = 1,
 	Normal_Spherical = 2,
 	Normal_Cartesian = 3,
 	Depth = 4,

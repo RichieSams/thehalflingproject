@@ -51,10 +51,6 @@ struct ModelSubset {
 	uint TextureFlags;
 };
 
-struct DefaultInstanceType {
-	DirectX::XMFLOAT4X4 worldTransform;
-};
-
 class Model {
 public:
 	Model()

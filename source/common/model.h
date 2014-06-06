@@ -123,22 +123,22 @@ public:
 
 	/**
 	 * Returns the minimum X, Y, Z components of the axis-aligned bounding box
-	 * surrounding a specific subset
+	 * surrounding the whole model
      */
 	inline DirectX::XMFLOAT3 GetAABBMin() { return m_AABB_min; }
 	/**
 	 * Returns the maximum X, Y, Z components of the axis-aligned bounding box
-	 * surrounding a specific subset
+	 * surrounding the whole model
      */
 	inline DirectX::XMFLOAT3 GetAABBMax() { return m_AABB_max; }
 	/**
 	 * Returns the minimum X, Y, Z components of the axis-aligned bounding box
-	 * surrounding a specific subset
+	 * surrounding the whole model
      */
 	inline DirectX::XMVECTOR GetAABBMin_XM() { return DirectX::XMLoadFloat3(&m_AABB_min); }
 	/**
 	 * Returns the maximum X, Y, Z components of the axis-aligned bounding box
-	 * surrounding a specific subset
+	 * surrounding the whole model
      */
 	inline DirectX::XMVECTOR GetAABBMax_XM() { return DirectX::XMLoadFloat3(&m_AABB_max); }
 

@@ -204,7 +204,7 @@ void ObjLoaderDemo::NoCullDeferredRenderingPass() {
 		DirectX::XMMATRIX worldViewProjection = DirectX::XMMatrixTranspose(combinedWorld * viewProj);
 
 		// GBuffer pass and Forward pass share the same Vertex cbPerFrame signature
-		SetGBufferVertexShaderConstants(worldMatrix, worldViewProjection);
+		SetGBufferVertexShaderObjectConstants(worldMatrix, worldViewProjection);
 
 		for (uint j = 0; j < iter->first->GetSubsetCount(); ++j) {
 			SetGBufferPixelShaderConstants(iter->first->GetSubsetMaterial(j), iter->first->GetSubsetTextureFlags(j));
@@ -265,7 +265,7 @@ void ObjLoaderDemo::NoCullDeferredRenderingPass() {
 	m_immediateContext->PSSetShaderResources(0, 4, views);
 }
 
-void ObjLoaderDemo::SetGBufferVertexShaderConstants(DirectX::XMMATRIX &worldMatrix, DirectX::XMMATRIX &worldViewProjMatrix) {
+void ObjLoaderDemo::SetGBufferVertexShaderObjectConstants(DirectX::XMMATRIX &worldMatrix, DirectX::XMMATRIX &worldViewProjMatrix) {
 	GBufferVertexShaderObjectConstants vertexShaderObjectConstants;
 	vertexShaderObjectConstants.World = worldMatrix;
 	vertexShaderObjectConstants.WorldViewProj = worldViewProjMatrix;

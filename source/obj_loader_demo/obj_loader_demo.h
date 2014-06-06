@@ -202,7 +202,7 @@ private:
 	void SetForwardVertexShaderObjectConstants(DirectX::XMMATRIX &worldMatrix, DirectX::XMMATRIX &worldViewProjMatrix);
 	void SetForwardPixelShaderFrameConstants();
 	void SetForwardPixelShaderObjectConstants(const Common::BlinnPhongMaterial &material, uint textureFlags);
-	void SetGBufferVertexShaderConstants(DirectX::XMMATRIX &worldMatrix, DirectX::XMMATRIX &worldViewProjMatrix);
+	void SetGBufferVertexShaderObjectConstants(DirectX::XMMATRIX &worldMatrix, DirectX::XMMATRIX &worldViewProjMatrix);
 	void SetGBufferPixelShaderConstants(const Common::BlinnPhongMaterial &material, uint textureFlags);
 	void SetNoCullFinalGatherShaderConstants(DirectX::XMMATRIX &projMatrix, DirectX::XMMATRIX &invViewProjMatrix);
 	void SetRenderGBuffersPixelShaderConstants(DirectX::XMMATRIX &projMatrix, DirectX::XMMATRIX &invViewProjMatrix, uint gBufferId);

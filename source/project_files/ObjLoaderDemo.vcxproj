@@ -169,6 +169,12 @@ XCOPY "$(OutDir)..\Halfling\sprite_sampled_pixel_shader.cso" "$(OutDir)" /D /K /
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">InstancedForwardVS</EntryPointName>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">InstancedForwardVS</EntryPointName>
     </FxCompile>
+    <FxCompile Include="..\obj_loader_demo\instanced_gbuffer_vs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">InstancedGBufferVS</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">InstancedGBufferVS</EntryPointName>
+    </FxCompile>
     <FxCompile Include="..\obj_loader_demo\no_cull_final_gather_ps.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NoCullFinalGatherPS</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>

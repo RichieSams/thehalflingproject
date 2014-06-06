@@ -68,6 +68,7 @@ void ObjLoaderDemo::Shutdown() {
 	delete(m_instancedForwardVertexShader);
 	delete(m_forwardPixelShader);
 	delete(m_gbufferVertexShader);
+	delete(m_instancedGBufferVertexShader);
 	delete(m_gbufferPixelShader);
 	delete(m_fullscreenTriangleVertexShader);
 	delete(m_noCullFinalGatherPixelShader);

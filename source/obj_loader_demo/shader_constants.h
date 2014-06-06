@@ -51,6 +51,14 @@ struct GBufferVertexShaderObjectConstants {
 	DirectX::XMMATRIX World;
 };
 
+struct InstancedGBufferVertexShaderFrameConstants {
+	DirectX::XMMATRIX ViewProj;
+};
+
+struct InstancedGBufferVertexShaderObjectConstants {
+	uint StartVector;
+};
+
 struct GBufferPixelShaderObjectConstants {
 	Common::BlinnPhongMaterial Material;
 	uint TextureFlags;

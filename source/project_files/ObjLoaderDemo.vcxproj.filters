@@ -45,6 +45,9 @@
     <FxCompile Include="..\obj_loader_demo\no_cull_final_gather_ps.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="..\obj_loader_demo\instanced_gbuffer_vs.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
     <FxCompile Include="..\obj_loader_demo\instanced_forward_vs.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>

@@ -142,6 +142,7 @@ private:
 	Common::VertexShader<InstancedForwardVertexShaderFrameConstants, InstancedForwardVertexShaderObjectConstants> *m_instancedForwardVertexShader;
 	Common::PixelShader<ForwardPixelShaderFrameConstants, ForwardPixelShaderObjectConstants> *m_forwardPixelShader;
 	Common::VertexShader<Common::DefaultShaderConstantType, GBufferVertexShaderObjectConstants> *m_gbufferVertexShader;
+	Common::VertexShader<InstancedGBufferVertexShaderFrameConstants, InstancedGBufferVertexShaderObjectConstants> *m_instancedGBufferVertexShader;
 	Common::PixelShader<Common::DefaultShaderConstantType, GBufferPixelShaderObjectConstants> *m_gbufferPixelShader;
 	Common::VertexShader<> *m_fullscreenTriangleVertexShader;
 	Common::PixelShader<NoCullFinalGatherPixelShaderFrameConstants, Common::DefaultShaderConstantType> *m_noCullFinalGatherPixelShader;
@@ -209,6 +210,8 @@ private:
 	void SetForwardPixelShaderFrameConstants();
 	void SetForwardPixelShaderObjectConstants(const Common::BlinnPhongMaterial &material, uint textureFlags);
 	void SetGBufferVertexShaderObjectConstants(DirectX::XMMATRIX &worldMatrix, DirectX::XMMATRIX &worldViewProjMatrix);
+	void SetInstancedGBufferVertexShaderFrameConstants(DirectX::XMMATRIX &viewProjMatrix);
+	void SetInstancedGBufferVertexShaderObjectConstants(uint startIndex);
 	void SetGBufferPixelShaderConstants(const Common::BlinnPhongMaterial &material, uint textureFlags);
 	void SetNoCullFinalGatherShaderConstants(DirectX::XMMATRIX &projMatrix, DirectX::XMMATRIX &invViewProjMatrix);
 	void SetRenderGBuffersPixelShaderConstants(DirectX::XMMATRIX &projMatrix, DirectX::XMMATRIX &invViewProjMatrix, uint gBufferId);

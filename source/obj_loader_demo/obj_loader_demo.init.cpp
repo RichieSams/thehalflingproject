@@ -338,6 +338,7 @@ void ObjLoaderDemo::LoadShaders() {
 	m_instancedForwardVertexShader = new Common::VertexShader<InstancedForwardVertexShaderFrameConstants, InstancedForwardVertexShaderObjectConstants>(L"instanced_forward_vs.cso", m_device, true, true);
 	m_forwardPixelShader = new Common::PixelShader<ForwardPixelShaderFrameConstants, ForwardPixelShaderObjectConstants>(L"forward_ps.cso", m_device, true, true);
 	m_gbufferVertexShader = new Common::VertexShader<Common::DefaultShaderConstantType, GBufferVertexShaderObjectConstants>(L"gbuffer_vs.cso", m_device, false, true, &m_defaultInputLayout, vertexDesc, 4);
+	m_instancedGBufferVertexShader = new Common::VertexShader<InstancedGBufferVertexShaderFrameConstants, InstancedGBufferVertexShaderObjectConstants>(L"instanced_gbuffer_vs.cso", m_device, true, true);
 	m_gbufferPixelShader = new Common::PixelShader<Common::DefaultShaderConstantType, GBufferPixelShaderObjectConstants>(L"gbuffer_ps.cso", m_device, false, true);
 	m_fullscreenTriangleVertexShader = new Common::VertexShader<>(L"fullscreen_triangle_vs.cso", m_device, false, false);
 	m_noCullFinalGatherPixelShader = new Common::PixelShader<NoCullFinalGatherPixelShaderFrameConstants, Common::DefaultShaderConstantType>(L"no_cull_final_gather_ps.cso", m_device, true, false);

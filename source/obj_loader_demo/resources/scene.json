@@ -55,8 +55,8 @@
             "AABB_max" : [1900, 1500, 1200],
             "RangeRange" : [150.0, 400.0],
             "AttenuationDistanceUNorm" : 0.75,
-            "LinearVelocityMinRange" :  [-300.0, -300.0, -300.0],
-            "LinearVelocityMaxRange" :  [300.0, 300.0, 300.0]
+            "LinearVelocityMinRange" :  [-0.05, -0.05, -0.05],
+            "LinearVelocityMaxRange" :  [0.05, 0.05, 0.05]
         }
     ],
     "SpotLights" : [
@@ -68,8 +68,8 @@
             "AttenuationDistanceUNorm" : 0.75,
             "OuterAngleRange" : [0.785398, 2.094395],
             "InnerAngleDifference" : 0.17,
-            "LinearVelocityMinRange" :  [-300.0, -300.0, -300.0],
-            "LinearVelocityMaxRange" :  [300.0, 300.0, 300.0],
+            "LinearVelocityMinRange" :  [-0.05, -0.05, -0.05],
+            "LinearVelocityMaxRange" :  [0.05, 0.05, 0.05],
             "AngularVelocityMinRange" : [-0.125, -0.125, -0.125],
             "AngularVelocityMaxRange" : [0.125, 0.125, 0.125]
         }

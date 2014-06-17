@@ -107,9 +107,9 @@ private:
 
 	Common::DirectionalLight m_directionalLight;
 	std::vector<Common::PointLight> m_pointLights;
-	std::vector<Common::PointLightAnimator *> m_pointLightAnimators;
+	std::vector<Common::PointLightAnimator> m_pointLightAnimators;
 	std::vector<Common::SpotLight> m_spotLights;
-	std::vector<Common::SpotLightAnimator *> m_spotLightAnimators;
+	std::vector<Common::SpotLightAnimator> m_spotLightAnimators;
 
 	bool m_pointLightBufferNeedsRebuild;
 	bool m_spotLightBufferNeedsRebuild;

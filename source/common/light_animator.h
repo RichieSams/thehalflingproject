@@ -11,46 +11,59 @@
 
 #include "DirectXMath.h"
 
+#include <vector>
+
 
 namespace Common {
 
-class LightAnimatorBase {
-protected:
-	LightAnimatorBase(DirectX::XMFLOAT3 &velocity, const DirectX::XMFLOAT3 &negativeBounds, const DirectX::XMFLOAT3 &positiveBounds)
-		: m_velocity(velocity), m_negativeBounds(negativeBounds), m_positiveBounds(positiveBounds) {}
+class PointLightAnimator {
+public:
+	PointLightAnimator(DirectX::XMFLOAT3 velocity, const DirectX::XMFLOAT3 negativeBounds, const DirectX::XMFLOAT3 positiveBounds, std::vector<Common::PointLight> *lightList, uint index)
+		: m_velocity(velocity),
+		  m_negativeBounds(negativeBounds),
+		  m_positiveBounds(positiveBounds),
+		  m_lightList(lightList),
+		  m_index(index) {
+	}
 
-protected:
+private:
 	DirectX::XMFLOAT3 m_velocity;
 
 	DirectX::XMFLOAT3 m_positiveBounds;
 	DirectX::XMFLOAT3 m_negativeBounds;
+
+	std::vector<Common::PointLight> *m_lightList;
+	uint m_index;
+
+public:
+	void AnimateLight(double deltaTime);
 };
 
 
-class PointLightAnimator : public LightAnimatorBase {
+class SpotLightAnimator {
 public:
-	PointLightAnimator(DirectX::XMFLOAT3 velocity, const DirectX::XMFLOAT3 negativeBounds, const DirectX::XMFLOAT3 positiveBounds)
-		: LightAnimatorBase(velocity, negativeBounds, positiveBounds) {}
-
-public:
-	void AnimateLight(Common::PointLight *light, double deltaTime);
-};
-
-
-class SpotLightAnimator : public LightAnimatorBase {
-public:
-	SpotLightAnimator(DirectX::XMFLOAT3 velocity, DirectX::XMFLOAT3 angularVelocity, const DirectX::XMFLOAT3 negativeBounds, const DirectX::XMFLOAT3 positiveBounds)
-		: LightAnimatorBase(velocity, negativeBounds, positiveBounds),
-		  m_angularVelocity(angularVelocity) {
+	SpotLightAnimator(DirectX::XMFLOAT3 velocity, const DirectX::XMFLOAT3 negativeBounds, const DirectX::XMFLOAT3 positiveBounds, DirectX::XMFLOAT3 angularVelocity, std::vector<Common::SpotLight> *lightList, uint index)
+		: m_velocity(velocity),
+		  m_negativeBounds(negativeBounds),
+		  m_positiveBounds(positiveBounds),
+		  m_angularVelocity(angularVelocity),
+		  m_lightList(lightList),
+		  m_index(index) {
 	}
 
 private:
+	DirectX::XMFLOAT3 m_velocity;
+
+	DirectX::XMFLOAT3 m_positiveBounds;
+	DirectX::XMFLOAT3 m_negativeBounds;
+
 	DirectX::XMFLOAT3 m_angularVelocity;
 
-
+	std::vector<Common::SpotLight> *m_lightList;
+	uint m_index;
 
 public:
-	void AnimateLight(Common::SpotLight *light, double deltaTime);
+	void AnimateLight(double deltaTime);
 };
 
 } // End of namespace Common

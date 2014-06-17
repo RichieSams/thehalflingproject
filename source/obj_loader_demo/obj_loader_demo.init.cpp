@@ -133,6 +133,15 @@ void ObjLoaderDemo::LoadSceneJson() {
 			                           DirectX::XMFLOAT3(pointLights[i]["Position"][0u].asSingle(), pointLights[i]["Position"][1u].asSingle(), pointLights[i]["Position"][2u].asSingle()),
 			                           pointLights[i]["Range"].asSingle(),
 			                           pointLights[i]["AttenuationDistanceUNorm"].asSingle());
+
+			// All three values must exist for a linear velocity to be valid
+			if (!pointLights[i]["LinearVelocity"].isNull() && !pointLights[i]["AABB_min"].isNull() && !pointLights[i]["AABB_max"]) {
+				m_pointLightAnimators.emplace_back(DirectX::XMFLOAT3(pointLights[i]["LinearVelocity"][0u].asSingle(), pointLights[i]["LinearVelocity"][1u].asSingle(), pointLights[i]["LinearVelocity"][2u].asSingle()),
+				                                   DirectX::XMFLOAT3(pointLights[i]["AABB_min"][0u].asSingle(), pointLights[i]["AABB_min"][1u].asSingle(), pointLights[i]["AABB_min"][2u].asSingle()),
+				                                   DirectX::XMFLOAT3(pointLights[i]["AABB_max"][0u].asSingle(), pointLights[i]["AABB_max"][1u].asSingle(), pointLights[i]["AABB_max"][2u].asSingle()),
+				                                   &m_pointLights,
+				                                   m_pointLights.size() - 1);
+			}
 		} else {
 			uint numPointLights = pointLights[i]["NumberOfLights"].asUInt();
 			for (uint j = 0; j < numPointLights; ++j) {
@@ -146,6 +155,31 @@ void ObjLoaderDemo::LoadSceneJson() {
 										   DirectX::XMFLOAT3(Common::RandF(AABB_min.x, AABB_max.x), Common::RandF(AABB_min.y, AABB_max.y), Common::RandF(AABB_min.z, AABB_max.z)),
 										   Common::RandF(rangeRange.x, rangeRange.y),
 										   pointLights[i]["AttenuationDistanceUNorm"].asSingle());
+
+				DirectX::XMFLOAT3 linearVelocityMin(0.0f, 0.0f, 0.0f);
+				DirectX::XMFLOAT3 linearVelocityMax(0.0f, 0.0f, 0.0f);
+
+				Json::Value value = pointLights[i];
+
+				if (!pointLights[i]["LinearVelocityMinRange"].isNull()) {
+					linearVelocityMin.x = pointLights[i]["LinearVelocityMinRange"][0u].asSingle();
+					linearVelocityMin.y = pointLights[i]["LinearVelocityMinRange"][1u].asSingle();
+					linearVelocityMin.z = pointLights[i]["LinearVelocityMinRange"][2u].asSingle();
+				}
+				if (!pointLights[i]["LinearVelocityMaxRange"].isNull()) {
+					linearVelocityMax.x = pointLights[i]["LinearVelocityMaxRange"][0u].asSingle();
+					linearVelocityMax.y = pointLights[i]["LinearVelocityMaxRange"][1u].asSingle();
+					linearVelocityMax.z = pointLights[i]["LinearVelocityMaxRange"][2u].asSingle();
+				}
+				// Only create an animator if there is non-zero velocity
+				if (linearVelocityMin.x != 0.0f || linearVelocityMin.y != 0.0f || linearVelocityMin.z != 0.0f ||
+					linearVelocityMax.x != 0.0f || linearVelocityMax.y != 0.0f || linearVelocityMax.z != 0.0f) {
+					m_pointLightAnimators.emplace_back(DirectX::XMFLOAT3(Common::RandF(linearVelocityMin.x, linearVelocityMax.x), Common::RandF(linearVelocityMin.y, linearVelocityMax.y), Common::RandF(linearVelocityMin.z, linearVelocityMax.z)),
+					                                   AABB_min,
+					                                   AABB_max,
+					                                   &m_pointLights,
+					                                   m_pointLights.size() - 1);
+				}
 			}
 		}
 	}
@@ -161,6 +195,40 @@ void ObjLoaderDemo::LoadSceneJson() {
 			                          spotLights[i]["AttenuationDistanceUNorm"].asSingle(),
 			                          std::cos(spotLights[i]["InnerConeAngle"].asSingle()),
 			                          std::cos(spotLights[i]["OuterConeAngle"].asSingle()));
+
+			DirectX::XMFLOAT3 linearVelocity(0.0f, 0.0f, 0.0f);
+			DirectX::XMFLOAT3 AABB_min(0.0f, 0.0f, 0.0f);
+			DirectX::XMFLOAT3 AABB_max(0.0f, 0.0f, 0.0f);
+			DirectX::XMFLOAT3 angularVelocity(0.0f, 0.0f, 0.0f);
+
+			if (!spotLights[i]["LinearVelocity"].isNull() && !pointLights[i]["AABB_min"].isNull() && !pointLights[i]["AABB_max"]) {
+				linearVelocity.x = spotLights[i]["LinearVelocity"][0u].asSingle();
+				linearVelocity.y = spotLights[i]["LinearVelocity"][1u].asSingle();
+				linearVelocity.z = spotLights[i]["LinearVelocity"][2u].asSingle();
+
+				AABB_min.x = spotLights[i]["AABB_min"][0u].asSingle();
+				AABB_min.y = spotLights[i]["AABB_min"][1u].asSingle();
+				AABB_min.z = spotLights[i]["AABB_min"][2u].asSingle();
+
+				AABB_max.x = spotLights[i]["AABB_max"][0u].asSingle();
+				AABB_max.y = spotLights[i]["AABB_max"][1u].asSingle();
+				AABB_max.z = spotLights[i]["AABB_max"][2u].asSingle();
+			}
+			if (!spotLights[i]["AngularVelocity"].isNull()) {
+				angularVelocity.x = spotLights[i]["AngularVelocity"][0u].asSingle();
+				angularVelocity.y = spotLights[i]["AngularVelocity"][1u].asSingle();
+				angularVelocity.z = spotLights[i]["AngularVelocity"][2u].asSingle();
+			}
+
+			// Only create an animator if one of the velocities is non-zero
+			if (linearVelocity.x != 0.0f || linearVelocity.y != 0.0f || linearVelocity.z != 0.0f || angularVelocity.x != 0.0f || angularVelocity.y != 0.0f || angularVelocity.z != 0.0f) {
+				m_spotLightAnimators.emplace_back(linearVelocity,
+				                                  AABB_min,
+				                                  AABB_max,
+				                                  angularVelocity,
+				                                  &m_spotLights,
+				                                  m_spotLights.size() - 1);
+			}
 		} else {
 			uint numSpotLights = spotLights[i]["NumberOfLights"].asUInt();
 			for (uint j = 0; j < numSpotLights; ++j) {
@@ -182,6 +250,44 @@ void ObjLoaderDemo::LoadSceneJson() {
 				                          spotLights[i]["AttenuationDistanceUNorm"].asSingle(),
 				                          cosInnerAngle,
 				                          cosOuterAngle);
+
+				DirectX::XMFLOAT3 linearVelocityMin(0.0f, 0.0f, 0.0f);
+				DirectX::XMFLOAT3 linearVelocityMax(0.0f, 0.0f, 0.0f);
+				DirectX::XMFLOAT3 angularVelocityMin(0.0f, 0.0f, 0.0f);
+				DirectX::XMFLOAT3 angularVelocityMax(0.0f, 0.0f, 0.0f);
+
+				if (!spotLights[i]["LinearVelocityMinRange"].isNull()) {
+					linearVelocityMin.x = spotLights[i]["LinearVelocityMinRange"][0u].asSingle();
+					linearVelocityMin.y = spotLights[i]["LinearVelocityMinRange"][1u].asSingle();
+					linearVelocityMin.z = spotLights[i]["LinearVelocityMinRange"][2u].asSingle();
+				}
+				if (!spotLights[i]["LinearVelocityMaxRange"].isNull()) {
+					linearVelocityMax.x = spotLights[i]["LinearVelocityMaxRange"][0u].asSingle();
+					linearVelocityMax.y = spotLights[i]["LinearVelocityMaxRange"][1u].asSingle();
+					linearVelocityMax.z = spotLights[i]["LinearVelocityMaxRange"][2u].asSingle();
+				}
+				if (!spotLights[i]["AngularVelocityMinRange"].isNull()) {
+					angularVelocityMin.x = spotLights[i]["AngularVelocityMinRange"][0u].asSingle();
+					angularVelocityMin.y = spotLights[i]["AngularVelocityMinRange"][1u].asSingle();
+					angularVelocityMin.z = spotLights[i]["AngularVelocityMinRange"][2u].asSingle();
+				}
+				if (!spotLights[i]["AngularVelocityMaxRange"].isNull()) {
+					angularVelocityMax.x = spotLights[i]["AngularVelocityMaxRange"][0u].asSingle();
+					angularVelocityMax.y = spotLights[i]["AngularVelocityMaxRange"][1u].asSingle();
+					angularVelocityMax.z = spotLights[i]["AngularVelocityMaxRange"][2u].asSingle();
+				}
+				// Only create an animator if there is non-zero velocity
+				if (linearVelocityMin.x != 0.0f || linearVelocityMin.y != 0.0f || linearVelocityMin.z != 0.0f ||
+					linearVelocityMax.x != 0.0f || linearVelocityMax.y != 0.0f || linearVelocityMax.z != 0.0f ||
+					angularVelocityMin.x != 0.0f || angularVelocityMin.y != 0.0f || angularVelocityMin.z != 0.0f ||
+					angularVelocityMax.x != 0.0f || angularVelocityMax.y != 0.0f || angularVelocityMax.z != 0.0f) {
+					m_spotLightAnimators.emplace_back(DirectX::XMFLOAT3(Common::RandF(linearVelocityMin.x, linearVelocityMax.x), Common::RandF(linearVelocityMin.y, linearVelocityMax.y), Common::RandF(linearVelocityMin.z, linearVelocityMax.z)),
+					                                  AABB_min,
+					                                  AABB_max,
+					                                  DirectX::XMFLOAT3(Common::RandF(angularVelocityMin.x, angularVelocityMax.x), Common::RandF(angularVelocityMin.y, angularVelocityMax.y), Common::RandF(angularVelocityMin.z, angularVelocityMax.z)),
+					                                  &m_spotLights,
+					                                  m_spotLights.size() - 1);
+				}
 			}
 		}
 	}

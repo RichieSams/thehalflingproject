@@ -79,12 +79,6 @@ void ObjLoaderDemo::Shutdown() {
 	ReleaseCOM(m_defaultInputLayout);
 	ReleaseCOM(m_debugObjectInputLayout);
 
-	for (auto iter = m_pointLightAnimators.begin(); iter != m_pointLightAnimators.end(); ++iter) {
-		delete *iter;
-	}
-	for (auto iter = m_spotLightAnimators.begin(); iter != m_spotLightAnimators.end(); ++iter) {
-		delete *iter;
-	}
 	for (auto iter = m_gBuffers.begin(); iter != m_gBuffers.end(); ++iter) {
 		delete *iter;
 	}

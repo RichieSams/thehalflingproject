@@ -166,6 +166,26 @@
                                 "minItems" : 3,
                                 "maxItems" : 3,
                                 "additionalItems" : false
+                            },
+                            "AABB_min" : {
+                                "description" : "",
+					            "type" : "array",
+					            "items" : {
+                                    "type" : "number"
+                                },
+                                "minItems" : 3,
+                                "maxItems" : 3,
+                                "additionalItems" : false
+                            },
+                            "AABB_max" : {
+                                "description" : "",
+					            "type" : "array",
+					            "items" : {
+                                    "type" : "number"
+                                },
+                                "minItems" : 3,
+                                "maxItems" : 3,
+                                "additionalItems" : false
                             }
                         }
                     },
@@ -312,6 +332,26 @@
                                 "additionalItems" : false
                             },
                             "AngularVelocity" : {
+                                "description" : "",
+					            "type" : "array",
+					            "items" : {
+                                    "type" : "number"
+                                },
+                                "minItems" : 3,
+                                "maxItems" : 3,
+                                "additionalItems" : false
+                            },
+                            "AABB_min" : {
+                                "description" : "",
+					            "type" : "array",
+					            "items" : {
+                                    "type" : "number"
+                                },
+                                "minItems" : 3,
+                                "maxItems" : 3,
+                                "additionalItems" : false
+                            },
+                            "AABB_max" : {
                                 "description" : "",
 					            "type" : "array",
 					            "items" : {

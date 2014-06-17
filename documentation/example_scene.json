@@ -45,7 +45,9 @@
             "AttenuationDistanceUNorm" : 0.75,
             // Velocities are all optional
             // If a velocity is not specified, it is assumed zero
-            "LinearVelocity" : [75.0, -200.0, 150.0]
+            "LinearVelocity" : [75.0, -200.0, 150.0],
+            "AABB_min" : [-500, -500, -500],
+            "AABB_max" : [500, 500, 500]
         },
         // Create 999 random lights in the area defined by the AABB
         {
@@ -75,7 +77,9 @@
             // Velocities are all optional
             // If a velocity is not specified, it is assumed zero
             "LinearVelocity" : [75.0, -200.0, 150.0],
-            "AngularVelocity" : [-0.1, 0.05, 0.01]
+            "AngularVelocity" : [-0.1, 0.05, 0.01],
+            "AABB_min" : [-500, -500, -500],
+            "AABB_max" : [500, 500, 500]
         },
         // Create 999 random lights in the area defined by the AABB
         {

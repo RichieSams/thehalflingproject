@@ -45,11 +45,10 @@ void GBufferPS(GBufferShaderPixelIn input, out GBuffer gbuffer) {
 	[flatten]
 	if ((gTextureFlags & 0x02) == 0x02) {
 		gbuffer.spec.xyz = gMaterial.Specular.xyz * gSpecColorTexture.Sample(gSpecColorSampler, input.texCoord).xyz;
-		gbuffer.spec.w = gMaterial.Specular.w / MAX_SPEC_POWER;
 	} else {
 		gbuffer.spec.xyz = gMaterial.Specular.xyz;
-		gbuffer.spec.w = gMaterial.Specular.w / MAX_SPEC_POWER;
 	}
+	gbuffer.spec.w = gMaterial.Specular.w / MAX_SPEC_POWER;
 
 	float3 cartesianNormal = normalize(input.normal);
 

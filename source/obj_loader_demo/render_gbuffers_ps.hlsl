@@ -57,10 +57,7 @@ float4 RenderGBuffersPS(CalculatedTrianglePixelIn input) : SV_TARGET {
 		float linearZ = LinearDepth(zw, gProj) * 0.001f;
 
 		return float4(zw, zw, zw, 1.0f);
-	} else {
-		// Render position from depth
-		float zw = (float)(gGBufferDepth.Load(pixelCoord, 0));
-
-		return float4(PositionFromDepth(zw, pixelCoord, gbufferDim, gInvViewProjection), 1.0f);
 	}
+
+	return float4(1.0f, 0.0f, 1.0f, 1.0f); // Magenta
 }

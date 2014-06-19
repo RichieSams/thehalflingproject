@@ -315,8 +315,8 @@ void ObjLoaderDemo::InitTweakBar() {
 	TwType shaderType = TwDefineEnum("ShaderType", shaderEV, 2);
 	TwAddVarRW(m_settingsBar, "Shader Type", shaderType, &m_shadingType, NULL);
 
-	TwEnumVal gbufferEV[] = {{GBufferSelector::None, "None"}, {GBufferSelector::Diffuse, "Diffuse"}, {GBufferSelector::Specular, "Specular"}, {GBufferSelector::Normal_Spherical, "Normal Spherical"}, {GBufferSelector::Normal_Cartesian, "Normal Cartesian"}, {GBufferSelector::Depth, "Depth"}, {GBufferSelector::Position, "Position"}};
-	TwType gbufferViewType = TwDefineEnum("GBufferViewType", gbufferEV, 7);
+	TwEnumVal gbufferEV[] = {{GBufferSelector::None, "None"}, {GBufferSelector::Diffuse, "Diffuse"}, {GBufferSelector::Specular, "Specular"}, {GBufferSelector::Normal_Spherical, "Normal Spherical"}, {GBufferSelector::Normal_Cartesian, "Normal Cartesian"}, {GBufferSelector::Depth, "Depth"}};
+	TwType gbufferViewType = TwDefineEnum("GBufferViewType", gbufferEV, 6);
 	TwAddVarRW(m_settingsBar, "GBuffer View", gbufferViewType, &m_gbufferSelector, NULL);
 
 	TwAddVarRW(m_settingsBar, "Directional Light Ambient", TW_TYPE_COLOR3F, &m_directionalLight.Ambient, "");

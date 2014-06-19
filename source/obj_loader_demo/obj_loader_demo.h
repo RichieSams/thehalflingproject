@@ -55,8 +55,7 @@ enum GBufferSelector {
 	Normal_Spherical = 2,
 	Normal_Cartesian = 3,
 	Depth = 4,
-	Position = 5,
-	None = 6
+	None = 5
 };
 
 struct ModelToLoad {

@@ -527,14 +527,13 @@ void ObjLoaderDemo::RenderDebugGeometry() {
 
 		m_immediateContext->PSSetShaderResources(0, 4, &m_gBufferSRVs.front());
 
-		DirectX::XMFLOAT2 translations[6] = {DirectX::XMFLOAT2(-1.0f, -1.0f),
+		DirectX::XMFLOAT2 translations[5] = {DirectX::XMFLOAT2(-1.0f, -1.0f),
 		                                     DirectX::XMFLOAT2(-0.5f, -1.0f),
 		                                     DirectX::XMFLOAT2(0.0f, -1.0f),
 		                                     DirectX::XMFLOAT2(0.5f, -1.0f),
-		                                     DirectX::XMFLOAT2(0.5f, -0.5f),
-		                                     DirectX::XMFLOAT2(0.5f, 0.0f)};
+		                                     DirectX::XMFLOAT2(0.5f, -0.5f)};
 
-		for (uint i = 0; i < 6; ++i) {
+		for (uint i = 0; i < 5; ++i) {
 			TransformedFullScreenTriangleVertexShaderConstants vertexShaderConstantsBuffer;
 			vertexShaderConstantsBuffer.gClipTranslation = translations[i];
 			vertexShaderConstantsBuffer.gClipScale = 0.25f;
@@ -568,9 +567,6 @@ void ObjLoaderDemo::RenderDebugGeometry() {
 
 		transform._42 = m_clientHeight - (2.0f * quarterHeight);
 		m_spriteRenderer.RenderText(m_timesNewRoman12Font, L"Z/W Depth", transform, 0U, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) /* Yellow */);
-
-		transform._42 = m_clientHeight - (3.0f * quarterHeight);
-		m_spriteRenderer.RenderText(m_timesNewRoman12Font, L"Position", transform, 0U, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) /* Yellow */);
 
 		m_spriteRenderer.End();
 	}

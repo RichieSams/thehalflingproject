@@ -18,10 +18,10 @@ float2 CartesianToSpherical(float3 cartesian) {
 	[flatten]
 	if (any(cartesian.xy)) {
 		spherical.x = atan2(cartesian.y, cartesian.x);
-		spherical.y = acos(cartesian.z);
 	} else {
-		spherical = float2(0.0f, 0.0f);
+		spherical.x = 0.0f;
 	}
+	spherical.y = acos(cartesian.z);
 
 	return spherical;
 }

@@ -134,6 +134,7 @@ private:
 	ID3D11SamplerState *m_linearClamp;
 	ID3D11SamplerState *m_linearBorder;
 	ID3D11SamplerState *m_point;
+	ID3D11SamplerState *m_pointWrap;
 	ID3D11SamplerState *m_anisotropic;
 	ID3D11SamplerState *m_shadowMap;
 	ID3D11SamplerState *m_shadowMapPCF;
@@ -145,6 +146,7 @@ public:
 	ID3D11SamplerState *LinearClamp() { return m_linearClamp; };
 	ID3D11SamplerState *LinearBorder() { return m_linearBorder; };
 	ID3D11SamplerState *Point() { return m_point; };
+	ID3D11SamplerState *PointWrap() { return m_pointWrap; }
 	ID3D11SamplerState *Anisotropic() { return m_anisotropic; };
 	ID3D11SamplerState *ShadowMap() { return m_shadowMap; };
 	ID3D11SamplerState *ShadowMapPCF() { return m_shadowMapPCF; };
@@ -153,6 +155,7 @@ public:
 	static D3D11_SAMPLER_DESC LinearClampDesc();
 	static D3D11_SAMPLER_DESC LinearBorderDesc();
 	static D3D11_SAMPLER_DESC PointDesc();
+	static D3D11_SAMPLER_DESC PointWrapDesc();
 	static D3D11_SAMPLER_DESC AnisotropicDesc();
 	static D3D11_SAMPLER_DESC ShadowMapDesc();
 	static D3D11_SAMPLER_DESC ShadowMapPCFDesc();

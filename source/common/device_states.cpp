@@ -470,6 +470,7 @@ void SamplerStates::Initialize(ID3D11Device *device) {
 	HR(device->CreateSamplerState(&LinearClampDesc(), &m_linearClamp));
 	HR(device->CreateSamplerState(&LinearBorderDesc(), &m_linearBorder));
 	HR(device->CreateSamplerState(&PointDesc(), &m_point));
+	HR(device->CreateSamplerState(&PointWrapDesc(), &m_pointWrap));
 	HR(device->CreateSamplerState(&AnisotropicDesc(), &m_anisotropic));
 	HR(device->CreateSamplerState(&ShadowMapDesc(), &m_shadowMap));
 	HR(device->CreateSamplerState(&ShadowMapPCFDesc(), &m_shadowMapPCF));
@@ -480,6 +481,7 @@ SamplerStates::~SamplerStates() {
 	ReleaseCOM(m_linearClamp);
 	ReleaseCOM(m_linearBorder);
 	ReleaseCOM(m_point);
+	ReleaseCOM(m_pointWrap);
 	ReleaseCOM(m_anisotropic);
 	ReleaseCOM(m_shadowMap);
 	ReleaseCOM(m_shadowMapPCF);
@@ -543,6 +545,23 @@ D3D11_SAMPLER_DESC SamplerStates::PointDesc() {
 	sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
 	sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
 	sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+	sampDesc.MipLODBias = 0.0f;
+	sampDesc.MaxAnisotropy = 1;
+	sampDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+	sampDesc.BorderColor[0] = sampDesc.BorderColor[1] = sampDesc.BorderColor[2] = sampDesc.BorderColor[3] = 0;
+	sampDesc.MinLOD = 0;
+	sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+	return sampDesc;
+}
+
+D3D11_SAMPLER_DESC SamplerStates::PointWrapDesc() {
+	D3D11_SAMPLER_DESC sampDesc;
+
+	sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+	sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
 	sampDesc.MipLODBias = 0.0f;
 	sampDesc.MaxAnisotropy = 1;
 	sampDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;

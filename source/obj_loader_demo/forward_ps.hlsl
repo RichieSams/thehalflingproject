@@ -43,6 +43,13 @@ StructuredBuffer<SpotLight> gSpotLights : register(t9);
 
 
 float4 ForwardPS(ForwardPixelIn input) : SV_TARGET {
+	// Alpha
+	[flatten]
+	if ((gTextureFlags & 0x08) == 0x08) {
+		float alpha = gAlphaTexture.Sample(gAlphaSampler, input.texCoord).x;
+		clip(alpha < 0.1f ? -1 : 1);
+	}
+
 	SurfaceProperties surfProps;
 	surfProps.position = input.positionWorld;
 	

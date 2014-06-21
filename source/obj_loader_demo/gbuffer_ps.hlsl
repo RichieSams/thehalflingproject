@@ -35,6 +35,14 @@ SamplerState gDisplacementSampler : register(s4);
 SamplerState gNormalSampler : register(s5);
 
 void GBufferPS(GBufferShaderPixelIn input, out GBuffer gbuffer) {
+	// Alpha
+	[flatten]
+	if ((gTextureFlags & 0x08) == 0x08) {
+		float alpha = gAlphaTexture.Sample(gAlphaSampler, input.texCoord).x;
+		clip(alpha < 0.1f ? -1 : 1);
+	}
+
+	// Diffuse
 	[flatten]
 	if ((gTextureFlags & 0x01) == 0x01) {
 		gbuffer.diffuse = gMaterial.Diffuse.xyz * gDiffuseTexture.Sample(gDiffuseSampler, input.texCoord).xyz;
@@ -42,6 +50,7 @@ void GBufferPS(GBufferShaderPixelIn input, out GBuffer gbuffer) {
 		gbuffer.diffuse = gMaterial.Diffuse.xyz;
 	}
 
+	// Specular
 	[flatten]
 	if ((gTextureFlags & 0x02) == 0x02) {
 		gbuffer.spec.xyz = gMaterial.Specular.xyz * gSpecColorTexture.Sample(gSpecColorSampler, input.texCoord).xyz;
@@ -52,6 +61,7 @@ void GBufferPS(GBufferShaderPixelIn input, out GBuffer gbuffer) {
 
 	float3 cartesianNormal = normalize(input.normal);
 
+	// Normal
 	[flatten]
 	if ((gTextureFlags & 0x20) == 0x20) {
 		float3 normalMapSample = gNormalTexture.Sample(gNormalSampler, input.texCoord).xyz;

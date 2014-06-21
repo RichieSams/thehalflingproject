@@ -20,6 +20,33 @@ void ObjLoaderDemo::DrawFrame(double deltaTime) {
 			// Clean-up the thread
 			m_sceneLoaderThread.join();
 
+			DirectX::XMVECTOR AABB_minXM = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+			DirectX::XMVECTOR AABB_maxXM = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+
+			// Get the AABB of the scene so we can calculate the scale factors for the camera movement
+			for (auto iter = m_models.begin(); iter != m_models.end(); ++iter) {
+				AABB_minXM = DirectX::XMVectorMin(AABB_minXM, DirectX::XMVectorScale(iter->first->GetAABBMin_XM(), m_sceneScaleFactor));
+				AABB_maxXM = DirectX::XMVectorMax(AABB_maxXM, DirectX::XMVectorScale(iter->first->GetAABBMax_XM(), m_sceneScaleFactor));
+			}
+			for (auto iter = m_instancedModels.begin(); iter != m_instancedModels.end(); ++iter) {
+				for (auto transformIter = iter->second->begin(); transformIter != iter->second->end(); ++transformIter) {
+					AABB_minXM = DirectX::XMVectorMin(AABB_minXM, DirectX::XMVectorScale(DirectX::XMVector3Transform(iter->first->GetAABBMin_XM(), *transformIter), m_sceneScaleFactor));
+					AABB_maxXM = DirectX::XMVectorMax(AABB_maxXM, DirectX::XMVectorScale(DirectX::XMVector3Transform(iter->first->GetAABBMax_XM(), *transformIter), m_sceneScaleFactor));
+				}
+			}
+
+			DirectX::XMFLOAT3 AABB_min;
+			DirectX::XMFLOAT3 AABB_max;
+			DirectX::XMStoreFloat3(&AABB_min, AABB_minXM);
+			DirectX::XMStoreFloat3(&AABB_max, AABB_maxXM);
+
+			float min = std::min(std::min(AABB_min.x, AABB_min.y), AABB_min.z);
+			float max = std::max(std::max(AABB_max.x, AABB_max.y), AABB_max.z);
+			float range = max - min;
+
+			m_cameraPanFactor = range * 0.0002857f;
+			m_cameraScrollFactor = range * 0.0002857f;
+
 			m_sceneIsSetup = true;
 		}
 		RenderMainPass();
@@ -75,7 +102,7 @@ void ObjLoaderDemo::ForwardRenderingPass() {
 	ID3D11SamplerState *samplerState[6] {m_samplerStates.Anisotropic(),  // Diffuse
 	                                     m_samplerStates.Anisotropic(),  // Spec color
 	                                     m_samplerStates.Linear(),       // Spec power
-	                                     m_samplerStates.Linear(),       // Alpha
+	                                     m_samplerStates.PointWrap(),    // Alpha
 	                                     m_samplerStates.Linear(),       // Displacement
 	                                     m_samplerStates.Linear()};      // Normal
 	m_immediateContext->PSSetSamplers(0, 6, samplerState);
@@ -240,7 +267,7 @@ void ObjLoaderDemo::NoCullDeferredRenderingPass() {
 	ID3D11SamplerState *samplerState[6] {m_samplerStates.Anisotropic(),  // Diffuse
 	                                     m_samplerStates.Anisotropic(),  // Spec color
 	                                     m_samplerStates.Linear(),       // Spec power
-	                                     m_samplerStates.Linear(),       // Alpha
+	                                     m_samplerStates.PointWrap(),    // Alpha
 	                                     m_samplerStates.Linear(),       // Displacement
 	                                     m_samplerStates.Linear()};      // Normal
 	m_immediateContext->PSSetSamplers(0, 6, samplerState);

@@ -81,6 +81,9 @@ private:
 
 	Common::Vector2 m_mouseLastPos;
 	Common::Camera m_camera;
+	float m_cameraPanFactor;
+	float m_cameraScrollFactor;
+
 	Common::TextureManager m_textureManager;
 	Common::ModelManager m_modelManager;
 	Common::Console m_console;

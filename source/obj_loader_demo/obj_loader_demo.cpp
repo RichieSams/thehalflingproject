@@ -23,6 +23,8 @@ ObjLoaderDemo::ObjLoaderDemo(HINSTANCE hinstance)
 	: Halfling::HalflingEngine(hinstance),
 	  m_nearClip(0.1f),
 	  m_farClip(5000.0f),
+	  m_cameraPanFactor(1.0f),
+	  m_cameraScrollFactor(1.0f),
 	  m_globalWorldTransform(DirectX::XMMatrixIdentity()),
 	  m_camera(0.5f * DirectX::XM_PI, 0.45f * DirectX::XM_PI, 100.0f),
 	  m_showConsole(false),
@@ -210,10 +212,10 @@ void ObjLoaderDemo::MouseMove(WPARAM buttonState, int x, int y) {
 		}
 	} else if ((buttonState & MK_MBUTTON) != 0) {
 		if (GetKeyState(VK_MENU) & 0x8000) {
-			float dx = ((float)(m_mouseLastPos.x - x) / 10);
-			float dy = ((float)(m_mouseLastPos.y - y) / 10);
+			float dx = ((float)(m_mouseLastPos.x - x));
+			float dy = ((float)(m_mouseLastPos.y - y));
 
-			m_camera.Pan(-dx, dy);
+			m_camera.Pan(-dx * m_cameraPanFactor, dy * m_cameraPanFactor);
 		}
 	}
 
@@ -223,7 +225,7 @@ void ObjLoaderDemo::MouseMove(WPARAM buttonState, int x, int y) {
 
 void ObjLoaderDemo::MouseWheel(int zDelta) {
 	// Make each wheel dedent correspond to a size based on the scene
-	m_camera.Zoom(0.1f * (float)zDelta);
+	m_camera.Zoom((float)zDelta * m_cameraScrollFactor);
 }
 
 void ObjLoaderDemo::CharacterInput(wchar character) {

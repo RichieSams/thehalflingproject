@@ -66,7 +66,7 @@ float4 ForwardPS(ForwardPixelIn input) : SV_TARGET {
 	if ((gTextureFlags & 0x02) == 0x02) {
 		surfProps.specAlbedoAndPower.xyz *= gSpecColorTexture.Sample(gSpecColorSampler, input.texCoord).xyz;
 	}
-	surfProps.specAlbedoAndPower.w = gMaterial.Specular.w / MAX_SPEC_POWER;
+	surfProps.specAlbedoAndPower.w = gMaterial.Specular.w;
 
 	// Interpolating can unnormalize
 	surfProps.normal = normalize(input.normal);

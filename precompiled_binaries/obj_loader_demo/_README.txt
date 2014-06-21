@@ -1,4 +1,4 @@
-This demo is the current (April 28, 2014) build of ObjLoaderDemo
+This demo is the current (June 21, 2014) build of ObjLoaderDemo
 As this demo is still in progress, if you want to most up-to-date version of the demo, download the full source and compile.
 
 
@@ -6,20 +6,16 @@ Overview:
 After finishing the deferred shading demo, I wanted a more complex scene to test deferred against forward. OBJ model files naturally were my first thought.
 So this demo is my current progress on loading an entire scene represented in an OBJ file and rendering it.
 
-As of now, it is hardcoded to only load the supplied Sponza Atrium Scene. The code is capable of loading other scenes, but I haven't implemented the interface to allow that yet.
-
-The actual rendering is very similar to the DeferredShadingDemo. Most of the modifications were actually bug fixes.
-
 The GBuffers are laid out as follows:
-Albedo           DXGI_FORMAT_R10G10B11_UNORM
-Normal           DXGI_FORMAT_R16G16_FLOAT
-MaterialIndex    DXGI_FORMAT_R16_FLOAT
-Depth            DXGI_FORMAT_R32_FLOAT
+Diffuse Albedo     DXGI_FORMAT_R11G11B10_FLOAT
+Specular Albedo    DXGI_FORMAT_R8G8B8A8_UNORM
+Normal             DXGI_FORMAT_R16G16_FLOAT
+Depth              DXGI_FORMAT_D32_FLOAT
 
-Albedo           Stores the RGB diffuse color read from texture mapping
-Normal           The fragment surface unit normal stored in spherical coordinates. (We don't store r since we know it's 1 for a unit normal)
-MaterialIndex    An offset index to a global material array in the shader
-Depth            The hardware depth buffer. It stores (1 - z/w). By swapping the depth planes, we spread the depth precision out more evenly. http://mynameismjp.wordpress.com/2010/03/22/attack-of-the-depth-buffer/)
+Diffuse Albedo     Stores the RGB diffuse color
+Specular Albedo    Stores the specular color in the RBG components and the specular power in the alpha component
+Normal             The fragment surface unit normal stored in spherical coordinates. (We don't store r since we know it's 1 for a unit normal)
+Depth              The hardware depth buffer. It stores (1 - z/w). By swapping the depth planes, we spread the depth precision out more evenly. http://mynameismjp.wordpress.com/2010/03/22/attack-of-the-depth-buffer/)
 
 
 Controls:
@@ -31,15 +27,27 @@ Scroll middle mouse to zoom
 Click the little arrow in the bottom left-corner to change settings
 
 
-Things I still need to add/fix:
-- Forward and Deferred are creating slightly different colors on certain faces
-    - Perhaps the normal buffer?
-- Allow users to specify their own OBJ file
+
 
 
 Changelog:
 
-April 28, 2014 SHA bb42984aba144c2ce393ea3d92ad1ef11c483530
+June 21, 2014 - SHA 0dcabe7245637c2533098ee02d701d34398ac7e8
+- Re-add loading screen
+- Added a scene.json
+    - Defines what is rendered
+        - Models
+		    - Can be instanced
+        - Lights
+- Added a cube model to demonstrate instancing
+- Deferred shading no longer stores an index to a material
+    - Instead it just bakes all the material data into the G-Buffers
+	- Added a specular G-Buffer to handle this
+- Modify the sponza materials to allow specular
+- Moved all demo files to a sub-folder and put a shortcut in the main folder
+    - Makes it a a lot easier for a user to find the exe file
+
+April 28, 2014 - SHA bb42984aba144c2ce393ea3d92ad1ef11c483530
 - All textures are now required to be DDS files (but added a tool to auto-convert them during HMF creation).
   WIC was allowing us to load some other image formats, but the library required an ImmediateContext in order to generate MipMaps. 
     - As of right now, this tool isn't included because sponza.hmf is provided and is hardcoded to be the only scene to run

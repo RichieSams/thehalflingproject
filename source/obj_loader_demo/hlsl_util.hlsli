@@ -87,4 +87,34 @@ float4x4 CreateMatrixFromRows(float4 r0, float4 r1, float4 r2, float4 r3) {
 	return float4x4(r0, r1, r2, r3);
 }
 
+float3 GetColor(float v, float vmin, float vmax)
+{
+   float3 color = float3(1.0f, 1.0f, 1.0f); // white
+   float dv;
+
+   if (v < vmin) {
+      v = vmin;
+   }
+   if (v > vmax) {
+      v = vmax;
+   }
+   dv = vmax - vmin;
+
+   if (v < (vmin + 0.25 * dv)) {
+      color.r = 0;
+      color.g = 4 * (v - vmin) / dv;
+   } else if (v < (vmin + 0.5 * dv)) {
+      color.r = 0;
+      color.b = 1 + 4 * (vmin + 0.25 * dv - v) / dv;
+   } else if (v < (vmin + 0.75 * dv)) {
+      color.r = 4 * (v - vmin - 0.5 * dv) / dv;
+      color.b = 0;
+   } else {
+      color.g = 1 + 4 * (vmin + 0.75 * dv - v) / dv;
+      color.b = 0;
+   }
+
+   return color;
+}
+
 #endif

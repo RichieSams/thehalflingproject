@@ -8,7 +8,6 @@
 #define LIGHTS_SHADER_H
 
 struct DirectionalLight {
-	float4 Ambient;
 	float4 Diffuse;
 	float4 Specular;
 	float3 Direction;

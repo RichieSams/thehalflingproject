@@ -18,7 +18,6 @@ struct DirectionalLight {
 public:
 	DirectionalLight() { ZeroMemory(this, sizeof(this)); }
 
-	DirectX::XMFLOAT4 Ambient;
 	DirectX::XMFLOAT4 Diffuse;
 	DirectX::XMFLOAT4 Specular;
 	DirectX::XMFLOAT3 Direction;

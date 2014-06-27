@@ -55,18 +55,8 @@
         "DirectionalLight" : {
             "description" : "",
 			"type" : "object",
-            "required" : ["Ambient", "Diffuse", "Specular", "Direction"],
+            "required" : ["Diffuse", "Specular", "Direction"],
             "properties" : {
-                "Ambient" : {
-                    "description" : "",
-					"type" : "array",
-					"items" : {
-                        "type" : "number"
-                    },
-                    "minItems" : 3,
-                    "maxItems" : 3,
-                    "additionalItems" : false
-                },
                 "Diffuse" : {
                     "description" : "",
 					"type" : "array",

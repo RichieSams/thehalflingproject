@@ -12,9 +12,9 @@
 cbuffer cbPerFrame : register(b0) {
 	float4x4 gInvViewProjection : packoffset(c0);
 	DirectionalLight gDirectionalLight : packoffset(c4);
-	float3 gEyePosition : packoffset(c8);
-	uint gNumPointLightsToDraw : packoffset(c9.x);
-	uint gNumSpotLightsToDraw : packoffset(c9.y);
+	float3 gEyePosition : packoffset(c7);
+	uint gNumPointLightsToDraw : packoffset(c8.x);
+	uint gNumSpotLightsToDraw : packoffset(c8.y);
 }
 
 

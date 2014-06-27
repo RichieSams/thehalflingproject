@@ -27,7 +27,6 @@
         // Append more models here
     ],
     "DirectionalLight" : {
-        "Ambient" : [0.2, 0.2, 0.2],
         "Diffuse" : [0.9, 0.9, 0.9],
         "Specular" : [1.0, 1.0, 1.0],
         "Direction" : [-0.57735, -0.57735, -0.57735],

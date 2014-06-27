@@ -118,7 +118,6 @@ void ObjLoaderDemo::LoadSceneJson() {
 
 	Json::Value directionalLight = root["DirectionalLight"];
 	if (!directionalLight.isNull()) {
-		m_directionalLight.Ambient = DirectX::XMFLOAT4(directionalLight["Ambient"][0u].asSingle(), directionalLight["Ambient"][1u].asSingle(), directionalLight["Ambient"][2u].asSingle(), 1.0f);
 		m_directionalLight.Diffuse = DirectX::XMFLOAT4(directionalLight["Diffuse"][0u].asSingle(), directionalLight["Diffuse"][1u].asSingle(), directionalLight["Diffuse"][2u].asSingle(), 1.0f);
 		m_directionalLight.Specular = DirectX::XMFLOAT4(directionalLight["Specular"][0u].asSingle(), directionalLight["Specular"][1u].asSingle(), directionalLight["Specular"][2u].asSingle(), 1.0f);
 		m_directionalLight.Direction = DirectX::XMFLOAT3(directionalLight["Direction"][0u].asSingle(), directionalLight["Direction"][1u].asSingle(), directionalLight["Direction"][2u].asSingle());
@@ -319,7 +318,6 @@ void ObjLoaderDemo::InitTweakBar() {
 	TwType gbufferViewType = TwDefineEnum("GBufferViewType", gbufferEV, 6);
 	TwAddVarRW(m_settingsBar, "GBuffer View", gbufferViewType, &m_gbufferSelector, NULL);
 
-	TwAddVarRW(m_settingsBar, "Directional Light Ambient", TW_TYPE_COLOR3F, &m_directionalLight.Ambient, "");
 	TwAddVarRW(m_settingsBar, "Directional Light Diffuse", TW_TYPE_COLOR3F, &m_directionalLight.Diffuse, "");
 	TwAddVarRW(m_settingsBar, "Directional Light Specular", TW_TYPE_COLOR3F, &m_directionalLight.Specular, "");
 	TwAddVarRW(m_settingsBar, "Directional Light Direction", TW_TYPE_DIR3F, &m_directionalLight.Direction, "");

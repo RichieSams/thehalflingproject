@@ -24,11 +24,11 @@ cbuffer cbPerFrame : register(b0) {
 
 	DirectionalLight gDirectionalLight : packoffset(c12);
 
-	float3 gEyePosition : packoffset(c16);
-	uint gNumPointLightsToDraw : packoffset(c16.w);
+	float3 gEyePosition : packoffset(c15);
+	uint gNumPointLightsToDraw : packoffset(c15.w);
 
-	float2 gCameraClipPlanes : packoffset(c17);
-	uint gNumSpotLightsToDraw : packoffset(c17.z);
+	float2 gCameraClipPlanes : packoffset(c16);
+	uint gNumSpotLightsToDraw : packoffset(c16.z);
 }
 
 #ifdef MSAA_

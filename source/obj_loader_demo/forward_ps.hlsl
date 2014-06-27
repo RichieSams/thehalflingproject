@@ -14,9 +14,9 @@
 
 cbuffer cbPerFrame : register(b0) {
 	DirectionalLight gDirectionalLight : packoffset(c0);
-	float3 gEyePosition : packoffset(c4);
-	uint gNumPointLightsToDraw : packoffset(c5.x);
-	uint gNumSpotLightsToDraw : packoffset(c5.y);
+	float3 gEyePosition : packoffset(c3);
+	uint gNumPointLightsToDraw : packoffset(c4.x);
+	uint gNumSpotLightsToDraw : packoffset(c4.y);
 }
 
 cbuffer cbPerObject : register(b1) {

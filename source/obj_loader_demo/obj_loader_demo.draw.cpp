@@ -461,6 +461,10 @@ void ObjLoaderDemo::DeferredRenderingPass() {
 		// Clear gBuffer resource bindings so they can be used as render targets next frame
 		ID3D11ShaderResourceView *views[4] = {nullptr, nullptr, nullptr, nullptr};
 		m_immediateContext->PSSetShaderResources(0, 4, views);
+
+		// Clear the HDR resource binding so it can be used in the PostProcessing
+		ID3D11RenderTargetView *nullRTV = nullptr;
+		m_immediateContext->OMSetRenderTargets(1, &nullRTV, nullptr);
 	}
 }
 
@@ -636,6 +640,10 @@ void ObjLoaderDemo::RenderDebugGeometry() {
 
 			m_immediateContext->Draw(6, 0);
 		}
+
+		// Clear gBuffer resource bindings so they can be used as render targets next frame
+		ID3D11ShaderResourceView *views[4] = {nullptr, nullptr, nullptr, nullptr};
+		m_immediateContext->PSSetShaderResources(0, 4, views);
 
 		// Render labels for each GBuffer part
 		m_spriteRenderer.Begin(m_immediateContext, Common::SpriteRenderer::Point);

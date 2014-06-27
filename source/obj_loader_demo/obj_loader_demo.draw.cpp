@@ -334,8 +334,6 @@ void ObjLoaderDemo::NoCullDeferredRenderingPass() {
 			SetInstancedGBufferVertexShaderObjectConstants(offsets[i]);
 
 			for (uint j = 0; j < m_instancedModels[i].first->GetSubsetCount(); ++j) {
-				SetForwardPixelShaderObjectConstants(m_instancedModels[i].first->GetSubsetMaterial(j), m_instancedModels[i].first->GetSubsetTextureFlags(j));
-
 				// Draw the models
 				m_instancedModels[i].first->DrawInstancedSubset(m_immediateContext, m_instancedModels[i].second->size(), j);
 			}

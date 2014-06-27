@@ -29,11 +29,7 @@ StructuredBuffer<SpotLight> gSpotLights : register(t5);
 StructuredBuffer<BlinnPhongMaterial> gMaterialList : register(t6);
 
 float4 NoCullFinalGatherPS(CalculatedTrianglePixelIn input) : SV_TARGET {
-	float2 gbufferDim;
-	uint dummy;
-	gGBufferDepth.GetDimensions(gbufferDim.x, gbufferDim.y, dummy);
-
-	float2 pixelCoord = input.texCoord * gbufferDim;
+	float2 pixelCoord = input.positionClip.xy;
 
 	// Sample from the Depth GBuffer and calculate position
 	float zw = (float)(gGBufferDepth.Load(pixelCoord, 0));

@@ -384,7 +384,37 @@ void ObjLoaderDemo::DeferredRenderingPass() {
 	DirectX::XMMATRIX tranposedProjMatrix = DirectX::XMMatrixTranspose(projectionMatrix);
 	DirectX::XMMATRIX transposedInvViewProj = DirectX::XMMatrixTranspose(DirectX::XMMatrixInverse(nullptr, viewProj));
 
-	if (m_shadingType == ShadingType::TiledCullDeferred) {
+	// If the selector isn't None, then we don't do any lighting calculations
+	// Instead we just render one of the GBuffers fullscreen.
+	if (m_gbufferSelector != None) {
+		// Bind and clear the HDR output texture
+		ID3D11RenderTargetView *targets[3] = {m_hdrOutput->GetRenderTarget(), nullptr, nullptr};
+		m_immediateContext->OMSetRenderTargets(3, targets, nullptr);
+		m_immediateContext->ClearRenderTargetView(targets[0], DirectX::Colors::LightGray);
+
+		// Bind the gbuffers to the pixel shader
+		m_immediateContext->PSSetShaderResources(0, 4, &m_gBufferSRVs.front());
+
+		m_renderGbuffersPixelShader->BindToPipeline(m_immediateContext);
+		SetRenderGBuffersPixelShaderConstants(transposedInvViewProj, m_gbufferSelector);
+
+		m_immediateContext->RSSetState(m_rasterizerStates.NoCull());
+
+		m_immediateContext->IASetVertexBuffers(0, 0, 0, 0, 0);
+		m_immediateContext->IASetIndexBuffer(0, DXGI_FORMAT_R32_UINT, 0);
+
+		m_immediateContext->Draw(3, 0);
+
+		// Clear gBuffer resource bindings so they can be used as render targets next frame
+		ID3D11ShaderResourceView *views[4] = {nullptr, nullptr, nullptr, nullptr};
+		m_immediateContext->PSSetShaderResources(0, 4, views);
+
+		// Clear the HDR resource binding so it can be used in the PostProcessing
+		ID3D11RenderTargetView *nullRTV = nullptr;
+		m_immediateContext->OMSetRenderTargets(1, &nullRTV, nullptr);
+
+	// Figure out what kind of final gather we're going to do
+	} else if (m_shadingType == ShadingType::TiledCullDeferred) {
 		// Bind and clear the HDR output texture
 		ID3D11UnorderedAccessView *hdrUAV = m_hdrOutput->GetUnorderedAccess();
 		m_immediateContext->CSSetUnorderedAccessViews(0, 1, &hdrUAV, nullptr);
@@ -431,24 +461,17 @@ void ObjLoaderDemo::DeferredRenderingPass() {
 		// Bind the gbuffers to the pixel shader
 		m_immediateContext->PSSetShaderResources(0, 4, &m_gBufferSRVs.front());
 
-		// Choose whether to actually calculate the lighting, or to render one of the GBuffers
-		if (m_gbufferSelector == None) {
-			// Bind the shader and set the constant buffer variables
-			m_noCullFinalGatherPixelShader->BindToPipeline(m_immediateContext);
-			SetNoCullFinalGatherShaderConstants(transposedInvViewProj);
+		// Bind the shader and set the constant buffer variables
+		m_noCullFinalGatherPixelShader->BindToPipeline(m_immediateContext);
+		SetNoCullFinalGatherShaderConstants(transposedInvViewProj);
 
-			if (m_pointLights.size() > 0) {
-				ID3D11ShaderResourceView *srv = m_pointLightBuffer->GetShaderResource();
-				m_immediateContext->PSSetShaderResources(4, 1, &srv);
-			}
-			if (m_spotLights.size() > 0) {
-				ID3D11ShaderResourceView *srv = m_spotLightBuffer->GetShaderResource();
-				m_immediateContext->PSSetShaderResources(5, 1, &srv);
-			}
-		} else {
-			m_renderGbuffersPixelShader->BindToPipeline(m_immediateContext);
-
-			SetRenderGBuffersPixelShaderConstants(transposedInvViewProj, m_gbufferSelector);
+		if (m_pointLights.size() > 0) {
+			ID3D11ShaderResourceView *srv = m_pointLightBuffer->GetShaderResource();
+			m_immediateContext->PSSetShaderResources(4, 1, &srv);
+		}
+		if (m_spotLights.size() > 0) {
+			ID3D11ShaderResourceView *srv = m_spotLightBuffer->GetShaderResource();
+			m_immediateContext->PSSetShaderResources(5, 1, &srv);
 		}
 
 		m_immediateContext->RSSetState(m_rasterizerStates.NoCull());

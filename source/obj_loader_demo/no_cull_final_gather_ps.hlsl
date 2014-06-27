@@ -43,7 +43,6 @@ float4 NoCullFinalGatherPS(CalculatedTrianglePixelIn input) : SV_TARGET {
 		discard;
 
 	SurfaceProperties surfProps;
-	surfProps.position = PositionFromDepth(zw, pixelCoord, gbufferDim, gInvViewProjection);
 
 	// Sample from the diffuse albedo GBuffer
 	surfProps.diffuseAlbedo = float4(gBufferDiffuse.Load(pixelCoord, 0).xyz, 1.0f);
@@ -56,6 +55,7 @@ float4 NoCullFinalGatherPS(CalculatedTrianglePixelIn input) : SV_TARGET {
 	// Sample from the Normal GBuffer
 	float2 normalSphericalCoords = gGBufferNormal.Load(pixelCoord, 0).xy;
 	surfProps.normal = SphericalToCartesian(normalSphericalCoords);
+	surfProps.position = PositionFromDepth(zw, input.texCoord, gInvViewProjection);
 
 	float3 toEye = normalize(gEyePosition - surfProps.position);
 

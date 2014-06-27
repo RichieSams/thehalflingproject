@@ -44,14 +44,17 @@ float LinearDepth(in float zw, in float4x4 projectionMatrix) {
     return projectionMatrix._43 / (zw - projectionMatrix._33);
 }
 
-// Calculates position from a depth value + pixel coordinate
-float3 PositionFromDepth(in float zw, in uint2 pixelCoord, in float2 displaySize, in float4x4 invViewProjection) {
-    float2 cpos = (pixelCoord + 0.5f) / displaySize;
-    cpos *= 2.0f;
-    cpos -= 1.0f;
-    cpos.y *= -1.0f;
-    float4 positionWS = mul(float4(cpos, zw, 1.0f), invViewProjection);
-    return positionWS.xyz / positionWS.w;
+// Calculates position from a depth value + texture coordinate
+float3 PositionFromDepth(in float zw, in float2 texCoord, in float4x4 invViewProjection) {
+    // Get x/w and y/w from the viewport position
+    float x = texCoord.x * 2 + -1;
+    float y = (1 - texCoord.y) * 2 + -1;
+
+    // Transform by the inverse view projection matrix
+    float4 positionVS = mul(float4(x, y, zw, 1.0f), invViewProjection);  
+
+    // Divide by w to get the view-space position
+    return positionVS.xyz / positionVS.w; 
 }
 
 // Perturbs a pixel normal given a normal map sample and the tangent

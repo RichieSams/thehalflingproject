@@ -584,7 +584,7 @@ void ObjLoaderDemo::RenderDebugGeometry() {
 
 		m_debugCone.UnMapInstanceBuffer(m_immediateContext);
 
-		// Use the backbuffer render target and the original depth buffer
+		// Use the hdr render target and the original depth buffer
 		ID3D11RenderTargetView *target = m_hdrOutput->GetRenderTarget();
 		m_immediateContext->OMSetRenderTargets(1, &target, m_depthStencilBuffer->GetDepthStencil());
 

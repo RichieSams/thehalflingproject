@@ -66,7 +66,6 @@ struct GBufferPixelShaderObjectConstants {
 
 // No cull final gather pass
 struct NoCullFinalGatherPixelShaderFrameConstants {
-	DirectX::XMMATRIX gProjection;
 	DirectX::XMMATRIX gInvViewProjection;
 
 	Common::DirectionalLight gDirectionalLight;
@@ -85,7 +84,6 @@ struct TransformedFullScreenTriangleVertexShaderConstants {
 };
 
 struct RenderGBuffersPixelShaderConstants {
-	DirectX::XMMATRIX gProj;
 	DirectX::XMMATRIX gInvViewProjection;
 	uint gGBufferIndex;
 };

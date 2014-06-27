@@ -10,12 +10,11 @@
 #include "obj_loader_demo/hlsl_util.hlsli"
 
 cbuffer cbPerFrame : register(b0) {
-	float4x4 gProjection : packoffset(c0);
-	float4x4 gInvViewProjection : packoffset(c4);
-	DirectionalLight gDirectionalLight : packoffset(c8);
-	float3 gEyePosition : packoffset(c12);
-	uint gNumPointLightsToDraw : packoffset(c13.x);
-	uint gNumSpotLightsToDraw : packoffset(c13.y);
+	float4x4 gInvViewProjection : packoffset(c0);
+	DirectionalLight gDirectionalLight : packoffset(c4);
+	float3 gEyePosition : packoffset(c8);
+	uint gNumPointLightsToDraw : packoffset(c9.x);
+	uint gNumSpotLightsToDraw : packoffset(c9.y);
 }
 
 

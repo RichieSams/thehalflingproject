@@ -382,7 +382,7 @@ void ObjLoaderDemo::NoCullDeferredRenderingPass() {
 	if (m_gbufferSelector == None) {
 		m_noCullFinalGatherPixelShader->BindToPipeline(m_immediateContext);
 
-		SetNoCullFinalGatherShaderConstants(projMatrix, invViewProj);
+		SetNoCullFinalGatherShaderConstants(invViewProj);
 
 		// Set light buffers
 		SetLightBuffers();
@@ -398,7 +398,7 @@ void ObjLoaderDemo::NoCullDeferredRenderingPass() {
 	} else {
 		m_renderGbuffersPixelShader->BindToPipeline(m_immediateContext);
 
-		SetRenderGBuffersPixelShaderConstants(projMatrix, invViewProj, m_gbufferSelector);
+		SetRenderGBuffersPixelShaderConstants(invViewProj, m_gbufferSelector);
 	}
 
 	m_immediateContext->RSSetState(m_rasterizerStates.NoCull());
@@ -443,9 +443,8 @@ void ObjLoaderDemo::SetGBufferPixelShaderConstants(const Common::BlinnPhongMater
 	m_gbufferPixelShader->SetPerObjectConstants(m_immediateContext, &pixelShaderObjectConstants, 1u);
 }
 
-void ObjLoaderDemo::SetNoCullFinalGatherShaderConstants(DirectX::XMMATRIX &projMatrix, DirectX::XMMATRIX &invViewProjMatrix) {
+void ObjLoaderDemo::SetNoCullFinalGatherShaderConstants(DirectX::XMMATRIX &invViewProjMatrix) {
 	NoCullFinalGatherPixelShaderFrameConstants pixelShaderFrameConstants;
-	pixelShaderFrameConstants.gProjection = projMatrix;
 	pixelShaderFrameConstants.gInvViewProjection = invViewProjMatrix;
 	pixelShaderFrameConstants.gDirectionalLight = m_directionalLight;
 	pixelShaderFrameConstants.gEyePosition = m_camera.GetCameraPosition();
@@ -565,7 +564,7 @@ void ObjLoaderDemo::RenderDebugGeometry() {
 
 			m_transformedFullscreenTriangleVertexShader->SetPerObjectConstants(m_immediateContext, &vertexShaderConstantsBuffer, 1u);
 
-			SetRenderGBuffersPixelShaderConstants(projectionMatrix, invViewProj, i);
+			SetRenderGBuffersPixelShaderConstants(invViewProj, i);
 
 			m_immediateContext->Draw(6, 0);
 		}
@@ -597,9 +596,8 @@ void ObjLoaderDemo::RenderDebugGeometry() {
 	}
 }
 
-void ObjLoaderDemo::SetRenderGBuffersPixelShaderConstants(DirectX::XMMATRIX &projMatrix, DirectX::XMMATRIX &invViewProjMatrix, uint gBufferId) {
+void ObjLoaderDemo::SetRenderGBuffersPixelShaderConstants(DirectX::XMMATRIX &invViewProjMatrix, uint gBufferId) {
 	RenderGBuffersPixelShaderConstants pixelShaderConstantsBuffer;
-	pixelShaderConstantsBuffer.gProj = DirectX::XMMatrixTranspose(projMatrix);
 	pixelShaderConstantsBuffer.gInvViewProjection = DirectX::XMMatrixTranspose(invViewProjMatrix);
 	pixelShaderConstantsBuffer.gGBufferIndex = gBufferId;
 

@@ -51,6 +51,7 @@ void ObjLoaderDemo::DrawFrame(double deltaTime) {
 		}
 		RenderMainPass();
 		RenderDebugGeometry();
+		PostProcess();
 	} else {
 		// Set the backbuffer as the main render target
 		m_immediateContext->OMSetRenderTargets(1, &m_renderTargetView, nullptr);
@@ -91,11 +92,12 @@ void ObjLoaderDemo::RenderMainPass() {
 }
 
 void ObjLoaderDemo::ForwardRenderingPass() {
-	// Set the backbuffer as the main render target
-	m_immediateContext->OMSetRenderTargets(1, &m_renderTargetView, m_depthStencilBuffer->GetDepthStencil());
+	// Set the HDR output as the main render target
+	ID3D11RenderTargetView *target = m_hdrOutput->GetRenderTarget();
+	m_immediateContext->OMSetRenderTargets(1, &target, m_depthStencilBuffer->GetDepthStencil());
 
 	// Clear the render target view and depth buffer
-	m_immediateContext->ClearRenderTargetView(m_renderTargetView, DirectX::Colors::LightGray);
+	m_immediateContext->ClearRenderTargetView(target, DirectX::Colors::LightGray);
 	m_immediateContext->ClearDepthStencilView(m_depthStencilBuffer->GetDepthStencil(), D3D11_CLEAR_DEPTH, 0.0f, 0);
 
 	// Set States
@@ -363,16 +365,15 @@ void ObjLoaderDemo::NoCullDeferredRenderingPass() {
 	}
 
 	// Final gather pass
-	ID3D11RenderTargetView *targets[3] = {m_renderTargetView, nullptr, nullptr};
+	ID3D11RenderTargetView *targets[3] = {m_hdrOutput->GetRenderTarget(), nullptr, nullptr};
 	m_immediateContext->OMSetRenderTargets(3, targets, nullptr);
-	m_immediateContext->ClearRenderTargetView(m_renderTargetView, DirectX::Colors::LightGray);
+	m_immediateContext->ClearRenderTargetView(targets[0], DirectX::Colors::LightGray);
 
 	// Full screen triangle setup
 	m_immediateContext->IASetInputLayout(nullptr);
 	m_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	m_fullscreenTriangleVertexShader->BindToPipeline(m_immediateContext);
-	m_immediateContext->GSSetShader(0, 0, 0);
 
 	m_immediateContext->PSSetShaderResources(0, 4, &m_gBufferSRVs.front());
 
@@ -515,7 +516,8 @@ void ObjLoaderDemo::RenderDebugGeometry() {
 		m_debugCone.UnMapInstanceBuffer(m_immediateContext);
 
 		// Use the backbuffer render target and the original depth buffer
-		m_immediateContext->OMSetRenderTargets(1, &m_renderTargetView, m_depthStencilBuffer->GetDepthStencil());
+		ID3D11RenderTargetView *target = m_hdrOutput->GetRenderTarget();
+		m_immediateContext->OMSetRenderTargets(1, &target, m_depthStencilBuffer->GetDepthStencil());
 
 		// Set States
 		m_immediateContext->OMSetDepthStencilState(m_depthStencilStates.ReverseDepthEnabled(), 0);
@@ -534,7 +536,8 @@ void ObjLoaderDemo::RenderDebugGeometry() {
 
 	if (m_showGBuffers && m_shadingType == ShadingType::NoCullDeferred) {
 		// Use the backbuffer render target
-		m_immediateContext->OMSetRenderTargets(1, &m_renderTargetView, nullptr);
+		ID3D11RenderTargetView *target = m_hdrOutput->GetRenderTarget();
+		m_immediateContext->OMSetRenderTargets(1, &target, nullptr);
 
 		// Set States
 		m_immediateContext->OMSetDepthStencilState(m_depthStencilStates.DepthDisabled(), 0);
@@ -602,6 +605,34 @@ void ObjLoaderDemo::SetRenderGBuffersPixelShaderConstants(DirectX::XMMATRIX &inv
 	pixelShaderConstantsBuffer.gGBufferIndex = gBufferId;
 
 	m_renderGbuffersPixelShader->SetPerFrameConstants(m_immediateContext, &pixelShaderConstantsBuffer, 0u);
+}
+
+void ObjLoaderDemo::PostProcess() {
+	m_immediateContext->OMSetRenderTargets(1, &m_renderTargetView, nullptr);
+
+	// No need to clear the backbuffer because we're writing to the entire thing
+
+	// Full screen triangle setup
+	m_immediateContext->IASetInputLayout(nullptr);
+	m_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	m_fullscreenTriangleVertexShader->BindToPipeline(m_immediateContext);
+	m_postProcessPixelShader->BindToPipeline(m_immediateContext);
+
+	m_immediateContext->RSSetState(m_rasterizerStates.NoCull());
+
+	m_immediateContext->IASetVertexBuffers(0, 0, 0, 0, 0);
+	m_immediateContext->IASetIndexBuffer(0, DXGI_FORMAT_R32_UINT, 0);
+
+	// Bind the HDR texture to the pixel shader
+	ID3D11ShaderResourceView *hdrSRV = m_hdrOutput->GetShaderResource();
+	m_immediateContext->PSSetShaderResources(0, 1, &hdrSRV);
+
+	m_immediateContext->Draw(3, 0);
+
+	// Clear hdr texture binding so it can be used as a render target next frame
+	ID3D11ShaderResourceView *nullSRV[1] = {nullptr};
+	m_immediateContext->PSSetShaderResources(0, 1, nullSRV);
 }
 
 void ObjLoaderDemo::RenderHUD() {

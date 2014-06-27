@@ -133,6 +133,8 @@ private:
 	Common::Depth2D *m_depthStencilBuffer;
 	D3D11_VIEWPORT m_screenViewport;
 
+	Common::Texture2D *m_hdrOutput;
+
 	std::vector<Common::Texture2D *> m_gBuffers;
 	std::vector<ID3D11ShaderResourceView *> m_gBufferSRVs;
 	std::vector<ID3D11RenderTargetView *> m_gBufferRTVs;
@@ -143,16 +145,22 @@ private:
 	Common::VertexShader<Common::DefaultShaderConstantType, ForwardVertexShaderObjectConstants> *m_forwardVertexShader;
 	Common::VertexShader<InstancedForwardVertexShaderFrameConstants, InstancedForwardVertexShaderObjectConstants> *m_instancedForwardVertexShader;
 	Common::PixelShader<ForwardPixelShaderFrameConstants, ForwardPixelShaderObjectConstants> *m_forwardPixelShader;
+
 	Common::VertexShader<Common::DefaultShaderConstantType, GBufferVertexShaderObjectConstants> *m_gbufferVertexShader;
 	Common::VertexShader<InstancedGBufferVertexShaderFrameConstants, InstancedGBufferVertexShaderObjectConstants> *m_instancedGBufferVertexShader;
 	Common::PixelShader<Common::DefaultShaderConstantType, GBufferPixelShaderObjectConstants> *m_gbufferPixelShader;
+
 	Common::VertexShader<> *m_fullscreenTriangleVertexShader;
+
 	Common::PixelShader<NoCullFinalGatherPixelShaderFrameConstants, Common::DefaultShaderConstantType> *m_noCullFinalGatherPixelShader;
 	Common::VertexShader<> *m_debugObjectVertexShader;
 	Common::PixelShader<> *m_debugObjectPixelShader;
 	Common::VertexShader<Common::DefaultShaderConstantType, TransformedFullScreenTriangleVertexShaderConstants> *m_transformedFullscreenTriangleVertexShader;
 	Common::PixelShader<RenderGBuffersPixelShaderConstants, Common::DefaultShaderConstantType> *m_renderGbuffersPixelShader;
 
+	Common::PixelShader<> *m_postProcessPixelShader;
+
+	// Shader Buffers
 	// We assume there is only one directional light. Therefore, it is stored in a cbuffer
 	Common::StructuredBuffer<Common::PointLight> *m_pointLightBuffer;
 	Common::StructuredBuffer<Common::SpotLight> *m_spotLightBuffer;
@@ -203,6 +211,8 @@ private:
 	void NoCullDeferredRenderingPass();
 	/** Renders any geometry used for visualizing effects, etc. (Light locations, etc) */
 	void RenderDebugGeometry();
+	/** Does the post processing for the frame */
+	void PostProcess();
 	/** Renders the frame statistics and the settings bar */
 	void RenderHUD();
 

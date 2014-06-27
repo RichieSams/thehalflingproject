@@ -444,6 +444,7 @@ void ObjLoaderDemo::LoadShaders() {
 	m_debugObjectPixelShader = new Common::PixelShader<>(L"debug_object_ps.cso", m_device, false, false);
 	m_transformedFullscreenTriangleVertexShader = new Common::VertexShader<Common::DefaultShaderConstantType, TransformedFullScreenTriangleVertexShaderConstants>(L"transformed_fullscreen_triangle_vs.cso", m_device, false, true);
 	m_renderGbuffersPixelShader = new Common::PixelShader<RenderGBuffersPixelShaderConstants, Common::DefaultShaderConstantType>(L"render_gbuffers_ps.cso", m_device, true, false);
+	m_postProcessPixelShader = new Common::PixelShader<>(L"post_process_ps.cso", m_device, false, false);
 }
 
 } // End of namespace ObjLoaderDemo

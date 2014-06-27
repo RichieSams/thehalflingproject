@@ -57,7 +57,8 @@ ObjLoaderDemo::ObjLoaderDemo(HINSTANCE hinstance)
 	  m_debugObjectVertexShader(nullptr),
 	  m_debugObjectPixelShader(nullptr),
 	  m_transformedFullscreenTriangleVertexShader(nullptr),
-	  m_renderGbuffersPixelShader(nullptr) {
+	  m_renderGbuffersPixelShader(nullptr),
+	  m_postProcessPixelShader(nullptr) {
 }
 
 void ObjLoaderDemo::Shutdown() {
@@ -78,6 +79,7 @@ void ObjLoaderDemo::Shutdown() {
 	delete(m_debugObjectPixelShader);
 	delete(m_transformedFullscreenTriangleVertexShader);
 	delete(m_renderGbuffersPixelShader);
+	delete(m_postProcessPixelShader);
 	ReleaseCOM(m_defaultInputLayout);
 	ReleaseCOM(m_debugObjectInputLayout);
 
@@ -147,6 +149,12 @@ void ObjLoaderDemo::OnResize() {
 	m_depthStencilBuffer = new Common::Depth2D(m_device, m_clientWidth, m_clientHeight,
 											   D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE,
 											   sampleDesc, m_stencil);
+
+	// Create the HDR output texture
+	m_hdrOutput = new Common::Texture2D(m_device, m_clientWidth, m_clientHeight, 
+	                                    DXGI_FORMAT_R16G16B16A16_FLOAT, 
+	                                    D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS,
+	                                    1);
 
 	// Create the gBuffers
 	// Diffuse Albedo

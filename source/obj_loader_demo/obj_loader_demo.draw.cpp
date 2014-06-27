@@ -693,6 +693,8 @@ void ObjLoaderDemo::PostProcess() {
 	m_postProcessPixelShader->BindToPipeline(m_immediateContext);
 
 	m_immediateContext->RSSetState(m_rasterizerStates.NoCull());
+	float blendFactor[4] = {1.0f, 1.0f, 1.0f, 1.0f};
+	m_immediateContext->OMSetBlendState(m_blendStates.BlendDisabled(), blendFactor, 0xFFFFFFFF);
 
 	m_immediateContext->IASetVertexBuffers(0, 0, 0, 0, 0);
 	m_immediateContext->IASetIndexBuffer(0, DXGI_FORMAT_R32_UINT, 0);

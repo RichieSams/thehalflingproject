@@ -51,6 +51,9 @@
     <FxCompile Include="..\obj_loader_demo\instanced_forward_vs.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="tiled_cull_final_gather_cs.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
     <FxCompile Include="..\obj_loader_demo\post_process_ps.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
@@ -88,6 +91,9 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="..\obj_loader_demo\shader_constants.h">
+      <Filter>Shader Logic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\obj_loader_demo\shader_defines.h">
       <Filter>Shader Logic</Filter>
     </ClInclude>
   </ItemGroup>

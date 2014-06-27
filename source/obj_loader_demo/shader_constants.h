@@ -30,12 +30,12 @@ struct InstancedForwardVertexShaderObjectConstants {
 };
 
 struct ForwardPixelShaderFrameConstants {
-	Common::DirectionalLight gDirectionalLight;
-	DirectX::XMFLOAT3 gEyePosition;
+	Common::DirectionalLight DirectionalLight;
+	DirectX::XMFLOAT3 EyePosition;
 	float pad;
 
-	uint gNumPointLightsToDraw;
-	uint gNumSpotLightsToDraw;
+	uint NumPointLightsToDraw;
+	uint NumSpotLightsToDraw;
 	uint pad2[2];
 };
 
@@ -66,14 +66,14 @@ struct GBufferPixelShaderObjectConstants {
 
 // No cull final gather pass
 struct NoCullFinalGatherPixelShaderFrameConstants {
-	DirectX::XMMATRIX gInvViewProjection;
+	DirectX::XMMATRIX InvViewProjection;
 
-	Common::DirectionalLight gDirectionalLight;
-	DirectX::XMFLOAT3 gEyePosition;
+	Common::DirectionalLight DirectionalLight;
+	DirectX::XMFLOAT3 EyePosition;
 	float pad;
 
-	uint gNumPointLightsToDraw;
-	uint gNumSpotLightsToDraw;
+	uint NumPointLightsToDraw;
+	uint NumSpotLightsToDraw;
 	uint pad2[2];
 };
 

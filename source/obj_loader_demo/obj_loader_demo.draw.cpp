@@ -237,10 +237,10 @@ void ObjLoaderDemo::SetInstancedForwardVertexShaderObjectConstants(uint startInd
 
 void ObjLoaderDemo::SetForwardPixelShaderFrameConstants() {
 	ForwardPixelShaderFrameConstants pixelShaderFrameConstants;
-	pixelShaderFrameConstants.gDirectionalLight = m_directionalLight;
-	pixelShaderFrameConstants.gEyePosition = m_camera.GetCameraPosition();
-	pixelShaderFrameConstants.gNumPointLightsToDraw = m_numPointLightsToDraw;
-	pixelShaderFrameConstants.gNumSpotLightsToDraw = m_numSpotLightsToDraw;
+	pixelShaderFrameConstants.DirectionalLight = m_directionalLight;
+	pixelShaderFrameConstants.EyePosition = m_camera.GetCameraPosition();
+	pixelShaderFrameConstants.NumPointLightsToDraw = m_numPointLightsToDraw;
+	pixelShaderFrameConstants.NumSpotLightsToDraw = m_numSpotLightsToDraw;
 
 	m_forwardPixelShader->SetPerFrameConstants(m_immediateContext, &pixelShaderFrameConstants, 0u);
 }
@@ -445,11 +445,11 @@ void ObjLoaderDemo::SetGBufferPixelShaderConstants(const Common::BlinnPhongMater
 
 void ObjLoaderDemo::SetNoCullFinalGatherShaderConstants(DirectX::XMMATRIX &invViewProjMatrix) {
 	NoCullFinalGatherPixelShaderFrameConstants pixelShaderFrameConstants;
-	pixelShaderFrameConstants.gInvViewProjection = invViewProjMatrix;
-	pixelShaderFrameConstants.gDirectionalLight = m_directionalLight;
-	pixelShaderFrameConstants.gEyePosition = m_camera.GetCameraPosition();
-	pixelShaderFrameConstants.gNumPointLightsToDraw = m_numPointLightsToDraw;
-	pixelShaderFrameConstants.gNumSpotLightsToDraw = m_numSpotLightsToDraw;
+	pixelShaderFrameConstants.InvViewProjection = invViewProjMatrix;
+	pixelShaderFrameConstants.DirectionalLight = m_directionalLight;
+	pixelShaderFrameConstants.EyePosition = m_camera.GetCameraPosition();
+	pixelShaderFrameConstants.NumPointLightsToDraw = m_numPointLightsToDraw;
+	pixelShaderFrameConstants.NumSpotLightsToDraw = m_numSpotLightsToDraw;
 
 	m_noCullFinalGatherPixelShader->SetPerFrameConstants(m_immediateContext, &pixelShaderFrameConstants, 0u);
 }

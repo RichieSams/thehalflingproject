@@ -120,6 +120,33 @@ public:
 	}
 };
 
+template <typename PerFrameType = DefaultShaderConstantType, typename PerObjectType = DefaultShaderConstantType>
+class ComputeShader : public BaseShader<ID3D11ComputeShader, PerFrameType, PerObjectType> {
+public:
+	ComputeShader(const wchar *fileName, ID3D11Device *device, bool hasPerFrameBuffer, bool hasPerObjectBuffer)
+			: BaseShader(device, hasPerFrameBuffer, hasPerObjectBuffer) {
+		Common::LoadComputeShader(fileName, device, &m_d3dShader);
+	}
+
+	inline virtual void BindToPipeline(ID3D11DeviceContext *context) {
+		context->CSSetShader(m_d3dShader, nullptr, 0);
+	}
+
+	void SetPerFrameConstants(ID3D11DeviceContext *context, PerFrameType *perFrameData, uint slotNumber) {
+		SetConstants(context, m_perFrameConstantBuffer, perFrameData, sizeof(PerFrameType), slotNumber);
+
+		// Bind it to the shader
+		context->CSSetConstantBuffers(slotNumber, 1u, &m_perFrameConstantBuffer);
+	}
+
+	void SetPerObjectConstants(ID3D11DeviceContext *context, PerObjectType *perObjectData, uint slotNumber) {
+		SetConstants(context, m_perObjectConstantBuffer, perObjectData, sizeof(PerObjectType), slotNumber);
+
+		// Bind it to the shader
+		context->CSSetConstantBuffers(slotNumber, 1u, &m_perObjectConstantBuffer);
+	}
+};
+
 } // End of namespace Common
 
 #endif

@@ -153,18 +153,21 @@ void ObjLoaderDemo::OnResize() {
 	m_gBuffers.push_back(new Common::Texture2D(m_device, m_clientWidth, m_clientHeight,
 		DXGI_FORMAT_R11G11B10_FLOAT,
 		D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE,
+		1,
 		sampleDesc));
 
 	// Specular Albedo and Spec Power
 	m_gBuffers.push_back(new Common::Texture2D(m_device, m_clientWidth, m_clientHeight,
 		DXGI_FORMAT_R8G8B8A8_UNORM,
 		D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE,
+		1,
 		sampleDesc));
 
 	// Normal
 	m_gBuffers.push_back(new Common::Texture2D(m_device, m_clientWidth, m_clientHeight,
 		DXGI_FORMAT_R16G16_FLOAT,
 		D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE,
+		1,
 		sampleDesc));
 
 	// Set up GBuffer resource list

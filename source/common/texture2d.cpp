@@ -28,14 +28,16 @@
 namespace Common {
 
 Texture2D::Texture2D(ID3D11Device *d3dDevice, int width, int height, DXGI_FORMAT format, uint bindFlags, int mipLevels) {
-	InternalConstructor(d3dDevice, width, height, format, bindFlags, mipLevels, 1, 1, 0,
+	InternalConstructor(d3dDevice, width, height, format, bindFlags, mipLevels, mipLevels, 1, 0,
 	                    D3D11_RTV_DIMENSION_TEXTURE2D, D3D11_UAV_DIMENSION_TEXTURE2D, D3D11_SRV_DIMENSION_TEXTURE2D);
 }
 
-Texture2D::Texture2D(ID3D11Device *d3dDevice, int width, int height, DXGI_FORMAT format, uint bindFlags, const DXGI_SAMPLE_DESC &sampleDesc) {
+Texture2D::Texture2D(ID3D11Device *d3dDevice, int width, int height, DXGI_FORMAT format, uint bindFlags, int mipLevels, const DXGI_SAMPLE_DESC &sampleDesc) {
 	// UAV's can't point to multisampled resources
-	InternalConstructor(d3dDevice, width, height, format, bindFlags, 1, 1, sampleDesc.Count, sampleDesc.Quality,
-	                    D3D11_RTV_DIMENSION_TEXTURE2DMS, D3D11_UAV_DIMENSION_UNKNOWN, D3D11_SRV_DIMENSION_TEXTURE2DMS);
+	InternalConstructor(d3dDevice, width, height, format, bindFlags, mipLevels, 1, sampleDesc.Count, sampleDesc.Quality,
+	                    sampleDesc.Count > 1 ? D3D11_RTV_DIMENSION_TEXTURE2DMS : D3D11_RTV_DIMENSION_TEXTURE2D, 
+						sampleDesc.Count > 1 ? D3D11_UAV_DIMENSION_UNKNOWN : D3D11_UAV_DIMENSION_TEXTURE2D, 
+						sampleDesc.Count > 1 ? D3D11_SRV_DIMENSION_TEXTURE2DMS : D3D11_SRV_DIMENSION_TEXTURE2D);
 }
 
 Texture2D::Texture2D(ID3D11Device *d3dDevice, int width, int height, DXGI_FORMAT format, uint bindFlags, int mipLevels, int arraySize) {
@@ -43,10 +45,12 @@ Texture2D::Texture2D(ID3D11Device *d3dDevice, int width, int height, DXGI_FORMAT
 	                    D3D11_RTV_DIMENSION_TEXTURE2DARRAY, D3D11_UAV_DIMENSION_TEXTURE2DARRAY, D3D11_SRV_DIMENSION_TEXTURE2DARRAY);
 }
 
-Texture2D::Texture2D(ID3D11Device *d3dDevice, int width, int height, DXGI_FORMAT format, uint bindFlags, int arraySize, const DXGI_SAMPLE_DESC &sampleDesc) {
+Texture2D::Texture2D(ID3D11Device *d3dDevice, int width, int height, DXGI_FORMAT format, uint bindFlags, int mipLevels, int arraySize, const DXGI_SAMPLE_DESC &sampleDesc) {
 	// UAV's can't point to multisampled resources
-	InternalConstructor(d3dDevice, width, height, format, bindFlags, 1, arraySize, sampleDesc.Count, sampleDesc.Quality,
-	                    D3D11_RTV_DIMENSION_TEXTURE2DMSARRAY, D3D11_UAV_DIMENSION_UNKNOWN, D3D11_SRV_DIMENSION_TEXTURE2DMSARRAY);
+	InternalConstructor(d3dDevice, width, height, format, bindFlags, mipLevels, arraySize, sampleDesc.Count, sampleDesc.Quality,
+						sampleDesc.Count > 1 ? D3D11_RTV_DIMENSION_TEXTURE2DMSARRAY : D3D11_RTV_DIMENSION_TEXTURE2DARRAY,
+						sampleDesc.Count > 1 ? D3D11_UAV_DIMENSION_UNKNOWN : D3D11_UAV_DIMENSION_TEXTURE2DARRAY,
+						sampleDesc.Count > 1 ? D3D11_SRV_DIMENSION_TEXTURE2DMSARRAY : D3D11_SRV_DIMENSION_TEXTURE2DARRAY);
 }
 
 void Texture2D::InternalConstructor(ID3D11Device *d3dDevice, int width, int height, DXGI_FORMAT format, UINT bindFlags, int mipLevels, int arraySize, int sampleCount, int sampleQuality, D3D11_RTV_DIMENSION rtvDimension, D3D11_UAV_DIMENSION uavDimension, D3D11_SRV_DIMENSION srvDimension) {

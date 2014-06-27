@@ -32,13 +32,13 @@ namespace Common {
 class Texture2D {
 public:
 	// Construct a Texture2D
-	Texture2D(ID3D11Device *d3dDevice, int width, int height, DXGI_FORMAT format, uint bindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE, int mipLevels = 1);
+	Texture2D(ID3D11Device *d3dDevice, int width, int height, DXGI_FORMAT format, uint bindFlags, int mipLevels);
 	// Construct a Texture2DMS
-	Texture2D(ID3D11Device *d3dDevice, int width, int height, DXGI_FORMAT format, uint bindFlags, const DXGI_SAMPLE_DESC &sampleDesc);
+	Texture2D(ID3D11Device *d3dDevice, int width, int height, DXGI_FORMAT format, uint bindFlags, int mipLevels, const DXGI_SAMPLE_DESC &sampleDesc);
 	// Construct a Texture2DArray
 	Texture2D(ID3D11Device *d3dDevice, int width, int height, DXGI_FORMAT format, uint bindFlags, int mipLevels, int arraySize);
 	// Construct a Texture2DMSArray
-	Texture2D(ID3D11Device *d3dDevice, int width, int height, DXGI_FORMAT format, uint bindFlags, int arraySize, const DXGI_SAMPLE_DESC &sampleDesc);
+	Texture2D(ID3D11Device *d3dDevice, int width, int height, DXGI_FORMAT format, uint bindFlags, int mipLevels, int arraySize, const DXGI_SAMPLE_DESC &sampleDesc);
 
 	~Texture2D();
 

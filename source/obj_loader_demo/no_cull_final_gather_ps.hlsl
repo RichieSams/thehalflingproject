@@ -18,10 +18,18 @@ cbuffer cbPerFrame : register(b0) {
 	uint gNumSpotLightsToDraw : packoffset(c13.y);
 }
 
-Texture2DMS<float3> gBufferDiffuse         : register(t0);
-Texture2DMS<float4> gBufferSpecAndPower    : register(t1);
-Texture2DMS<float2> gGBufferNormal         : register(t2);
-Texture2DMS<float> gGBufferDepth           : register(t3);
+
+#ifdef MSAA_
+	Texture2DMS<float3> gBufferDiffuse         : register(t0);
+	Texture2DMS<float4> gBufferSpecAndPower    : register(t1);
+	Texture2DMS<float2> gGBufferNormal         : register(t2);
+	Texture2DMS<float> gGBufferDepth           : register(t3);
+#else
+	Texture2D<float3> gBufferDiffuse         : register(t0);
+	Texture2D<float4> gBufferSpecAndPower    : register(t1);
+	Texture2D<float2> gGBufferNormal         : register(t2);
+	Texture2D<float> gGBufferDepth           : register(t3);
+#endif
 
 StructuredBuffer<PointLight> gPointLights : register(t4);
 StructuredBuffer<SpotLight> gSpotLights : register(t5);
@@ -32,26 +40,44 @@ float4 NoCullFinalGatherPS(CalculatedTrianglePixelIn input) : SV_TARGET {
 	float2 pixelCoord = input.positionClip.xy;
 
 	// Sample from the Depth GBuffer and calculate position
-	float zw = (float)(gGBufferDepth.Load(pixelCoord, 0));
+	#ifdef MSAA_
+		float zw = (float)(gGBufferDepth.Load(pixelCoord, 0));
+	#else
+		float zw = (float)(gGBufferDepth[pixelCoord]);
+	#endif
 
 	// Discard pixels that have infinite depth.
 	if (zw == 0.0f)
 		discard;
 
 	SurfaceProperties surfProps;
-
-	// Sample from the diffuse albedo GBuffer
-	surfProps.diffuseAlbedo = float4(gBufferDiffuse.Load(pixelCoord, 0).xyz, 1.0f);
-
-	// Sample from the specular albedo GBuffer
-	surfProps.specAlbedoAndPower = gBufferSpecAndPower.Load(pixelCoord, 0);
-	// Decode the specular power
-	surfProps.specAlbedoAndPower.w *= MAX_SPEC_POWER;
-
-	// Sample from the Normal GBuffer
-	float2 normalSphericalCoords = gGBufferNormal.Load(pixelCoord, 0).xy;
-	surfProps.normal = SphericalToCartesian(normalSphericalCoords);
 	surfProps.position = PositionFromDepth(zw, input.texCoord, gInvViewProjection);
+
+	#ifdef MSAA_
+		// Sample from the diffuse albedo GBuffer
+		surfProps.diffuseAlbedo = float4(gBufferDiffuse.Load(pixelCoord, 0).xyz, 1.0f);
+
+		// Sample from the specular albedo GBuffer
+		surfProps.specAlbedoAndPower = gBufferSpecAndPower.Load(pixelCoord, 0);
+		// Decode the specular power
+		surfProps.specAlbedoAndPower.w *= MAX_SPEC_POWER;
+
+		// Sample from the Normal GBuffer
+		float2 normalSphericalCoords = gGBufferNormal.Load(pixelCoord, 0).xy;
+		surfProps.normal = SphericalToCartesian(normalSphericalCoords);
+	#else
+		// Sample from the diffuse albedo GBuffer
+		surfProps.diffuseAlbedo = float4(gBufferDiffuse[pixelCoord].xyz, 1.0f);
+
+		// Sample from the specular albedo GBuffer
+		surfProps.specAlbedoAndPower = gBufferSpecAndPower[pixelCoord];
+		// Decode the specular power
+		surfProps.specAlbedoAndPower.w *= MAX_SPEC_POWER;
+
+		// Sample from the Normal GBuffer
+		float2 normalSphericalCoords = gGBufferNormal[pixelCoord].xy;
+		surfProps.normal = SphericalToCartesian(normalSphericalCoords);
+	#endif
 
 	float3 toEye = normalize(gEyePosition - surfProps.position);
 

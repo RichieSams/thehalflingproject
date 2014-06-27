@@ -603,8 +603,8 @@ void ObjLoaderDemo::RenderDebugGeometry() {
 		m_debugCone.DrawInstancedSubset(m_immediateContext, m_numSpotLightsToDraw);
 	}
 
-	if (m_showGBuffers && m_shadingType == ShadingType::NoCullDeferred) {
-		// Use the backbuffer render target
+	if (m_showGBuffers && (m_shadingType == ShadingType::NoCullDeferred || m_shadingType == ShadingType::TiledCullDeferred)) {
+		// Use the hdr render target
 		ID3D11RenderTargetView *target = m_hdrOutput->GetRenderTarget();
 		m_immediateContext->OMSetRenderTargets(1, &target, nullptr);
 

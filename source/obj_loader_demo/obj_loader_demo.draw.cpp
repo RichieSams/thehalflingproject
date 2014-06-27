@@ -7,6 +7,7 @@
 #include "obj_loader_demo/obj_loader_demo.h"
 
 #include "obj_loader_demo/shader_constants.h"
+#include "obj_loader_demo/shader_defines.h"
 
 #include <DirectXColors.h>
 #include <sstream>
@@ -86,7 +87,8 @@ void ObjLoaderDemo::RenderMainPass() {
 		ForwardRenderingPass();
 		break;
 	case ShadingType::NoCullDeferred:
-		NoCullDeferredRenderingPass();
+	case ShadingType::TiledCullDeferred:
+		DeferredRenderingPass();
 		break;
 	}
 }
@@ -255,7 +257,7 @@ void ObjLoaderDemo::SetForwardPixelShaderObjectConstants(const Common::BlinnPhon
 	m_forwardPixelShader->SetPerObjectConstants(m_immediateContext, &pixelShaderObjectConstants, 1u);
 }
 
-void ObjLoaderDemo::NoCullDeferredRenderingPass() {
+void ObjLoaderDemo::DeferredRenderingPass() {
 	// Bind the gbufferRTVs and depth/stencil view to the pipeline.
 	m_immediateContext->OMSetRenderTargets(3, &m_gBufferRTVs[0], m_depthStencilBuffer->GetDepthStencil());
 
@@ -364,54 +366,102 @@ void ObjLoaderDemo::NoCullDeferredRenderingPass() {
 		}
 	}
 
+
 	// Final gather pass
-	ID3D11RenderTargetView *targets[3] = {m_hdrOutput->GetRenderTarget(), nullptr, nullptr};
-	m_immediateContext->OMSetRenderTargets(3, targets, nullptr);
-	m_immediateContext->ClearRenderTargetView(targets[0], DirectX::Colors::LightGray);
 
 	// Full screen triangle setup
 	m_immediateContext->IASetInputLayout(nullptr);
 	m_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
+	// Bind the vertex shader
 	m_fullscreenTriangleVertexShader->BindToPipeline(m_immediateContext);
 
-	m_immediateContext->PSSetShaderResources(0, 4, &m_gBufferSRVs.front());
+	// Set light buffers
+	SetLightBuffers();
 
-	DirectX::XMMATRIX projMatrix = DirectX::XMMatrixTranspose(projectionMatrix);
-	DirectX::XMMATRIX invViewProj = DirectX::XMMatrixTranspose(DirectX::XMMatrixInverse(nullptr, viewProj));
+	// Cache some matrix calculations
+	DirectX::XMMATRIX transposedWorldViewMatrix = DirectX::XMMatrixTranspose(m_globalWorldTransform * viewMatrix);
+	DirectX::XMMATRIX tranposedProjMatrix = DirectX::XMMatrixTranspose(projectionMatrix);
+	DirectX::XMMATRIX transposedInvViewProj = DirectX::XMMatrixTranspose(DirectX::XMMatrixInverse(nullptr, viewProj));
 
-	if (m_gbufferSelector == None) {
-		m_noCullFinalGatherPixelShader->BindToPipeline(m_immediateContext);
+	if (m_shadingType == ShadingType::TiledCullDeferred) {
+		// Bind and clear the HDR output texture
+		ID3D11UnorderedAccessView *hdrUAV = m_hdrOutput->GetUnorderedAccess();
+		m_immediateContext->CSSetUnorderedAccessViews(0, 1, &hdrUAV, nullptr);
+		m_immediateContext->ClearUnorderedAccessViewFloat(hdrUAV, DirectX::Colors::LightGray);
 
-		SetNoCullFinalGatherShaderConstants(invViewProj);
+		// Free the gbuffers from the previous pixel shader so we can use them as SRVs
+		ID3D11RenderTargetView *targets[3] = {nullptr, nullptr, nullptr};
+		m_immediateContext->OMSetRenderTargets(3, targets, nullptr);
 
-		// Set light buffers
-		SetLightBuffers();
+		// Bind the gbuffers to the compute shader
+		m_immediateContext->CSSetShaderResources(0, 4, &m_gBufferSRVs.front());
+
+		// Bind the shader and set the constant buffer variables
+		m_tiledCullFinalGatherComputeShader->BindToPipeline(m_immediateContext);
+		SetTiledCullFinalGatherShaderConstants(transposedWorldViewMatrix, tranposedProjMatrix, transposedInvViewProj);
 
 		if (m_pointLights.size() > 0) {
 			ID3D11ShaderResourceView *srv = m_pointLightBuffer->GetShaderResource();
-			m_immediateContext->PSSetShaderResources(4, 1, &srv);
+			m_immediateContext->CSSetShaderResources(4, 1, &srv);
 		}
 		if (m_spotLights.size() > 0) {
 			ID3D11ShaderResourceView *srv = m_spotLightBuffer->GetShaderResource();
-			m_immediateContext->PSSetShaderResources(5, 1, &srv);
+			m_immediateContext->CSSetShaderResources(5, 1, &srv);
 		}
-	} else {
-		m_renderGbuffersPixelShader->BindToPipeline(m_immediateContext);
 
-		SetRenderGBuffersPixelShaderConstants(invViewProj, m_gbufferSelector);
+		// Dispatch
+		uint dispatchWidth = (m_clientWidth + COMPUTE_SHADER_TILE_GROUP_DIM - 1) / COMPUTE_SHADER_TILE_GROUP_DIM;
+		uint dispatchHeight = (m_clientHeight + COMPUTE_SHADER_TILE_GROUP_DIM - 1) / COMPUTE_SHADER_TILE_GROUP_DIM;
+		m_immediateContext->Dispatch(dispatchWidth, dispatchHeight, 1);
+
+		// Clear gBuffer resource bindings so they can be used as render targets next frame
+		ID3D11ShaderResourceView *views[4] = {nullptr, nullptr, nullptr, nullptr};
+		m_immediateContext->CSSetShaderResources(0, 4, views);
+
+		// Clear the HDR resource binding so it can be used in the PostProcessing
+		ID3D11UnorderedAccessView *nullUAV = nullptr;
+		m_immediateContext->CSSetUnorderedAccessViews(0, 1, &nullUAV, nullptr);
+	} else if (m_shadingType == ShadingType::NoCullDeferred) {
+		// Bind and clear the HDR output texture
+		ID3D11RenderTargetView *targets[3] = {m_hdrOutput->GetRenderTarget(), nullptr, nullptr};
+		m_immediateContext->OMSetRenderTargets(3, targets, nullptr);
+		m_immediateContext->ClearRenderTargetView(targets[0], DirectX::Colors::LightGray);
+
+		// Bind the gbuffers to the pixel shader
+		m_immediateContext->PSSetShaderResources(0, 4, &m_gBufferSRVs.front());
+
+		// Choose whether to actually calculate the lighting, or to render one of the GBuffers
+		if (m_gbufferSelector == None) {
+			// Bind the shader and set the constant buffer variables
+			m_noCullFinalGatherPixelShader->BindToPipeline(m_immediateContext);
+			SetNoCullFinalGatherShaderConstants(transposedInvViewProj);
+
+			if (m_pointLights.size() > 0) {
+				ID3D11ShaderResourceView *srv = m_pointLightBuffer->GetShaderResource();
+				m_immediateContext->PSSetShaderResources(4, 1, &srv);
+			}
+			if (m_spotLights.size() > 0) {
+				ID3D11ShaderResourceView *srv = m_spotLightBuffer->GetShaderResource();
+				m_immediateContext->PSSetShaderResources(5, 1, &srv);
+			}
+		} else {
+			m_renderGbuffersPixelShader->BindToPipeline(m_immediateContext);
+
+			SetRenderGBuffersPixelShaderConstants(transposedInvViewProj, m_gbufferSelector);
+		}
+
+		m_immediateContext->RSSetState(m_rasterizerStates.NoCull());
+
+		m_immediateContext->IASetVertexBuffers(0, 0, 0, 0, 0);
+		m_immediateContext->IASetIndexBuffer(0, DXGI_FORMAT_R32_UINT, 0);
+
+		m_immediateContext->Draw(3, 0);
+
+		// Clear gBuffer resource bindings so they can be used as render targets next frame
+		ID3D11ShaderResourceView *views[4] = {nullptr, nullptr, nullptr, nullptr};
+		m_immediateContext->PSSetShaderResources(0, 4, views);
 	}
-
-	m_immediateContext->RSSetState(m_rasterizerStates.NoCull());
-
-	m_immediateContext->IASetVertexBuffers(0, 0, 0, 0, 0);
-	m_immediateContext->IASetIndexBuffer(0, DXGI_FORMAT_R32_UINT, 0);
-
-	m_immediateContext->Draw(3, 0);
-
-	// Clear gBuffer resource bindings so they can be used as render targets next frame
-	ID3D11ShaderResourceView *views[4] = {nullptr, nullptr, nullptr, nullptr};
-	m_immediateContext->PSSetShaderResources(0, 4, views);
 }
 
 void ObjLoaderDemo::SetGBufferVertexShaderObjectConstants(DirectX::XMMATRIX &worldMatrix, DirectX::XMMATRIX &worldViewProjMatrix) {
@@ -453,6 +503,21 @@ void ObjLoaderDemo::SetNoCullFinalGatherShaderConstants(DirectX::XMMATRIX &invVi
 	pixelShaderFrameConstants.NumSpotLightsToDraw = m_numSpotLightsToDraw;
 
 	m_noCullFinalGatherPixelShader->SetPerFrameConstants(m_immediateContext, &pixelShaderFrameConstants, 0u);
+}
+
+void ObjLoaderDemo::SetTiledCullFinalGatherShaderConstants(DirectX::XMMATRIX &worldViewMatrix, DirectX::XMMATRIX &projMatrix, DirectX::XMMATRIX &invViewProjMatrix) {
+	TiledCullFinalGatherComputeShaderFrameConstants computeShaderFrameConstants;
+	computeShaderFrameConstants.WorldView = worldViewMatrix;
+	computeShaderFrameConstants.Projection = projMatrix;
+	computeShaderFrameConstants.InvViewProjection = invViewProjMatrix;
+	computeShaderFrameConstants.DirectionalLight = m_directionalLight;
+	computeShaderFrameConstants.EyePosition = m_camera.GetCameraPosition();
+	computeShaderFrameConstants.NumPointLightsToDraw = m_numPointLightsToDraw;
+	computeShaderFrameConstants.CameraClipPlanes.x = m_nearClip;
+	computeShaderFrameConstants.CameraClipPlanes.y = m_farClip;
+	computeShaderFrameConstants.NumSpotLightsToDraw = m_numSpotLightsToDraw;
+	
+	m_tiledCullFinalGatherComputeShader->SetPerFrameConstants(m_immediateContext, &computeShaderFrameConstants, 0u);
 }
 
 void ObjLoaderDemo::SetLightBuffers() {

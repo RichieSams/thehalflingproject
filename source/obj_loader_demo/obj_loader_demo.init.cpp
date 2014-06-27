@@ -311,8 +311,8 @@ void ObjLoaderDemo::InitTweakBar() {
 	TwAddVarRW(m_settingsBar, "Show light locations", TwType::TW_TYPE_BOOLCPP, &m_showLightLocations, "");
 	TwAddVarRW(m_settingsBar, "Show GBuffer parts", TwType::TW_TYPE_BOOLCPP, &m_showGBuffers, "");
 
-	TwEnumVal shaderEV[] = {{ShadingType::Forward, "Forward"}, {ShadingType::NoCullDeferred, "No-cull Deferred"}};
-	TwType shaderType = TwDefineEnum("ShaderType", shaderEV, 2);
+	TwEnumVal shaderEV[] = {{ShadingType::Forward, "Forward"}, {ShadingType::NoCullDeferred, "No-cull Deferred"}, {ShadingType::TiledCullDeferred, "Tiled Deferred"}};
+	TwType shaderType = TwDefineEnum("ShaderType", shaderEV, 3);
 	TwAddVarRW(m_settingsBar, "Shader Type", shaderType, &m_shadingType, NULL);
 
 	TwEnumVal gbufferEV[] = {{GBufferSelector::None, "None"}, {GBufferSelector::Diffuse, "Diffuse"}, {GBufferSelector::Specular, "Specular"}, {GBufferSelector::Normal_Spherical, "Normal Spherical"}, {GBufferSelector::Normal_Cartesian, "Normal Cartesian"}, {GBufferSelector::Depth, "Depth"}};
@@ -440,6 +440,7 @@ void ObjLoaderDemo::LoadShaders() {
 	m_gbufferPixelShader = new Common::PixelShader<Common::DefaultShaderConstantType, GBufferPixelShaderObjectConstants>(L"gbuffer_ps.cso", m_device, false, true);
 	m_fullscreenTriangleVertexShader = new Common::VertexShader<>(L"fullscreen_triangle_vs.cso", m_device, false, false);
 	m_noCullFinalGatherPixelShader = new Common::PixelShader<NoCullFinalGatherPixelShaderFrameConstants, Common::DefaultShaderConstantType>(L"no_cull_final_gather_ps.cso", m_device, true, false);
+	m_tiledCullFinalGatherComputeShader = new Common::ComputeShader<TiledCullFinalGatherComputeShaderFrameConstants, Common::DefaultShaderConstantType>(L"tiled_cull_final_gather_cs.cso", m_device, true, false);
 	m_debugObjectVertexShader = new Common::VertexShader<>(L"debug_object_vs.cso", m_device, false, false, &m_debugObjectInputLayout, instanceVertexDesc, 6);
 	m_debugObjectPixelShader = new Common::PixelShader<>(L"debug_object_ps.cso", m_device, false, false);
 	m_transformedFullscreenTriangleVertexShader = new Common::VertexShader<Common::DefaultShaderConstantType, TransformedFullScreenTriangleVertexShaderConstants>(L"transformed_fullscreen_triangle_vs.cso", m_device, false, true);

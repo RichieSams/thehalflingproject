@@ -64,6 +64,7 @@ struct GBufferPixelShaderObjectConstants {
 	uint TextureFlags;
 };
 
+
 // No cull final gather pass
 struct NoCullFinalGatherPixelShaderFrameConstants {
 	DirectX::XMMATRIX InvViewProjection;
@@ -76,6 +77,25 @@ struct NoCullFinalGatherPixelShaderFrameConstants {
 	uint NumSpotLightsToDraw;
 	uint pad2[2];
 };
+
+
+// Tiled cull final gather pass
+struct TiledCullFinalGatherComputeShaderFrameConstants {
+	DirectX::XMMATRIX WorldView;
+	DirectX::XMMATRIX Projection;
+	DirectX::XMMATRIX InvViewProjection;
+
+	Common::DirectionalLight DirectionalLight;
+
+	DirectX::XMFLOAT3 EyePosition;
+	uint NumPointLightsToDraw;
+
+	DirectX::XMFLOAT2 CameraClipPlanes;
+	uint NumSpotLightsToDraw;
+
+	float pad;
+};
+
 
 // Debug pass
 struct TransformedFullScreenTriangleVertexShaderConstants {

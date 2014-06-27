@@ -38,7 +38,7 @@ ObjLoaderDemo::ObjLoaderDemo(HINSTANCE hinstance)
 	  m_vsync(false),
 	  m_wireframe(false),
 	  m_animateLights(true),
-	  m_shadingType(ShadingType::NoCullDeferred),
+	  m_shadingType(ShadingType::TiledCullDeferred),
 	  m_gbufferSelector(GBufferSelector::None),
 	  m_showLightLocations(false),
 	  m_showGBuffers(false),
@@ -54,6 +54,7 @@ ObjLoaderDemo::ObjLoaderDemo(HINSTANCE hinstance)
 	  m_gbufferPixelShader(nullptr),
 	  m_fullscreenTriangleVertexShader(nullptr),
 	  m_noCullFinalGatherPixelShader(nullptr),
+	  m_tiledCullFinalGatherComputeShader(nullptr),
 	  m_debugObjectVertexShader(nullptr),
 	  m_debugObjectPixelShader(nullptr),
 	  m_transformedFullscreenTriangleVertexShader(nullptr),
@@ -75,6 +76,7 @@ void ObjLoaderDemo::Shutdown() {
 	delete(m_gbufferPixelShader);
 	delete(m_fullscreenTriangleVertexShader);
 	delete(m_noCullFinalGatherPixelShader);
+	delete(m_tiledCullFinalGatherComputeShader);
 	delete(m_debugObjectVertexShader);
 	delete(m_debugObjectPixelShader);
 	delete(m_transformedFullscreenTriangleVertexShader);

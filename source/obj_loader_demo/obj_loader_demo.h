@@ -46,7 +46,8 @@ struct DebugObjectInstance {
 
 enum ShadingType {
 	Forward,
-	NoCullDeferred
+	NoCullDeferred,
+	TiledCullDeferred
 };
 
 enum GBufferSelector {
@@ -153,6 +154,8 @@ private:
 	Common::VertexShader<> *m_fullscreenTriangleVertexShader;
 
 	Common::PixelShader<NoCullFinalGatherPixelShaderFrameConstants, Common::DefaultShaderConstantType> *m_noCullFinalGatherPixelShader;
+	Common::ComputeShader<TiledCullFinalGatherComputeShaderFrameConstants, Common::DefaultShaderConstantType> *m_tiledCullFinalGatherComputeShader;
+
 	Common::VertexShader<> *m_debugObjectVertexShader;
 	Common::PixelShader<> *m_debugObjectPixelShader;
 	Common::VertexShader<Common::DefaultShaderConstantType, TransformedFullScreenTriangleVertexShaderConstants> *m_transformedFullscreenTriangleVertexShader;
@@ -207,8 +210,8 @@ private:
 	void RenderMainPass();
 	/** Renders the geometry using Forward Shading */
 	void ForwardRenderingPass();
-	/** Renders the geometry using Deferred Shading with no light culling */
-	void NoCullDeferredRenderingPass();
+	/** Renders the geometry using Deferred Shading */
+	void DeferredRenderingPass();
 	/** Renders any geometry used for visualizing effects, etc. (Light locations, etc) */
 	void RenderDebugGeometry();
 	/** Does the post processing for the frame */
@@ -221,11 +224,15 @@ private:
 	void SetInstancedForwardVertexShaderObjectConstants(uint startIndex);
 	void SetForwardPixelShaderFrameConstants();
 	void SetForwardPixelShaderObjectConstants(const Common::BlinnPhongMaterial &material, uint textureFlags);
+
 	void SetGBufferVertexShaderObjectConstants(DirectX::XMMATRIX &worldMatrix, DirectX::XMMATRIX &worldViewProjMatrix);
 	void SetInstancedGBufferVertexShaderFrameConstants(DirectX::XMMATRIX &viewProjMatrix);
 	void SetInstancedGBufferVertexShaderObjectConstants(uint startIndex);
 	void SetGBufferPixelShaderConstants(const Common::BlinnPhongMaterial &material, uint textureFlags);
+
 	void SetNoCullFinalGatherShaderConstants(DirectX::XMMATRIX &invViewProjMatrix);
+	void SetTiledCullFinalGatherShaderConstants(DirectX::XMMATRIX &viewMatrix, DirectX::XMMATRIX &projMatrix, DirectX::XMMATRIX &invViewProjMatrix);
+
 	void SetRenderGBuffersPixelShaderConstants(DirectX::XMMATRIX &invViewProjMatrix, uint gBufferId);
 
 	/** Maps the point light StructuredBuffer and the spot light Structured buffer to the pixel shader */

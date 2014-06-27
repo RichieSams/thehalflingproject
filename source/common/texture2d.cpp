@@ -157,7 +157,9 @@ Depth2D::Depth2D(ID3D11Device *d3dDevice, int width, int height, uint bindFlags,
 
 Depth2D::Depth2D(ID3D11Device *d3dDevice, int width, int height, uint bindFlags, const DXGI_SAMPLE_DESC &sampleDesc, bool stencil) {
 	InternalConstruct(d3dDevice, width, height, bindFlags, 1, sampleDesc.Count, sampleDesc.Quality,
-	                  D3D11_DSV_DIMENSION_TEXTURE2DMS, D3D11_SRV_DIMENSION_TEXTURE2DMS, stencil);
+	                  sampleDesc.Count > 1 ? D3D11_DSV_DIMENSION_TEXTURE2DMS : D3D11_DSV_DIMENSION_TEXTURE2D, 
+	                  sampleDesc.Count > 1 ? D3D11_SRV_DIMENSION_TEXTURE2DMS : D3D11_SRV_DIMENSION_TEXTURE2D, 
+	                  stencil);
 }
 
 Depth2D::Depth2D(ID3D11Device *d3dDevice, int width, int height, uint bindFlags, int arraySize, bool stencil) {
@@ -167,7 +169,9 @@ Depth2D::Depth2D(ID3D11Device *d3dDevice, int width, int height, uint bindFlags,
 
 Depth2D::Depth2D(ID3D11Device *d3dDevice, int width, int height, uint bindFlags, int arraySize, const DXGI_SAMPLE_DESC &sampleDesc, bool stencil) {
 	InternalConstruct(d3dDevice, width, height, bindFlags, arraySize, sampleDesc.Count, sampleDesc.Quality,
-	                  D3D11_DSV_DIMENSION_TEXTURE2DMSARRAY, D3D11_SRV_DIMENSION_TEXTURE2DMSARRAY, stencil);
+	                  sampleDesc.Count > 1 ? D3D11_DSV_DIMENSION_TEXTURE2DMSARRAY : D3D11_DSV_DIMENSION_TEXTURE2DARRAY,
+	                  sampleDesc.Count > 1 ? D3D11_SRV_DIMENSION_TEXTURE2DMSARRAY : D3D11_SRV_DIMENSION_TEXTURE2DARRAY,
+	                  stencil);
 }
 
 void Depth2D::InternalConstruct(ID3D11Device *d3dDevice, int width, int height, uint bindFlags, int arraySize, int sampleCount, int sampleQuality, D3D11_DSV_DIMENSION dsvDimension, D3D11_SRV_DIMENSION srvDimension, bool stencil) {

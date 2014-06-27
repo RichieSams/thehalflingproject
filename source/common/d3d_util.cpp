@@ -45,4 +45,17 @@ HRESULT LoadPixelShader(const wchar *fileName, ID3D11Device *device, ID3D11Pixel
 	return result;
 }
 
+HRESULT LoadComputeShader(const wchar *fileName, ID3D11Device *device, ID3D11ComputeShader **computeShader) {
+	DWORD bytesRead;
+	char *fileBuffer = ReadWholeFile(fileName, &bytesRead);
+	if (fileBuffer == nullptr) {
+		return -1;
+	}
+
+	HRESULT result = device->CreateComputeShader(fileBuffer, bytesRead, NULL, computeShader);
+
+	delete[] fileBuffer;
+	return result;
+}
+
 } // End of namespace Common

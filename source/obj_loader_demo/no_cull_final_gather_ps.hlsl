@@ -81,8 +81,8 @@ float4 NoCullFinalGatherPS(CalculatedTrianglePixelIn input) : SV_TARGET {
 	float3 toEye = normalize(gEyePosition - surfProps.position);
 
 	// Initialize
-	float4 diffuse = float4(0.0f, 0.0f, 0.0f, 0.0f);
-	float4 spec = float4(0.0f, 0.0f, 0.0f, 0.0f);
+	float4 diffuse = float4(0.0f, 0.0f, 0.0f, 1.0f);
+	float4 spec = float4(0.0f, 0.0f, 0.0f, 1.0f);
 
 	// Sum the contribution from each light source
 	uint lightIndex;

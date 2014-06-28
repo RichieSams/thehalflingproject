@@ -92,8 +92,7 @@ struct TiledCullFinalGatherComputeShaderFrameConstants {
 
 	DirectX::XMFLOAT2 CameraClipPlanes;
 	uint NumSpotLightsToDraw;
-
-	float pad;
+	uint VisualizeLightCount;
 };
 
 

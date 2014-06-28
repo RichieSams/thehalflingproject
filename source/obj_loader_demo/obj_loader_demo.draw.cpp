@@ -543,6 +543,7 @@ void ObjLoaderDemo::SetTiledCullFinalGatherShaderConstants(DirectX::XMMATRIX &wo
 	computeShaderFrameConstants.CameraClipPlanes.x = m_nearClip;
 	computeShaderFrameConstants.CameraClipPlanes.y = m_farClip;
 	computeShaderFrameConstants.NumSpotLightsToDraw = m_numSpotLightsToDraw;
+	computeShaderFrameConstants.VisualizeLightCount = m_visualizeLightCount ? 1u : 0u;
 	
 	m_tiledCullFinalGatherComputeShader->SetPerFrameConstants(m_immediateContext, &computeShaderFrameConstants, 0u);
 }
@@ -690,6 +691,33 @@ void ObjLoaderDemo::RenderDebugGeometry() {
 
 		transform._42 = m_clientHeight - (2.0f * quarterHeight);
 		m_spriteRenderer.RenderText(m_timesNewRoman12Font, L"Z/W Depth", transform, 0U, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) /* Yellow */);
+
+		m_spriteRenderer.End();
+	}
+	if (m_visualizeLightCount && m_shadingType == ShadingType::TiledCullDeferred && m_gbufferSelector == None) {
+		// Use the hdr render target
+		ID3D11RenderTargetView *target = m_hdrOutput->GetRenderTarget();
+		m_immediateContext->OMSetRenderTargets(1, &target, nullptr);
+
+		m_spriteRenderer.Begin(m_immediateContext, Common::SpriteRenderer::Point);
+
+		DirectX::XMFLOAT4X4 transform {1, 0, 0, 0,
+		                               0, 1, 0, 0,
+		                               0, 0, 1, 0,
+		                               20, m_clientHeight / 3.0f, 0, 1};
+
+		// Render the color map texture
+		m_spriteRenderer.Render(m_colormapSRV, transform);
+
+		// Render the top text
+		transform._41 += 10.0f;
+		transform._42 += 5.0f;
+		m_spriteRenderer.RenderText(m_timesNewRoman12Font, L"24", transform, 0U, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
+
+		// Render the bottom text
+		transform._41 += 3.0f;
+		transform._42 += 234.0f;
+		m_spriteRenderer.RenderText(m_timesNewRoman12Font, L"0", transform, 0U, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
 
 		m_spriteRenderer.End();
 	}

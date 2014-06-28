@@ -69,6 +69,8 @@ bool ObjLoaderDemo::Initialize(LPCTSTR mainWndCaption, uint32 screenWidth, uint3
 	m_timesNewRoman12Font.Initialize(L"Times New Roman", 12, Common::SpriteFont::Regular, true, m_device);
 	m_courierNew10Font.Initialize(L"Courier New", 12, Common::SpriteFont::Regular, true, m_device);
 
+	m_colormapSRV = m_textureManager.GetSRVFromFile(m_device, L"colormap.dds", D3D11_USAGE_IMMUTABLE);
+
 	// Initialize the console
 	m_console.Initialize(Common::Rect(20, m_clientHeight - 320, m_clientWidth - 20, m_clientHeight - 10), &m_spriteRenderer, &m_courierNew10Font);
 
@@ -309,6 +311,7 @@ void ObjLoaderDemo::InitTweakBar() {
 	TwAddVarRW(m_settingsBar, "Animate Lights", TW_TYPE_BOOLCPP, &m_animateLights, "");
 	TwAddVarRW(m_settingsBar, "Show light locations", TwType::TW_TYPE_BOOLCPP, &m_showLightLocations, "");
 	TwAddVarRW(m_settingsBar, "Show GBuffer parts", TwType::TW_TYPE_BOOLCPP, &m_showGBuffers, "");
+	TwAddVarRW(m_settingsBar, "Visualize light count", TwType::TW_TYPE_BOOLCPP, &m_visualizeLightCount, "");
 
 	TwEnumVal shaderEV[] = {{ShadingType::Forward, "Forward"}, {ShadingType::NoCullDeferred, "No-cull Deferred"}, {ShadingType::TiledCullDeferred, "Tiled Deferred"}};
 	TwType shaderType = TwDefineEnum("ShaderType", shaderEV, 3);

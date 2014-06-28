@@ -42,6 +42,7 @@ ObjLoaderDemo::ObjLoaderDemo(HINSTANCE hinstance)
 	  m_gbufferSelector(GBufferSelector::None),
 	  m_showLightLocations(false),
 	  m_showGBuffers(false),
+	  m_visualizeLightCount(false),
 	  m_numPointLightsToDraw(100),
 	  m_numSpotLightsToDraw(100),
 	  m_renderTargetView(nullptr),

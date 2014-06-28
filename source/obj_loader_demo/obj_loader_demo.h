@@ -124,8 +124,11 @@ private:
 	GBufferSelector m_gbufferSelector;
 	bool m_showLightLocations;
 	bool m_showGBuffers;
+	bool m_visualizeLightCount;
 	uint32 m_numSpotLightsToDraw;
 	uint32 m_numPointLightsToDraw;
+
+	ID3D11ShaderResourceView *m_colormapSRV;
 
 	ID3D11RenderTargetView *m_renderTargetView;
 	ID3D11InputLayout *m_defaultInputLayout;

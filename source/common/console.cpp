@@ -187,6 +187,13 @@ void Console::ProcessCommandString(std::wstring commandString) {
 	std::deque<std::wstring> args;
 	Common::Tokenize(commandString, args, L" ", true);
 
+	// The user entered only spaces
+	// Just reset
+	if (args.size() == 0) {
+		return;
+	}
+
+	// Now try to process it
 	std::wstring command = args.front();
 	args.pop_front();
 

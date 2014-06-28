@@ -73,7 +73,6 @@ public:
 	ObjLoaderDemo(HINSTANCE hinstance);
 
 private:
-	static const uint kMaxMaterialsPerFrame = 2000;
 	static const uint kMaxInstanceVectorsPerFrame = 5000;
 
 	float m_nearClip;
@@ -169,8 +168,6 @@ private:
 	// We assume there is only one directional light. Therefore, it is stored in a cbuffer
 	Common::StructuredBuffer<Common::PointLight> *m_pointLightBuffer;
 	Common::StructuredBuffer<Common::SpotLight> *m_spotLightBuffer;
-
-	Common::StructuredBuffer<Common::BlinnPhongMaterial> *m_frameMaterialListBuffer;
 
 	Common::BlendStates m_blendStates;
 	Common::DepthStencilStates m_depthStencilStates;

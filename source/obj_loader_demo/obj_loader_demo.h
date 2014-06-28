@@ -4,8 +4,7 @@
  * Copyright Adrian Astley 2013 - 2014
  */
 
-#ifndef OBJ_LOADER_DEMO_H
-#define OBJ_LOADER_DEMO_H
+#pragma once
 
 #include "halfling/halfling_engine.h"
 
@@ -243,5 +242,3 @@ private:
 };
 
 } // End of namespace ObjLoaderDemo
-
-#endif

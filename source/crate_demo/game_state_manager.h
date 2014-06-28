@@ -4,8 +4,7 @@
  * Copyright Adrian Astley 2013
  */
 
-#ifndef CRATE_DEMO_GAME_STATE_MANAGER_H
-#define CRATE_DEMO_GAME_STATE_MANAGER_H
+#pragma once
 
 #include "common/game_state_manager_base.h"
 
@@ -69,5 +68,3 @@ public:
 };
 
 } // End of namespace CrateDemo
-
-#endif

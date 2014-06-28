@@ -4,8 +4,7 @@
  * Copyright Adrian Astley 2013 - 2014
  */
 
-#ifndef COMMON_TEXTURE_MANAGER_H
-#define COMMON_TEXTURE_MANAGER_H
+#pragma once
 
 #include "common/typedefs.h"
 
@@ -40,5 +39,3 @@ private:
 };
 
 } // End of namespace Common
-
-#endif

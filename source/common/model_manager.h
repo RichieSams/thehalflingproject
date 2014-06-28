@@ -4,8 +4,7 @@
  * Copyright Adrian Astley 2013 - 2014
  */
 
-#ifndef COMMON_MODEL_MANAGER_H
-#define COMMON_MODEL_MANAGER_H
+#pragma once
 
 #include "common/model.h"
 
@@ -28,5 +27,3 @@ public:
 };
 
 } // End of namespace Common
-
-#endif

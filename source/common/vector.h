@@ -4,8 +4,7 @@
  * Copyright Adrian Astley 2013 - 2014
  */
 
-#ifndef VECTOR_H
-#define VECTOR_H
+#pragma once
 
 
 namespace Common {
@@ -32,5 +31,3 @@ public:
 };
 
 } // End of namespace Common
-
-#endif

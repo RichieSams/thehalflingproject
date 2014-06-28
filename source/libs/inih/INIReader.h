@@ -5,8 +5,7 @@
 //
 // http://code.google.com/p/inih/
 
-#ifndef __INIREADER_H__
-#define __INIREADER_H__
+#pragma once
 
 #include <map>
 #include <string>
@@ -49,5 +48,3 @@ private:
     static int ValueHandler(void* user, const char* section, const char* name,
                             const char* value);
 };
-
-#endif  // __INIREADER_H__

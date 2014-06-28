@@ -4,8 +4,7 @@
  * Copyright Adrian Astley 2013 - 2014
  */
 
-#ifndef HALFLING_ENGINE_H
-#define HALFLING_ENGINE_H
+#pragma once
 
 #include "common/halfling_sys.h"
 #include "common/clock.h"
@@ -210,5 +209,3 @@ private:
 // procedure to our member function window procedure because we cannot
 // assign a member function to WNDCLASS::lpfnWndProc.
 static Halfling::HalflingEngine *g_engine = NULL;
-
-#endif

@@ -4,8 +4,7 @@
  * Copyright Adrian Astley 2013 - 2014
  */
 
-#ifndef COMMON_RECT_H
-#define COMMON_RECT_H
+#pragma once
 
 #include "common/typedefs.h"
 
@@ -190,5 +189,3 @@ struct Rect {
 };
 
 } // End of namespace Common
-
-#endif

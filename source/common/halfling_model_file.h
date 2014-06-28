@@ -4,8 +4,7 @@
  * Copyright Adrian Astley 2013 - 2014
  */
 
-#ifndef COMMON_HALFLING_MODEL_FILE_H
-#define COMMON_HALFLING_MODEL_FILE_H
+#pragma once
 
 #include "common/model.h"
 #include "common/texture_manager.h"
@@ -79,5 +78,3 @@ public:
 };
 
 } // End of namespace Common
-
-#endif

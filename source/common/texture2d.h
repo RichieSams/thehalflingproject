@@ -18,8 +18,7 @@
  * Copyright Adrian Astley 2013 - 2014
  */
 
-#ifndef COMMON_TEXTURE2D_H
-#define COMMON_TEXTURE2D_H
+#pragma once
 
 #include "common/typedefs.h"
 
@@ -117,5 +116,3 @@ private:
 };
 
 } // End of namespace Common
-
-#endif

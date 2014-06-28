@@ -4,8 +4,7 @@
  * Copyright Adrian Astley 2013 - 2014
  */
 
-#ifndef CONSOLE_PROGRESS_BAR_H
-#define CONSOLE_PROGRESS_BAR_H
+#pragma once
 
 #include "common/typedefs.h"
 
@@ -53,5 +52,3 @@ void ConsoleProgressBar::SetVerticalOffset(uint offset) {
 }
 
 }
-
-#endif

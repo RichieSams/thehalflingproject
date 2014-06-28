@@ -4,8 +4,7 @@
  * Copyright Adrian Astley 2013
  */
 
-#ifndef CRATE_DEMO_GRAPHICS_MANAGER_H
-#define CRATE_DEMO_GRAPHICS_MANAGER_H
+#pragma once
 
 #include "common/graphics_manager_base.h"
 
@@ -53,5 +52,3 @@ private:
 };
 
 } // End of namespace CrateDemo
-
-#endif

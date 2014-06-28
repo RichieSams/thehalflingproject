@@ -4,8 +4,7 @@
  * Copyright Adrian Astley 2013 - 2014
  */
 
-#ifndef COMMON_CLOCK_H
-#define COMMON_CLOCK_H
+#pragma once
 
 #include "common/typedefs.h"
 
@@ -67,5 +66,3 @@ private:
 };
 
 } // End of Common
-
-#endif

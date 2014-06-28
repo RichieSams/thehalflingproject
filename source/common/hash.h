@@ -4,8 +4,7 @@
  * Copyright Adrian Astley 2013 - 2014
  */
 
-#ifndef COMMON_HASH_H
-#define COMMON_HASH_H
+#pragma once
 
 #include <tuple>
 #include <functional>
@@ -38,5 +37,3 @@ public:
 };
 
 } // End of namespace std
-
-#endif

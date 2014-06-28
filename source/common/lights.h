@@ -4,8 +4,7 @@
  * Copyright Adrian Astley 2013 - 2014
  */
 
-#ifndef COMMON_LIGHTS_H
-#define COMMON_LIGHTS_H
+#pragma once
 
 #include "common/halfling_sys.h"
 
@@ -79,5 +78,3 @@ private:
 };
 
 } // End of namespace Common
-
-#endif

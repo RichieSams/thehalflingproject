@@ -20,8 +20,7 @@
  * Copyright Adrian Astley 2013 - 2014
  */
 
-#ifndef COMMON_STRUCTURED_BUFFER_H
-#define COMMON_STRUCTURED_BUFFER_H
+#pragma once
 
 #include "common/d3d_util.h"
 
@@ -111,5 +110,3 @@ void StructuredBuffer<T>::Unmap(ID3D11DeviceContext *d3dDeviceContext) {
 // TODO: Constant buffers
 
 } // End of namespace Common
-
-#endif

@@ -4,8 +4,7 @@
  * Copyright Adrian Astley 2013 - 2014
  */
 
-#ifndef COMMON_D3D_UTIL_H
-#define COMMON_D3D_UTIL_H
+#pragma once
 
 #include "common/dxerr.h"
 
@@ -53,5 +52,3 @@ inline size_t CBSize(size_t size) {
 }
 
 } // End of namespace Common
-
-#endif

@@ -4,8 +4,7 @@
  * Copyright Adrian Astley 2013 - 2014
  */
 
-#ifndef COMMON_TYPEDEFS_H
-#define COMMON_TYPEDEFS_H
+#pragma once
 
 typedef unsigned char byte;
 typedef unsigned char uint8;
@@ -26,5 +25,3 @@ typedef wchar_t wchar;
 namespace DisposeAfterUse {
 enum Flag { NO, YES };
 }
-
-#endif

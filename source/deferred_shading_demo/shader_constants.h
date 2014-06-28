@@ -4,8 +4,7 @@
  * Copyright Adrian Astley 2013
  */
 
-#ifndef DEFERRED_SHADING_DEMO_SHADING_CONSTANTS_H
-#define DEFERRED_SHADING_DEMO_SHADING_CONSTANTS_H
+#pragma once
 
 #include "common/materials.h"
 
@@ -67,5 +66,3 @@ struct RenderGBuffersPixelShaderConstants {
 };
 
 } // End of namespace DeferredShadingDemo
-
-#endif

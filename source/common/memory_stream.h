@@ -4,8 +4,7 @@
  * Copyright Adrian Astley 2013 - 2014
  */
 
-#ifndef COMMON_MEMORY_STREAM_H
-#define COMMON_MEMORY_STREAM_H
+#pragma once
 
 #include <istream>
 
@@ -41,5 +40,3 @@ public:
 };
 
 } // End of namespace Common
-
-#endif

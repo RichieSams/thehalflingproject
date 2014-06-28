@@ -4,8 +4,7 @@
  * Copyright Adrian Astley 2013 - 2014
  */
 
-#ifndef COMMON_CAMERA_H
-#define COMMON_CAMERA_H
+#pragma once
 
 #include "DirectXMath.h"
 
@@ -154,5 +153,3 @@ private:
 };
 
 } // End of namespace Common
-
-#endif

@@ -4,8 +4,7 @@
  * Copyright Adrian Astley 2013 - 2014
  */
 
-#ifndef COMMON_ENDIAN_H
-#define COMMON_ENDIAN_H
+#pragma once
 
 
 /**
@@ -23,6 +22,3 @@
  * ensure portability. Typical usage: MKTAG16('w','b').
  */
 #define MKTAG16(a0,a1) ((uint16)((a1) | ((a0) << 8)))
-
-
-#endif

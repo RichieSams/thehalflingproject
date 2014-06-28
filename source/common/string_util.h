@@ -4,8 +4,7 @@
  * Copyright Adrian Astley 2013 - 2014
  */
 
-#ifndef COMMON_STRING_UTIL_H
-#define COMMON_STRING_UTIL_H
+#pragma once
 
 #include <string>
 
@@ -81,5 +80,3 @@ void Tokenize(const std::wstring& str, ContainerT& tokens, const std::wstring& d
 };
 
 } // End of namespace Common
-
-#endif

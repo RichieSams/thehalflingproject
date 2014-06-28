@@ -4,8 +4,7 @@
  * Copyright Adrian Astley 2013 - 2014
  */
 
-#ifndef COMMON_MATERIALS_H
-#define COMMON_MATERIALS_H
+#pragma once
 
 #include "DirectXMath.h"
 
@@ -18,5 +17,3 @@ struct BlinnPhongMaterial {
 };
 
 } // End of namespace Common
-
-#endif

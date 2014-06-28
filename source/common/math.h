@@ -4,8 +4,7 @@
  * Copyright Adrian Astley 2013 - 2014
  */
 
-#ifndef MATH_H
-#define MATH_H
+#pragma once
 
 #include "common/halfling_sys.h"
 
@@ -33,5 +32,3 @@ static float RandF(float a, float b) {
 }
 
 } // End of namespace Common
-
-#endif // MATHHELPER_H

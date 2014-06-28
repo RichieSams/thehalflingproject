@@ -4,8 +4,7 @@
  * Copyright Adrian Astley 2013
  */
 
-#ifndef LIGHTING_DEMO_WAVE_SIMULATOR_H
-#define LIGHTING_DEMO_WAVE_SIMULATOR_H
+#pragma once
 
 #include "common/typedefs.h"
 
@@ -53,5 +52,3 @@ private:
 };
 
 } // End of namespace LightingDemo
-
-#endif

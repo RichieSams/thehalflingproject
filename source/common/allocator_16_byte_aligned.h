@@ -13,8 +13,7 @@
  */
 
 
-#ifndef COMMON_ALLOCATOR_16_BYTE_ALIGNED_H
-#define COMMON_ALLOCATOR_16_BYTE_ALIGNED_H
+#pragma once
 
 #include <stddef.h>  // Required for size_t and ptrdiff_t and NULL
 #include <new>       // Required for placement new and std::bad_alloc
@@ -139,5 +138,3 @@ private:
 };
 
 } // End of namespace Common
-
-#endif

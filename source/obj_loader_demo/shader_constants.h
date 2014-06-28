@@ -4,8 +4,7 @@
  * Copyright Adrian Astley 2013 - 2014
  */
 
-#ifndef OBJ_LOADER_DEMO_SHADING_CONSTANTS_H
-#define OBJ_LOADER_DEMO_SHADING_CONSTANTS_H
+#pragma once
 
 #include "common/materials.h"
 #include "common/lights.h"
@@ -108,5 +107,3 @@ struct RenderGBuffersPixelShaderConstants {
 };
 
 } // End of namespace ObjLoaderDemo
-
-#endif

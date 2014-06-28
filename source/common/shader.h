@@ -4,8 +4,7 @@
  * Copyright Adrian Astley 2013 - 2014
  */
 
-#ifndef COMMON_SHADER_H
-#define COMMON_SHADER_H
+#pragma once
 
 #include "common/typedefs.h"
 #include "common/d3d_util.h"
@@ -148,5 +147,3 @@ public:
 };
 
 } // End of namespace Common
-
-#endif

@@ -4,8 +4,7 @@
  * Copyright Adrian Astley 2013 - 2014
  */
 
-#ifndef COMMON_FILE_IO_UTIL_H
-#define COMMON_FILE_IO_UTIL_H
+#pragma once
 
 #include "common/halfling_sys.h"
 
@@ -37,5 +36,3 @@ std::ostream &BinaryWriteInt16(std::ostream &stream, const int16 &value);
 std::ostream &BinaryWriteByte(std::ostream &stream, const byte &value);
 
 } // End of namespace Common
-
-#endif

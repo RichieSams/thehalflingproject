@@ -4,8 +4,7 @@
  * Copyright Adrian Astley 2013
  */
 
-#ifndef DEFERRED_SHADING_DEMO_H
-#define DEFERRED_SHADING_DEMO_H
+#pragma once
 
 #include "halfling/halfling_engine.h"
 
@@ -196,5 +195,3 @@ private:
 };
 
 } // End of namespace DeferredShadingDemo
-
-#endif

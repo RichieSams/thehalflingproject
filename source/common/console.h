@@ -4,8 +4,7 @@
  * Copyright Adrian Astley 2013 - 2014
  */
 
-#ifndef COMMON_CONSOLE_H
-#define COMMON_CONSOLE_H
+#pragma once
 
 #include "common/sprite_renderer.h"
 #include "common/sprite_font.h"
@@ -53,5 +52,3 @@ private:
 };
 
 } // End of namespace Common
-
-#endif

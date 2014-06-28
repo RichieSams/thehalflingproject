@@ -4,8 +4,7 @@
  * Copyright Adrian Astley 2013 - 2014
  */
 
-#ifndef COMMON_GEOMETRY_GENERATOR_H
-#define COMMON_GEOMETRY_GENERATOR_H
+#pragma once
 
 #include "common/typedefs.h"
 
@@ -135,5 +134,3 @@ public:
 };
 
 } // End of namespace Common
-
-#endif

@@ -4,8 +4,7 @@
  * Copyright Adrian Astley 2013 - 2014
  */
 
-#ifndef COMMON_PROFILER_H
-#define COMMON_PROFILER_H
+#pragma once
 
 #include "common/typedefs.h"
 
@@ -38,5 +37,3 @@ public:
 };
 
 } // End of namespace Common
-
-#endif

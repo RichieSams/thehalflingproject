@@ -4,8 +4,7 @@
  * Copyright Adrian Astley 2013 - 2014
  */
 
-#ifndef OBJ_HMF_CONVERTER_UTIL_H
-#define OBJ_HMF_CONVERTER_UTIL_H
+#pragma once
 
 #include <d3d11.h>
 #include <DirectXMath.h>
@@ -119,5 +118,3 @@ public:
 };
 
 } // End of namespace ObjHmfConverter
-
-#endif

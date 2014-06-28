@@ -4,8 +4,7 @@
  * Copyright Adrian Astley 2013 - 2014
  */
 
-#ifndef COMMON_HALFLING_SYS_H
-#define COMMON_HALFLING_SYS_H
+#pragma once
 
 #include "common/typedefs.h"
 
@@ -40,4 +39,3 @@
 			DebugBreak();                                                                                                                        \
 		}                                                                                                                                        \
 	} while (false)
-#endif

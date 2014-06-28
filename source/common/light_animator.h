@@ -4,8 +4,7 @@
  * Copyright Adrian Astley 2013 - 2014
  */
 
-#ifndef COMMON_LIGHT_ANIMATOR_H
-#define COMMON_LIGHT_ANIMATOR_H
+#pragma once
 
 #include "common/lights.h"
 
@@ -67,5 +66,3 @@ public:
 };
 
 } // End of namespace Common
-
-#endif

@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <FxCompile Include="..\pbr_demo\debug_object_ps.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\pbr_demo\debug_object_vs.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\pbr_demo\forward_ps.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\pbr_demo\forward_vs.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\pbr_demo\fullscreen_triangle_vs.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\pbr_demo\gbuffer_ps.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\pbr_demo\gbuffer_vs.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\pbr_demo\instanced_forward_vs.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\pbr_demo\instanced_gbuffer_vs.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\pbr_demo\no_cull_final_gather_ps.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\pbr_demo\post_process_ps.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\pbr_demo\render_gbuffers_ps.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\pbr_demo\tiled_cull_final_gather_cs.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\pbr_demo\transformed_fullscreen_triangle_vs.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\pbr_demo\pbr_demo.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\pbr_demo\pbr_demo.draw.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\pbr_demo\pbr_demo.init.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\pbr_demo\pbr_demo.update.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\pbr_demo\main.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\pbr_demo\pbr_demo.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\pbr_demo\shader_constants.h">
+      <Filter>Shader Logic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\pbr_demo\shader_defines.h">
+      <Filter>Shader Logic</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\pbr_demo\tempIcon.ico">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="..\pbr_demo\hlsl_util.hlsli">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\pbr_demo\types.hlsli">
+      <Filter>Shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Core">
+      <UniqueIdentifier>{434d1833-aaa9-4448-9a01-756c4009b527}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{72b745cb-9348-4e32-8a39-66ada565c8f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader Logic">
+      <UniqueIdentifier>{429decc3-816e-40bf-948a-766e90cc87ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{ade00db2-9f6f-4eb0-ac29-ffb4d6a3afda}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="PBRDemo.rc">
+      <Filter>Resources</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

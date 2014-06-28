@@ -149,7 +149,7 @@ void Console::InputCharacter(wchar character) {
 	{
 		std::wstring command = m_currentInput.substr(2);
 		if (!command.empty()) {
-			PrintText(command);
+			PrintText(m_currentInput);
 			ProcessCommandString(command);
 
 			// Reset the current input to 'empty'

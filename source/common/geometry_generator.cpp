@@ -17,7 +17,7 @@
 
 namespace Common {
 
-void GeometryGenerator::CreateGrid(float width, float depth, uint m, uint n, MeshData *meshData, float textureTilingX, float textureTilingY) {
+void GeometryGenerator::CreateGrid(float width, float depth, uint m, uint n, MeshData *meshData, float textureTilingX, float textureTilingZ) {
 	uint vertexCount = m * n;
 	uint faceCount = (m - 1) * (n - 1) * 2;
 
@@ -42,7 +42,7 @@ void GeometryGenerator::CreateGrid(float width, float depth, uint m, uint n, Mes
 
 			// Stretch texture over grid.
 			meshData->Vertices[(i * n) + j].TexCoord.x = j * du * textureTilingX;
-			meshData->Vertices[(i * n) + j].TexCoord.y = i * dv * textureTilingY;
+			meshData->Vertices[(i * n) + j].TexCoord.y = i * dv * textureTilingZ;
 		}
 	}
 

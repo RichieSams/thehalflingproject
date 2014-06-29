@@ -121,9 +121,9 @@ public:
 	 * @param n                 The number of grid subdivisions in the z direction
 	 * @param meshData          Pointer to the MeshData object that will be filled with the grid data
 	 * @param textureTilingX    How much to tile the texture coordinates in the U direction. 1.0 means the texture will be stretched across the entire grid, 2.0 means the texture will be tiled twice, etc.
-	 * @param textureTilingY    How much to tile the texture coordinates in the V direction. 1.0 means the texture will be stretched across the entire grid, 2.0 means the texture will be tiled twice, etc.
+	 * @param textureTilingZ    How much to tile the texture coordinates in the V direction. 1.0 means the texture will be stretched across the entire grid, 2.0 means the texture will be tiled twice, etc.
 	 */
-	static void CreateGrid(float width, float depth, uint m, uint n, MeshData *meshData, float textureTilingX = 1.0f, float textureTilingY = 1.0f);
+	static void CreateGrid(float width, float depth, uint m, uint n, MeshData *meshData, float textureTilingX = 1.0f, float textureTilingZ = 1.0f);
 	/**
 	 * Create a triangulated quad the size of the screen
 	 *

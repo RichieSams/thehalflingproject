@@ -34,30 +34,6 @@
 
 namespace PBRDemo {
 
-struct DebugObjectVertex {
-	DirectX::XMFLOAT3 pos;
-};
-
-struct DebugObjectInstance {
-	DirectX::XMMATRIX worldViewProj;
-	DirectX::XMFLOAT4 color;
-};
-
-enum ShadingType {
-	Forward,
-	NoCullDeferred,
-	TiledCullDeferred
-};
-
-enum GBufferSelector {
-	Diffuse = 0,
-	Specular = 1,
-	Normal_Spherical = 2,
-	Normal_Cartesian = 3,
-	Depth = 4,
-	None = 5
-};
-
 struct ModelToLoad {
 	ModelToLoad(std::string filePath, std::vector<DirectX::XMMATRIX, Common::Allocator16ByteAligned<DirectX::XMMATRIX> > *instances)
 		: FilePath(filePath),
@@ -73,7 +49,6 @@ public:
 	PBRDemo(HINSTANCE hinstance);
 
 private:
-	static const uint kMaxMaterialsPerFrame = 2000;
 	static const uint kMaxInstanceVectorsPerFrame = 5000;
 
 	float m_nearClip;
@@ -104,32 +79,19 @@ private:
 	float m_sceneScaleFactor;
 	uint m_modelInstanceThreshold;
 
-	Common::InstancedModel m_debugSphere;
-	Common::InstancedModel m_debugCone;
-
 	Common::DirectionalLight m_directionalLight;
 	std::vector<Common::PointLight> m_pointLights;
 	std::vector<Common::PointLightAnimator> m_pointLightAnimators;
 	std::vector<Common::SpotLight> m_spotLights;
 	std::vector<Common::SpotLightAnimator> m_spotLightAnimators;
 
-	bool m_pointLightBufferNeedsRebuild;
-	bool m_spotLightBufferNeedsRebuild;
-
 	bool m_vsync;
 	bool m_wireframe;
 	bool m_animateLights;
-	ShadingType m_shadingType;
-	GBufferSelector m_gbufferSelector;
-	bool m_showLightLocations;
-	bool m_showGBuffers;
-	bool m_visualizeLightCount;
 	uint32 m_numSpotLightsToDraw;
 	uint32 m_numPointLightsToDraw;
 
-	ID3D11ShaderResourceView *m_colormapSRV;
-
-	ID3D11RenderTargetView *m_renderTargetView;
+	ID3D11RenderTargetView *m_backbufferRTV;
 	ID3D11InputLayout *m_defaultInputLayout;
 	ID3D11InputLayout *m_debugObjectInputLayout;
 
@@ -145,23 +107,12 @@ private:
 	TwBar *m_settingsBar;
 
 	// Shaders
-	Common::VertexShader<Common::DefaultShaderConstantType, ForwardVertexShaderObjectConstants> *m_forwardVertexShader;
-	Common::VertexShader<InstancedForwardVertexShaderFrameConstants, InstancedForwardVertexShaderObjectConstants> *m_instancedForwardVertexShader;
-	Common::PixelShader<ForwardPixelShaderFrameConstants, ForwardPixelShaderObjectConstants> *m_forwardPixelShader;
-
 	Common::VertexShader<Common::DefaultShaderConstantType, GBufferVertexShaderObjectConstants> *m_gbufferVertexShader;
 	Common::VertexShader<InstancedGBufferVertexShaderFrameConstants, InstancedGBufferVertexShaderObjectConstants> *m_instancedGBufferVertexShader;
 	Common::PixelShader<Common::DefaultShaderConstantType, GBufferPixelShaderObjectConstants> *m_gbufferPixelShader;
 
 	Common::VertexShader<> *m_fullscreenTriangleVertexShader;
-
-	Common::PixelShader<NoCullFinalGatherPixelShaderFrameConstants, Common::DefaultShaderConstantType> *m_noCullFinalGatherPixelShader;
 	Common::ComputeShader<TiledCullFinalGatherComputeShaderFrameConstants, Common::DefaultShaderConstantType> *m_tiledCullFinalGatherComputeShader;
-
-	Common::VertexShader<> *m_debugObjectVertexShader;
-	Common::PixelShader<> *m_debugObjectPixelShader;
-	Common::VertexShader<Common::DefaultShaderConstantType, TransformedFullScreenTriangleVertexShaderConstants> *m_transformedFullscreenTriangleVertexShader;
-	Common::PixelShader<RenderGBuffersPixelShaderConstants, Common::DefaultShaderConstantType> *m_renderGbuffersPixelShader;
 
 	Common::PixelShader<> *m_postProcessPixelShader;
 
@@ -169,8 +120,6 @@ private:
 	// We assume there is only one directional light. Therefore, it is stored in a cbuffer
 	Common::StructuredBuffer<Common::PointLight> *m_pointLightBuffer;
 	Common::StructuredBuffer<Common::SpotLight> *m_spotLightBuffer;
-
-	Common::StructuredBuffer<Common::BlinnPhongMaterial> *m_frameMaterialListBuffer;
 
 	Common::BlendStates m_blendStates;
 	Common::DepthStencilStates m_depthStencilStates;
@@ -204,18 +153,13 @@ private:
 	void LoadSceneJson();
 	void InitTweakBar();
 	void LoadShaders();
-	void BuildGeometryBuffers();
 	void CreateLights(const DirectX::XMFLOAT3 &sceneSizeMin, const DirectX::XMFLOAT3 &sceneSizeMax);
 
 	// Rendering methods
-	/** Renders the geometry using the ShadingType in m_shadingType */
+	/** Renders the geometry */
 	void RenderMainPass();
-	/** Renders the geometry using Forward Shading */
-	void ForwardRenderingPass();
 	/** Renders the geometry using Deferred Shading */
 	void DeferredRenderingPass();
-	/** Renders any geometry used for visualizing effects, etc. (Light locations, etc) */
-	void RenderDebugGeometry();
 	/** Does the post processing for the frame */
 	void PostProcess();
 	/** Renders the frame statistics and the settings bar */

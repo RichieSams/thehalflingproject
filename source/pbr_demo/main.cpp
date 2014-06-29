@@ -19,7 +19,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		DBG_UNREFERENCED_PARAMETER(lpCmdLine);
 		DBG_UNREFERENCED_PARAMETER(nCmdShow);
 
-		app.Initialize(L"OBJ Loader Demo", 1280, 720, false);
+		app.Initialize(L"Physically Based Rendering Demo", 1280, 720, false);
 
 		#ifdef _DEBUG
 		app.CreateDebugInterface(&debugInterface);

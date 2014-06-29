@@ -25,14 +25,6 @@ struct InstancedVertexIn {
 	uint instanceId  : SV_INSTANCEID;
 };
 
-struct ForwardPixelIn {
-	float4 positionClip   : SV_POSITION;
-	float3 positionWorld  : POSITION_WORLD;
-	float3 normal         : NORMAL;
-	float3 tangent        : TANGENT;
-	float2 texCoord       : TEXCOORD;
-};
-
 struct GBufferShaderPixelIn {
 	float4 positionClip   : SV_POSITION;
 	float3 normal         : NORMAL;
@@ -43,17 +35,6 @@ struct GBufferShaderPixelIn {
 struct CalculatedTrianglePixelIn {
 	float4 positionClip  : SV_POSITION;
 	float2 texCoord      : TEXCOORD;
-};
-
-struct DebugObjectShaderVertexIn {
-	float3 position                   : POSITION;
-	float4x4 instanceWorldViewProj    : INSTANCE_WORLDVIEWPROJ;
-	float4 instanceColor              : INSTANCE_COLOR;
-};
-
-struct DebugObjectShaderPixelIn {
-	float4 positionClip   : SV_POSITION;
-	float4 color          : COLOR;
 };
 
 #endif

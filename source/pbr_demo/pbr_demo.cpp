@@ -33,19 +33,12 @@ PBRDemo::PBRDemo(HINSTANCE hinstance)
 	  m_sceneIsSetup(false),
 	  m_sceneScaleFactor(0.0f),
 	  m_modelInstanceThreshold(100u),
-	  m_pointLightBufferNeedsRebuild(false),
-	  m_spotLightBufferNeedsRebuild(false),
 	  m_vsync(false),
 	  m_wireframe(false),
 	  m_animateLights(true),
-	  m_shadingType(ShadingType::TiledCullDeferred),
-	  m_gbufferSelector(GBufferSelector::None),
-	  m_showLightLocations(false),
-	  m_showGBuffers(false),
-	  m_visualizeLightCount(false),
 	  m_numPointLightsToDraw(100),
 	  m_numSpotLightsToDraw(100),
-	  m_renderTargetView(nullptr),
+	  m_backbufferRTV(nullptr),
 	  m_depthStencilBuffer(nullptr),
 	  m_defaultInputLayout(nullptr),
 	  m_debugObjectInputLayout(nullptr),
@@ -54,12 +47,7 @@ PBRDemo::PBRDemo(HINSTANCE hinstance)
 	  m_gbufferVertexShader(nullptr),
 	  m_gbufferPixelShader(nullptr),
 	  m_fullscreenTriangleVertexShader(nullptr),
-	  m_noCullFinalGatherPixelShader(nullptr),
 	  m_tiledCullFinalGatherComputeShader(nullptr),
-	  m_debugObjectVertexShader(nullptr),
-	  m_debugObjectPixelShader(nullptr),
-	  m_transformedFullscreenTriangleVertexShader(nullptr),
-	  m_renderGbuffersPixelShader(nullptr),
 	  m_postProcessPixelShader(nullptr) {
 }
 
@@ -68,20 +56,11 @@ void PBRDemo::Shutdown() {
 	delete m_pointLightBuffer;
 	delete m_spotLightBuffer;
 	delete m_instanceBuffer;
-	delete m_frameMaterialListBuffer;
-	delete(m_forwardVertexShader);
-	delete(m_instancedForwardVertexShader);
-	delete(m_forwardPixelShader);
 	delete(m_gbufferVertexShader);
 	delete(m_instancedGBufferVertexShader);
 	delete(m_gbufferPixelShader);
 	delete(m_fullscreenTriangleVertexShader);
-	delete(m_noCullFinalGatherPixelShader);
 	delete(m_tiledCullFinalGatherComputeShader);
-	delete(m_debugObjectVertexShader);
-	delete(m_debugObjectPixelShader);
-	delete(m_transformedFullscreenTriangleVertexShader);
-	delete(m_renderGbuffersPixelShader);
 	delete(m_postProcessPixelShader);
 	ReleaseCOM(m_defaultInputLayout);
 	ReleaseCOM(m_debugObjectInputLayout);
@@ -91,7 +70,7 @@ void PBRDemo::Shutdown() {
 	}
 
 	delete m_depthStencilBuffer;
-	ReleaseCOM(m_renderTargetView);
+	ReleaseCOM(m_backbufferRTV);
 
 	if (m_sceneLoaderThread.joinable()) {
 		m_sceneLoaderThread.detach();
@@ -120,7 +99,7 @@ void PBRDemo::OnResize() {
 	m_gBufferSRVs.clear();
 
 	// Release the old views and the old depth/stencil buffer.
-	ReleaseCOM(m_renderTargetView);
+	ReleaseCOM(m_backbufferRTV);
 	delete m_depthStencilBuffer;
 	m_depthStencilBuffer = nullptr;
 
@@ -130,7 +109,7 @@ void PBRDemo::OnResize() {
 	// Recreate the render target view.
 	ID3D11Texture2D *backBuffer;
 	HR(m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void **>(&backBuffer)));
-	HR(m_device->CreateRenderTargetView(backBuffer, 0, &m_renderTargetView));
+	HR(m_device->CreateRenderTargetView(backBuffer, 0, &m_backbufferRTV));
 	ReleaseCOM(backBuffer);
 
 	// Create the depth/stencil buffer and view.

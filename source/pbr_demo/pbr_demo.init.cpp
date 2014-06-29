@@ -49,10 +49,7 @@ bool PBRDemo::Initialize(LPCTSTR mainWndCaption, uint32 screenWidth, uint32 scre
 	// TODO: Make ModelManager thread safe
 	m_sceneLoaderThread = std::thread(LoadScene, &m_sceneLoaded, m_device, &m_textureManager, &m_modelManager, &m_modelsToLoad, &m_models, &m_instancedModels, m_modelInstanceThreshold);
 
-	BuildGeometryBuffers();
-
 	LoadShaders();
-	m_frameMaterialListBuffer = new Common::StructuredBuffer<Common::BlinnPhongMaterial>(m_device, kMaxMaterialsPerFrame, D3D11_BIND_SHADER_RESOURCE, true);
 
 	m_instanceBuffer = new Common::StructuredBuffer<DirectX::XMVECTOR>(m_device, kMaxInstanceVectorsPerFrame, D3D11_BIND_SHADER_RESOURCE, true);
 
@@ -68,8 +65,6 @@ bool PBRDemo::Initialize(LPCTSTR mainWndCaption, uint32 screenWidth, uint32 scre
 	m_spriteRenderer.Initialize(m_device);
 	m_timesNewRoman12Font.Initialize(L"Times New Roman", 12, Common::SpriteFont::Regular, true, m_device);
 	m_courierNew10Font.Initialize(L"Courier New", 12, Common::SpriteFont::Regular, true, m_device);
-
-	m_colormapSRV = m_textureManager.GetSRVFromFile(m_device, L"colormap.dds", D3D11_USAGE_IMMUTABLE);
 
 	// Initialize the console
 	m_console.Initialize(Common::Rect(20, m_clientHeight - 320, m_clientWidth - 20, m_clientHeight - 10), &m_spriteRenderer, &m_courierNew10Font);
@@ -309,17 +304,6 @@ void PBRDemo::InitTweakBar() {
 	TwAddVarRW(m_settingsBar, "V-Sync", TwType::TW_TYPE_BOOLCPP, &m_vsync, "");
 	TwAddVarRW(m_settingsBar, "Wireframe", TwType::TW_TYPE_BOOLCPP, &m_wireframe, "");
 	TwAddVarRW(m_settingsBar, "Animate Lights", TW_TYPE_BOOLCPP, &m_animateLights, "");
-	TwAddVarRW(m_settingsBar, "Show light locations", TwType::TW_TYPE_BOOLCPP, &m_showLightLocations, "");
-	TwAddVarRW(m_settingsBar, "Show GBuffer parts", TwType::TW_TYPE_BOOLCPP, &m_showGBuffers, "");
-	TwAddVarRW(m_settingsBar, "Visualize light count", TwType::TW_TYPE_BOOLCPP, &m_visualizeLightCount, "");
-
-	TwEnumVal shaderEV[] = {{ShadingType::Forward, "Forward"}, {ShadingType::NoCullDeferred, "No-cull Deferred"}, {ShadingType::TiledCullDeferred, "Tiled Deferred"}};
-	TwType shaderType = TwDefineEnum("ShaderType", shaderEV, 3);
-	TwAddVarRW(m_settingsBar, "Shader Type", shaderType, &m_shadingType, NULL);
-
-	TwEnumVal gbufferEV[] = {{GBufferSelector::None, "None"}, {GBufferSelector::Diffuse, "Diffuse"}, {GBufferSelector::Specular, "Specular"}, {GBufferSelector::Normal_Spherical, "Normal Spherical"}, {GBufferSelector::Normal_Cartesian, "Normal Cartesian"}, {GBufferSelector::Depth, "Depth"}};
-	TwType gbufferViewType = TwDefineEnum("GBufferViewType", gbufferEV, 6);
-	TwAddVarRW(m_settingsBar, "GBuffer View", gbufferViewType, &m_gbufferSelector, NULL);
 
 	TwAddVarRW(m_settingsBar, "Directional Light Diffuse", TW_TYPE_COLOR3F, &m_directionalLight.Diffuse, "");
 	TwAddVarRW(m_settingsBar, "Directional Light Specular", TW_TYPE_COLOR3F, &m_directionalLight.Specular, "");
@@ -348,69 +332,10 @@ void LoadScene(std::atomic<bool> *sceneIsLoaded,
 		}
 	}
 
+	// Shapes
+
+
 	sceneIsLoaded->store(true, std::memory_order_relaxed);
-}
-
-void PBRDemo::BuildGeometryBuffers() {
-	size_t vertexStride = sizeof(DebugObjectVertex);
-	size_t instanceStride = sizeof(DebugObjectInstance);
-	
-	Common::GeometryGenerator::MeshData meshData;
-	ZeroMemory(&meshData, sizeof(Common::GeometryGenerator::MeshData));
-
-	// Create debug sphere
-	Common::GeometryGenerator::CreateSphere(2.0f, 10, 10, &meshData);
-	uint vertexCount = meshData.Vertices.size();
-	uint indexCount = meshData.Indices.size();
-
-	DebugObjectVertex *debugSphereVertices = new DebugObjectVertex[vertexCount];
-	for (uint i = 0; i < vertexCount; ++i) {
-		debugSphereVertices[i].pos = meshData.Vertices[i].Position;
-	}
-	m_debugSphere.CreateVertexBuffer(m_device, debugSphereVertices, vertexStride, vertexCount);
-
-	uint *debugSphereIndices = new uint[indexCount];
-	for (uint i = 0; i < indexCount; ++i) {
-		debugSphereIndices[i] = meshData.Indices[i];
-	}
-	m_debugSphere.CreateIndexBuffer(m_device, debugSphereIndices, indexCount);
-
-	// Create subsets
-	Common::ModelSubset *debugSphereSubsets = new Common::ModelSubset[1] {
-		{0, vertexCount, 0, indexCount, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {{0.0f, 0.0f, 0.0f, 0.0f}}, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, 0}
-	};
-	m_debugSphere.CreateSubsets(debugSphereSubsets, 1);
-
-	m_debugSphere.CreateInstanceBuffer(m_device, instanceStride, 1000);
-
-
-	meshData.Indices.clear();
-	meshData.Vertices.clear();
-
-	// Create debug cone
-	Common::GeometryGenerator::CreateCone(0.8029f, 8.0f, 10, &meshData, true); // ~ 60 degrees
-	vertexCount = meshData.Vertices.size();
-	indexCount = meshData.Indices.size();
-
-	DebugObjectVertex *debugConeVertices = new DebugObjectVertex[vertexCount];
-	for (uint i = 0; i < vertexCount; ++i) {
-		debugConeVertices[i].pos = meshData.Vertices[i].Position;
-	}
-	m_debugCone.CreateVertexBuffer(m_device, debugConeVertices, vertexStride, vertexCount);
-
-	uint *debugConeIndices = new uint[indexCount];
-	for (uint i = 0; i < indexCount; ++i) {
-		debugConeIndices[i] = meshData.Indices[i];
-	}
-	m_debugCone.CreateIndexBuffer(m_device, debugConeIndices, indexCount);
-
-	// Create subsets
-	Common::ModelSubset *debugConeSubsets = new Common::ModelSubset[1] {
-		{0, vertexCount, 0, indexCount, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {{0.0f, 0.0f, 0.0f, 0.0f}}, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, 0}
-	};
-	m_debugCone.CreateSubsets(debugConeSubsets, 1);
-
-	m_debugCone.CreateInstanceBuffer(m_device, instanceStride, 1000);
 }
 
 void PBRDemo::LoadShaders() {
@@ -421,31 +346,11 @@ void PBRDemo::LoadShaders() {
 		{"TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0}
 	};
 
-	D3D11_INPUT_ELEMENT_DESC instanceVertexDesc[] = {
-		// Data from the vertex buffer
-		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-
-		// Data from the instance buffer
-		{"INSTANCE_WORLDVIEWPROJ", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 0, D3D11_INPUT_PER_INSTANCE_DATA, 1},
-		{"INSTANCE_WORLDVIEWPROJ", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 16, D3D11_INPUT_PER_INSTANCE_DATA, 1},
-		{"INSTANCE_WORLDVIEWPROJ", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 32, D3D11_INPUT_PER_INSTANCE_DATA, 1},
-		{"INSTANCE_WORLDVIEWPROJ", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 48, D3D11_INPUT_PER_INSTANCE_DATA, 1},
-		{"INSTANCE_COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 64, D3D11_INPUT_PER_INSTANCE_DATA, 1}
-	};
-
-	m_forwardVertexShader = new Common::VertexShader<Common::DefaultShaderConstantType, ForwardVertexShaderObjectConstants>(L"forward_vs.cso", m_device, false, true);
-	m_instancedForwardVertexShader = new Common::VertexShader<InstancedForwardVertexShaderFrameConstants, InstancedForwardVertexShaderObjectConstants>(L"instanced_forward_vs.cso", m_device, true, true);
-	m_forwardPixelShader = new Common::PixelShader<ForwardPixelShaderFrameConstants, ForwardPixelShaderObjectConstants>(L"forward_ps.cso", m_device, true, true);
 	m_gbufferVertexShader = new Common::VertexShader<Common::DefaultShaderConstantType, GBufferVertexShaderObjectConstants>(L"gbuffer_vs.cso", m_device, false, true, &m_defaultInputLayout, vertexDesc, 4);
 	m_instancedGBufferVertexShader = new Common::VertexShader<InstancedGBufferVertexShaderFrameConstants, InstancedGBufferVertexShaderObjectConstants>(L"instanced_gbuffer_vs.cso", m_device, true, true);
 	m_gbufferPixelShader = new Common::PixelShader<Common::DefaultShaderConstantType, GBufferPixelShaderObjectConstants>(L"gbuffer_ps.cso", m_device, false, true);
 	m_fullscreenTriangleVertexShader = new Common::VertexShader<>(L"fullscreen_triangle_vs.cso", m_device, false, false);
-	m_noCullFinalGatherPixelShader = new Common::PixelShader<NoCullFinalGatherPixelShaderFrameConstants, Common::DefaultShaderConstantType>(L"no_cull_final_gather_ps.cso", m_device, true, false);
 	m_tiledCullFinalGatherComputeShader = new Common::ComputeShader<TiledCullFinalGatherComputeShaderFrameConstants, Common::DefaultShaderConstantType>(L"tiled_cull_final_gather_cs.cso", m_device, true, false);
-	m_debugObjectVertexShader = new Common::VertexShader<>(L"debug_object_vs.cso", m_device, false, false, &m_debugObjectInputLayout, instanceVertexDesc, 6);
-	m_debugObjectPixelShader = new Common::PixelShader<>(L"debug_object_ps.cso", m_device, false, false);
-	m_transformedFullscreenTriangleVertexShader = new Common::VertexShader<Common::DefaultShaderConstantType, TransformedFullScreenTriangleVertexShaderConstants>(L"transformed_fullscreen_triangle_vs.cso", m_device, false, true);
-	m_renderGbuffersPixelShader = new Common::PixelShader<RenderGBuffersPixelShaderConstants, Common::DefaultShaderConstantType>(L"render_gbuffers_ps.cso", m_device, true, false);
 	m_postProcessPixelShader = new Common::PixelShader<>(L"post_process_ps.cso", m_device, false, false);
 }
 

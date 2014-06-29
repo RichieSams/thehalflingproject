@@ -29,7 +29,6 @@ cbuffer cbPerFrame : register(b0) {
 
 	float2 gCameraClipPlanes : packoffset(c16);
 	uint gNumSpotLightsToDraw : packoffset(c16.z);
-	uint gVisualizeLightCount : packoffset(c16.w);
 }
 
 #ifdef MSAA_
@@ -202,10 +201,7 @@ void ComputeShaderTileCS(uint3 groupId : SV_GroupID,
 	[branch]
 	if (all(pixelCoord < (uint)gbufferDim)) {
 		[branch] 
-		if (gVisualizeLightCount) {
-			gOutputBuffer[pixelCoord] = float4(GetColor((float)(numPointLights + numSpotLights), 0.0f, 24.0f), 1.0f);
-			return;
-		} else if (zw == 0.0f) {
+		if (zw == 0.0f) {
 			return;
 		} else {
 			SurfaceProperties surfProps;

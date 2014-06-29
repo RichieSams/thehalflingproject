@@ -15,6 +15,7 @@
     "ModelInstanceThreshold" : 100,
     "Models" : [
         {
+            "Type" : "File",
             "FilePath" : "sponza.hmf",
             "Instances" : [
                 [1.0, 0.0, 0.0, 0.0,

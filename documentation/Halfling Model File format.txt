@@ -1,50 +1,69 @@
-Halfling Model File format             Version 2	
+Halfling Model File format             Version 3        
 
 
 
-+-------------------------------------+-------------------+----------+--------------------------------------------------------------------------------------------------------------+
-|                Item                 |       Type        | Required |                                                 Description                                                  |
-+-------------------------------------+-------------------+----------+--------------------------------------------------------------------------------------------------------------+
-| File Id                             | '\0FMH'           | T        | "Little-endian ""HMF\0"""                                                                                    |
-| File format version                 | byte              | T        | Version of the HMF format that this file uses                                                                |
-| Flags                               | uint64            | T        | Bitwise-OR of flags used in the file. See the flags below                                                    |
-|                                     |                   |          |                                                                                                              |
-| String Table                        |                   | F        |                                                                                                              |
-|         Num strings                 | uint32            | T        | The number of strings in the table                                                                           |
-|         String data                 |                   | T        |                                                                                                              |
-|                 String length       | uint16            | T        | Length of the string                                                                                         |
-|                 String              | char[]            | T        | The string characters. DOES NOT HAVE A NULL TERMINATION                                                      |
-|                                     |                   |          |                                                                                                              |
-| Num Vertices                        | uint32            | T        | The number of vertices in the file                                                                           |
-| Num Indices                         | uint32            | T        | The number of indices in the file                                                                            |
-|                                     |                   |          |                                                                                                              |
-| NumVertexElements                   | uint16            | T        | The number of elements in the vertex description                                                             |
-|                                     |                   |          |                                                                                                              |
-| Vertex Buffer Desc                  | D3D11_BUFFER_DESC | T        | A hard cast of the vertex buffer description                                                                 |
-| Index Buffer Desc                   | D3D11_BUFFER_DESC | T        | A hard cast of the index buffer description                                                                  |
-|                                     |                   |          |                                                                                                              |
-| Vertex data                         | void[]            | T        | Will be read in a single block using VertexBufferDesc.ByteWidth                                              |
-| Index data                          | void[]            | T        | Will be read in a single block using IndexBufferDesc.ByteWidth                                               |
-|                                     |                   |          |                                                                                                              |
-| Num Subsets                         | uint32            | T        | The number of subsets in the file                                                                            |
-| Subset data                         | Subset[]          | T        | Will read in a single block to a Subset[]                                                                    |
-|         Vertex Start                | uint64            | T        | The index to the first vertex used by the subset                                                             |
-|         Vertex Count                | uint64            | T        | The number of vertices used by the subset (All used vertices must be in the range VertexStart + VertexCount) |
-|         Index Start                 | uint64            | T        | The index to the first index used by the subset                                                              |
-|         Index Count                 | uint64            | T        | The number of indices used by the subset (All used indices must be in the range IndexStart + IndexCount)     |
-|         Material Diffuse Color      | float[4]          | T        | The RGBA diffuse color values of the material                                                                |
-|         Material Specular Color     | float[3]          | T        | The RGB specular color values of the material                                                                |
-|         Material Specular Power     | float             | T        | The Specular Power                                                                                           |
-|         Diffuse Color Map Filename  | int32             | T        | An index to the string table. -1 if it doesn't exist.                                                        |
-|         Specular Color Map Filename | int32             | T        | An index to the string table. -1 if it doesn't exist.                                                        |
-|         Specular Power Map Filename | int32             | T        | An index to the string table. -1 if it doesn't exist.                                                        |
-|         Alpha Map Filename          | int32             | T        | An index to the string table. -1 if it doesn't exist.                                                        |
-|         Bump Map Filename           | int32             | T        | An index to the string table. -1 if it doesn't exist. Mutually exclusive with Normal Map                     |
-|         Normal Map Filename         | int32             | T        | An index to the string table. -1 if it doesn't exist. Mutually exclusive with Bump Map                       |
-+-------------------------------------+-------------------+----------+--------------------------------------------------------------------------------------------------------------+
++------------------------------------------------+---------------------------+------------------+------------------------------------------------------------------------+
+|                Item                            |       Type                | Required         |                                                 Description            |
++------------------------------------------------+---------------------------+------------------+------------------------------------------------------------------------+
+| File Id                                        | '\0FMH'                   | T                | Little-endian "HMF\0"                                                  |
+| File format version                            | byte                      | T                | Version of the HMF format that this file uses                          |
+| Flags                                          | uint64                    | T                | Bitwise-OR of flags used in the file. See the flags to the             |
+|                                                |                           |                  |   right                                                                |
+|                                                |                           |                  |                                                                        |
+| String Table                                   |                           | F                |                                                                        |
+|         Num strings                            | uint32                    | T                | The number of strings in the table                                     |
+|         String data                            |                           |                  |                                                                        |
+|                 String length                  | uint16                    | T                | Length of the string                                                   |
+|                 String                         | char[]                    | T                | The string characters. DOES NOT HAVE A NULL TERMINATION                |
+|                                                |                           |                  |                                                                        |
+| Num Vertices                                   | uint32                    | T                | The number of vertices in the file                                     |
+| Num Indices                                    | uint32                    | T                | The number of indices in the file                                      |
+|                                                |                           |                  |                                                                        |
+| NumVertexElements                              | uint16                    | T                | The number of elements in the vertex description                       |
+|                                                |                           |                  |                                                                        |
+| Vertex Buffer Desc                             | D3D11_BUFFER_DESC         | T                | A hard cast of the vertex buffer description                           |
+| Index Buffer Desc                              | D3D11_BUFFER_DESC         | T                | A hard cast of the index buffer description                            |
+|                                                |                           |                  |                                                                        |
+| Vertex data                                    | void[]                    | T                | Will be read in a single block using                                   |
+|                                                |                           |                  |   VertexBufferDesc.ByteWidth                                           |
+| Index data                                     | void[]                    | T                | Will be read in a single block using IndexBufferDesc.ByteWidth         |
+|                                                |                           |                  |                                                                        |
+| Material Table                                 |                           | F                |                                                                        |
+|         Num Materials                          | uint32                    | T                | The number of materials in the table                                   |
+|         Material data                          |                           |                  |                                                                        |
+|                 Material HMAT FilePath         | uint32                    | T                | An index to the string table                                           |
+|                 Num textures                   | uint32                    | T                | The number of textures in the table                                    |
+|                 Texture data                   |                           |                  |                                                                        |
+|                         FilePath               | uint32                    | T                | An index to the string table                                           |
+|                         Sampler                | byte                      | T                | An enum from Sampling Enum                                             |
+|                                                |                           |                  |                                                                        |
+| Num Subsets                                    | uint32                    | T                | The number of subsets in the file                                      |
+| Subset data                                    | Subset[]                  | T                | Will read in a single block to a Subset[]                              |
+|         Vertex Start                           | uint64                    | T                | The index to the first vertex used by the subset                       |
+|         Vertex Count                           | uint64                    | T                | The number of vertices used by the subset (All used vertices           |
+|                                                |                           |                  |   must be in the range VertexStart + VertexCount)                      |
+|         Index Start                            | uint64                    | T                | The index to the first index used by the subset                        |
+|         Index Count                            | uint64                    | T                | The number of indices used by the subset (All used indices             |
+|                                                |                           |                  |   must be in the range IndexStart + IndexCount)                        |
+|         AABB_min                               | float3                    | T                | The minimum bounds of the AABB surrounding the subset                  |
+|         AABB_max                               | float3                    | T                | The maximum bounds of the AABB surrounding the subset                  |
+|         Material Index                         | uint32                    | T                | An index to the material table                                         |
++------------------------------------------------+---------------------------+------------------+------------------------------------------------------------------------+
 
 +--------------------------+--------+
 |        File Flags        |        |
 +--------------------------+--------+
 | HAS_STRING_TABLE         | 0x0001 |
+| HAS_MATERIAL_TABLE       | 0x0002 |
++--------------------------+--------+
+
++--------------------------+--------+
+|       SamplingEnum       |        |
++--------------------------+--------+
+| LINEAR_CLAMP             | 1      |
+| LINEAR_BORDER            | 2      |
+| LINEAR_WRAP              | 3      |
+| POINT_CLAMP              | 4      |
+| POINT_WRAP               | 5      |
+| ANISOTROPIC_WRAP         | 6      |
 +--------------------------+--------+

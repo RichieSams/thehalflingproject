@@ -243,4 +243,125 @@ void HalflingModelFile::Write(const wchar *filepath, uint numVertices, uint numI
 	fout.close();
 }
 
+void HalflingModelFile::VerifyFileIntegrity(const wchar *filepath) {
+	// Read the entire file into memory
+	DWORD bytesRead;
+	char *fileBuffer = ReadWholeFile(filepath, &bytesRead);
+	assert(fileBuffer != NULL);
+
+	Common::MemoryInputStream fin(fileBuffer, bytesRead);
+
+	// Read in the file data
+
+	// Check that this is a 'HFM' file
+	uint32 fileId;
+	fin.readUInt32(&fileId);
+	assert(fileId == MKTAG('\0', 'F', 'M', 'H'));
+
+	// File format version
+	byte fileFormatVersion;
+	fin.readByte(&fileFormatVersion);
+	assert(fileFormatVersion == kFileFormatVersion);
+
+	// Flags
+	uint64 flags;
+	fin.readUInt64(&flags);
+
+	// String table
+	std::string *stringTable = nullptr;
+	uint32 numStrings;
+	if ((flags & HAS_STRING_TABLE) == HAS_STRING_TABLE) {
+		fin.readUInt32(&numStrings);
+
+		stringTable = new std::string[numStrings];
+
+		for (uint i = 0; i < numStrings; ++i) {
+			uint16 stringLength;
+			fin.readUInt16(&stringLength);
+
+			// Read in the string characters
+			stringTable[i].resize(stringLength + 1); // Allow space for the null terminator
+			fin.read(&stringTable[i][0], stringLength);
+
+			// Manually create the null terminator
+			stringTable[i][stringLength] = '\0';
+		}
+	}
+
+	// Num vertices
+	uint32 numVertices;
+	fin.readUInt32(&numVertices);
+
+	// Num indices
+	uint32 numIndices;
+	fin.readUInt32(&numIndices);
+
+	// Vertex buffer desc
+	D3D11_BUFFER_DESC vertexBufferDesc;
+	fin.read((char *)&vertexBufferDesc, sizeof(D3D11_BUFFER_DESC));
+
+	// Index buffer desc
+	D3D11_BUFFER_DESC indexBufferDesc;
+	fin.read((char *)&indexBufferDesc, sizeof(D3D11_BUFFER_DESC));
+
+	// Vertex data
+	char *vertexData = new char[vertexBufferDesc.ByteWidth];
+	fin.read(vertexData, vertexBufferDesc.ByteWidth);
+
+	// Index data
+	char *indexData = new char[indexBufferDesc.ByteWidth];
+	fin.read(indexData, indexBufferDesc.ByteWidth);
+
+	// Material table
+	MaterialTableData *materialTable = nullptr;
+	uint32 numMaterials;
+	if ((flags & HAS_MATERIAL_TABLE) == HAS_MATERIAL_TABLE) {
+		fin.readUInt32(&numMaterials);
+
+		materialTable = new MaterialTableData[numMaterials];
+
+		for (uint i = 0; i < numMaterials; ++i) {
+			fin.readUInt32(&materialTable[i].HMATFilePathIndex);
+
+			uint32 numTextures;
+			fin.readUInt32(&numTextures);
+
+			for (uint j = 0; j < numTextures; ++j) {
+				TextureData data;
+				fin.readUInt32(&data.FilePathIndex);
+				fin.readByte(&data.Sampler);
+				materialTable[i].Textures.push_back(data);
+			}
+		}
+	}
+
+	// Num subsets
+	uint32 numSubsets;
+	fin.readUInt32(&numSubsets);
+
+	// Subset data
+	Subset *subsets = new Subset[numSubsets];
+	fin.read((char *)subsets, sizeof(Subset) * numSubsets);
+
+	// Process the subsets
+	for (uint i = 0; i < numSubsets; ++i) {
+		assert(subsets[i].VertexCount > 0);
+		assert(subsets[i].IndexCount > 0);
+
+		MaterialTableData materialData = materialTable[subsets[i].MaterialIndex];
+
+		assert(materialData.HMATFilePathIndex < numStrings);
+
+		for (uint j = 0; j < materialData.Textures.size(); ++j) {
+			assert(materialData.Textures[j].FilePathIndex < numStrings);
+			assert(materialData.Textures[j].Sampler >= LINEAR_CLAMP && materialData.Textures[j].Sampler <= ANISOTROPIC_WRAP);
+		}
+	}
+
+	// Cleanup
+	delete[] stringTable;
+	delete[] materialTable;
+	delete[] subsets;
+}
+
 } // End of namespace Common

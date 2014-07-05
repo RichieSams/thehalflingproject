@@ -71,6 +71,7 @@ public:
 	                  std::vector<Subset> &subsets, 
 	                  std::vector<std::string> &stringTable,
 	                  std::vector<MaterialTableData> &materialTable);
+	static void VerifyFileIntegrity(const wchar *filepath);
 };
 
 } // End of namespace Common

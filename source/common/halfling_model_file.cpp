@@ -91,6 +91,29 @@ Common::Model *Common::HalflingModelFile::Load(ID3D11Device *device, Common::Tex
 	char *indexData = new char[indexBufferDesc.ByteWidth];
 	fin.read(indexData, indexBufferDesc.ByteWidth);
 
+	// Material table
+	MaterialTableData *materialTable = nullptr;
+	if ((flags & HAS_MATERIAL_TABLE) == HAS_MATERIAL_TABLE) {
+		uint32 numMaterials;
+		fin.readUInt32(&numMaterials);
+
+		materialTable = new MaterialTableData[numMaterials];
+
+		for (uint i = 0; i < numMaterials; ++i) {
+			fin.readUInt32(&materialTable[i].HMATFilePathIndex);
+			
+			uint32 numTextures;
+			fin.readUInt32(&numTextures);
+
+			for (uint j = 0; j < numTextures; ++j) {
+				TextureData data;
+				fin.readUInt32(&data.FilePathIndex);
+				fin.readByte(&data.Sampler);
+				materialTable[i].Textures.push_back(data);
+			}
+		}
+	}
+
 	// Num subsets
 	uint32 numSubsets;
 	fin.readUInt32(&numSubsets);
@@ -112,42 +135,21 @@ Common::Model *Common::HalflingModelFile::Load(ID3D11Device *device, Common::Tex
 		modelSubsets[i].AABB_min = subsets[i].AABB_min;
 		modelSubsets[i].AABB_max = subsets[i].AABB_max;
 
-		modelSubsets[i].Material.Diffuse = subsets[i].MatDiffuseColor;
-		modelSubsets[i].Material.Specular = DirectX::XMFLOAT4(subsets[i].MatSpecColor.x, subsets[i].MatSpecColor.y, subsets[i].MatSpecColor.z, subsets[i].MatSpecPower);
+		MaterialTableData materialData = materialTable[subsets[i].MaterialIndex];
 
-		if (subsets[i].DiffuseColorMapIndex != -1) {
-			std::wstring wideFileName(stringTable[subsets[i].DiffuseColorMapIndex].begin(), stringTable[subsets[i].DiffuseColorMapIndex].end());
-			modelSubsets[i].DiffuseColorSRV = textureManager->GetSRVFromFile(device, wideFileName, D3D11_USAGE_IMMUTABLE);
-			modelSubsets[i].TextureFlags |= Common::TextureFlags::DIFFUSE_COLOR;
-		}
-		if (subsets[i].SpecColorMapIndex != -1) {
-			std::wstring wideFileName(stringTable[subsets[i].SpecColorMapIndex].begin(), stringTable[subsets[i].SpecColorMapIndex].end());
-			modelSubsets[i].SpecularColorSRV = textureManager->GetSRVFromFile(device, wideFileName, D3D11_USAGE_IMMUTABLE);
-			modelSubsets[i].TextureFlags |= Common::TextureFlags::SPEC_COLOR;
-		}
-		if (subsets[i].SpecPowerMapIndex != -1) {
-			std::wstring wideFileName(stringTable[subsets[i].SpecPowerMapIndex].begin(), stringTable[subsets[i].SpecPowerMapIndex].end());
-			modelSubsets[i].SpecularPowerSRV = textureManager->GetSRVFromFile(device, wideFileName, D3D11_USAGE_IMMUTABLE);
-			modelSubsets[i].TextureFlags |= Common::TextureFlags::SPEC_POWER;
-		}
-		if (subsets[i].AlphaMapIndex != -1) {
-			std::wstring wideFileName(stringTable[subsets[i].AlphaMapIndex].begin(), stringTable[subsets[i].AlphaMapIndex].end());
-			modelSubsets[i].AlphaMapSRV = textureManager->GetSRVFromFile(device, wideFileName, D3D11_USAGE_IMMUTABLE);
-			modelSubsets[i].TextureFlags |= Common::TextureFlags::ALPHA_MAP;
-		}
-		if (subsets[i].DisplacementMapIndex != -1) {
-			std::wstring wideFileName(stringTable[subsets[i].DisplacementMapIndex].begin(), stringTable[subsets[i].DisplacementMapIndex].end());
-			modelSubsets[i].DisplacementMapSRV = textureManager->GetSRVFromFile(device, wideFileName, D3D11_USAGE_IMMUTABLE);
-			modelSubsets[i].TextureFlags |= Common::TextureFlags::DISPLACEMENT_MAP;
-		}
-		if (subsets[i].NormalMapIndex != -1) {
-			std::wstring wideFileName(stringTable[subsets[i].NormalMapIndex].begin(), stringTable[subsets[i].NormalMapIndex].end());
-			modelSubsets[i].NormalMapSRV = textureManager->GetSRVFromFile(device, wideFileName, D3D11_USAGE_IMMUTABLE);
-			modelSubsets[i].TextureFlags |= Common::TextureFlags::NORMAL_MAP;
+		// TODO: Actually figure out how to do shader index....
+		std::string hmatFilePath = stringTable[materialData.HMATFilePathIndex];
+
+		for (uint j = 0; j < materialData.Textures.size(); ++j) {
+			std::wstring wideFileName(stringTable[materialData.Textures[j].FilePathIndex].begin(), stringTable[materialData.Textures[j].FilePathIndex].end());
+			modelSubsets[i].TextureSRVs.push_back(textureManager->GetSRVFromFile(device, wideFileName, D3D11_USAGE_IMMUTABLE));
+			modelSubsets[i].TextureSamplers.push_back(static_cast<TextureSampler>(materialData.Textures[j].Sampler));
 		}
 	}
 
 	// Cleanup
+	delete[] stringTable;
+	delete[] materialTable;
 	delete[] subsets;
 
 	// Create the model with the read data
@@ -161,7 +163,7 @@ Common::Model *Common::HalflingModelFile::Load(ID3D11Device *device, Common::Tex
 }
 
 
-void HalflingModelFile::Write(const wchar *filepath, uint numVertices, uint numIndices, D3D11_BUFFER_DESC *vertexBufferDesc, D3D11_BUFFER_DESC *indexBufferDesc, D3D11_BUFFER_DESC *instanceBufferDesc, void *vertexData, void *indexData, void *instanceData, std::vector<Subset> &subsets, std::vector<std::string> &stringTable) {
+void HalflingModelFile::Write(const wchar *filepath, uint numVertices, uint numIndices, D3D11_BUFFER_DESC *vertexBufferDesc, D3D11_BUFFER_DESC *indexBufferDesc, D3D11_BUFFER_DESC *instanceBufferDesc, void *vertexData, void *indexData, void *instanceData, std::vector<Subset> &subsets, std::vector<std::string> &stringTable, std::vector<MaterialTableData> &materialTable) {
 	std::ofstream fout(filepath, std::ios::out | std::ios::binary);
 
 	// File Id
@@ -180,7 +182,7 @@ void HalflingModelFile::Write(const wchar *filepath, uint numVertices, uint numI
 	if (stringTableSize > 0) {
 		flags |= HAS_STRING_TABLE;
 
-		BinaryWriteUInt32(fout, stringTable.size());
+		BinaryWriteUInt32(fout, stringTableSize);
 		for (uint i = 0; i < stringTableSize; ++i) {
 			BinaryWriteUInt16(fout, stringTable[i].size());
 			fout.write(stringTable[i].c_str(), stringTable[i].size());
@@ -208,11 +210,29 @@ void HalflingModelFile::Write(const wchar *filepath, uint numVertices, uint numI
 	// Index data
 	fout.write(reinterpret_cast<const char *>(indexData), indexBufferDesc->ByteWidth);
 
+	// Material table
+	size_t materialTableSize = materialTable.size();
+	if (materialTableSize > 0) {
+		flags |= HAS_MATERIAL_TABLE;
+
+		BinaryWriteUInt32(fout, materialTableSize);
+		for (uint i = 0; i < materialTableSize; ++i) {
+			BinaryWriteUInt32(fout, materialTable[i].HMATFilePathIndex);
+			
+			size_t textureListSize = materialTable[i].Textures.size();
+			BinaryWriteUInt32(fout, textureListSize);
+
+			for (uint j = 0; j < textureListSize; ++j) {
+				BinaryWriteUInt32(fout, materialTable[i].Textures[j].FilePathIndex);
+				BinaryWriteByte(fout, materialTable[i].Textures[j].Sampler);
+			}
+			
+		}
+	}
+
 	// Subsets
 	BinaryWriteUInt32(fout, subsets.size());
-	for (uint i = 0; i < subsets.size(); ++i) {
-		fout.write(reinterpret_cast<const char *>(&subsets[i]), sizeof(Subset));
-	}
+	fout.write(reinterpret_cast<const char *>(&subsets[0]), sizeof(Subset) * subsets.size());
 
 	// Go back and re-write flags
 	fout.seekp(flagsPos);

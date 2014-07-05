@@ -18,7 +18,8 @@ private:
 
 private:
 	enum Flags {
-		HAS_STRING_TABLE = 0x0001
+		HAS_STRING_TABLE = 0x0001,
+		HAS_MATERIAL_TABLE = 0x0002
 	};
 
 public:
@@ -30,15 +31,7 @@ public:
 			  IndexCount(0),
 			  AABB_min(0.0f, 0.0f, 0.0f),
 			  AABB_max(0.0f, 0.0f, 0.0f),
-			  MatDiffuseColor(0.0f, 0.0f, 0.0f, 0.0f),
-			  MatSpecColor(0.0f, 0.0f, 0.0f),
-			  MatSpecPower(0.0f),
-			  DiffuseColorMapIndex(-1),
-			  SpecColorMapIndex(-1),
-			  SpecPowerMapIndex(-1),
-			  AlphaMapIndex(-1),
-			  DisplacementMapIndex(-1),
-			  NormalMapIndex(-1) {
+			  MaterialIndex(0u) {
 		}
 
 		uint32 VertexStart;
@@ -49,20 +42,21 @@ public:
 		DirectX::XMFLOAT3 AABB_min;
 		DirectX::XMFLOAT3 AABB_max;
 
-		DirectX::XMFLOAT4 MatDiffuseColor;
-		DirectX::XMFLOAT3 MatSpecColor;
-		float MatSpecPower;
+		uint32 MaterialIndex;
+	};
 
-		int32 DiffuseColorMapIndex;
-		int32 SpecColorMapIndex;
-		int32 SpecPowerMapIndex;
-		int32 AlphaMapIndex;
-		int32 DisplacementMapIndex;
-		int32 NormalMapIndex;
+	struct TextureData {
+		uint32 FilePathIndex;
+		byte Sampler;
+	};
+
+	struct MaterialTableData {
+		uint32 HMATFilePathIndex;
+		std::vector<TextureData> Textures;
 	};
 
 private:
-	static const byte kFileFormatVersion = 2;
+	static const byte kFileFormatVersion = 3;
 
 public:
 	static Common::Model *Load(ID3D11Device *device, Common::TextureManager *textureManager, const wchar *filePath);
@@ -74,7 +68,9 @@ public:
 	                  void *vertexData,
 	                  void *indexData,
 	                  void *instanceData,
-	                  std::vector<Subset> &subsets, std::vector<std::string> &stringTable);
+	                  std::vector<Subset> &subsets, 
+	                  std::vector<std::string> &stringTable,
+	                  std::vector<MaterialTableData> &materialTable);
 };
 
 } // End of namespace Common

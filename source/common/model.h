@@ -9,24 +9,22 @@
 #include "common/typedefs.h"
 #include "common/d3d_util.h"
 #include "common/materials.h"
+#include "common/shader.h"
 
 #include <DirectXMath.h>
+#include <vector>
 
 
 namespace Common {
 
-namespace TextureFlags {
-/** Represents the kind of texture*/
-enum Flags {
-	DIFFUSE_COLOR = 0x01,
-	SPEC_COLOR = 0x02,
-	SPEC_POWER = 0x04,
-	ALPHA_MAP = 0x08,
-	DISPLACEMENT_MAP = 0x10,
-	NORMAL_MAP = 0x20
+enum TextureSampler {
+	LINEAR_CLAMP = 1,
+	LINEAR_BORDER = 2,
+	LINEAR_WRAP = 3,
+	POINT_CLAMP = 4,
+	POINT_WRAP = 5,
+	ANISOTROPIC_WRAP = 6
 };
-
-} // End of namespace TextureFlags
 
 /** A struct to hold all the data needed to describe a subset of the model */
 struct ModelSubset {
@@ -39,16 +37,10 @@ struct ModelSubset {
 	DirectX::XMFLOAT3 AABB_min;
 	DirectX::XMFLOAT3 AABB_max;
 
-	Common::BlinnPhongMaterial Material;
+	uint ShaderIndex;
 
-	ID3D11ShaderResourceView *DiffuseColorSRV;
-	ID3D11ShaderResourceView *SpecularColorSRV;
-	ID3D11ShaderResourceView *SpecularPowerSRV;
-	ID3D11ShaderResourceView *AlphaMapSRV;
-	ID3D11ShaderResourceView *DisplacementMapSRV;
-	ID3D11ShaderResourceView *NormalMapSRV;
-
-	uint TextureFlags;
+	std::vector<ID3D11ShaderResourceView *> TextureSRVs;
+	std::vector<TextureSampler> TextureSamplers;
 };
 
 /** 
@@ -92,34 +84,9 @@ protected:
 
 	DisposeAfterUse::Flag m_disposeSubsetArray;
 
-protected:
-	/**
-	 * Binds a subset's texture SRVs to the pixel shader. Uses shader texture slots 0 - 5
-	 *
-	 * @param context    A device context
-	 * @param subset     The subset to whose texture SRVs you want to bind
-	 */
-	static void SetTextureResources(ID3D11DeviceContext *context, ModelSubset &subset);
-
 public:
 	/* Returns the number of subsets the model has */
 	inline uint GetSubsetCount() const { return m_subsetCount; }
-	/**
-	 * Returns the material for a specific subset
-	 *
-	 * @param subsetIndex    The index of the subset
-	 * @return               The subset's material
-	 */
-	const Common::BlinnPhongMaterial &GetSubsetMaterial(uint subsetIndex) const;
-	/**
-	 * Returns the texture flags for a specific subset. They are combined into a single
-	 * uint using bitwise-OR
-	 *
-	 * @param subsetIndex    The index of the subset
-	 * @return               The texture flags
-	 */
-	uint GetSubsetTextureFlags(uint subsetIndex) const;
-
 	/**
 	 * Returns the minimum X, Y, Z components of the axis-aligned bounding box
 	 * surrounding the whole model

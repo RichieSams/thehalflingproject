@@ -9,22 +9,6 @@
 
 namespace Common {
 
-const Common::BlinnPhongMaterial &Model::GetSubsetMaterial(uint subsetIndex) const {
-	if (subsetIndex < m_subsetCount) {
-		return m_subsets[subsetIndex].Material;
-	}
-
-	throw std::out_of_range("subsetIndex out of range");
-}
-
-uint Model::GetSubsetTextureFlags(uint subsetIndex) const {
-	if (subsetIndex < m_subsetCount) {
-		return m_subsets[subsetIndex].TextureFlags;
-	}
-
-	throw std::out_of_range("subsetIndex out of range");
-}
-
 void Model::CreateVertexBuffer(ID3D11Device *device, void *vertices, size_t vertexStride, uint vertexCount, DisposeAfterUse::Flag disposeAfterUse) {
 	D3D11_BUFFER_DESC vbd;
 	vbd.Usage = D3D11_USAGE_IMMUTABLE;
@@ -90,31 +74,6 @@ void Model::CreateSubsets(ModelSubset *subsetArray, uint subsetCount, DisposeAft
 	DirectX::XMStoreFloat3(&m_AABB_max, AABB_max);
 }
 
-void Model::SetTextureResources(ID3D11DeviceContext *context, ModelSubset &subset) {
-	ID3D11ShaderResourceView * resources[6] = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
-
-	if ((subset.TextureFlags & TextureFlags::DIFFUSE_COLOR) == TextureFlags::DIFFUSE_COLOR) {
-		resources[0] = subset.DiffuseColorSRV;
-	}
-	if ((subset.TextureFlags & TextureFlags::SPEC_COLOR) == TextureFlags::SPEC_COLOR) {
-		resources[1] = subset.SpecularColorSRV;
-	}
-	if ((subset.TextureFlags & TextureFlags::SPEC_POWER) == TextureFlags::SPEC_POWER) {
-		resources[2] = subset.SpecularPowerSRV;
-	}
-	if ((subset.TextureFlags & TextureFlags::ALPHA_MAP) == TextureFlags::ALPHA_MAP) {
-		resources[3] = subset.AlphaMapSRV;
-	}
-	if ((subset.TextureFlags & TextureFlags::DISPLACEMENT_MAP) == TextureFlags::DISPLACEMENT_MAP) {
-		resources[4] = subset.DisplacementMapSRV;
-	}
-	if ((subset.TextureFlags & TextureFlags::NORMAL_MAP) == TextureFlags::NORMAL_MAP) {
-		resources[5] = subset.NormalMapSRV;
-	}
-
-	context->PSSetShaderResources(0, 6, resources);
-}
-
 void Model::DrawSubset(ID3D11DeviceContext *deviceContext, int subsetId) {
 	assert(subsetId >= -1 && subsetId < (int)m_subsetCount);
 
@@ -125,11 +84,11 @@ void Model::DrawSubset(ID3D11DeviceContext *deviceContext, int subsetId) {
 
 	if (subsetId == -1) {
 		for (uint i = 0; i < m_subsetCount; ++i) {
-			SetTextureResources(deviceContext, m_subsets[i]);
+			deviceContext->PSSetShaderResources(0, m_subsets[i].TextureSRVs.size(), &m_subsets[i].TextureSRVs[0]);
 			deviceContext->DrawIndexed(m_subsets[i].IndexCount, m_subsets[i].IndexStart, m_subsets[i].VertexStart);
 		}
 	} else {
-		SetTextureResources(deviceContext, m_subsets[subsetId]);
+		deviceContext->PSSetShaderResources(0, m_subsets[subsetId].TextureSRVs.size(), &m_subsets[subsetId].TextureSRVs[0]);
 		deviceContext->DrawIndexed(m_subsets[subsetId].IndexCount, m_subsets[subsetId].IndexStart, m_subsets[subsetId].VertexStart);
 	}
 }
@@ -141,11 +100,11 @@ void Model::DrawInstancedSubset(ID3D11DeviceContext *deviceContext, uint instanc
 
 	if (subsetId == -1) {
 		for (uint i = 0; i < m_subsetCount; ++i) {
-			SetTextureResources(deviceContext, m_subsets[i]);
+			deviceContext->PSSetShaderResources(0, m_subsets[i].TextureSRVs.size(), &m_subsets[i].TextureSRVs[0]);
 			deviceContext->DrawIndexedInstanced(indexCountPerInstance == 0 ? m_subsets[i].IndexCount : indexCountPerInstance, instanceCount, m_subsets[i].IndexStart, m_subsets[i].VertexStart, 0);
 		}
 	} else {
-		SetTextureResources(deviceContext, m_subsets[subsetId]);
+		deviceContext->PSSetShaderResources(0, m_subsets[subsetId].TextureSRVs.size(), &m_subsets[subsetId].TextureSRVs[0]);
 		deviceContext->DrawIndexedInstanced(indexCountPerInstance == 0 ? m_subsets[subsetId].IndexCount : indexCountPerInstance, instanceCount, m_subsets[subsetId].IndexStart, m_subsets[subsetId].VertexStart, 0);
 	}
 }
@@ -201,11 +160,11 @@ void InstancedModel::DrawInstancedSubset(ID3D11DeviceContext *deviceContext, uin
 
 	if (subsetId == -1) {
 		for (uint i = 0; i < m_subsetCount; ++i) {
-			SetTextureResources(deviceContext, m_subsets[i]);
+			deviceContext->PSSetShaderResources(0, m_subsets[i].TextureSRVs.size(), &m_subsets[i].TextureSRVs[0]);
 			deviceContext->DrawIndexedInstanced(indexCountPerInstance == 0 ? m_subsets[i].IndexCount : indexCountPerInstance, instanceCount, m_subsets[i].IndexStart, m_subsets[i].VertexStart, 0);
 		}
 	} else {
-		SetTextureResources(deviceContext, m_subsets[subsetId]);
+		deviceContext->PSSetShaderResources(0, m_subsets[subsetId].TextureSRVs.size(), &m_subsets[subsetId].TextureSRVs[0]);
 		deviceContext->DrawIndexedInstanced(indexCountPerInstance == 0 ? m_subsets[subsetId].IndexCount : indexCountPerInstance, instanceCount, m_subsets[subsetId].IndexStart, m_subsets[subsetId].VertexStart, 0);
 	}
 }

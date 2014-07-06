@@ -6,7 +6,17 @@
 
 #include "obj_hfm_converter/util.h"
 
-#include <iostream>
+#include "common/file_io_util.h"
+#include "common/memory_stream.h"
+
+#include <json/writer.h>
+#include <json/value.h>
+
+#include <assimp/Importer.hpp>
+#include <assimp/Exporter.hpp>
+#include <assimp/scene.h>
+
+#include <fstream>
 
 using filepath = std::tr2::sys::path;
 
@@ -73,68 +83,73 @@ aiTextureType ParseTextureTypeFromString(std::string &inputString, aiTextureType
 	}
 }
 
-void CreateDefaultIniFile(const char *filePath) {
-	std::ofstream fout(filePath);
+Common::TextureSampler ParseSamplerTypeFromString(std::string &inputString, Common::TextureSampler defaultType) {
+	if (_stricmp(inputString.c_str(), "linear_clamp") == 0) {
+		return Common::LINEAR_CLAMP;
+	} else if (_stricmp(inputString.c_str(), "linear_border") == 0) {
+		return Common::LINEAR_BORDER;
+	} else if (_stricmp(inputString.c_str(), "linear_wrap") == 0) {
+		return Common::LINEAR_WRAP;
+	} else if (_stricmp(inputString.c_str(), "point_clamp") == 0) {
+		return Common::POINT_CLAMP;
+	} else if (_stricmp(inputString.c_str(), "point_wrap") == 0) {
+		return Common::POINT_WRAP;
+	} else if (_stricmp(inputString.c_str(), "anisotropic_wrap") == 0) {
+		return Common::ANISOTROPIC_WRAP;
+	} else {
+		return defaultType;
+	}
+}
 
-	// Make sure open was successful
-	if (!fout) {
-		std::cerr << "File could not be opened";
-		return;
+void CreateDefaultJsonFile(filepath filePath) {
+	// Import the model file
+	Assimp::Importer importer;
+	const aiScene* scene = importer.ReadFile(filePath, 0u);
+
+	// Start creating the json file
+	Json::Value root;
+	root["GenNormals"] = true;
+	root["CalcTangents"] = true;
+	root["VertexBufferUsage"] = "immutable";
+	root["IndexBufferUsage"] = "immutable";
+	root["MaterialDefinitions"] = Json::arrayValue;
+
+	for (uint i = 0; i < scene->mNumMaterials; ++i) {
+		aiMaterial *material = scene->mMaterials[i];
+		aiString string;
+
+		Json::Value newMaterialDefinition(Json::objectValue);
+		material->Get(AI_MATKEY_NAME, string);
+		newMaterialDefinition["MaterialName"] = string.C_Str();
+		newMaterialDefinition["HMATFilePath"] = "default.hmat.hlsli";
+		newMaterialDefinition["TextureDefinitions"] = Json::arrayValue;
+
+		
+
+		const static aiTextureType types[13] = {aiTextureType_NONE, aiTextureType_DIFFUSE, aiTextureType_SPECULAR, aiTextureType_AMBIENT, aiTextureType_EMISSIVE, aiTextureType_HEIGHT, aiTextureType_NORMALS,
+		                                        aiTextureType_SHININESS, aiTextureType_OPACITY, aiTextureType_DISPLACEMENT, aiTextureType_LIGHTMAP, aiTextureType_REFLECTION, aiTextureType_UNKNOWN};
+		
+		for (uint j = 0; j < 13; ++j) {
+			for (uint k = 0; k < material->GetTextureCount(types[j]); ++k) {
+				material->GetTexture(types[j], k, &string);
+				Json::Value textureDefinition(Json::objectValue);
+				textureDefinition["FilePath"] = string.C_Str();
+				textureDefinition["Sampler"] = "linear_wrap";
+
+				newMaterialDefinition["TextureDefinitions"].append(textureDefinition);
+			}
+		}
+		
+		root["MaterialDefinitions"].append(newMaterialDefinition);
 	}
 
-	fout << "; Post-processing can automatically calculate the mesh normals and/or tangents"
-	        "; If normals already exist, setting GenNormals to true will do nothing\n" <<
-	        "; If tangents already exist, setting GenTangents to true will do nothing\n" <<
-	        "[Post-Processing]\n" <<
-	        "GenNormals = true\n" <<
-	        "CalcTangents = true\n" <<
-			"\n" <<
-	        "; The booleans represent a high level override for these material properties.\n" <<
-	        "; If the boolean is false, the property will be set to NULL, even if the property exists within the input model file\n" <<
-	        "; If the boolean is true, but the value doesn't exist within the input model file, the property will be set to NULL\n" <<
-	        "[MaterialPropertyOverrides]\n" <<
-	        "AmbientColor = true\n" <<
-	        "DiffuseColor = true\n" <<
-	        "SpecColor = true\n" <<
-	        "Opacity = true\n" <<
-	        "SpecPower = true\n" <<
-	        "SpecIntensity = true\n" <<
-			"\n" <<
-	        "; The booleans represent a high level override for these textures.\n" <<
-	        "; If the boolean is false, the texture will be excluded, even if the texture exists within the input model file\n" <<
-	        "; If the boolean is true, but the texture doesn't exist within the input model file properties, the texture will still be excluded\n" <<
-	        "[TextureOverrides]\n" <<
-	        "DiffuseColorMap = true\n" <<
-	        "NormalMap = true\n" <<
-	        "DisplacementMap = true\n" <<
-	        "AlphaMap = true\n" <<
-	        "SpecColorMap = true\n" <<
-	        "SpecPowerMap = true\n" <<
-			"\n" <<
-	        "; Usages can be 'default', 'immutable', 'dynamic', or 'staging'\n" <<
-	        "; In the case of a mis-spelling, immutable is assumed\n" <<
-	        "[BufferDesc]\n" <<
-	        "VertexBufferUsage = immutable\n" <<
-	        "IndexBufferUsage = immutable\n" <<
-			"\n" <<
-	        "; TextureMapRedirects allow you to interpret certain textures as other kinds\n" <<
-	        "; For example, OBJ doesn't directly support normal maps. Often, you will then see\n" <<
-	        "; the normal map in the height (bump) map slot. These options allow you to specify\n" <<
-	        "; what texture goes where.\n" <<
-	        ";\n" <<
-	        "; Any Maps that are excluded are treated as mapping to their own kind\n" <<
-	        "; IE. excluding DiffuseColorMap is interpreted as:\n" <<
-	        ";       DiffuseColorMap = diffuse\n" <<
-	        ";\n" <<
-	        "; The available kinds are: 'diffuse', 'normal', 'height', 'displacement', 'alpha', 'specColor', and 'specPower'\n" <<
-	        "[TextureMapRedirects]\n" <<
-	        "DiffuseColorMap = diffuse\n" <<
-	        "NormalMap = normal\n" <<
-	        "DisplacementMap = displacement\n" <<
-	        "AlphaMap = alpha\n" <<
-	        "SpecColorMap = specColor\n" <<
-	        "SpecPowerMap = specPower\n";
+	// Write everything to file
+	filePath.replace_extension("hmf.json");
 
+	std::ofstream fout(filePath);
+	fout << root << std::endl;
+
+	// Cleanup
 	fout.flush();
 	fout.close();
 }

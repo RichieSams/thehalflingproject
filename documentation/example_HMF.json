@@ -1,0 +1,36 @@
+{
+	"GenNormals" : true,
+	"CalcTangents" : true,
+	"VertexBufferUsage" : "immutable",
+	"IndexBufferUsage" : "immutable",
+	"MaterialDefinitions" : [
+		{
+			"MaterialName" : "plant_3",
+			"HMATFilePath" : "default.hmat.hlsli",
+			"TextureDefinitions" : [
+				{
+					"FilePath" : "plant_3_D.dds",
+					"Sampler" : "anisotropic_wrap"
+				},
+				{
+					"FilePath" : "plant_3_N.dds",
+					"Sampler" : "anisotropic_wrap"
+				}
+			]
+		},
+		{
+			"MaterialName" : "wall",
+			"HMATFilePath" : "default.hmat.hlsli",
+			"TextureDefinitions" : [
+				{
+					"FilePath" : "wall_D.dds",
+					"Sampler" : "anisotropic_wrap"
+				},
+				{
+					"FilePath" : "wall_N.dds",
+					"Sampler" : "anisotropic_wrap"
+				}
+			]
+		}
+	]
+}

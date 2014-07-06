@@ -8,26 +8,27 @@
 
 #include <iostream>
 
+using filepath = std::tr2::sys::path;
 
 namespace ObjHmfConverter {
 
-std::string ConvertToDDS(const char *filePath, std::tr2::sys::path &baseDirectory, std::tr2::sys::path &rootInputDirectory, std::tr2::sys::path &rootOutputDirectory) {
-	std::tr2::sys::path relativePath(filePath);
-	std::tr2::sys::path relativeDDSPath(relativePath);
+std::string ConvertToDDS(const char *filePath, filepath &baseDirectory, filepath &rootInputDirectory, filepath &rootOutputDirectory) {
+	filepath relativePath(filePath);
+	filepath relativeDDSPath(relativePath);
 	relativeDDSPath.replace_extension("dds");
 	
 	// If the file already exists in the output directory, we don't need to do anything
-	std::tr2::sys::path outputFilePath(rootOutputDirectory.file_string() + "\\" + relativeDDSPath.file_string());
+	filepath outputFilePath(rootOutputDirectory.file_string() + "\\" + relativeDDSPath.file_string());
 	if (exists(outputFilePath)) {
 		return relativeDDSPath;
 	}
 
 	// Guarantee the output directory exists
-	std::tr2::sys::path outputDirectory(outputFilePath.parent_path());
+	filepath outputDirectory(outputFilePath.parent_path());
 	create_directories(outputDirectory);
 
 	// If input is already dds, but doesn't exist in the output directory, just copy the file to the output
-	std::tr2::sys::path inputFilePath(rootInputDirectory.file_string() + "\\" + relativePath.file_string());
+	filepath inputFilePath(rootInputDirectory.file_string() + "\\" + relativePath.file_string());
 	if (_stricmp(relativePath.extension().c_str(), "dds") == 0) {
 		copy_file(inputFilePath, outputFilePath);
 		return relativeDDSPath;

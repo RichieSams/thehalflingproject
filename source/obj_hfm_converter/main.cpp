@@ -17,13 +17,10 @@ int main(int argc, char *argv[]) {
 	// Check the number of parameters
     if (argc < 2) {
         // Tell the user how to run the program
-        std::cerr << "Usage: HMFConverter.exe -f <input filePath>" << std::endl << std::endl <<
-		             "Optional parameters:" << std::endl <<
-		             "    -i <ini filePath>" << std::endl << 
-		             "    -o <output filePath>" << std::endl << std::endl <<
+        std::cerr << "Usage: HMFConverter.exe -j <json filePath> [-o <output filePath>] <model filePath>" << std::endl << std::endl <<
 					 "Other Usage:" << std::endl << std::endl <<
-					 "HMFConverter.exe -c <iniOutput filePath>" << std::endl <<
-					 "    to generate an ini file with default values" << std::endl;
+					 "HMFConverter.exe -c <model filePath>" << std::endl <<
+					 "    to generate a json file with default values" << std::endl;
         return 1;
     }
 	
@@ -35,34 +32,27 @@ int main(int argc, char *argv[]) {
 	
 	std::tr2::sys::path inputPath;
 	std::tr2::sys::path outputPath;
-	std::tr2::sys::path iniFilePath;
+	std::tr2::sys::path jsonFilePath;
 
 	// Parse the command line arguments
-	for (int i = 1; i < argc; ++i) {
+	for (int i = 1; i < argc - 1; ++i) {
 		if (strcmp(argv[i], "-c") == 0) {
 			if (++i >= argc) {
 				std::cerr << "-c requires an argument";
 				return 1;
 			}
 
-			ObjHmfConverter::CreateDefaultIniFile(argv[i]);
+			ObjHmfConverter::CreateDefaultJsonFile(argv[i]);
 			return 0;
-		} else if (strcmp(argv[i], "-f") == 0) {
-			if (++i >= argc) {
-				std::cerr << "-f requires an argument";
+		} else if (strcmp(argv[i], "-j") == 0) {
+			if (++i >= argc - 1) {
+				std::cerr << "-j requires an argument";
 				return 1;
 			}
 
-			inputPath = argv[i];
-		} else if (strcmp(argv[i], "-i") == 0) {
-			if (++i >= argc) {
-				std::cerr << "-i requires an argument";
-				return 1;
-			}
-
-			iniFilePath = argv[i];
+			jsonFilePath = argv[i];
 		} else if (strcmp(argv[i], "-o") == 0) {
-			if (++i >= argc) {
+			if (++i >= argc - 1) {
 				std::cerr << "-o requires an argument";
 				return 1;
 			}
@@ -71,17 +61,16 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
+	inputPath = argv[argc - 1];
+
 	// If the input path doesn't exist, tell the user how to use the program
 	if (inputPath.empty()) {
-        std::cerr << "Usage: HMFConverter.exe -f <input filePath>" << std::endl << std::endl <<
-		             "Optional parameters:" << std::endl <<
-		             "    -i <ini filePath>" << std::endl << 
-		             "    -o <output filePath>" << std::endl << std::endl <<
+        std::cerr << "Usage: HMFConverter.exe -j <json filePath> [-o <output filePath>] <model filePath>" << std::endl << std::endl <<
 					 "Other Usage:" << std::endl << std::endl <<
-					 "OBJ_HMFConverter.exe -c <iniOutput filePath>" << std::endl <<
-					 "    to generate an ini file with default values" << std::endl;
+					 "OBJ_HMFConverter.exe -c <model filePath>" << std::endl <<
+					 "    to generate a json file with default values" << std::endl;
         return 1;
 	}
 
-	return ObjHmfConverter::ConvertToHMF(baseDirectory, inputPath, iniFilePath, outputPath) ? 0 : 1;
+	return ObjHmfConverter::ConvertToHMF(baseDirectory, inputPath, jsonFilePath, outputPath) ? 0 : 1;
 }

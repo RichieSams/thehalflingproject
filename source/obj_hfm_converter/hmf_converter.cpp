@@ -6,13 +6,15 @@
 
 #include "obj_hfm_converter/hmf_converter.h"
 
-#include "common/typedefs.h"
-#include "common/halfling_model_file.h"
-
 #include "obj_hfm_converter/util.h"
 
-#define DINI_MAX_LINE 1000
-#include "INIReader.h"
+#include "common/typedefs.h"
+#include "common/halfling_model_file.h"
+#include "common/file_io_util.h"
+#include "common/memory_stream.h"
+
+#include <json/reader.h>
+#include <json/value.h>
 
 #include <assimp/Importer.hpp>
 #include <assimp/Exporter.hpp>
@@ -23,12 +25,14 @@
 #include <vector>
 
 
+using filepath = std::tr2::sys::path;
+
 namespace ObjHmfConverter {
 
-bool ConvertToHMF(std::tr2::sys::path &baseDirectory, std::tr2::sys::path &inputFilePath, std::tr2::sys::path &iniFilePath, std::tr2::sys::path &outputFilePath) {
-	std::tr2::sys::path inputDirectory(inputFilePath.parent_path());
+bool ConvertToHMF(filepath &baseDirectory, filepath &inputFilePath, filepath &jsonFilePath, filepath &outputFilePath) {
+	filepath inputDirectory(inputFilePath.parent_path());
 	if (!inputFilePath.has_parent_path()) {
-		inputDirectory = std::tr2::sys::current_path<std::tr2::sys::path>();
+		inputDirectory = std::tr2::sys::current_path<filepath>();
 	}
 
 	// If the output path doesn't exist, just use the input path with the .hmf extension
@@ -37,65 +41,126 @@ bool ConvertToHMF(std::tr2::sys::path &baseDirectory, std::tr2::sys::path &input
 		outputFilePath.replace_extension("hmf");
 	}
 
-	std::tr2::sys::path outputDirectory(outputFilePath.parent_path());
+	filepath outputDirectory(outputFilePath.parent_path());
 	if (!outputFilePath.has_parent_path()) {
-		outputDirectory = std::tr2::sys::current_path<std::tr2::sys::path>();
+		outputDirectory = std::tr2::sys::current_path<filepath>();
 	}
 
-	// Set default values
-	ImporterIniFile iniFile;
+	// Process the json file
+	if (jsonFilePath.empty()) {
+		std::cout << "Json file required" << std::endl;
+		return false;
+	}
 
-	// Process the ini file
-	if (!iniFilePath.empty()) {
-		std::cout << "Parsing ini file... ";
+	std::cout << "Parsing json file... ";
 
-		INIReader reader(iniFilePath);
-		if (reader.ParseError() != 0) {
-			std::cout << "Ini file parse error" << std::endl;
+	// Read the entire file into memory
+	DWORD bytesRead;
+	std::string str(jsonFilePath);
+	std::wstring wideStr(str.begin(), str.end());
+	char *fileBuffer = Common::ReadWholeFile(wideStr.c_str(), &bytesRead);
+
+	// TODO: Add error handling
+	if (fileBuffer == NULL) {
+		std::cout << "Json file open error" << std::endl;
+		return false;
+	}
+
+	Common::MemoryInputStream fin(fileBuffer, bytesRead);
+
+	Json::Reader reader;
+	Json::Value root;
+	if (!reader.parse(fin, root, false)) {
+		std::cout << "Json file parse error: " << std::endl << reader.getFormatedErrorMessages() << std::endl;
+		return false;
+	}
+
+	// Structures to store the data
+	std::vector<Vertex> vertices;
+	std::vector<uint> indices;
+	std::vector<Common::HalflingModelFile::Subset> subsets;
+	std::vector<std::string> stringTable;
+	std::unordered_map<std::string, size_t> stringLookup;
+	std::vector<Common::HalflingModelFile::MaterialTableData> materialTable;
+	std::unordered_map<std::string, size_t> materialLookup;
+
+	ImporterJsonFile jsonFile;
+	jsonFile.GenNormals = root.get("GenNormals", jsonFile.GenNormals).asBool();
+	jsonFile.CalcTangents = root.get("CalcTangents", jsonFile.CalcTangents).asBool();
+
+	jsonFile.VertexBufferUsage = ParseUsageFromString(root.get("VertexBufferUsage", "immutable").asString());
+	jsonFile.IndexBufferUsage = ParseUsageFromString(root.get("IndexBufferUsage", "immutable").asString());
+
+	for (uint i = 0; i < root["MaterialDefinitions"].size(); ++i) {
+		Json::Value materialDefinition = root["MaterialDefinitions"][i];
+
+		std::string materialName = materialDefinition["MaterialName"].asString();
+
+		if (materialLookup.find(materialName) != materialLookup.end()) {
+			std::cout << "Error - Duplicate material: " << materialName << std::endl;
 			return false;
 		}
 
-		iniFile.GenNormals = reader.GetBoolean("post-processing", "gennormals", iniFile.GenNormals);
-		iniFile.CalcTangents = reader.GetBoolean("post-processing", "calctangents", iniFile.CalcTangents);
+		Common::HalflingModelFile::MaterialTableData materialData;
 
-		iniFile.UseMaterialAmbientColor = reader.GetBoolean("materialpropertyoverrides", "ambientcolor", iniFile.UseMaterialAmbientColor);
-		iniFile.UseMaterialDiffuseColor = reader.GetBoolean("materialpropertyoverrides", "diffusecolor", iniFile.UseMaterialDiffuseColor);
-		iniFile.UseMaterialSpecColor = reader.GetBoolean("materialpropertyoverrides", "speccolor", iniFile.UseMaterialSpecColor);
-		iniFile.UseMaterialOpacity = reader.GetBoolean("materialpropertyoverrides", "opacity", iniFile.UseMaterialOpacity);
-		iniFile.UseMaterialSpecPower = reader.GetBoolean("materialpropertyoverrides", "specpower", iniFile.UseMaterialSpecPower);
-		iniFile.UseMaterialSpecIntensity = reader.GetBoolean("materialpropertyoverrides", "specintensity", iniFile.UseMaterialSpecIntensity);
+		// Store the hmat file path
+		std::string hmatFilePath = materialDefinition["HMATFilePath"].asString();
+		// See if it already exists in the string table
+		auto stringIter = stringLookup.find(hmatFilePath);
+		if (stringIter != stringLookup.end()) {
+			materialData.HMATFilePathIndex = stringIter->second;
+		} else {
+			size_t size = stringTable.size();
+			materialData.HMATFilePathIndex = size;
+			stringLookup[hmatFilePath] = size;
+			stringTable.push_back(hmatFilePath);
+		}
 
-		iniFile.UseDiffuseColorMap = reader.GetBoolean("textureoverrides", "diffusecolormap", iniFile.UseDiffuseColorMap);
-		iniFile.UseNormalMap = reader.GetBoolean("textureoverrides", "normalmap", iniFile.UseNormalMap);
-		iniFile.UseDisplacementMap = reader.GetBoolean("textureoverrides", "displacementmap", iniFile.UseDisplacementMap);
-		iniFile.UseAlphaMap = reader.GetBoolean("textureoverrides", "alphamap", iniFile.UseAlphaMap);
-		iniFile.UseSpecColorMap = reader.GetBoolean("textureoverrides", "speccolormap", iniFile.UseSpecColorMap);
-		iniFile.UseSpecPowerMap = reader.GetBoolean("textureoverrides", "specpowermap", iniFile.UseSpecPowerMap);
+		// Store the textures
+		for (uint j = 0; j < materialDefinition["TextureDefinitions"].size(); ++j) {
+			Json::Value textureDefinition = materialDefinition["TextureDefinitions"][j];
 
-		iniFile.VertexBufferUsage = ParseUsageFromString(reader.Get("bufferdesc", "vertexbufferusage", "immutable"));
-		iniFile.IndexBufferUsage = ParseUsageFromString(reader.Get("bufferdesc", "indexbufferusage", "immutable"));
+			Common::HalflingModelFile::TextureData data;
+			data.Sampler = ParseSamplerTypeFromString(textureDefinition["Sampler"].asString(), Common::LINEAR_WRAP);
 
-		iniFile.DiffuseColorMapTextureType = ParseTextureTypeFromString(reader.Get("texturemapredirects", "diffusecolormap", "diffuse"), aiTextureType_DIFFUSE);
-		iniFile.NormalMapTextureType = ParseTextureTypeFromString(reader.Get("texturemapredirects", "normalmap", "normal"), aiTextureType_NORMALS);
-		iniFile.DisplacementMapTextureType = ParseTextureTypeFromString(reader.Get("texturemapredirects", "displacementmap", "displacement"), aiTextureType_DISPLACEMENT);
-		iniFile.AlphaMapTextureType = ParseTextureTypeFromString(reader.Get("texturemapredirects", "alphamap", "alpha"), aiTextureType_OPACITY);
-		iniFile.SpecColorMapTextureType = ParseTextureTypeFromString(reader.Get("texturemapredirects", "speccolormap", "specColor"), aiTextureType_SPECULAR);
-		iniFile.SpecPowerMapTextureType = ParseTextureTypeFromString(reader.Get("texturemapredirects", "specpowermap", "specPower"), aiTextureType_SHININESS);
+			// Guarantee it's a dds file
+			std::string fileString(ConvertToDDS(textureDefinition["FilePath"].asString().c_str(), baseDirectory, inputDirectory, outputDirectory));
 
-		std::cout << "Done" << std::endl;
+			// See if it already exists
+			stringIter = stringLookup.find(fileString);
+			if (stringIter != stringLookup.end()) {
+				data.FilePathIndex = stringIter->second;
+			} else {
+				size_t size = stringTable.size();
+				data.FilePathIndex = size;
+				stringLookup[fileString] = size;
+				stringTable.push_back(fileString);
+			}
+
+			materialData.Textures.push_back(data);
+		}
+
+		// Store the index
+		materialLookup[materialName] = materialTable.size();
+
+		// Push the material onto the table
+		materialTable.push_back(materialData);
 	}
 
-	uint postProcessingFlags = aiProcess_ConvertToLeftHanded |
-		aiProcess_Triangulate |
-		aiProcess_JoinIdenticalVertices |
-		aiProcess_ValidateDataStructure |
-		aiProcess_ImproveCacheLocality |
-		aiProcess_RemoveRedundantMaterials |
-		aiProcess_FindInvalidData |
-		aiProcess_OptimizeMeshes |
-		aiProcess_OptimizeGraph;
 
-	if (iniFile.GenNormals) {
+	std::cout << "Done" << std::endl;
+
+	uint postProcessingFlags = aiProcess_ConvertToLeftHanded |
+	                           aiProcess_Triangulate |
+	                           aiProcess_JoinIdenticalVertices |
+	                           aiProcess_ValidateDataStructure |
+	                           aiProcess_ImproveCacheLocality |
+	                           aiProcess_RemoveRedundantMaterials |
+	                           aiProcess_FindInvalidData |
+	                           aiProcess_OptimizeMeshes |
+	                           aiProcess_OptimizeGraph;
+
+	if (jsonFile.GenNormals) {
 		postProcessingFlags |= aiProcess_GenSmoothNormals;
 	}
 
@@ -107,7 +172,7 @@ bool ConvertToHMF(std::tr2::sys::path &baseDirectory, std::tr2::sys::path &input
 	const aiScene* scene = importer.ReadFile(inputFilePath.file_string(), postProcessingFlags);
 
 	// Generate tangents
-	if (iniFile.CalcTangents) {
+	if (jsonFile.CalcTangents) {
 		scene = importer.ApplyPostProcessing(aiProcess_CalcTangentSpace);
 	}
 
@@ -119,13 +184,8 @@ bool ConvertToHMF(std::tr2::sys::path &baseDirectory, std::tr2::sys::path &input
 
 	std::cout << "Done" << std::endl << "Converting... ";
 
-	// Extract the data from the assimp scene
-	std::vector<Vertex> vertices;
-	std::vector<uint> indices;
-	std::vector<Common::HalflingModelFile::Subset> subsets;
-	std::vector<std::string> stringTable;
-	std::unordered_map<std::string, size_t> stringLookup; 
 
+	// Extract the data from the assimp scene
 	for (uint i = 0; i < scene->mNumMeshes; ++i) {
 		aiMesh *mesh = scene->mMeshes[i];
 
@@ -159,116 +219,19 @@ bool ConvertToHMF(std::tr2::sys::path &baseDirectory, std::tr2::sys::path &input
 				indices.push_back(mesh->mFaces[j].mIndices[k]);
 			}
 		}
+		
+		aiString name;
+		scene->mMaterials[mesh->mMaterialIndex]->Get(AI_MATKEY_NAME, name);
 
-		aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
-
-		aiColor3D color;
-		float value;
-		aiString string;
-
-		if (iniFile.UseMaterialDiffuseColor && material->Get(AI_MATKEY_COLOR_DIFFUSE, color) == aiReturn_SUCCESS) {
-			subset.MatDiffuseColor = DirectX::XMFLOAT4(color.r, color.g, color.b, 1.0f);
+		// See if the material exists within the 
+		std::string materialName(name.C_Str());
+		auto iter = materialLookup.find(materialName);
+		if (iter == materialLookup.end()) {
+			std::cout << "Error - Material \"" << materialName << "\" is not defined in the json file" << std::endl;
+			return false;
 		}
-		if (iniFile.UseMaterialSpecColor && material->Get(AI_MATKEY_COLOR_SPECULAR, color) == aiReturn_SUCCESS) {
-			subset.MatSpecColor = DirectX::XMFLOAT3(color.r, color.g, color.b);
-		}
-		if (iniFile.UseMaterialOpacity && material->Get(AI_MATKEY_OPACITY, value) == aiReturn_SUCCESS) {
-			subset.MatDiffuseColor.w = value;
-		}
-		if (iniFile.UseMaterialSpecPower && material->Get(AI_MATKEY_SHININESS, value) == aiReturn_SUCCESS) {
-			subset.MatSpecPower = value;
-		}
-
-		if (iniFile.UseDiffuseColorMap && material->GetTexture(iniFile.DiffuseColorMapTextureType, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
-			// Guarantee it's a dds file
-			std::string fileString(ConvertToDDS(string.data, baseDirectory, inputDirectory, outputDirectory));
-			
-			// See if it already exists
-			auto iter = stringLookup.find(fileString);
-			if (iter != stringLookup.end()) {
-				subset.DiffuseColorMapIndex = iter->second;
-			} else {
-				size_t size = stringTable.size();
-				subset.DiffuseColorMapIndex = size;
-				stringLookup[fileString] = size;
-				stringTable.push_back(fileString);
-			}
-		}
-		if (iniFile.UseNormalMap && material->GetTexture(iniFile.NormalMapTextureType, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
-			// Guarantee it's a dds file
-			std::string fileString(ConvertToDDS(string.data, baseDirectory, inputDirectory, outputDirectory));
-
-			// See if it already exists
-			auto iter = stringLookup.find(fileString);
-			if (iter != stringLookup.end()) {
-				subset.NormalMapIndex = iter->second;
-			} else {
-				size_t size = stringTable.size();
-				subset.NormalMapIndex = size;
-				stringLookup[fileString] = size;
-				stringTable.push_back(fileString);
-			}
-		}
-		if (iniFile.UseDisplacementMap && material->GetTexture(iniFile.DisplacementMapTextureType, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
-			// Guarantee it's a dds file
-			std::string fileString(ConvertToDDS(string.data, baseDirectory, inputDirectory, outputDirectory));
-
-			// See if it already exists
-			auto iter = stringLookup.find(fileString);
-			if (iter != stringLookup.end()) {
-				subset.DisplacementMapIndex = iter->second;
-			} else {
-				size_t size = stringTable.size();
-				subset.DisplacementMapIndex = size;
-				stringLookup[fileString] = size;
-				stringTable.push_back(fileString);
-			}
-		}
-		if (iniFile.UseAlphaMap && material->GetTexture(iniFile.AlphaMapTextureType, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
-			// Guarantee it's a dds file
-			std::string fileString(ConvertToDDS(string.data, baseDirectory, inputDirectory, outputDirectory));
-
-			// See if it already exists
-			auto iter = stringLookup.find(fileString);
-			if (iter != stringLookup.end()) {
-				subset.AlphaMapIndex = iter->second;
-			} else {
-				size_t size = stringTable.size();
-				subset.AlphaMapIndex = size;
-				stringLookup[fileString] = size;
-				stringTable.push_back(fileString);
-			}
-		}
-		if (iniFile.UseSpecColorMap && material->GetTexture(iniFile.SpecColorMapTextureType, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
-			// Guarantee it's a dds file
-			std::string fileString(ConvertToDDS(string.data, baseDirectory, inputDirectory, outputDirectory));
-
-			// See if it already exists
-			auto iter = stringLookup.find(fileString);
-			if (iter != stringLookup.end()) {
-				subset.SpecColorMapIndex = iter->second;
-			} else {
-				size_t size = stringTable.size();
-				subset.SpecColorMapIndex = size;
-				stringLookup[fileString] = size;
-				stringTable.push_back(fileString);
-			}
-		}
-		if (iniFile.UseSpecPowerMap && material->GetTexture(iniFile.SpecPowerMapTextureType, 0, &string, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
-			// Guarantee it's a dds file
-			std::string fileString(ConvertToDDS(string.data, baseDirectory, inputDirectory, outputDirectory));
-
-			// See if it already exists
-			auto iter = stringLookup.find(fileString);
-			if (iter != stringLookup.end()) {
-				subset.SpecPowerMapIndex = iter->second;
-			} else {
-				size_t size = stringTable.size();
-				subset.SpecPowerMapIndex = size;
-				stringLookup[fileString] = size;
-				stringTable.push_back(fileString);
-			}
-		}
+		
+		subset.MaterialIndex = iter->second;
 
 		subsets.push_back(subset);
 	}
@@ -277,7 +240,7 @@ bool ConvertToHMF(std::tr2::sys::path &baseDirectory, std::tr2::sys::path &input
 
 	D3D11_BUFFER_DESC vbd;
 	ZeroMemory(&vbd, sizeof(D3D11_BUFFER_DESC));
-	vbd.Usage = iniFile.VertexBufferUsage;
+	vbd.Usage = jsonFile.VertexBufferUsage;
 	vbd.ByteWidth = sizeof(Vertex) * vertices.size();
 	vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vbd.CPUAccessFlags = 0;
@@ -286,7 +249,7 @@ bool ConvertToHMF(std::tr2::sys::path &baseDirectory, std::tr2::sys::path &input
 
 	D3D11_BUFFER_DESC ibd;
 	ZeroMemory(&ibd, sizeof(D3D11_BUFFER_DESC));
-	ibd.Usage = iniFile.IndexBufferUsage;
+	ibd.Usage = jsonFile.IndexBufferUsage;
 	ibd.ByteWidth = sizeof(uint)* indices.size();
 	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	ibd.CPUAccessFlags = 0;
@@ -295,7 +258,11 @@ bool ConvertToHMF(std::tr2::sys::path &baseDirectory, std::tr2::sys::path &input
 
 	std::string outputPathStr(outputFilePath.file_string());
 	std::wstring wideString(outputPathStr.begin(), outputPathStr.end());
-	Common::HalflingModelFile::Write(wideString.c_str(), vertices.size(), indices.size(), &vbd, &ibd, nullptr, &vertices[0], &indices[0], nullptr, subsets, stringTable);
+	Common::HalflingModelFile::Write(wideString.c_str(), vertices.size(), indices.size(), &vbd, &ibd, nullptr, &vertices[0], &indices[0], nullptr, subsets, stringTable, materialTable);
+
+	std::cout << "Done" << std::endl << "Verifying file integrity... ";
+
+	Common::HalflingModelFile::VerifyFileIntegrity(wideString.c_str());
 
 	std::cout << "Done" << std::endl << "Finished" << std::endl;
 

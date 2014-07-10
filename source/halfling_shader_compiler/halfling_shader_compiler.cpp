@@ -184,6 +184,9 @@ bool CompileFiles(filepath jsonFilePath) {
 		}
 	}
 
+	// Delete the temp file
+	DeleteFile(L"tmp.hlsl");
+
 	return true;
 }
 

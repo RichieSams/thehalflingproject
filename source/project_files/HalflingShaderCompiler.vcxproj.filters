@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\halfling_shader_compiler\main.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\halfling_shader_compiler\halfling_shader_compiler.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\halfling_shader_compiler\util.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\halfling_shader_compiler\halfling_shader_compiler.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\halfling_shader_compiler\util.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Core">
+      <UniqueIdentifier>{249614af-0434-4091-8047-6bbde10e7ab1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util">
+      <UniqueIdentifier>{d48a2a1d-bfe8-41b8-9a2e-307e49ca53d7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

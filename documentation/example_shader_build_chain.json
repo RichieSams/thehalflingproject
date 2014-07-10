@@ -1,0 +1,22 @@
+{
+	"FXCPath" : "C:/Program Files (x86)/Windows Kits/8.1/bin/x64/fxc.exe",
+	"OutputDirectory" : "../../build/x64/Release/Asdf/",
+	"AdditionalIncludeDirectories" : [
+		"../"
+	],
+	"ShadersToCompile" : [
+		{
+			"InputFilePath" : "default_ps.hlsl",
+			"OutputFilePath" : "default_ps.cso",
+			"EntryPointName" : "DefaultPS",
+			"ShaderType" : "pixel",
+			"ShaderModel" : "5.0",
+			"AdditionalIncludes" : [
+				"example.hmat.hlsli"
+			],
+			"Pre-ProcessorDefines" :  [
+				"MAX_LIGHTS=126"
+			]
+		}
+	]
+}

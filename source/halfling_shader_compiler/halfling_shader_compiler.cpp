@@ -154,18 +154,17 @@ bool CompileFiles(filepath jsonFilePath) {
 		           "/nologo ";
 
 		// Add the directories for fxc to look in for files #include'ed in the shader
-		if (additionalIncludeDirectories.size() > 0) {
-			// Re-use the previous string stream
-			ss.str(std::string());
-			ss.clear();
+		for (uint j = 0; j < includeDirectories.size(); ++j) {
+			filepath includeDirectory(includeDirectories[j]);
+			if (!includeDirectory.is_complete()) {
+				includeDirectory = inputFilePathParentDirectory / includeDirectory;
+			}
 
-			std::copy(includeDirectories.begin(), includeDirectories.end(), std::ostream_iterator<std::string>(ss, ";"));
-			
-			// Guarantee contiguous memory
-			std::string concatenatedIncludeDirectories = ss.str();
-
-			command << "/I\"" << concatenatedIncludeDirectories << "\" ";
+			command << "/I\"" << Common::ReplaceAll(includeDirectory.file_string(), "\\", "/") << "\" ";
 		}
+
+		// Always add the directory of the shader input file as a includeDirectory
+		command << "/I\"" << Common::ReplaceAll(inputFilePathParentDirectory.file_string(), "\\", "/") << "\" ";
 
 		// Add the pre-processor macros
 		// Each one requires its own "/D"

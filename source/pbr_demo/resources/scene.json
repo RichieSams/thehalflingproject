@@ -12,7 +12,7 @@
 	"ModelInstanceThreshold" : 1,
     "Models" : [
         {
-            "Type" : "Plane",
+            "Type" : "plane",
             "Width" : 100,
             "Depth" : 100,
 			"Material" : {
@@ -36,8 +36,8 @@
             ]
         },
         {
-            "Type" :  "Sphere",
             "Radius" : 20,
+            "Type" :  "sphere",
             "SliceCount" : 20,
             "StackCount" : 20,
 			"Material" : {

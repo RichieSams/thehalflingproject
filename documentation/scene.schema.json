@@ -134,7 +134,7 @@
 			"properties" : {
 				"Type" : {
 					"description" : "A model from a HMF file",
-					"enum" : ["File"]
+					"enum" : ["file"]
 				},
 				"FilePath" : {
 					"description" : "The path to the HMF file",
@@ -163,7 +163,7 @@
 			"properties" : {
 				"Type" : {
 					"description" : "A (potentially) subdivided quad in the X-Z plane",
-					"enum" : ["Plane"]
+					"enum" : ["plane"]
 				},
 				"Width" : {
 					"description" : "The width of the quad",
@@ -222,7 +222,7 @@
 			"properties" : {
 				"Type" : {
 					"description" : "A box",
-					"enum" : ["Box"]
+					"enum" : ["box"]
 				},
 				"Width" : {
 					"description" : "The width of the box",
@@ -266,7 +266,7 @@
 			"properties" : {
 				"Type" : {
 					"description" : "A sphere",
-					"enum" : ["Sphere"]
+					"enum" : ["sphere"]
 				},
 				"Radius" : {
 					"description" : "The radius of the sphere",

@@ -34,8 +34,6 @@ ShaderModel ParseStringToShaderModel(const std::string &input);
 
 std::string ShaderParamsToCommandLineArg(ShaderType shaderType, ShaderModel shaderModel);
 
-std::string ConvertFilePathMacros(const std::string &input);
-
 } // End of namespace HalflingShaderCompiler
 
  

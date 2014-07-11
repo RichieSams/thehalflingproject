@@ -87,12 +87,4 @@ std::string ShaderParamsToCommandLineArg(ShaderType shaderType, ShaderModel shad
 	return output;
 }
 
-std::string ConvertFilePathMacros(const std::string &input) {
-	std::string returnStr(input);
-	Common::ReplaceAll(returnStr, "$(Configuration)", CONFIGURATION);
-	Common::ReplaceAll(returnStr, "$(Platform)", PLATFORM);
-
-	return returnStr;
-}
-
 } // End of namespace HalflingShaderCompiler

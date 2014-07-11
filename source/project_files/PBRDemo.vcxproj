@@ -244,7 +244,19 @@ XCOPY "$(OutDir)..\Halfling\sprite_sampled_pixel_shader.cso" "$(OutDir)" /D /K /
     <ResourceCompile Include="PBRDemo.rc" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\pbr_demo\materials\example.hmat.hlsl" />
+    <None Include="..\pbr_demo\materials\example.hmat.hlsl">
+      <FileType>Document</FileType>
+    </None>
+    <FxCompile Include="..\pbr_demo\materials\pine.hmat.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">GBufferPS</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">GBufferPS</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">GBufferPS</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">GBufferPS</EntryPointName>
+    </FxCompile>
     <FxCompile Include="..\pbr_demo\shaders\fullscreen_triangle_vs.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">FullScreenTriangleVS</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>

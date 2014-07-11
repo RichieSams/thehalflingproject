@@ -77,9 +77,6 @@
     <FxCompile Include="..\pbr_demo\shaders\instanced_gbuffer_vs.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="..\pbr_demo\shaders\material_compile_test_ps.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
     <FxCompile Include="..\pbr_demo\shaders\post_process_ps.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>

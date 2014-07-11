@@ -5,7 +5,7 @@
  */
 
 #include "types.hlsli"
-#include "hlsl_util.hlsli"
+#include "common/shaders/hlsl_util.hlsli"
 
 
 #define NUM_VECTORS_PER_INSTANCE 3u

@@ -13,7 +13,7 @@
 #include "pbr_demo/shaders/types.hlsli"
 #include "common/shaders/lights.hlsli"
 #include "common/shaders/light_functions.hlsli"
-#include "pbr_demo/shaders/hlsl_util.hlsli"
+#include "common/shaders/hlsl_util.hlsli"
 #include "pbr_demo/shader_defines.h"
 
 

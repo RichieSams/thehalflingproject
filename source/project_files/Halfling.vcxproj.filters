@@ -220,6 +220,9 @@
     <None Include="..\common\shaders\sprite_header.hlsli">
       <Filter>Common\Shaders</Filter>
     </None>
+    <None Include="..\common\shaders\hlsl_util.hlsli">
+      <Filter>Common\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\common\shaders\sprite_vertex_shader.hlsl">

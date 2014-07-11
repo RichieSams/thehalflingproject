@@ -6,7 +6,7 @@
 
 #include "types.hlsli"
 #include "common/shaders/materials.hlsli"
-#include "pbr_demo/shaders/hlsl_util.hlsli"
+#include "common/shaders/hlsl_util.hlsli"
 
 
 struct GBuffer {

@@ -4,8 +4,8 @@
  * Copyright Adrian Astley 2013 - 2014
  */
 
-#ifndef PBR_DEMO_HLSL_UTIL_H
-#define PBR_DEMO_HLSL_UTIL_H
+#ifndef COMMON_HLSL_UTIL_H
+#define COMMON_HLSL_UTIL_H
 
 
 // Converts a normalized cartesian direction vector

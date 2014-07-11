@@ -141,7 +141,7 @@ XCOPY "$(OutDir)..\Halfling\sprite_sampled_pixel_shader.cso" "$(OutDir)" /D /K /
       <ShaderModel>5.0</ShaderModel>
     </FxCompile>
     <PostBuildEvent>
-      <Command>XCOPY "$(SolutionDir)..\libs\AntTweakBar\lib\AntTweakBar.dll" "$(OutDir)" /D /K /Y
+      <Command>XCOPY "$(SolutionDir)..\libs\AntTweakBar\lib\AntTweakBar64.dll" "$(OutDir)" /D /K /Y
 XCOPY "$(SolutionDir)..\pbr_demo\resources\*" "$(OutDir)" /D /K /Y /E
 XCOPY "$(OutDir)..\Halfling\sprite_vertex_shader.cso" "$(OutDir)" /D /K /Y
 XCOPY "$(OutDir)..\Halfling\sprite_instanced_vertex_shader.cso" "$(OutDir)" /D /K /Y
@@ -207,7 +207,7 @@ XCOPY "$(OutDir)..\Halfling\sprite_sampled_pixel_shader.cso" "$(OutDir)" /D /K /
       <ShaderModel>5.0</ShaderModel>
     </FxCompile>
     <PostBuildEvent>
-      <Command>XCOPY "$(SolutionDir)..\libs\AntTweakBar\lib\AntTweakBar.dll" "$(OutDir)" /D /K /Y
+      <Command>XCOPY "$(SolutionDir)..\libs\AntTweakBar\lib\AntTweakBar64.dll" "$(OutDir)" /D /K /Y
 XCOPY "$(SolutionDir)..\pbr_demo\resources\*" "$(OutDir)" /D /K /Y /E
 XCOPY "$(OutDir)..\Halfling\sprite_vertex_shader.cso" "$(OutDir)" /D /K /Y
 XCOPY "$(OutDir)..\Halfling\sprite_instanced_vertex_shader.cso" "$(OutDir)" /D /K /Y

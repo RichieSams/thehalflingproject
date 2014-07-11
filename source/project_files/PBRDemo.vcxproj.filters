@@ -62,9 +62,6 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="..\pbr_demo\shader_build_chain.json" />
-  </ItemGroup>
-  <ItemGroup>
     <FxCompile Include="..\pbr_demo\shaders\fullscreen_triangle_vs.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>

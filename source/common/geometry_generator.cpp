@@ -18,6 +18,8 @@
 namespace Common {
 
 void GeometryGenerator::CreateGrid(float width, float depth, uint m, uint n, MeshData *meshData, float textureTilingX, float textureTilingZ) {
+	assert(m != 0u && n != 0u);
+
 	uint vertexCount = m * n;
 	uint faceCount = (m - 1) * (n - 1) * 2;
 

@@ -10,6 +10,7 @@
 
 #include "common/file_io_util.h"
 #include "common/memory_stream.h"
+#include "common/string_util.h"
 
 #include <json/reader.h>
 #include <json/json.h>
@@ -23,11 +24,16 @@ using filepath = std::tr2::sys::path;
 
 namespace HalflingShaderCompiler {
 
-bool CompileFiles(filepath jsonFilePath) {
-	filepath jsonDirectory(jsonFilePath.parent_path());
-	if (!jsonFilePath.has_parent_path()) {
-		jsonDirectory = std::tr2::sys::current_path<filepath>();
+bool CompileFiles(filepath outputDirectory, filepath jsonFilePath) {
+	if (!outputDirectory.is_complete()) {
+		outputDirectory = std::tr2::sys::current_path<filepath>() / outputDirectory;
 	}
+	std::tr2::sys::create_directories(outputDirectory);
+
+	if (!jsonFilePath.is_complete()) {
+		jsonFilePath = std::tr2::sys::current_path<filepath>() / jsonFilePath;
+	}
+	filepath jsonDirectory(jsonFilePath.parent_path());
 
 	// Read the entire file into memory
 	DWORD bytesRead;
@@ -50,33 +56,34 @@ bool CompileFiles(filepath jsonFilePath) {
 	// Clean-up the file buffer
 	delete[] fileBuffer;
 
-	filepath fxcPath(ConvertFilePathMacros(root["FXCPath"].asString()));
-
-	filepath outputDirectory(ConvertFilePathMacros(root["OutputDirectory"].asString()));
-	if (!outputDirectory.is_complete()) {
-		outputDirectory = jsonDirectory / outputDirectory;
-	}
-	std::tr2::sys::create_directories(outputDirectory);
+	filepath fxcPath(root["FXCPath"].asString());	
 
 	Json::Value additionalIncludeDirectories(root["AdditionalIncludeDirectories"]);
 	std::vector<std::string> includeDirectories;
 	for (uint i = 0; i < additionalIncludeDirectories.size(); ++i) {
-		includeDirectories.push_back(ConvertFilePathMacros(additionalIncludeDirectories[i].asString()));
+		includeDirectories.push_back(additionalIncludeDirectories[i].asString());
 	}
 
 
+	std::cout << "Compiling shaders..." << std::endl;
+
 	Json::Value shaders = root["ShadersToCompile"];
 	for (uint i = 0; i < shaders.size(); ++i) {
-		std::string inputFilePath(shaders[i]["InputFilePath"].asString());
+		filepath inputFilePath(shaders[i]["InputFilePath"].asString());
+		if (!inputFilePath.is_complete()) {
+			inputFilePath = jsonDirectory / inputFilePath;
+		}
+
+		filepath inputFilePathParentDirectory(inputFilePath.parent_path());
 
 		// Users don't have to supply and output directory
 		// Default to the same name as the input, but with a .cso extension instead
-		std::string outputFilePath(shaders[i]["OutputFilePath"].asString());
+		filepath outputFilePath(shaders[i]["OutputFilePath"].asString());
 		if (shaders[i]["OutputFilePath"].isNull()) {
 			filepath outputPath(inputFilePath);
 			outputPath.replace_extension("cso");
-			outputFilePath = outputPath.file_string();
 		}
+		outputFilePath = outputDirectory / outputFilePath;
 
 		// Entry point name
 		std::string entryPointName(shaders[i]["EntryPointName"].asString());
@@ -125,7 +132,8 @@ bool CompileFiles(filepath jsonFilePath) {
 		WriteFile(hFile, concatenatedIncludes.c_str(), static_cast<DWORD>(concatenatedIncludes.size()), &bytesWritten, nullptr);
 
 		// Then read the shader file in and immediately append its contents to the end of temp file
-		std::wstring wideInputPath(inputFilePath.begin(), inputFilePath.end());
+		std::string strInputPath(inputFilePath.file_string());
+		std::wstring wideInputPath(strInputPath.begin(), strInputPath.end());
 		char *buffer = Common::ReadWholeFile(wideInputPath.c_str(), &bytesRead);
 		if (buffer == nullptr) {
 			std::cerr << "Could not open shader file:\n\t\"" << inputFilePath << "\"" << std::endl;
@@ -143,10 +151,10 @@ bool CompileFiles(filepath jsonFilePath) {
 		// Since fxcPath needs to have quotes around it to protect against 
 		// spaces, we need to surround the entire command with quotes
 		std::stringstream command;
-		command << "\"\"" << fxcPath.file_string() << "\" " <<
+		command << "\"\"" << Common::ReplaceAll(fxcPath.file_string(), "\\", "/") << "\" " <<
 		           SHADER_DEBUG_FLAGS << 
 				   "/E\"" << entryPointName << "\" " <<
-		           "/Fo\"" << outputFilePath << "\" " <<
+		           "/Fo\"" << Common::ReplaceAll(outputFilePath.file_string(), "\\", "/") << "\" " <<
 		           ShaderParamsToCommandLineArg(shaderType, shaderModel) <<
 		           "/nologo ";
 
@@ -182,6 +190,8 @@ bool CompileFiles(filepath jsonFilePath) {
 
 	// Delete the temp file
 	DeleteFile(L"tmp.hlsl");
+
+	std::cout << "Finished compiling" << std::endl;
 
 	return false;
 }

@@ -12,13 +12,14 @@
 
 int main(int argc, char *argv[]) {
 	// Check the number of parameters
-	if (argc < 2) {
+	if (argc < 3) {
 		// Tell the user how to run the program
-		std::cerr << "Usage: hsc.exe <json filePath>" << std::endl;
+		std::cerr << "Usage: hsc.exe <outputDirectory> <json filePath>" << std::endl;
 		return 1;
 	}
 
-	std::tr2::sys::path jsonFilePath(argv[1]);
+	std::tr2::sys::path outputDirectory(argv[1]);
+	std::tr2::sys::path jsonFilePath(argv[2]);
 
-	return HalflingShaderCompiler::CompileFiles(jsonFilePath);
+	return HalflingShaderCompiler::CompileFiles(outputDirectory, jsonFilePath);
 }

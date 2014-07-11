@@ -11,6 +11,6 @@
 
 namespace HalflingShaderCompiler {
 
-bool CompileFiles(std::tr2::sys::path jsonFilePath);
+bool CompileFiles(std::tr2::sys::path outputDirectory, std::tr2::sys::path jsonFilePath);
 
 } // End of namespace HalflingShaderCompiler

@@ -6,41 +6,64 @@
 // See example_scene.json and scene.schema.json for syntax information
 
 {
-    "NearClip" : 0.1,
-    "FarClip" : 800.0,
-    "SceneScaleFactor" : 1.0,
-    "ModelInstanceThreshold" : 1,
-    "DirectionalLight" : {
-        "Diffuse" : [1.0, 1.0, 1.0],
-        "Specular" : [1.0, 1.0, 1.0],
-        "Direction" : [-0.57735, -0.57735, -0.57735]
-    },
-        "PointLights" : [
+	"NearClip" : 0.1,
+	"FarClip" : 800.0,
+	"SceneScaleFactor" : 1.0,
+	"ModelInstanceThreshold" : 1,
+    "Models" : [
         {
-            "NumberOfLights" : 1000,
-            "AABB_min" : [-100, -100, -100],
-            "AABB_max" : [100, 100, 100],
-            "RangeRange" : [50.0, 100.0],
-            "AttenuationDistanceUNorm" : 0.75,
-            "LinearVelocityMinRange" :  [-0.0005, -0.0005, -0.0005],
-            "LinearVelocityMaxRange" :  [0.0005, 0.0005, 0.0005]
+            "Type" : "Plane",
+            "Width" : 100,
+            "Depth" : 100,
+			"Material" : {
+				"HMATFilePath" : "simple.hmat",
+				"TextureDefinitions" : [
+					{
+						"FilePath" : "T_Wood_Pine_D.dds",
+						"Sampler" : "anisotropic_wrap"
+					},
+					{
+						"FilePath" : "T_Wood_Pine_N.dds",
+						"Sampler" : "anisotropic_wrap"
+					}
+				]
+			},
+            "Instances" : [
+                [1.0, 0.0, 0.0, 0.0,
+                 0.0, 1.0, 0.0, 0.0,
+                 0.0, 0.0, 1.0, 0.0,
+                 0.0, 0.0, 0.0, 1.0]
+            ]
+        },
+        {
+            "Type" :  "Sphere",
+            "Radius" : 20,
+            "SliceCount" : 20,
+            "StackCount" : 20,
+			"Material" : {
+				"HMATFilePath" : "pine.hmat",
+				"TextureDefinitions" : [
+					{
+						"FilePath" : "T_Wood_Pine_D.dds",
+						"Sampler" : "anisotropic_wrap"
+					},
+					{
+						"FilePath" : "T_Wood_Pine_N.dds",
+						"Sampler" : "anisotropic_wrap"
+					}
+				]
+			},
+            "Instances" : [
+                [1.0, 0.0, 0.0, 0.0,
+                 0.0, 1.0, 0.0, 0.0,
+                 0.0, 0.0, 1.0, 0.0,
+                 0.0, 0.0, 0.0, 1.0]
+            ]
         }
     ],
-    "SpotLights" : [
-        {
-            "NumberOfLights" : 1000,
-            "AABB_min" : [-100, -100, -1000],
-            "AABB_max" : [100, 100, 100],
-            "RangeRange" : [50.0, 100.0],
-            "AttenuationDistanceUNorm" : 0.75,
-            "OuterAngleRange" : [0.349, 0.785398],
-            "InnerAngleDifference" : 0.17,
-            "LinearVelocityMinRange" :  [-0.0005, -0.0005, -0.0005],
-            "LinearVelocityMaxRange" :  [0.0005, 0.0005, 0.0005],
-            "AngularVelocityMinRange" : [-0.125, -0.125, -0.125],
-            "AngularVelocityMaxRange" : [0.125, 0.125, 0.125]
-        }
-    ]
+	"DirectionalLight" : {
+		"Diffuse" : [1.0, 1.0, 1.0],
+		"Specular" : [1.0, 1.0, 1.0],
+		"Direction" : [-0.57735, -0.57735, -0.57735]
+	}
 }
-
-

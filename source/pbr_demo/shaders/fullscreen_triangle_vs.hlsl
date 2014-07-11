@@ -18,7 +18,7 @@
  * Copyright Adrian Astley 2013 - 2014
  */
 
-#include "types.hlsli"
+#include "pbr_demo/shaders/types.hlsli"
 
 
 CalculatedTrianglePixelIn FullScreenTriangleVS(uint vertexID : SV_VertexID) {

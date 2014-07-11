@@ -104,25 +104,26 @@
 			"type" : "object",
 			"required" : ["MaterialFilePath"],
 			"properties" : {
-				"MaterialFilePath" : {
-					"description" : "The HMAT material file path",
+				"HMATFilePath" : {
+					"description" : "The file path to the *.hmat file for the material",
 					"type" : "string"
 				},
-				"TextureOneFilePath" : {
-					"description" : "The file path of the first texture for the material",
-					"type" : "string"
-				},
-				"TextureTwoFilePath" : {
-					"description" : "The file path of the second texture for the material",
-					"type" : "string"
-				},
-				"TextureThreeFilePath" : {
-					"description" : "The file path of the third texture for the material",
-					"type" : "string"
-				},
-				"TextureFourFilePath" : {
-					"description" : "The file path of the fourth texture for the material",
-					"type" : "string"
+				"TextureDefinitions" : {
+					"description" : "The textures used in the shader. ORDER MATTERS!! They will be fed to the shader in the order that they are specified here",
+					"type" : "array",
+					"items" : {
+						"type" : "object",
+						"properties" : {
+							"FilePath" : {
+								"description" : "The file path to the texture",
+								"type" : "string"
+							},
+							"Sampler" : {
+								"description" : "The sampler to use with the texture",
+								"enum" : ["linear_clamp", "linear_border", "linear_wrap", "point_clamp", "point_wrap", "anisotropic_wrap"]
+							}
+						}
+					}
 				}
 			}
 		},

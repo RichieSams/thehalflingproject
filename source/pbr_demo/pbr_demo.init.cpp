@@ -138,8 +138,12 @@ void PBRDemo::LoadSceneJson() {
 				                                   &m_pointLights,
 				                                   m_pointLights.size() - 1);
 			}
+
+			m_numPointLightsToDraw++;
 		} else {
 			uint numPointLights = pointLights[i]["NumberOfLights"].asUInt();
+			m_numPointLightsToDraw += numPointLights;
+
 			for (uint j = 0; j < numPointLights; ++j) {
 				DirectX::XMFLOAT3 AABB_min(pointLights[i]["AABB_min"][0u].asSingle(), pointLights[i]["AABB_min"][1u].asSingle(), pointLights[i]["AABB_min"][2u].asSingle());
 				DirectX::XMFLOAT3 AABB_max(pointLights[i]["AABB_max"][0u].asSingle(), pointLights[i]["AABB_max"][1u].asSingle(), pointLights[i]["AABB_max"][2u].asSingle());
@@ -225,8 +229,12 @@ void PBRDemo::LoadSceneJson() {
 				                                  &m_spotLights,
 				                                  m_spotLights.size() - 1);
 			}
+
+			m_numSpotLightsToDraw++;
 		} else {
 			uint numSpotLights = spotLights[i]["NumberOfLights"].asUInt();
+			m_numSpotLightsToDraw += numSpotLights;
+
 			for (uint j = 0; j < numSpotLights; ++j) {
 				DirectX::XMFLOAT3 AABB_min(spotLights[i]["AABB_min"][0u].asSingle(), spotLights[i]["AABB_min"][1u].asSingle(), spotLights[i]["AABB_min"][2u].asSingle());
 				DirectX::XMFLOAT3 AABB_max(spotLights[i]["AABB_max"][0u].asSingle(), spotLights[i]["AABB_max"][1u].asSingle(), spotLights[i]["AABB_max"][2u].asSingle());
@@ -308,9 +316,6 @@ void PBRDemo::InitTweakBar() {
 	TwAddVarRW(m_settingsBar, "Directional Light Diffuse", TW_TYPE_COLOR3F, &m_directionalLight.Diffuse, "");
 	TwAddVarRW(m_settingsBar, "Directional Light Specular", TW_TYPE_COLOR3F, &m_directionalLight.Specular, "");
 	TwAddVarRW(m_settingsBar, "Directional Light Direction", TW_TYPE_DIR3F, &m_directionalLight.Direction, "");
-
-	TwAddVarRW(m_settingsBar, "Number of PointLights", TW_TYPE_INT32, &m_numPointLightsToDraw, " min=0 max=1000 ");
-	TwAddVarRW(m_settingsBar, "Number of SpotLights", TW_TYPE_INT32, &m_numSpotLightsToDraw, " min=0 max=1000 ");
 }
 
 void LoadScene(std::atomic<bool> *sceneIsLoaded, 

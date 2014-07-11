@@ -28,11 +28,6 @@ struct InstancedGBufferVertexShaderObjectConstants {
 	uint StartVector;
 };
 
-struct GBufferPixelShaderObjectConstants {
-	Common::BlinnPhongMaterial Material;
-	uint TextureFlags;
-};
-
 
 // Tiled cull final gather pass
 struct TiledCullFinalGatherComputeShaderFrameConstants {

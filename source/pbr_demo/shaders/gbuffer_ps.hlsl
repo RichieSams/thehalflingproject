@@ -10,64 +10,36 @@
 
 
 struct GBuffer {
-	float3 diffuse     : SV_Target0;
-	float4 spec        : SV_Target1;
-	float2 normal      : SV_Target2;
+	float4 diffuseAndRoughness    : SV_Target0;
+	float4 specAndMetal           : SV_Target1;
+	float2 normal                 : SV_Target2;
 };
 
-cbuffer cbPerObject : register(b1) {
-	BlinnPhongMaterial gMaterial;
-	uint gTextureFlags;
-};
 
-Texture2D gDiffuseTexture : register(t0);
-Texture2D gSpecColorTexture : register(t1);
-Texture2D gSpecPowerTexture : register(t2);
-Texture2D gAlphaTexture : register(t3);
-Texture2D gDisplacementTexture : register(t4);
-Texture2D gNormalTexture : register(t5);
+Texture2D gTextures[TEXTURE_COUNT] : register(t0);
+SamplerState gSamplers[TEXTURE_COUNT] : register(s0);
 
-SamplerState gDiffuseSampler : register(s0);
-SamplerState gSpecColorSampler : register(s1);
-SamplerState gSpecPowerSampler : register(s2);
-SamplerState gAlphaSampler : register(s3);
-SamplerState gDisplacementSampler : register(s4);
-SamplerState gNormalSampler : register(s5);
 
 void GBufferPS(GBufferShaderPixelIn input, out GBuffer gbuffer) {
-	// Alpha
-	[flatten]
-	if ((gTextureFlags & 0x08) == 0x08) {
-		float alpha = gAlphaTexture.Sample(gAlphaSampler, input.texCoord).x;
-		clip(alpha < 0.1f ? -1 : 1);
+	float4 textureSamples[TEXTURE_COUNT];
+
+	[unroll]
+	for (uint i = 0; i < TEXTURE_COUNT; ++i) {
+		textureSamples[i] = gTextures[i].Sample(gSamplers[i], input.texCoord);
 	}
 
-	// Diffuse
-	[flatten]
-	if ((gTextureFlags & 0x01) == 0x01) {
-		gbuffer.diffuse = gMaterial.Diffuse.xyz * gDiffuseTexture.Sample(gDiffuseSampler, input.texCoord).xyz;
-	} else {
-		gbuffer.diffuse = gMaterial.Diffuse.xyz;
-	}
+	// Initialize
+	float3 diffuse = float3(0.5f, 0.5f, 0.5f);
+	float3 specular = float3(0.5f, 0.5f, 0.5f);
+	float3 normal = float3(0.0f, 0.0f, 1.0f);
+	float metallic = 0.0f;
+	float roughness = 0.5f;
+	float opacity = 1.0f;
 
-	// Specular
-	[flatten]
-	if ((gTextureFlags & 0x02) == 0x02) {
-		gbuffer.spec.xyz = gMaterial.Specular.xyz * gSpecColorTexture.Sample(gSpecColorSampler, input.texCoord).xyz;
-	} else {
-		gbuffer.spec.xyz = gMaterial.Specular.xyz;
-	}
-	gbuffer.spec.w = gMaterial.Specular.w / MAX_SPEC_POWER;
+	GetMaterialInfo(normalize(input.normal), input.tangent, textureSamples, diffuse, specular, normal, metallic, roughness, opacity);
 
-	float3 cartesianNormal = normalize(input.normal);
+	gbuffer.diffuseAndRoughness = float4(diffuse, roughness);
+	gbuffer.specAndMetal = float4(specular, metallic);
+	gbuffer.normal = CartesianToSpherical(normal);
 
-	// Normal
-	[flatten]
-	if ((gTextureFlags & 0x20) == 0x20) {
-		float3 normalMapSample = gNormalTexture.Sample(gNormalSampler, input.texCoord).xyz;
-
-		cartesianNormal = PerturbNormal(cartesianNormal, normalMapSample, input.tangent);
-	}
-	
-	gbuffer.normal = CartesianToSpherical(cartesianNormal);
 }

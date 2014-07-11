@@ -181,7 +181,7 @@ void PBRDemo::RenderMainPass() {
 			SetGBufferVertexShaderObjectConstants(worldMatrix, worldViewProjection);
 
 			for (uint j = 0; j < iter->first->GetSubsetCount(); ++j) {
-				SetGBufferPixelShaderConstants(iter->first->GetSubsetMaterial(j), iter->first->GetSubsetTextureFlags(j));
+				//SetGBufferPixelShaderConstants(iter->first->GetSubsetMaterial(j), iter->first->GetSubsetTextureFlags(j));
 
 				// Draw the models
 				iter->first->DrawSubset(m_immediateContext, j);
@@ -266,14 +266,6 @@ void PBRDemo::SetInstancedGBufferVertexShaderObjectConstants(uint startIndex) {
 	vertexShaderObjectConstants.StartVector = startIndex;
 
 	m_instancedGBufferVertexShader->SetPerObjectConstants(m_immediateContext, &vertexShaderObjectConstants, 1u);
-}
-
-void PBRDemo::SetGBufferPixelShaderConstants(const Common::BlinnPhongMaterial &material, uint textureFlags) {
-	GBufferPixelShaderObjectConstants pixelShaderObjectConstants;
-	pixelShaderObjectConstants.Material = material;
-	pixelShaderObjectConstants.TextureFlags = textureFlags;
-
-	m_gbufferPixelShader->SetPerObjectConstants(m_immediateContext, &pixelShaderObjectConstants, 1u);
 }
 
 void PBRDemo::SetTiledCullFinalGatherShaderConstants(DirectX::XMMATRIX &worldViewMatrix, DirectX::XMMATRIX &projMatrix, DirectX::XMMATRIX &invViewProjMatrix) {

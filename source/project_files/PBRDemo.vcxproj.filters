@@ -38,6 +38,9 @@
     <None Include="..\pbr_demo\shaders\types.hlsli">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="..\pbr_demo\shaders\gbuffer_ps.hlsl">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -63,9 +66,6 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\pbr_demo\shaders\fullscreen_triangle_vs.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="..\pbr_demo\shaders\gbuffer_ps.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="..\pbr_demo\shaders\gbuffer_vs.hlsl">

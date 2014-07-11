@@ -162,7 +162,7 @@ void PBRDemo::RenderMainPass() {
 
 			for (uint j = 0; j < m_instancedModels[i].first->GetSubsetCount(); ++j) {
 				// Draw the models
-				m_instancedModels[i].first->DrawInstancedSubset(m_immediateContext, m_instancedModels[i].second->size(), j);
+				m_instancedModels[i].first->DrawInstancedSubset(m_immediateContext, static_cast<uint>(m_instancedModels[i].second->size()), j);
 			}
 		}
 	}

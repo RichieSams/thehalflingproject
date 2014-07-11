@@ -328,7 +328,7 @@ void GeometryGenerator::CreateCone(float angle, float height, uint sliceCount, M
 	}
 
 	// Build the bottom cap
-	uint baseIndex = meshData->Vertices.size();
+	uint baseIndex = static_cast<uint>(meshData->Vertices.size());
 
 	Vertex centerVertex;
 	centerVertex.Position = DirectX::XMFLOAT3(0.0f, bottom, 0.0f);
@@ -344,7 +344,7 @@ void GeometryGenerator::CreateCone(float angle, float height, uint sliceCount, M
 
 	for (uint i = 1; i <= sliceCount; ++i) {
 		uint lastIndex = baseIndex + i + 1;
-		if (lastIndex == meshData->Vertices.size()) {
+		if (lastIndex == static_cast<uint>(meshData->Vertices.size())) {
 			lastIndex = 0;
 		}
 		meshData->Indices.push_back(lastIndex);
@@ -478,13 +478,13 @@ bool GeometryGenerator::LoadFromOBJ(const wchar *fileName, MeshData *meshData, s
 					int normalIndex = indexStrings.size() > 2 ? std::stoul(indexStrings[2]) : 0;
 
 					if (posIndex < 0) {
-						posIndex += vertPos.size();
+						posIndex += static_cast<uint>(vertPos.size());
 					}
 					if (texCoordIndex < 0) {
-						texCoordIndex += vertTexCoord.size();
+						texCoordIndex += static_cast<uint>(vertTexCoord.size());
 					}
 					if (normalIndex < 0) {
-						normalIndex += vertNorm.size();
+						normalIndex += static_cast<uint>(vertNorm.size());
 					}
 
 					TupleUInt3 vertexTuple{posIndex, texCoordIndex, normalIndex};
@@ -499,7 +499,7 @@ bool GeometryGenerator::LoadFromOBJ(const wchar *fileName, MeshData *meshData, s
 						}
 					} else {
 						// No match. Make a new one
-						uint index = meshData->Vertices.size();
+						uint index = static_cast<uint>(meshData->Vertices.size());
 						vertexMap[vertexTuple] = index;
 
 						DirectX::XMFLOAT3 position = posIndex == 0 ? DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f) : vertPos[posIndex - 1];
@@ -535,13 +535,13 @@ bool GeometryGenerator::LoadFromOBJ(const wchar *fileName, MeshData *meshData, s
 					int normalIndex = indexStrings.size() > 2 ? std::stoul(indexStrings[2]) : 0;
 
 					if (posIndex < 0) {
-						posIndex += vertPos.size();
+						posIndex += static_cast<int>(vertPos.size());
 					}
 					if (texCoordIndex < 0) {
-						texCoordIndex += vertTexCoord.size();
+						texCoordIndex += static_cast<int>(vertTexCoord.size());
 					}
 					if (normalIndex < 0) {
-						normalIndex += vertNorm.size();
+						normalIndex += static_cast<int>(vertNorm.size());
 					}
 
 					TupleUInt3 vertexTuple{posIndex, texCoordIndex, normalIndex};
@@ -553,7 +553,7 @@ bool GeometryGenerator::LoadFromOBJ(const wchar *fileName, MeshData *meshData, s
 						lastIndex = iter->second;
 					} else {
 						// No match. Make a new one
-						lastIndex = meshData->Vertices.size();
+						lastIndex = static_cast<uint>(meshData->Vertices.size());
 						vertexMap[vertexTuple] = lastIndex;
 
 						DirectX::XMFLOAT3 position = posIndex == 0 ? DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f) : vertPos[posIndex - 1];
@@ -587,12 +587,12 @@ bool GeometryGenerator::LoadFromOBJ(const wchar *fileName, MeshData *meshData, s
 				// Set the length of the previous subset
 				if (meshSubsets->size() != 0) {
 					GeometryGenerator::MeshSubset *lastSubset = &meshSubsets->back();
-					lastSubset->IndexCount = meshData->Indices.size() - lastSubset->IndexStart;
+					lastSubset->IndexCount = static_cast<uint>(meshData->Indices.size()) - lastSubset->IndexStart;
 				}
 
 				GeometryGenerator::MeshSubset subset;
 				memset(&subset, 0, sizeof(GeometryGenerator::MeshSubset));
-				subset.IndexStart = meshData->Indices.size();
+				subset.IndexStart = static_cast<uint>(meshData->Indices.size());
 				meshSubsets->push_back(subset);
 			}
 			break;
@@ -604,11 +604,11 @@ bool GeometryGenerator::LoadFromOBJ(const wchar *fileName, MeshData *meshData, s
 
 	// Make sure there is at least one subset
 	if (meshSubsets->size() == 0) {
-		meshSubsets->push_back({0, 0, 0, meshData->Indices.size()});
+		meshSubsets->push_back({0, 0, 0, static_cast<uint>(meshData->Indices.size())});
 	} else {
 		// Set the length of the last subset
 		GeometryGenerator::MeshSubset *lastSubset = &meshSubsets->back();
-		lastSubset->IndexCount = meshData->Indices.size() - lastSubset->IndexStart;
+		lastSubset->IndexCount = static_cast<uint>(meshData->Indices.size()) - lastSubset->IndexStart;
 	}
 
 	// Release the obj file memory
@@ -781,7 +781,7 @@ bool GeometryGenerator::LoadFromOBJ(const wchar *fileName, MeshData *meshData, s
 		delete[] fileBuffer;
 	}
 
-	uint totalVertices = meshData->Vertices.size();
+	uint totalVertices = static_cast<uint>(meshData->Vertices.size());
 
 	// Apply the parsed materials to the subsets
 	for (uint i = 0; i < meshSubsets->size(); ++i) {

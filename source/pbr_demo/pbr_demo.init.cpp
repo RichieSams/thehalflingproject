@@ -136,7 +136,7 @@ void PBRDemo::LoadSceneJson() {
 				                                   DirectX::XMFLOAT3(pointLights[i]["AABB_min"][0u].asSingle(), pointLights[i]["AABB_min"][1u].asSingle(), pointLights[i]["AABB_min"][2u].asSingle()),
 				                                   DirectX::XMFLOAT3(pointLights[i]["AABB_max"][0u].asSingle(), pointLights[i]["AABB_max"][1u].asSingle(), pointLights[i]["AABB_max"][2u].asSingle()),
 				                                   &m_pointLights,
-				                                   m_pointLights.size() - 1);
+				                                   static_cast<uint>(m_pointLights.size()) - 1u);
 			}
 
 			m_numPointLightsToDraw++;
@@ -178,7 +178,7 @@ void PBRDemo::LoadSceneJson() {
 					                                   AABB_min,
 					                                   AABB_max,
 					                                   &m_pointLights,
-					                                   m_pointLights.size() - 1);
+					                                   static_cast<uint>(m_pointLights.size()) - 1u);
 				}
 			}
 		}
@@ -227,7 +227,7 @@ void PBRDemo::LoadSceneJson() {
 				                                  AABB_max,
 				                                  angularVelocity,
 				                                  &m_spotLights,
-				                                  m_spotLights.size() - 1);
+				                                  static_cast<uint>(m_spotLights.size()) - 1u);
 			}
 
 			m_numSpotLightsToDraw++;
@@ -290,7 +290,7 @@ void PBRDemo::LoadSceneJson() {
 					                                  AABB_max,
 					                                  DirectX::XMFLOAT3(Common::RandF(angularVelocityMin.x, angularVelocityMax.x), Common::RandF(angularVelocityMin.y, angularVelocityMax.y), Common::RandF(angularVelocityMin.z, angularVelocityMax.z)),
 					                                  &m_spotLights,
-					                                  m_spotLights.size() - 1);
+					                                  static_cast<uint>(m_spotLights.size()) - 1u);
 				}
 			}
 		}

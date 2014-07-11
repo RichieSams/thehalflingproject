@@ -110,12 +110,12 @@ void SpriteRenderer::Initialize(ID3D11Device *device) {
 
 	// Create our constant buffers
 	desc.Usage = D3D11_USAGE_DYNAMIC;
-	desc.ByteWidth = CBSize(sizeof(VSPerBatchCB));
+	desc.ByteWidth = static_cast<uint>(CBSize(sizeof(VSPerBatchCB)));
 	desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	HR(device->CreateBuffer(&desc, nullptr, &m_vsPerBatchConstBuffer));
 
-	desc.ByteWidth = CBSize(sizeof(SpriteDrawData));
+	desc.ByteWidth = static_cast<uint>(CBSize(sizeof(SpriteDrawData)));
 	HR(device->CreateBuffer(&desc, nullptr, &m_vsPerInstanceConstBuffer));
 
 	// Create our states

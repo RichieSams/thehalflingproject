@@ -74,15 +74,6 @@ D3D11_USAGE ParseUsageFromString(std::string &inputString);
  */
 aiTextureType ParseTextureTypeFromString(std::string &inputString, aiTextureType defaultType);
 /**
- * Tries to parse a string into a TextureSampler
- * If the parse fails, the default return is 'defaultType'
- *
- * @param inputString    The string to parse into a sampler type
- * @param defaultType    The value that should be returned if the parse fails
- * @return               The sampler type
- */
-Common::TextureSampler ParseSamplerTypeFromString(std::string &inputString, Common::TextureSampler defaultType);
-/**
  * Creates an ini file with the default values. This is useful
  * if the user wants to know how to use the ini file.
  * 

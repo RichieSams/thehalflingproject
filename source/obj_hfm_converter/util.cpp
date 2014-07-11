@@ -83,24 +83,6 @@ aiTextureType ParseTextureTypeFromString(std::string &inputString, aiTextureType
 	}
 }
 
-Common::TextureSampler ParseSamplerTypeFromString(std::string &inputString, Common::TextureSampler defaultType) {
-	if (_stricmp(inputString.c_str(), "linear_clamp") == 0) {
-		return Common::LINEAR_CLAMP;
-	} else if (_stricmp(inputString.c_str(), "linear_border") == 0) {
-		return Common::LINEAR_BORDER;
-	} else if (_stricmp(inputString.c_str(), "linear_wrap") == 0) {
-		return Common::LINEAR_WRAP;
-	} else if (_stricmp(inputString.c_str(), "point_clamp") == 0) {
-		return Common::POINT_CLAMP;
-	} else if (_stricmp(inputString.c_str(), "point_wrap") == 0) {
-		return Common::POINT_WRAP;
-	} else if (_stricmp(inputString.c_str(), "anisotropic_wrap") == 0) {
-		return Common::ANISOTROPIC_WRAP;
-	} else {
-		return defaultType;
-	}
-}
-
 void CreateDefaultJsonFile(filepath filePath) {
 	// Import the model file
 	Assimp::Importer importer;

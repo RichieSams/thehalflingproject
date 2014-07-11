@@ -26,6 +26,16 @@ enum TextureSampler {
 	ANISOTROPIC_WRAP = 6
 };
 
+/**
+ * Tries to parse a string into a TextureSampler
+ * If the parse fails, the default return is 'defaultType'
+ *
+ * @param inputString    The string to parse into a sampler type
+ * @param defaultType    The value that should be returned if the parse fails
+ * @return               The sampler type
+ */
+TextureSampler ParseSamplerTypeFromString(std::string &inputString, Common::TextureSampler defaultType);
+
 /** A struct to hold all the data needed to describe a subset of the model */
 struct ModelSubset {
 	uint VertexStart;

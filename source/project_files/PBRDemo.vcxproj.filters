@@ -1,26 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <FxCompile Include="..\pbr_demo\fullscreen_triangle_vs.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="..\pbr_demo\gbuffer_ps.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="..\pbr_demo\gbuffer_vs.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="..\pbr_demo\instanced_gbuffer_vs.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="..\pbr_demo\post_process_ps.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="..\pbr_demo\tiled_cull_final_gather_cs.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="..\pbr_demo\pbr_demo.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -52,10 +32,10 @@
     <None Include="..\pbr_demo\tempIcon.ico">
       <Filter>Resources</Filter>
     </None>
-    <None Include="..\pbr_demo\hlsl_util.hlsli">
+    <None Include="..\pbr_demo\shaders\hlsl_util.hlsli">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="..\pbr_demo\types.hlsli">
+    <None Include="..\pbr_demo\shaders\types.hlsli">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
@@ -72,10 +52,42 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{ade00db2-9f6f-4eb0-ac29-ffb4d6a3afda}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Materials">
+      <UniqueIdentifier>{96beb857-5ef2-4a3a-9262-893e42b47cfc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="PBRDemo.rc">
       <Filter>Resources</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\pbr_demo\shader_build_chain.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\pbr_demo\shaders\fullscreen_triangle_vs.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\pbr_demo\shaders\gbuffer_ps.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\pbr_demo\shaders\gbuffer_vs.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\pbr_demo\shaders\instanced_gbuffer_vs.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\pbr_demo\shaders\material_compile_test_ps.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\pbr_demo\shaders\post_process_ps.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\pbr_demo\shaders\tiled_cull_final_gather_cs.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\pbr_demo\materials\example.hmat.hlsl">
+      <Filter>Materials</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

@@ -5,9 +5,17 @@
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -22,7 +30,20 @@
     <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
@@ -35,23 +56,43 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\..\build\$(Configuration)\$(ProjectName)\</OutDir>
-    <IntDir>..\..\obj\$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir>..\..\build\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>..\..\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <IncludePath>../;../libs/AntTweakBar/include;../libs/json-cpp/include;$(IncludePath)</IncludePath>
-    <LibraryPath>../libs/AntTweakBar/lib;../libs/json-cpp/build/debug;$(LibraryPath)</LibraryPath>
+    <LibraryPath>../libs/AntTweakBar/lib;../libs/json-cpp/lib/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>../;../libs/AntTweakBar/include;../libs/json-cpp/include;$(IncludePath)</IncludePath>
+    <LibraryPath>../libs/AntTweakBar/lib;../libs/json-cpp/lib/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>..\..\build\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>..\..\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\..\build\$(Configuration)\$(ProjectName)\</OutDir>
-    <IntDir>..\..\obj\$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir>..\..\build\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>..\..\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <IncludePath>../;../libs/AntTweakBar/include;../libs/json-cpp/include;$(IncludePath)</IncludePath>
-    <LibraryPath>../libs/AntTweakBar/lib;../libs/json-cpp/build/release;$(LibraryPath)</LibraryPath>
+    <LibraryPath>../libs/AntTweakBar/lib;../libs/json-cpp/lib/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>../;../libs/AntTweakBar/include;../libs/json-cpp/include;$(IncludePath)</IncludePath>
+    <LibraryPath>../libs/AntTweakBar/lib;../libs/json-cpp/lib/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>..\..\build\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>..\..\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -64,7 +105,36 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;AntTweakBar.lib;gdiplus.lib;json-cpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;AntTweakBar.lib;gdiplus.lib;json-cppd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <FxCompile>
+      <AdditionalIncludeDirectories>../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ShaderModel>5.0</ShaderModel>
+    </FxCompile>
+    <PostBuildEvent>
+      <Command>XCOPY "$(SolutionDir)..\libs\AntTweakBar\lib\AntTweakBar.dll" "$(OutDir)" /D /K /Y
+XCOPY "$(SolutionDir)..\pbr_demo\resources\*" "$(OutDir)" /D /K /Y /E
+XCOPY "$(OutDir)..\Halfling\sprite_vertex_shader.cso" "$(OutDir)" /D /K /Y
+XCOPY "$(OutDir)..\Halfling\sprite_instanced_vertex_shader.cso" "$(OutDir)" /D /K /Y
+XCOPY "$(OutDir)..\Halfling\sprite_pixel_shader.cso" "$(OutDir)" /D /K /Y
+XCOPY "$(OutDir)..\Halfling\sprite_sampled_pixel_shader.cso" "$(OutDir)" /D /K /Y</Command>
+    </PostBuildEvent>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>d3d11.lib;AntTweakBar.lib;gdiplus.lib;json-cppd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <FxCompile>
       <AdditionalIncludeDirectories>../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -115,54 +185,43 @@ XCOPY "$(OutDir)..\Halfling\sprite_sampled_pixel_shader.cso" "$(OutDir)" /D /K /
       <AdditionalIncludeDirectories>../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>d3d11.lib;AntTweakBar.lib;gdiplus.lib;json-cpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <FxCompile>
+      <AdditionalIncludeDirectories>../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ShaderModel>5.0</ShaderModel>
+    </FxCompile>
+    <PostBuildEvent>
+      <Command>XCOPY "$(SolutionDir)..\libs\AntTweakBar\lib\AntTweakBar.dll" "$(OutDir)" /D /K /Y
+XCOPY "$(SolutionDir)..\pbr_demo\resources\*" "$(OutDir)" /D /K /Y /E
+XCOPY "$(OutDir)..\Halfling\sprite_vertex_shader.cso" "$(OutDir)" /D /K /Y
+XCOPY "$(OutDir)..\Halfling\sprite_instanced_vertex_shader.cso" "$(OutDir)" /D /K /Y
+XCOPY "$(OutDir)..\Halfling\sprite_pixel_shader.cso" "$(OutDir)" /D /K /Y
+XCOPY "$(OutDir)..\Halfling\sprite_sampled_pixel_shader.cso" "$(OutDir)" /D /K /Y</Command>
+    </PostBuildEvent>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
   <ItemGroup>
     <ProjectReference Include="Halfling.vcxproj">
       <Project>{e126e907-e152-410a-b81b-d206b709ba48}</Project>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="..\pbr_demo\fullscreen_triangle_vs.hlsl">
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">FullScreenTriangleVS</EntryPointName>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">FullScreenTriangleVS</EntryPointName>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-    </FxCompile>
-    <FxCompile Include="..\pbr_demo\gbuffer_ps.hlsl">
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">GBufferPS</EntryPointName>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">GBufferPS</EntryPointName>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-    </FxCompile>
-    <FxCompile Include="..\pbr_demo\gbuffer_vs.hlsl">
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">GBufferVS</EntryPointName>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">GBufferVS</EntryPointName>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-    </FxCompile>
-    <FxCompile Include="..\pbr_demo\instanced_gbuffer_vs.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">InstancedGBufferVS</EntryPointName>
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">InstancedGBufferVS</EntryPointName>
-    </FxCompile>
-    <FxCompile Include="..\pbr_demo\post_process_ps.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">PostProcessPS</EntryPointName>
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">PostProcessPS</EntryPointName>
-    </FxCompile>
-    <FxCompile Include="..\pbr_demo\tiled_cull_final_gather_cs.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compute</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compute</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">ComputeShaderTileCS</EntryPointName>
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">ComputeShaderTileCS</EntryPointName>
-    </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\pbr_demo\hlsl_util.hlsli" />
-    <None Include="..\pbr_demo\types.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\pbr_demo\main.cpp" />
@@ -177,10 +236,81 @@ XCOPY "$(OutDir)..\Halfling\sprite_sampled_pixel_shader.cso" "$(OutDir)" /D /K /
     <ClInclude Include="..\pbr_demo\shader_defines.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\pbr_demo\shaders\hlsl_util.hlsli" />
+    <None Include="..\pbr_demo\shaders\types.hlsli" />
     <None Include="..\pbr_demo\tempIcon.ico" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="PBRDemo.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\pbr_demo\materials\example.hmat.hlsl" />
+    <FxCompile Include="..\pbr_demo\shaders\fullscreen_triangle_vs.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">FullScreenTriangleVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">FullScreenTriangleVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">FullScreenTriangleVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">FullScreenTriangleVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="..\pbr_demo\shaders\gbuffer_ps.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">GBufferPS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">GBufferPS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">GBufferPS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">GBufferPS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="..\pbr_demo\shaders\gbuffer_vs.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">GBufferVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">GBufferVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">GBufferVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">GBufferVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="..\pbr_demo\shaders\instanced_gbuffer_vs.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">InstancedGBufferVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">InstancedGBufferVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">InstancedGBufferVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">InstancedGBufferVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="..\pbr_demo\shaders\material_compile_test_ps.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="..\pbr_demo\shaders\post_process_ps.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">PostProcessPS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">PostProcessPS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PostProcessPS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">PostProcessPS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="..\pbr_demo\shaders\tiled_cull_final_gather_cs.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">ComputeShaderTileCS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compute</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">ComputeShaderTileCS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compute</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ComputeShaderTileCS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ComputeShaderTileCS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

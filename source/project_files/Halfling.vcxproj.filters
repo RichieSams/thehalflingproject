@@ -90,6 +90,9 @@
     <ClCompile Include="..\common\shader.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="..\common\string_util.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\common\halfling_sys.h">

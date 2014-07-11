@@ -79,4 +79,7 @@ void Tokenize(const std::wstring& str, ContainerT& tokens, const std::wstring& d
 	}
 };
 
+bool Replace(std::string &str, const std::string &from, const std::string &to);
+std::string &ReplaceAll(std::string &str, const std::string &from, const std::string &to);
+
 } // End of namespace Common

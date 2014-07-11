@@ -90,7 +90,7 @@ void Console::PrintText(const std::wstring &line) {
 		case '\r':
 		case '\n':
 		{
-			size_t count = i - lastSubstring;
+			uint count = i - lastSubstring;
 			if (count > 0) {
 				m_lines.push_back(line.substr(lastSubstring, count));
 			}
@@ -136,8 +136,8 @@ void Console::PrintText(const std::wstring &line) {
 	m_lines.push_back(line.substr(lastSubstring));
 
 	// Pop off lines until we're under the limit
-	int numLinesToPop = m_lines.size() - m_maxNumLines;
-	for (int i = 0; i < numLinesToPop; ++i) {
+	uint numLinesToPop = static_cast<uint>(m_lines.size()) - m_maxNumLines;
+	for (uint i = 0; i < numLinesToPop; ++i) {
 		m_lines.pop_front();
 	}
 }

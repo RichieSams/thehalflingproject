@@ -56,10 +56,10 @@ bool PBRDemo::Initialize(LPCTSTR mainWndCaption, uint32 screenWidth, uint32 scre
 	// Create light buffers
 	// This has to be done after the Engine has been Initialized so we have a valid m_device
 	if (m_pointLights.size() > 0) {
-		m_pointLightBuffer = new Common::StructuredBuffer<Common::PointLight>(m_device, m_pointLights.size(), D3D11_BIND_SHADER_RESOURCE, true);
+		m_pointLightBuffer = new Common::StructuredBuffer<Common::PointLight>(m_device, static_cast<uint>(m_pointLights.size()), D3D11_BIND_SHADER_RESOURCE, true);
 	}
 	if (m_spotLights.size() > 0) {
-		m_spotLightBuffer = new Common::StructuredBuffer<Common::SpotLight>(m_device, m_spotLights.size(), D3D11_BIND_SHADER_RESOURCE, true);
+		m_spotLightBuffer = new Common::StructuredBuffer<Common::SpotLight>(m_device, static_cast<uint>(m_spotLights.size()), D3D11_BIND_SHADER_RESOURCE, true);
 	}
 
 	m_spriteRenderer.Initialize(m_device);

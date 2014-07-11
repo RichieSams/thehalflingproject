@@ -35,12 +35,12 @@ protected:
 
 		if (hasPerFrameBuffer) {
 			assert(sizeof(PerFrameType) > 0);
-			bufferDesc.ByteWidth = Common::CBSize(sizeof(PerFrameType));
+			bufferDesc.ByteWidth = static_cast<uint>(Common::CBSize(sizeof(PerFrameType)));
 			device->CreateBuffer(&bufferDesc, nullptr, &m_perFrameConstantBuffer);
 		}
 		if (hasPerObjectBuffer) {
 			assert(sizeof(PerObjectType) > 0);
-			bufferDesc.ByteWidth = Common::CBSize(sizeof(PerObjectType));
+			bufferDesc.ByteWidth = static_cast<uint>(Common::CBSize(sizeof(PerObjectType)));
 			device->CreateBuffer(&bufferDesc, nullptr, &m_perObjectConstantBuffer);
 		}
 	}

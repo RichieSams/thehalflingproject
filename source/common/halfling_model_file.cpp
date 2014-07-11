@@ -178,13 +178,13 @@ void HalflingModelFile::Write(const wchar *filepath, uint numVertices, uint numI
 	BinaryWriteInt64(fout, flags);
 
 	// String table
-	size_t stringTableSize = stringTable.size();
+	uint stringTableSize = static_cast<uint>(stringTable.size());
 	if (stringTableSize > 0) {
 		flags |= HAS_STRING_TABLE;
 
 		BinaryWriteUInt32(fout, stringTableSize);
 		for (uint i = 0; i < stringTableSize; ++i) {
-			BinaryWriteUInt16(fout, stringTable[i].size());
+			BinaryWriteUInt16(fout, static_cast<uint16>(stringTable[i].size()));
 			fout.write(stringTable[i].c_str(), stringTable[i].size());
 		}
 	}
@@ -211,7 +211,7 @@ void HalflingModelFile::Write(const wchar *filepath, uint numVertices, uint numI
 	fout.write(reinterpret_cast<const char *>(indexData), indexBufferDesc->ByteWidth);
 
 	// Material table
-	size_t materialTableSize = materialTable.size();
+	uint materialTableSize = static_cast<uint>(materialTable.size());
 	if (materialTableSize > 0) {
 		flags |= HAS_MATERIAL_TABLE;
 
@@ -219,7 +219,7 @@ void HalflingModelFile::Write(const wchar *filepath, uint numVertices, uint numI
 		for (uint i = 0; i < materialTableSize; ++i) {
 			BinaryWriteUInt32(fout, materialTable[i].HMATFilePathIndex);
 			
-			size_t textureListSize = materialTable[i].Textures.size();
+			uint textureListSize = static_cast<uint>(materialTable[i].Textures.size());
 			BinaryWriteUInt32(fout, textureListSize);
 
 			for (uint j = 0; j < textureListSize; ++j) {
@@ -231,7 +231,7 @@ void HalflingModelFile::Write(const wchar *filepath, uint numVertices, uint numI
 	}
 
 	// Subsets
-	BinaryWriteUInt32(fout, subsets.size());
+	BinaryWriteUInt32(fout, static_cast<uint>(subsets.size()));
 	fout.write(reinterpret_cast<const char *>(&subsets[0]), sizeof(Subset) * subsets.size());
 
 	// Go back and re-write flags

@@ -31,7 +31,7 @@
 						"type" : "string"
 					},
 					"HMATFilePath" : {
-						"description" : "The file path to the *.hmat.hlsli file for the material",
+						"description" : "The file path to the *.hmat file for the material",
 						"type" : "string"
 					},
 					"TextureDefinitions" : {

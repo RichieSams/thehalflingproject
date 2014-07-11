@@ -38,7 +38,7 @@ bool CompileFiles(filepath jsonFilePath) {
 	// TODO: Add error handling
 	if (fileBuffer == nullptr) {
 		std::cerr << "JSON file could not be opened:\n\t\"" << jsonFilePath << "\"" << std::endl;
-		return false;
+		return true;
 	}
 
 	Common::MemoryInputStream fin(fileBuffer, bytesRead);
@@ -187,7 +187,7 @@ bool CompileFiles(filepath jsonFilePath) {
 	// Delete the temp file
 	DeleteFile(L"tmp.hlsl");
 
-	return true;
+	return false;
 }
 
 } // End of namespace HalflingShaderCompiler

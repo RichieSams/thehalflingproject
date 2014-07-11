@@ -98,7 +98,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>CONFIGURATION="$(Configuration)";PLATFORM="$(Platform)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>CONFIGURATION="$(Configuration)";PLATFORM="$(Platform)";PROJECT_NAME="$(ProjectName)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -110,7 +110,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>CONFIGURATION="$(Configuration)";PLATFORM="$(Platform)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>CONFIGURATION="$(Configuration)";PLATFORM="$(Platform)";PROJECT_NAME="$(ProjectName)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -124,7 +124,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>CONFIGURATION="$(Configuration)";PLATFORM="$(Platform)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>CONFIGURATION="$(Configuration)";PLATFORM="$(Platform)";PROJECT_NAME="$(ProjectName)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -140,7 +140,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>CONFIGURATION="$(Configuration)";PLATFORM="$(Platform)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>CONFIGURATION="$(Configuration)";PLATFORM="$(Platform)";PROJECT_NAME="$(ProjectName)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

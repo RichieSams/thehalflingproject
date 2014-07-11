@@ -94,15 +94,12 @@ bool CompileFiles(filepath jsonFilePath) {
 		// Parse the includes
 		// Then concatenate them all together, adding the necessary '#include '
 		Json::Value additionalIncludes = shaders[i]["AdditionalIncludes"];
-		std::vector<std::string> includes;
+		std::stringstream ss;
+
 		for (uint j = 0; j < additionalIncludes.size(); ++j) {
-			includes.push_back(additionalIncludes[j].asString());
+			ss << "#include \"" << additionalIncludes[j].asString() << "\"\r\n";
 		}
 
-		std::stringstream ss;
-		for (uint j = 0; j < includes.size(); ++j) {
-			ss << "#include \"" << includes[j] << "\"\r\n";
-		}
 		// Guarantee contiguous memory
 		std::string concatenatedIncludes = ss.str();
 

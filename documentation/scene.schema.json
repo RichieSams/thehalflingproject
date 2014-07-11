@@ -19,16 +19,16 @@
 		"ModelInstanceThreshold" : {
 			"description" : "If the number of instances is less than or equal to this number, the model will just be drawn multiple times. However, if the number of instances is greater than this number, we will add to the instance buffer and use DrawIndexedInstanced",
 			"type" : "integer",
-			"minimum": 1
+			"minimum" : 1
 		},
 		"Models" : {
 			"description" : "",
 			"type" : "array",
 			"items" : {
-				"oneOf": [
-					{ "$ref": "#/definitions/Model-File" },
-					{ "$ref": "#/definitions/Model-Plane" },
-					{ "$ref": "#/definitions/Model-Box" },
+				"oneOf" : [
+					{ "$ref" : "#/definitions/Model-File" },
+					{ "$ref" : "#/definitions/Model-Plane" },
+					{ "$ref" : "#/definitions/Model-Box" },
                     { "$ref" : "#/definitions/Model-Sphere" }
 				]
 			},
@@ -63,7 +63,7 @@
 			"description" : "",
 			"type" : "array",
 			"items" : {
-				"oneOf": [
+				"oneOf" : [
 					{ "$ref" : "#/definitions/SpecificPointLight" },
 					{ "$ref" : "#/definitions/RandomPointLights" }
 				]
@@ -73,7 +73,7 @@
 			"description" : "",
 			"type" : "array",
 			"items" : {
-				"oneOf": [
+				"oneOf" : [
 					{ "$ref" : "#/definitions/SpecificSpotLight" },
 					{ "$ref" : "#/definitions/RandomSpotLights" }
 				]
@@ -81,7 +81,7 @@
 		}
 	},
 	"additionalProperties" : false,
-	"definitions": {
+	"definitions" : {
 		"float2" : {
 			"type" : "array",
 			"items" : {
@@ -101,28 +101,28 @@
 			"additionalItems" : false
 		},
 		"material" : {
-			"type": "object",
-			"required": ["MaterialFilePath"],
-			"properties": {
+			"type" : "object",
+			"required" : ["MaterialFilePath"],
+			"properties" : {
 				"MaterialFilePath" : {
-					"description": "The HMAT material file path",
-					"type": "string"
+					"description" : "The HMAT material file path",
+					"type" : "string"
 				},
 				"TextureOneFilePath" : {
-					"description": "The file path of the first texture for the material",
-					"type": "string"
+					"description" : "The file path of the first texture for the material",
+					"type" : "string"
 				},
 				"TextureTwoFilePath" : {
-					"description": "The file path of the second texture for the material",
-					"type": "string"
+					"description" : "The file path of the second texture for the material",
+					"type" : "string"
 				},
 				"TextureThreeFilePath" : {
-					"description": "The file path of the third texture for the material",
-					"type": "string"
+					"description" : "The file path of the third texture for the material",
+					"type" : "string"
 				},
 				"TextureFourFilePath" : {
-					"description": "The file path of the fourth texture for the material",
-					"type": "string"
+					"description" : "The file path of the fourth texture for the material",
+					"type" : "string"
 				}
 			}
 		},
@@ -132,8 +132,8 @@
 			"required" : ["Type", "FilePath", "Instances"],
 			"properties" : {
 				"Type" : {
-					"description": "A model from a HMF file",
-					"enum": ["File"]
+					"description" : "A model from a HMF file",
+					"enum" : ["File"]
 				},
 				"FilePath" : {
 					"description" : "The path to the HMF file",
@@ -161,42 +161,42 @@
 			"required" : ["Type", "Width", "Depth", "Instances"],
 			"properties" : {
 				"Type" : {
-					"description": "A (potentially) subdivided quad in the X-Z plane",
-					"enum": ["Plane"]
+					"description" : "A (potentially) subdivided quad in the X-Z plane",
+					"enum" : ["Plane"]
 				},
 				"Width" : {
-					"description": "The width of the quad",
-					"type": "number",
-					"minimum": 0.0
+					"description" : "The width of the quad",
+					"type" : "number",
+					"minimum" : 0.0
 				},
 				"Depth" : {
-					"description": "The depth of the quad",
-					"type": "number",
-					"minimum": 0.0
+					"description" : "The depth of the quad",
+					"type" : "number",
+					"minimum" : 0.0
 				},
 				"X-Subdivisions" : {
-					"description": "The number of times to subdivide the quad in the X direction",
-					"type": "integer",
-					"minimum": 0
+					"description" : "The number of times to subdivide the quad in the X direction",
+					"type" : "integer",
+					"minimum" : 0
 				},
 				"Z-Subdivisions" : {
-					"description": "The number of times to subdivide the quad in the Z direction",
-					"type": "integer",
-					"minimum": 0
+					"description" : "The number of times to subdivide the quad in the Z direction",
+					"type" : "integer",
+					"minimum" : 0
 				},
 				"X-TextureTiling" : {
-					"description": "How much to tile the texture coordinates in the U (X) direction. 1.0 means the texture will be stretched across the entire grid, 2.0 means the texture will be tiled twice, etc.",
-					"type": "number",
-					"minimum": 0.0
+					"description" : "How much to tile the texture coordinates in the U (X) direction. 1.0 means the texture will be stretched across the entire grid, 2.0 means the texture will be tiled twice, etc.",
+					"type" : "number",
+					"minimum" : 0.0
 				},
 				"Z-TextureTiling" : {
-					"description": "How much to tile the texture coordinates in the V (Z) direction. 1.0 means the texture will be stretched across the entire grid, 2.0 means the texture will be tiled twice, etc.",
-					"type": "number",
-					"minimum": 0.0
+					"description" : "How much to tile the texture coordinates in the V (Z) direction. 1.0 means the texture will be stretched across the entire grid, 2.0 means the texture will be tiled twice, etc.",
+					"type" : "number",
+					"minimum" : 0.0
 				},
 				"Material" : {
-					"description": "The material for the plane",
-					"$ref": "#/definitions/material"
+					"description" : "The material for the plane",
+					"$ref" : "#/definitions/material"
 				},
 				"Instances" : {
 					"description" : "The world transform matricies for one or more instances of the model",
@@ -220,27 +220,27 @@
 			"required" : ["Type", "Width", "Height", "Depth", "Instances"],
 			"properties" : {
 				"Type" : {
-					"description": "A box",
-					"enum": ["Box"]
+					"description" : "A box",
+					"enum" : ["Box"]
 				},
 				"Width" : {
-					"description": "The width of the box",
-					"type": "number",
-					"minimum": 0.0
+					"description" : "The width of the box",
+					"type" : "number",
+					"minimum" : 0.0
 				},
 				"Height" : {
-					"description": "The height of the box",
-					"type": "number",
-					"minimum": 0.0
+					"description" : "The height of the box",
+					"type" : "number",
+					"minimum" : 0.0
 				},
 				"Depth" : {
-					"description": "The depth of the box",
-					"type": "number",
-					"minimum": 0.0
+					"description" : "The depth of the box",
+					"type" : "number",
+					"minimum" : 0.0
 				},
                 "Material" : {
-					"description": "The material for the box",
-					"$ref": "#/definitions/material"
+					"description" : "The material for the box",
+					"$ref" : "#/definitions/material"
 				},
 				"Instances" : {
 					"description" : "The world transform matricies for one or more instances of the model",
@@ -264,27 +264,27 @@
 			"required" : ["Type", "SliceCount", "StackCount", "Instances"],
 			"properties" : {
 				"Type" : {
-					"description": "A sphere",
-					"enum": ["Sphere"]
+					"description" : "A sphere",
+					"enum" : ["Sphere"]
 				},
 				"Radius" : {
-					"description": "The radius of the sphere",
-					"type": "number",
-					"minimum": 0.0
+					"description" : "The radius of the sphere",
+					"type" : "number",
+					"minimum" : 0.0
 				},
 				"SliceCount" : {
-					"description": "The number of slices to divide the sphere into",
-					"type": "integer",
-					"minimum": 0
+					"description" : "The number of slices to divide the sphere into",
+					"type" : "integer",
+					"minimum" : 0
 				},
 				"StackCount" : {
-					"description": "The number of stacks to divide the sphere into",
-					"type": "integer",
-					"minimum": 0.0
+					"description" : "The number of stacks to divide the sphere into",
+					"type" : "integer",
+					"minimum" : 0.0
 				},
                 "Material" : {
-					"description": "The material for the sphere",
-					"$ref": "#/definitions/material"
+					"description" : "The material for the sphere",
+					"$ref" : "#/definitions/material"
 				},
 				"Instances" : {
 					"description" : "The world transform matricies for one or more instances of the model",

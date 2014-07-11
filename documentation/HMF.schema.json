@@ -37,7 +37,7 @@
 					"TextureDefinitions" : {
 						"description" : "The textures used in the shader. ORDER MATTERS!! They will be fed to the shader in the order that they are specified here",
 						"type" : "array",
-						"items": {
+						"items" : {
 							"type" : "object",
 							"properties" : {
 								"FilePath" : {
@@ -50,9 +50,6 @@
 								}
 							}
 						}
-					},
-					"TextureOneSampler" : {
-						"description": ""
 					}
 				},
 				"minItems" : 1,

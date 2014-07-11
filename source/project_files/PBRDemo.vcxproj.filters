@@ -44,6 +44,9 @@
     <None Include="..\pbr_demo\shaders\gbuffer_ps.hlsl">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="..\pbr_demo\resources\scene.json">
+      <Filter>Core</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

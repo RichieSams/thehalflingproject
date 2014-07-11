@@ -236,6 +236,7 @@ XCOPY "$(OutDir)..\Halfling\sprite_sampled_pixel_shader.cso" "$(OutDir)" /D /K /
     <ClInclude Include="..\pbr_demo\shader_defines.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\pbr_demo\resources\scene.json" />
     <None Include="..\pbr_demo\shaders\hlsl_util.hlsli" />
     <None Include="..\pbr_demo\shaders\types.hlsli" />
     <None Include="..\pbr_demo\tempIcon.ico" />

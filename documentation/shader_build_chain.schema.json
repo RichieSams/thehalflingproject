@@ -8,9 +8,6 @@
 			"description" : "The path to fxc.exe",
 			"type" : "string"
 		},
-		"OutputDirectory" : {
-			"description" : "The directory to put "
-		}
 		"AdditionalIncludeDirectories" : {
 			"description" : "Additional directories for the shader to use as search directories when resolving #includes",
 			"type" : "array",

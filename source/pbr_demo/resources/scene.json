@@ -41,7 +41,7 @@
             "SliceCount" : 20,
             "StackCount" : 20,
 			"Material" : {
-				"HMATFilePath" : "pine.hmat",
+				"HMATFilePath" : "simple.hmat",
 				"TextureDefinitions" : [
 					{
 						"FilePath" : "T_Wood_Pine_D.dds",

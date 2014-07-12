@@ -34,13 +34,77 @@
 
 namespace PBRDemo {
 
+namespace ModelType {
+	enum Flag {
+		FILE,
+		PLANE,
+		BOX,
+		SPHERE
+	};
+}
+
+struct FileModel {
+	std::string FilePath;
+};
+
+struct TextureDescription {
+	std::string FilePath;
+	Common::TextureSampler Sampler;
+};
+
+struct ModelMaterial {
+	std::string HMATFilePath;
+	std::vector<TextureDescription> Textures;
+};
+
+struct PlaneModel {
+	float Width;
+	float Depth;
+	uint X_Subdivisions;
+	uint Z_Subdivisions;
+	float X_TextureTiling;
+	float Z_TextureTiling;
+	ModelMaterial Material;
+};
+
+struct BoxModel {
+	float Width;
+	float Depth;
+	float Height;
+	ModelMaterial Material;
+};
+
+struct SphereModel {
+	float Radius;
+	uint SliceCount;
+	uint StackCount;
+	ModelMaterial Material;
+};
+
 struct ModelToLoad {
-	ModelToLoad(std::string filePath, std::vector<DirectX::XMMATRIX, Common::Allocator16ByteAligned<DirectX::XMMATRIX> > *instances)
-		: FilePath(filePath),
+	ModelToLoad(FileModel &fileModel, std::vector<DirectX::XMMATRIX, Common::Allocator16ByteAligned<DirectX::XMMATRIX> > *instances)
+		: Type(ModelType::FILE),
+		  ModelData(new FileModel(fileModel)),
+		  Instances(instances) {
+	}
+	ModelToLoad(PlaneModel &planeModel, std::vector<DirectX::XMMATRIX, Common::Allocator16ByteAligned<DirectX::XMMATRIX> > *instances)
+		: Type(ModelType::PLANE),
+		  ModelData(new PlaneModel(planeModel)),
+		  Instances(instances) {
+	}
+	ModelToLoad(BoxModel &boxModel, std::vector<DirectX::XMMATRIX, Common::Allocator16ByteAligned<DirectX::XMMATRIX> > *instances)
+		: Type(ModelType::BOX),
+		  ModelData(new BoxModel(boxModel)),
+		  Instances(instances) {
+	}
+	ModelToLoad(SphereModel &sphereModel, std::vector<DirectX::XMMATRIX, Common::Allocator16ByteAligned<DirectX::XMMATRIX> > *instances)
+		: Type(ModelType::SPHERE),
+		  ModelData(new SphereModel(sphereModel)),
 		  Instances(instances) {
 	}
 
-	std::string FilePath;
+	ModelType::Flag Type;
+	void *ModelData;
 	std::vector<DirectX::XMMATRIX, Common::Allocator16ByteAligned<DirectX::XMMATRIX> > *Instances;
 };
 

@@ -36,8 +36,8 @@
             ]
         },
         {
-            "Radius" : 20,
             "Type" :  "sphere",
+            "Radius" : 20.0,
             "SliceCount" : 20,
             "StackCount" : 20,
 			"Material" : {

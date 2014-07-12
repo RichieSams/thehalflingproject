@@ -15,6 +15,10 @@
             "Type" : "plane",
             "Width" : 100,
             "Depth" : 100,
+			"X-Subdivisions" : 10,
+			"Z-Subdivisions" : 10,
+			"X-TextureTiling" : 1.0,
+			"Z-TextureTiling" : 1.0,
 			"Material" : {
 				"HMATFilePath" : "simple.hmat",
 				"TextureDefinitions" : [

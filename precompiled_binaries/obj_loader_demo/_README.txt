@@ -1,4 +1,4 @@
-This demo is the current (June 21, 2014) build of ObjLoaderDemo
+This demo is the current (June 28, 2014) build of ObjLoaderDemo
 As this demo is still in progress, if you want to most up-to-date version of the demo, download the full source and compile.
 
 
@@ -31,6 +31,19 @@ Click the little arrow in the bottom left-corner to change settings
 
 
 Changelog:
+
+June 28, 2014 - SHA da36d4a101e68ba93773830a6083e901e2c31821
+- Implemented Tiled Culled Deferred Shading
+- In all shading methods (Forward, No-cull deferred, tiled cull deferred), we now render to an HDR render target, not directly to the backbuffer
+    - DXGI_FORMAT_R16G16B16A16_FLOAT
+	- We then do a simple full screen triangle post-process pixel shader to map the HDR to the backbuffer
+	    - In its current state, it's just extra overhead to have this post process step
+		- However, Tiled Culled requires a post-process step since a compute shader can't write directly to the backbuffer
+		- This sets up the necessary groundwork for future post processing such as tone-mapping and bloom
+- General clean-up of the code base
+    - Moved from #include guards to #pragma once
+	- Lots of variable name style fixes
+	- etc
 
 June 21, 2014 - SHA 0dcabe7245637c2533098ee02d701d34398ac7e8
 - Re-add loading screen

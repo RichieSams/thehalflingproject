@@ -14,7 +14,7 @@
 
 # Build files
 /build
-/obj
+obj/
 debug/
 release/
 Debug/

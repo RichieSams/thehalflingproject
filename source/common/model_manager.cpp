@@ -26,7 +26,14 @@ Model *ModelManager::GetModel(ID3D11Device *device, Common::TextureManager *text
 
 	// Else create it from scratch
 	Model *newModel = Common::HalflingModelFile::Load(device, textureManager, filePath.c_str());
+
+	// Lock the cache before writing
+	std::lock_guard<std::mutex> guard(m_cacheLock);
+
+	// Write
 	m_modelCache[filePath] = newModel;
+
+	// The mutex will unlock when 'guard' goes out of scope and destructs
 
 	return newModel;
 }

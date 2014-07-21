@@ -11,6 +11,7 @@
 #include "common/texture_manager.h"
 
 #include <unordered_map>
+#include <mutex>
 
 
 namespace Common {
@@ -21,6 +22,7 @@ public:
 
 private:
 	std::unordered_map<std::wstring, Model *> m_modelCache;
+	std::mutex m_cacheLock;
 
 public:
 	Model *GetModel(ID3D11Device *device, Common::TextureManager *textureManager, std::wstring filePath);

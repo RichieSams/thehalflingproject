@@ -1,0 +1,51 @@
+--- include/stlsoft/stlsoft.h	Mon Jan 19 23:26:36 1970
++++ include/stlsoft/stlsoft.h	Mon Jan 19 23:26:36 1970
+@@ -667,8 +667,10 @@
+ #  define STLSOFT_COMPILER_VERSION_STRING       "Visual C++ 10.0"
+ # elif (_MSC_VER == 1700)
+ #  define STLSOFT_COMPILER_VERSION_STRING       "Visual C++ 11.0"
++# elif (_MSC_VER == 1800)
++#  define STLSOFT_COMPILER_VERSION_STRING       "Visual C++ 12.0"
+ # else /* ? _MSC_VER */
+-#  error Currently only versions 5.0, 6.0, 7.0, 7.1, 8.0, 9.0, 10.0, and 11.0 of the Visual C++ compiler are supported by the STLSoft libraries
++#  error Currently only versions 5.0, 6.0, 7.0, 7.1, 8.0, 9.0, 10.0, 11.0 and 12.0 of the Visual C++ compiler are supported by the STLSoft libraries
+ # endif /* _MSC_VER */
+ 
+ #else /* ? compiler */
+--- include/stlsoft/util/std/iterator_helper.hpp	Mon Jan 19 23:26:36 1970
++++ include/stlsoft/util/std/iterator_helper.hpp	Mon Jan 19 23:26:36 1970
+@@ -430,6 +430,7 @@
+            STLSOFT_CF_STD_LIBRARY_DINKUMWARE_VC_VERSION == STLSOFT_CF_DINKUMWARE_VC_VERSION_9_0 || \
+            STLSOFT_CF_STD_LIBRARY_DINKUMWARE_VC_VERSION == STLSOFT_CF_DINKUMWARE_VC_VERSION_10_0 || \
+            STLSOFT_CF_STD_LIBRARY_DINKUMWARE_VC_VERSION == STLSOFT_CF_DINKUMWARE_VC_VERSION_11_0 || \
++           STLSOFT_CF_STD_LIBRARY_DINKUMWARE_VC_VERSION == STLSOFT_CF_DINKUMWARE_VC_VERSION_12_0 || \
+            0 \
+        )
+  /* Visual C++ + Dinkumware */
+--- include/stlsoft/util/std/library_discriminator.hpp	Mon Jan 19 23:26:36 1970
++++ include/stlsoft/util/std/library_discriminator.hpp	Mon Jan 19 23:26:36 1970
+@@ -290,6 +290,7 @@
+ #define STLSOFT_CF_DINKUMWARE_VC_VERSION_9_0            (0x0900)
+ #define STLSOFT_CF_DINKUMWARE_VC_VERSION_10_0           (0x0a00)
+ #define STLSOFT_CF_DINKUMWARE_VC_VERSION_11_0           (0x0b00)
++#define STLSOFT_CF_DINKUMWARE_VC_VERSION_12_0           (0x0c00)
+ 
+ #ifdef STLSOFT_CF_STD_LIBRARY_IS_DINKUMWARE_VC
+ # if defined(STLSOFT_COMPILER_IS_INTEL) && \
+@@ -347,8 +348,15 @@
+ #   endif /* STLSOFT_COMPILE_VERBOSE */
+ #   define STLSOFT_CF_STD_LIBRARY_DINKUMWARE_VC_VERSION      STLSOFT_CF_DINKUMWARE_VC_VERSION_11_0
+ 
++#  elif _CPPLIB_VER <= 610
++  /* Version 12.0 */
++#   ifdef STLSOFT_COMPILE_VERBOSE
++#    pragma message("  Dinkumware version 12.0")
++#   endif /* STLSOFT_COMPILE_VERBOSE */
++#   define STLSOFT_CF_STD_LIBRARY_DINKUMWARE_VC_VERSION      STLSOFT_CF_DINKUMWARE_VC_VERSION_12_0
++
+ #  else
+-#   error Dinkumware C++ Library version unrecognised: are you using a version of VC++ later than 10.0?
++#   error Dinkumware C++ Library version unrecognised: are you using a version of VC++ later than 12.0?
+ 
+ #  endif /* _CPPLIB_VER */
+ 

@@ -10,6 +10,22 @@
 	"FarClip" : 800.0,
 	"SceneScaleFactor" : 1.0,
 	"ModelInstanceThreshold" : 1,
+	"Materials" : [
+		{
+			"Name" : "pine",
+			"HMATFilePath" : "simple.hmat",
+			"TextureDefinitions" : [
+				{
+					"FilePath" : "T_Wood_Pine_D.dds",
+					"Sampler" : "anisotropic_wrap"
+				},
+				{
+					"FilePath" : "T_Wood_Pine_N.dds",
+					"Sampler" : "anisotropic_wrap"
+				}
+			]
+		}
+	],
     "Models" : [
         {
             "Type" : "plane",
@@ -19,19 +35,7 @@
 			"Z-Subdivisions" : 10,
 			"X-TextureTiling" : 1.0,
 			"Z-TextureTiling" : 1.0,
-			"Material" : {
-				"HMATFilePath" : "simple.hmat",
-				"TextureDefinitions" : [
-					{
-						"FilePath" : "T_Wood_Pine_D.dds",
-						"Sampler" : "anisotropic_wrap"
-					},
-					{
-						"FilePath" : "T_Wood_Pine_N.dds",
-						"Sampler" : "anisotropic_wrap"
-					}
-				]
-			},
+			"Material" : "pine",
             "Instances" : [
                 [1.0, 0.0, 0.0, 0.0,
                  0.0, 1.0, 0.0, 0.0,
@@ -44,19 +48,7 @@
             "Radius" : 20.0,
             "SliceCount" : 20,
             "StackCount" : 20,
-			"Material" : {
-				"HMATFilePath" : "simple.hmat",
-				"TextureDefinitions" : [
-					{
-						"FilePath" : "T_Wood_Pine_D.dds",
-						"Sampler" : "anisotropic_wrap"
-					},
-					{
-						"FilePath" : "T_Wood_Pine_N.dds",
-						"Sampler" : "anisotropic_wrap"
-					}
-				]
-			},
+			"Material" : "pine",
             "Instances" : [
                 [1.0, 0.0, 0.0, 0.0,
                  0.0, 1.0, 0.0, 0.0,

@@ -24,23 +24,23 @@ cbuffer cbPerFrame : register(b0) {
 
 	DirectionalLight gDirectionalLight : packoffset(c12);
 
-	float3 gEyePosition : packoffset(c15);
-	uint gNumPointLightsToDraw : packoffset(c15.w);
+	float3 gEyePosition : packoffset(c14);
+	uint gNumPointLightsToDraw : packoffset(c14.w);
 
-	float2 gCameraClipPlanes : packoffset(c16);
-	uint gNumSpotLightsToDraw : packoffset(c16.z);
+	float2 gCameraClipPlanes : packoffset(c15);
+	uint gNumSpotLightsToDraw : packoffset(c15.z);
 }
 
 #ifdef MSAA_
-	Texture2DMS<float3> gBufferDiffuse         : register(t0);
-	Texture2DMS<float4> gBufferSpecAndPower    : register(t1);
-	Texture2DMS<float2> gGBufferNormal         : register(t2);
-	Texture2DMS<float> gGBufferDepth           : register(t3);
+	Texture2DMS<float3> gBufferBaseColor                : register(t0);
+	Texture2DMS<float3> gBufferRoughnessSpecAndMetal    : register(t1);
+	Texture2DMS<float2> gGBufferNormal                  : register(t2);
+	Texture2DMS<float> gGBufferDepth                    : register(t3);
 #else
-	Texture2D<float3> gBufferDiffuse         : register(t0);
-	Texture2D<float4> gBufferSpecAndPower    : register(t1);
-	Texture2D<float2> gGBufferNormal         : register(t2);
-	Texture2D<float> gGBufferDepth           : register(t3);
+	Texture2D<float3> gBufferBaseColor                : register(t0);
+	Texture2D<float3> gBufferRoughnessSpecAndMetal    : register(t1);
+	Texture2D<float2> gGBufferNormal                  : register(t2);
+	Texture2D<float> gGBufferDepth                    : register(t3);
 #endif
 
 StructuredBuffer<PointLight> gPointLights : register(t4);
@@ -205,57 +205,61 @@ void ComputeShaderTileCS(uint3 groupId : SV_GroupID,
 			return;
 		} else {
 			SurfaceProperties surfProps;
-			surfProps.position = positionWS;
+			surfProps.Position = positionWS;
 
 			#ifdef MSAA_
-				// Sample from the diffuse albedo GBuffer
-				surfProps.diffuseAlbedo = float4(gBufferDiffuse.Load(pixelCoord, 0).xyz, 1.0f);
+				// Sample and calculate the diffuse and specular colors
+				float3 baseColor = gBufferBaseColor.Load(pixelCoord, 0).rgb;
+				float3 roughnessSpecAndMetal = gBufferRoughnessSpecAndMetal.Load(pixelCoord, 0).rgb);
 
-				// Sample from the specular albedo GBuffer
-				surfProps.specAlbedoAndPower = gBufferSpecAndPower.Load(pixelCoord, 0);
-				// Decode the specular power
-				surfProps.specAlbedoAndPower.w *= MAX_SPEC_POWER;
+				surfProps.DiffuseColor = baseColor - baseColor * roughnessSpecAndMetal.z;
+				surfProps.SpecularColor = lerp(0.08f * (roughnessSpecAndMetal.y).xxx, baseColor, roughnessSpecAndMetal.z);
+				surfProps.Roughness = roughnessSpecAndMetal.x;
 
 				// Sample from the Normal GBuffer
-				float2 normalSphericalCoords = gGBufferNormal.Load(pixelCoord, 0).xy;
-				surfProps.normal = SphericalToCartesian(normalSphericalCoords);
+				float2 normalSphericalCoords = gGBufferNormal.Load(pixelCoord, 0).rg;
+				surfProps.Normal = SphericalToCartesian(normalSphericalCoords);
 			#else
-				// Sample from the diffuse albedo GBuffer
-				surfProps.diffuseAlbedo = float4(gBufferDiffuse[pixelCoord].xyz, 1.0f);
+				// Sample and calculate the diffuse and specular colors
+				float3 baseColor = gBufferBaseColor[pixelCoord].rgb;
+				float3 roughnessSpecAndMetal = gBufferRoughnessSpecAndMetal[pixelCoord].rgb;
 
-				// Sample from the specular albedo GBuffer
-				surfProps.specAlbedoAndPower = gBufferSpecAndPower[pixelCoord];
-				// Decode the specular power
-				surfProps.specAlbedoAndPower.w *= MAX_SPEC_POWER;
+				surfProps.DiffuseColor = baseColor - baseColor * roughnessSpecAndMetal.z;
+				surfProps.SpecularColor = lerp(0.08f * (roughnessSpecAndMetal.y).xxx, baseColor, roughnessSpecAndMetal.z);
+				surfProps.Roughness = roughnessSpecAndMetal.x;
 
 				// Sample from the Normal GBuffer
-				float2 normalSphericalCoords = gGBufferNormal[pixelCoord].xy;
-				surfProps.normal = SphericalToCartesian(normalSphericalCoords);
+				float2 normalSphericalCoords = gGBufferNormal[pixelCoord].rg;
+				surfProps.Normal = SphericalToCartesian(normalSphericalCoords);
 			#endif
 
-			float3 toEye = normalize(gEyePosition - surfProps.position);
+			float3 toEye = normalize(gEyePosition - surfProps.Position);
 
 			// Initialize
-			float4 diffuse = float4(0.0f, 0.0f, 0.0f, 1.0f);
-			float4 spec = float4(0.0f, 0.0f, 0.0f, 1.0f);
+			float4 outColor = float4(0.0f, 0.0f, 0.0f, 1.0f);
 
 			// Sum the contribution from each light source
 			uint lightIndex;
 
-			AccumulateBlinnPhongDirectionalLight(gDirectionalLight, surfProps, toEye, diffuse, spec);
+			// Accumulate directional contribution
+			AccumulateCookTorranceDirectionalLight(gDirectionalLight, surfProps, toEye, outColor);
 
 			for (lightIndex = 0; lightIndex < numPointLights; ++lightIndex) {
 				PointLight light = gPointLights[sTilePointLightIndices[lightIndex]];
-				AccumulateBlinnPhongPointLight(light, surfProps, toEye, diffuse, spec);
+				
+				// Accumulate point light contribution
+				AccumulateCookTorrancePointLight(light, surfProps, toEye, outColor);
 			}
 
 			for (lightIndex = 0; lightIndex < numSpotLights; ++lightIndex) {
 				SpotLight light = gSpotLights[sTileSpotLightIndices[lightIndex]];
-				AccumulateBlinnPhongSpotLight(light, surfProps, toEye, diffuse, spec);
+				
+				// Accumulate point light contribution
+				AccumulateCookTorranceSpotLight(light, surfProps, toEye, outColor);
 			}
 
-			// Combine and write sample 0 result
-			gOutputBuffer[pixelCoord] = diffuse + spec;
+			// Write sample 0 result
+			gOutputBuffer[pixelCoord] = outColor;
 		}
 	}
 }

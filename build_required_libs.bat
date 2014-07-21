@@ -26,6 +26,17 @@ echo.
 %msbuild% lib_json.vcxproj /p:configuration=debug /p:platform=x64 /v:m /nologo
 %msbuild% lib_json.vcxproj /p:configuration=release /p:platform=x64 /v:m /nologo
 
+cd "%~dp0source\libs\fastformat\projects\core\vc9"
+
+echo.
+echo Building fastformat...
+echo.
+
+%msbuild% fastformat.core.vcxproj /p:configuration="Unicode Debug Multithreaded" /p:platform=win32 /v:m /nologo
+%msbuild% fastformat.core.vcxproj /p:configuration="Unicode Release Multithreaded" /p:platform=win32 /v:m /nologo
+%msbuild% fastformat.core.vcxproj /p:configuration="Unicode Debug Multithreaded" /p:platform=x64 /v:m /nologo
+%msbuild% fastformat.core.vcxproj /p:configuration="Unicode Release Multithreaded" /p:platform=x64 /v:m /nologo
+
 echo.
 echo Finished
 echo.

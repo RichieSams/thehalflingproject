@@ -196,13 +196,13 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>..\..\build\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
     <IntDir>..\..\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>../;../libs/AntTweakBar/include;../libs/DirectXTex;$(IncludePath)</IncludePath>
-    <LibraryPath>../libs/AntTweakBar/lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>../;../libs/AntTweakBar/include;../libs/DirectXTex;../libs/stlsoft/include;../libs/fastformat/include;$(IncludePath)</IncludePath>
+    <LibraryPath>../libs/AntTweakBar/lib;../libs/fastformat/lib/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
     <TargetName>$(ProjectName)d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>../;../libs/AntTweakBar/include;../libs/DirectXTex;$(IncludePath)</IncludePath>
-    <LibraryPath>../libs/AntTweakBar/lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>../;../libs/AntTweakBar/include;../libs/DirectXTex;../libs/stlsoft/include;../libs/fastformat/include;$(IncludePath)</IncludePath>
+    <LibraryPath>../libs/AntTweakBar/lib;../libs/fastformat/lib/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
     <LinkIncremental>true</LinkIncremental>
     <TargetName>$(ProjectName)d</TargetName>
     <OutDir>..\..\build\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
@@ -212,12 +212,12 @@
     <LinkIncremental>false</LinkIncremental>
     <OutDir>..\..\build\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
     <IntDir>..\..\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>../;../libs/AntTweakBar/include;../libs/DirectXTex/;$(IncludePath)</IncludePath>
-    <LibraryPath>../libs/AntTweakBar/lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>../;../libs/AntTweakBar/include;../libs/DirectXTex;../libs/stlsoft/include;../libs/fastformat/include;$(IncludePath)</IncludePath>
+    <LibraryPath>../libs/AntTweakBar/lib;../libs/fastformat/lib/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>../;../libs/AntTweakBar/include;../libs/DirectXTex/;$(IncludePath)</IncludePath>
-    <LibraryPath>../libs/AntTweakBar/lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>../;../libs/AntTweakBar/include;../libs/DirectXTex;../libs/stlsoft/include;../libs/fastformat/include;$(IncludePath)</IncludePath>
+    <LibraryPath>../libs/AntTweakBar/lib;../libs/fastformat/lib/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
     <LinkIncremental>false</LinkIncremental>
     <OutDir>..\..\build\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
     <IntDir>..\..\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
@@ -236,7 +236,7 @@
       <OutputFile>$(OutDir)$(TargetName)d$(TargetExt)</OutputFile>
     </Link>
     <Lib>
-      <AdditionalDependencies>AntTweakBar.lib;gdiplus.lib;user32.lib</AdditionalDependencies>
+      <AdditionalDependencies>AntTweakBar.lib;gdiplus.lib;user32.lib;fastformatd.lib</AdditionalDependencies>
     </Lib>
     <FxCompile>
       <AdditionalIncludeDirectories>../</AdditionalIncludeDirectories>
@@ -257,7 +257,7 @@
       <OutputFile>$(OutDir)$(TargetName)d$(TargetExt)</OutputFile>
     </Link>
     <Lib>
-      <AdditionalDependencies>AntTweakBar.lib;gdiplus.lib;user32.lib</AdditionalDependencies>
+      <AdditionalDependencies>AntTweakBar.lib;gdiplus.lib;user32.lib;fastformatd.lib</AdditionalDependencies>
     </Lib>
     <FxCompile>
       <AdditionalIncludeDirectories>../</AdditionalIncludeDirectories>
@@ -285,7 +285,7 @@
       <ShaderModel>5.0</ShaderModel>
     </FxCompile>
     <Lib>
-      <AdditionalDependencies>AntTweakBar.lib;gdiplus.lib;user32.lib</AdditionalDependencies>
+      <AdditionalDependencies>AntTweakBar.lib;gdiplus.lib;user32.lib;fastformat.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -309,7 +309,7 @@
       <ShaderModel>5.0</ShaderModel>
     </FxCompile>
     <Lib>
-      <AdditionalDependencies>AntTweakBar.lib;gdiplus.lib;user32.lib</AdditionalDependencies>
+      <AdditionalDependencies>AntTweakBar.lib;gdiplus.lib;user32.lib;fastformat.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

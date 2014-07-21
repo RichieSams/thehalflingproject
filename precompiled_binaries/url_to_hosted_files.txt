@@ -1,0 +1,5 @@
+Rather than bloat the repo with binaries and models/textures, I chose to host the files on MediaFire. Below is the link to my folder.
+
+
+
+https://www.mediafire.com/folder/f7qs04731ahyg/precompiled_binaries

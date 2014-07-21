@@ -50,9 +50,14 @@ ID3D11ShaderResourceView *TextureManager::GetSRVFromDDSFile(ID3D11Device *device
 	ID3D11ShaderResourceView *newSRV;
 	HR(DirectX::CreateDDSTextureFromFileEx(device, filePath.c_str(), 0, usage, bindFlags, cpuAccessFlags, miscFlags, forceSRGB, nullptr, &newSRV));
 
+	// Lock the cache before writing
+	std::lock_guard<std::mutex> guard(m_cacheLock);
+
 	// Store the new SRV in cache
 	TextureParams newParams {usage, bindFlags, cpuAccessFlags, miscFlags, forceSRGB};
 	m_textureCache[filePath].push_back(std::pair<TextureParams, ID3D11ShaderResourceView *>(newParams, newSRV));
+
+	// The mutex will be unlocked when 'guard' goes out of scope and is destructed
 
 	// Finally return the SRV
 	return newSRV;

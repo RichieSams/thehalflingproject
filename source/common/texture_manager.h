@@ -9,6 +9,7 @@
 #include "common/typedefs.h"
 
 #include <unordered_map>
+#include <mutex>
 #include <string>
 #include <d3d11.h>
 
@@ -30,6 +31,7 @@ public:
 
 private:
 	std::unordered_map<std::wstring, std::vector<std::pair<TextureParams, ID3D11ShaderResourceView *> > > m_textureCache;
+	std::mutex m_cacheLock;
 
 public:
 	ID3D11ShaderResourceView *GetSRVFromFile(ID3D11Device *device, const std::wstring filePath, D3D11_USAGE usage, uint bindFlags = D3D11_BIND_SHADER_RESOURCE, uint cpuAccessFlags = 0, uint miscFlags = 0, bool forceSRGB = false);

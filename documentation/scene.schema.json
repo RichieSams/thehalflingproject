@@ -21,6 +21,13 @@
 			"type" : "integer",
 			"minimum" : 1
 		},
+		"Materials" : {
+			"description" : "",
+			"type" : "array",
+			"items" : {
+				"$ref" : "#/definitions/material"
+			}
+		},
 		"Models" : {
 			"description" : "",
 			"type" : "array",
@@ -29,7 +36,7 @@
 					{ "$ref" : "#/definitions/Model-File" },
 					{ "$ref" : "#/definitions/Model-Plane" },
 					{ "$ref" : "#/definitions/Model-Box" },
-                    { "$ref" : "#/definitions/Model-Sphere" }
+					{ "$ref" : "#/definitions/Model-Sphere" }
 				]
 			},
 			"minItems" : 1,
@@ -102,8 +109,12 @@
 		},
 		"material" : {
 			"type" : "object",
-			"required" : ["MaterialFilePath"],
+			"required" : ["Name", "MaterialFilePath"],
 			"properties" : {
+				"Name" : {
+					"description" : "The unique name of the material",
+					"type" : "string"
+				},
 				"HMATFilePath" : {
 					"description" : "The file path to the *.hmat file for the material",
 					"type" : "string"
@@ -144,13 +155,13 @@
 					"description" : "The world transform matricies for one or more instances of the model",
 					"type" : "array",
 					"items" : { 
-                        "type" : "array",
-			            "items" : {
-				            "type" : "number"
-			            },
-			            "minItems" : 16,
-			            "maxItems" : 16,
-			            "additionalItems" : false
+						"type" : "array",
+						"items" : {
+							"type" : "number"
+						},
+						"minItems" : 16,
+						"maxItems" : 16,
+						"additionalItems" : false
 					},
 					"minItems" : 1,
 					"additionalItems" : false
@@ -197,19 +208,19 @@
 				},
 				"Material" : {
 					"description" : "The material for the plane",
-					"$ref" : "#/definitions/material"
+					"type" : "string"
 				},
 				"Instances" : {
 					"description" : "The world transform matricies for one or more instances of the model",
 					"type" : "array",
 					"items" : {
-                        "type" : "array",
-			            "items" : {
-				            "type" : "number"
-			            },
-			            "minItems" : 16,
-			            "maxItems" : 16,
-			            "additionalItems" : false
+						"type" : "array",
+						"items" : {
+							"type" : "number"
+						},
+						"minItems" : 16,
+						"maxItems" : 16,
+						"additionalItems" : false
 					},
 					"minItems" : 1,
 					"additionalItems" : false
@@ -239,29 +250,29 @@
 					"type" : "number",
 					"minimum" : 0.0
 				},
-                "Material" : {
+				"Material" : {
 					"description" : "The material for the box",
-					"$ref" : "#/definitions/material"
+					"type" : "string"
 				},
 				"Instances" : {
 					"description" : "The world transform matricies for one or more instances of the model",
 					"type" : "array",
 					"items" : {
-                        "type" : "array",
-			            "items" : {
-				            "type" : "number"
-			            },
-			            "minItems" : 16,
-			            "maxItems" : 16,
-			            "additionalItems" : false
+						"type" : "array",
+						"items" : {
+							"type" : "number"
+						},
+						"minItems" : 16,
+						"maxItems" : 16,
+						"additionalItems" : false
 					},
 					"minItems" : 1,
 					"additionalItems" : false
 				}
 			}
 		},
-        "Model-Sphere" : {
-            "type" : "object",
+		"Model-Sphere" : {
+			"type" : "object",
 			"required" : ["Type", "SliceCount", "StackCount", "Instances"],
 			"properties" : {
 				"Type" : {
@@ -283,37 +294,33 @@
 					"type" : "integer",
 					"minimum" : 0.0
 				},
-                "Material" : {
+				"Material" : {
 					"description" : "The material for the sphere",
-					"$ref" : "#/definitions/material"
+					"type" : "string"
 				},
 				"Instances" : {
 					"description" : "The world transform matricies for one or more instances of the model",
 					"type" : "array",
 					"items" : {
-                        "type" : "array",
-			            "items" : {
-				            "type" : "number"
-			            },
-			            "minItems" : 16,
-			            "maxItems" : 16,
-			            "additionalItems" : false
+						"type" : "array",
+						"items" : {
+							"type" : "number"
+						},
+						"minItems" : 16,
+						"maxItems" : 16,
+						"additionalItems" : false
 					},
 					"minItems" : 1,
 					"additionalItems" : false
 				}
 			}
-        },
+		},
 		"SpecificPointLight" : {
 			"type" : "object",
 			"required" : ["Diffuse", "Specular", "Position", "Range", "AttenuationDistanceUNorm"],
 			"properties" : {
-				"Diffuse" : {
-					"description" : "The diffuse color",
-					"$ref" : "#/definitions/float3"
-				},
-				"Specular" : {
-					"description" : "The specular color",
+				"Color" : {
+					"description" : "The color of the light",
 					"$ref" : "#/definitions/float3"
 				},
 				"Position" : {
@@ -322,10 +329,6 @@
 				},
 				"Range" : {
 					"description" : "The range of the light",
-					"type" : "number"
-				},
-				"AttenuationDistanceUNorm" : {
-					"description" : "The percentage (0.0 - 1.0) of the Range at which attenuation starts",
 					"type" : "number"
 				},
 				"LinearVelocity" : {
@@ -362,10 +365,6 @@
 					"description" : "Interval in which to randomly generate the range of the light",
 					"$ref" : "#/definitions/float2"
 				},
-				"AttenuationDistanceUNorm" : {
-					"description" : "The percentage (0.0 - 1.0) of the Range at which attenuation starts",
-					"type" : "number"
-				},
 				"LinearVelocityMinRange" : {
 					"description" : "The lower part of the interval in which to generate the light linear velocity [x, y, z]",
 					"$ref" : "#/definitions/float3"
@@ -380,12 +379,8 @@
 			"type" : "object",
 			"required" : ["Diffuse", "Specular", "Position", "Range", "Direction", "AttenuationDistanceUNorm", "InnerConeAngle", "OuterConeAngle"],
 			"properties" : {
-				"Diffuse" : {
-					"description" : "The diffuse color",
-					"$ref" : "#/definitions/float3"
-				},
-				"Specular" : {
-					"description" : "The specular color",
+				"Color" : {
+					"description" : "The color of the light",
 					"$ref" : "#/definitions/float3"
 				},
 				"Position" : {
@@ -399,10 +394,6 @@
 				"Direction" : {
 					"description" : "The direction of the light",
 					"$ref" : "#/definitions/float3"
-				},
-				"AttenuationDistanceUNorm" : {
-					"description" : "The percentage (0.0 - 1.0) of the Range at which attenuation starts",
-					"type" : "number"
 				},
 				"InnerConeAngle" : {
 					"description" : "The angle of the inner cone of light. The inner cone will have full light intensity",
@@ -449,10 +440,6 @@
 				"RangeRange" : {
 					"description" : "Interval in which to randomly generate the range of the light",
 					"$ref" : "#/definitions/float2"
-				},
-				"AttenuationDistanceUNorm" : {
-					"description" : "The percentage (0.0 - 1.0) of the Range at which attenuation starts",
-					"type" : "number"
 				},
 				"OuterAngleRange" : {
 					"description" : "Interval in which to randomly generate the outer cone angle",

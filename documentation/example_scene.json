@@ -13,9 +13,23 @@
     // However, if the number of instances is greater than this number,
     // we will add to the instance buffer and use DrawIndexedInstanced
     "ModelInstanceThreshold" : 100,
+	"Materials" : {
+		"Name" : "wood",
+		"HMATFilePath" : "simple.hmat",
+		"TextureDefinitions" : [
+			{
+				"FilePath" : "pine_D.dds",
+				"Sampler" : "anisotropic_wrap"
+			},
+			{
+				"FilePath" : "pine_N.dds",
+				"Sampler" : "anisotropic_wrap"
+			}
+		]
+	},
     "Models" : [
         {
-            "Type" : "File",
+            "Type" : "file",
             "FilePath" : "sponza.hmf",
             "Instances" : [
                 [1.0, 0.0, 0.0, 0.0,
@@ -24,12 +38,25 @@
                  0.0, 0.0, 0.0, 1.0]
                 // Append more instances here
             ]
-        }
+        },
+		{
+			"Type" : "box",
+			"Width" : 50.0,
+			"Height" : 50.0,
+			"Depth" : 50.0,
+			"Material" : "wood",
+			"Instances" : [
+				[1.0, 0.0, 0.0, 0.0,
+                 0.0, 1.0, 0.0, 0.0,
+                 0.0, 0.0, 1.0, 0.0,
+                 0.0, 0.0, 0.0, 1.0]
+                // Append more instances here
+			]
+		}
         // Append more models here
     ],
     "DirectionalLight" : {
-        "Diffuse" : [0.9, 0.9, 0.9],
-        "Specular" : [1.0, 1.0, 1.0],
+        "Color" : [0.9, 0.9, 0.9],
         "Direction" : [-0.57735, -0.57735, -0.57735],
         // Velocities are all optional
         // If a velocity is not specified, it is assumed zero
@@ -38,11 +65,9 @@
     "PointLights" : [
         // Create one light with these specific properties
         {
-            "Diffuse" : [1.0, 0.0, 0.0],
-            "Specular" : [1.0, 1.0, 1.0],
+            "Color" : [1.0, 0.0, 0.0],
             "Position" : [0.0, 100.0, 0.0],
             "Range" : 200.0,
-            "AttenuationDistanceUNorm" : 0.75,
             // Velocities are all optional
             // If a velocity is not specified, it is assumed zero
             "LinearVelocity" : [75.0, -200.0, 150.0],
@@ -55,7 +80,6 @@
             "AABB_min" : [-500, -500, -500],
             "AABB_max" : [500, 500, 500],
             "RangeRange" : [75.0, 200.0],
-            "AttenuationDistanceUNorm" : 0.75,
             // Velocities are all optional
             // If a velocity is not specified, it is assumed zero
             "VelocityMinRange" :  [-300.0, -300.0, -300.0],
@@ -66,12 +90,10 @@
     "SpotLights" : [
         // Create one light with these specific properties
         {
-            "Diffuse" : [0.0, 0.0, 1.0],
-            "Specular" : [1.0, 1.0, 1.0],
+            "Color" : [0.0, 0.0, 1.0],
             "Position" : [200.0, 100.0, 0.0],
             "Range" : 200.0,
             "Direction" : [1.0, 0.0, 0.0],
-            "AttenuationDistanceUNorm" : 0.75,
             "InnerConeAngle" : 1.570796,
             "OuterConeAngle" : 1.396263,
             // Velocities are all optional
@@ -87,7 +109,6 @@
             "AABB_min" : [-500, -500, -500],
             "AABB_max" : [500, 500, 500],
             "RangeRange" : [75.0, 200.0],
-            "AttenuationDistanceUNorm" : 0.75,
             "OuterAngleRange" : [0.785398, 2.094395], // In radians
             "InnerAngleDifference" : 0.17, // InnerAngle = OuterAngle - InnerAngleDifference
             // Velocities are all optional

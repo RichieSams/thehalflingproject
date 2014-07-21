@@ -9,6 +9,7 @@
 #include "common/string_util.h"
 
 #include <DirectXMath.h>
+#include <fastformat/fastformat.hpp>
 
 
 namespace Common {
@@ -172,9 +173,9 @@ void Console::InputCharacter(wchar character) {
 
 bool Console::RegisterCommand(const std::wstring &command, ConsoleCommandCallback callback) {
 	if (command.find(' ') != std::string::npos) {
-		std::wstringstream sstream;
-		sstream << L"\tRegisterCommand - '" << command << L"': Command name can not contain spaces. ";
-		PrintText(sstream.str());
+		std::wstring output;
+		fastformat::write(output, L"\tRegisterCommand - '", command, L"': Command name can not contain spaces. ");
+		PrintText(output);
 		return false;
 	}
 
@@ -201,9 +202,9 @@ void Console::ProcessCommandString(std::wstring commandString) {
 	if (iter != m_commandCallbacks.end()) {
 		iter->second(args);
 	} else {
-		std::wstringstream sstream;
-		sstream << L"\tCommand '" << command << L"' is not registered";
-		PrintText(sstream.str());
+		std::wstring output;
+		fastformat::write(output, L"\tCommand '", command, L"' is not registered");
+		PrintText(output);
 	}
 }
 

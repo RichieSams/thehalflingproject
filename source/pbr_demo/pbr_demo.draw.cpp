@@ -10,7 +10,9 @@
 #include "pbr_demo/shader_defines.h"
 
 #include <DirectXColors.h>
-#include <sstream>
+
+#include <fastformat/fastformat.hpp>
+#include <fastformat/shims/conversion/filter_type/reals.hpp>
 
 
 namespace PBRDemo {
@@ -339,14 +341,14 @@ void PBRDemo::RenderHUD() {
 	m_immediateContext->OMSetRenderTargets(1, &m_backbufferRTV, nullptr);
 
 	m_spriteRenderer.Begin(m_immediateContext, Common::SpriteRenderer::Point);
-	std::wostringstream stream;
-	stream << L"FPS: " << m_fps << L"\nFrame Time: " << m_frameTime << L" (ms)";
+	std::wstring output;
+	fastformat::write(output, L"FPS: ", m_fps, L"\nFrame Time: ", m_frameTime, L" (ms)");
 	
 	DirectX::XMFLOAT4X4 transform {1, 0, 0, 0,
 	                               0, 1, 0, 0,
 	                               0, 0, 1, 0,
 	                               25, 25, 0, 1};
-	m_spriteRenderer.RenderText(m_timesNewRoman12Font, stream.str().c_str(), transform, 0U, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) /* Yellow */);
+	m_spriteRenderer.RenderText(m_timesNewRoman12Font, output.c_str(), transform, 0U, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) /* Yellow */);
 	m_spriteRenderer.End();
 
 	TwDraw();

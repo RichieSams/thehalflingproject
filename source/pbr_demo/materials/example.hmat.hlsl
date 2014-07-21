@@ -13,17 +13,16 @@
 // Any outputs not explicitly set will stay at their default values.
 //
 // Default values:
-// diffuse = (0.5f, 0.5f, 0.5f)
-// specular = (0.5, 0.5f, 0.5f)
+// baseColor = (0.5f, 0.5f, 0.5f)
+// specular = 0.5f
 // normal = (0.0f, 0.0f, 1.0f)
 // metallic = 0.0f
 // roughness = 0.5f
-// opacity = 1.0f;
 
 void GetMaterialInfo(in float4 inputTextureSamples[TEXTURE_COUNT],
-					 inout float3 diffuse, inout float3 specular, inout float3 normal, inout float metallic, inout float roughness, inout float opacity) {
-	// The first texture is diffuse color and roughness
-	diffuse = inputTextureSamples[0].rgb;
+					 inout float3 baseColor, inout float specular, inout float3 normal, inout float metallic, inout float roughness) {
+	// The first texture is base color and roughness
+	baseColor = inputTextureSamples[0].rgb;
 	roughness = lerp(0.4f, 0.8f, inputTextureSamples[0].a);
 
 	// The second texture is the normal. There isn't an alpha channel

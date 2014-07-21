@@ -7,25 +7,8 @@
 #include "common/model.h"
 
 
-namespace Common {
 
-TextureSampler ParseSamplerTypeFromString(std::string &inputString, TextureSampler defaultType) {
-	if (_stricmp(inputString.c_str(), "linear_clamp") == 0) {
-		return LINEAR_CLAMP;
-	} else if (_stricmp(inputString.c_str(), "linear_border") == 0) {
-		return LINEAR_BORDER;
-	} else if (_stricmp(inputString.c_str(), "linear_wrap") == 0) {
-		return LINEAR_WRAP;
-	} else if (_stricmp(inputString.c_str(), "point_clamp") == 0) {
-		return POINT_CLAMP;
-	} else if (_stricmp(inputString.c_str(), "point_wrap") == 0) {
-		return POINT_WRAP;
-	} else if (_stricmp(inputString.c_str(), "anisotropic_wrap") == 0) {
-		return ANISOTROPIC_WRAP;
-	} else {
-		return defaultType;
-	}
-}
+namespace Common {
 
 void Model::CreateVertexBuffer(ID3D11Device *device, void *vertices, size_t vertexStride, uint vertexCount, DisposeAfterUse::Flag disposeAfterUse) {
 	D3D11_BUFFER_DESC vbd;

@@ -85,11 +85,17 @@ void Model::DrawSubset(ID3D11DeviceContext *deviceContext, int subsetId) {
 
 	if (subsetId == -1) {
 		for (uint i = 0; i < m_subsetCount; ++i) {
-			deviceContext->PSSetShaderResources(0, static_cast<uint>(m_subsets[i].TextureSRVs.size()), &m_subsets[i].TextureSRVs[0]);
+			if (m_subsets[i].TextureSRVs.size() > 0) {
+				deviceContext->PSSetShaderResources(0, static_cast<uint>(m_subsets[i].TextureSRVs.size()), &m_subsets[i].TextureSRVs[0]);
+			}
+
 			deviceContext->DrawIndexed(m_subsets[i].IndexCount, m_subsets[i].IndexStart, m_subsets[i].VertexStart);
 		}
 	} else {
-		deviceContext->PSSetShaderResources(0, static_cast<uint>(m_subsets[subsetId].TextureSRVs.size()), &m_subsets[subsetId].TextureSRVs[0]);
+		if (m_subsets[subsetId].TextureSRVs.size() > 0) {
+			deviceContext->PSSetShaderResources(0, static_cast<uint>(m_subsets[subsetId].TextureSRVs.size()), &m_subsets[subsetId].TextureSRVs[0]);
+		}
+
 		deviceContext->DrawIndexed(m_subsets[subsetId].IndexCount, m_subsets[subsetId].IndexStart, m_subsets[subsetId].VertexStart);
 	}
 }
@@ -101,11 +107,17 @@ void Model::DrawInstancedSubset(ID3D11DeviceContext *deviceContext, uint instanc
 
 	if (subsetId == -1) {
 		for (uint i = 0; i < m_subsetCount; ++i) {
-			deviceContext->PSSetShaderResources(0, static_cast<uint>(m_subsets[i].TextureSRVs.size()), &m_subsets[i].TextureSRVs[0]);
+			if (m_subsets[i].TextureSRVs.size() > 0) {
+				deviceContext->PSSetShaderResources(0, static_cast<uint>(m_subsets[i].TextureSRVs.size()), &m_subsets[i].TextureSRVs[0]);
+			}
+			
 			deviceContext->DrawIndexedInstanced(indexCountPerInstance == 0 ? m_subsets[i].IndexCount : indexCountPerInstance, instanceCount, m_subsets[i].IndexStart, m_subsets[i].VertexStart, 0);
 		}
 	} else {
-		deviceContext->PSSetShaderResources(0, static_cast<uint>(m_subsets[subsetId].TextureSRVs.size()), &m_subsets[subsetId].TextureSRVs[0]);
+		if (m_subsets[subsetId].TextureSRVs.size() > 0) {
+			deviceContext->PSSetShaderResources(0, static_cast<uint>(m_subsets[subsetId].TextureSRVs.size()), &m_subsets[subsetId].TextureSRVs[0]);
+		}
+
 		deviceContext->DrawIndexedInstanced(indexCountPerInstance == 0 ? m_subsets[subsetId].IndexCount : indexCountPerInstance, instanceCount, m_subsets[subsetId].IndexStart, m_subsets[subsetId].VertexStart, 0);
 	}
 }
@@ -161,11 +173,17 @@ void InstancedModel::DrawInstancedSubset(ID3D11DeviceContext *deviceContext, uin
 
 	if (subsetId == -1) {
 		for (uint i = 0; i < m_subsetCount; ++i) {
-			deviceContext->PSSetShaderResources(0, static_cast<uint>(m_subsets[i].TextureSRVs.size()), &m_subsets[i].TextureSRVs[0]);
+			if (m_subsets[i].TextureSRVs.size() > 0) {
+				deviceContext->PSSetShaderResources(0, static_cast<uint>(m_subsets[i].TextureSRVs.size()), &m_subsets[i].TextureSRVs[0]);
+			}
+
 			deviceContext->DrawIndexedInstanced(indexCountPerInstance == 0 ? m_subsets[i].IndexCount : indexCountPerInstance, instanceCount, m_subsets[i].IndexStart, m_subsets[i].VertexStart, 0);
 		}
 	} else {
-		deviceContext->PSSetShaderResources(0, static_cast<uint>(m_subsets[subsetId].TextureSRVs.size()), &m_subsets[subsetId].TextureSRVs[0]);
+		if (m_subsets[subsetId].TextureSRVs.size() > 0) {
+			deviceContext->PSSetShaderResources(0, static_cast<uint>(m_subsets[subsetId].TextureSRVs.size()), &m_subsets[subsetId].TextureSRVs[0]);
+		}
+
 		deviceContext->DrawIndexedInstanced(indexCountPerInstance == 0 ? m_subsets[subsetId].IndexCount : indexCountPerInstance, instanceCount, m_subsets[subsetId].IndexStart, m_subsets[subsetId].VertexStart, 0);
 	}
 }

@@ -16,65 +16,64 @@ namespace Common {
 struct DirectionalLight {
 public:
 	DirectionalLight() { ZeroMemory(this, sizeof(this)); }
+	DirectionalLight(DirectX::XMFLOAT3 color, DirectX::XMFLOAT3 direction)
+		: Color(color),
+		  Direction(direction) {
+	}
 
-	DirectX::XMFLOAT4 Diffuse;
-	DirectX::XMFLOAT4 Specular;
+	DirectX::XMFLOAT3 Color;
+private:
+	float pad;
+
+public:
 	DirectX::XMFLOAT3 Direction;
 
 private:
-	float pad; // To pad the last float3 to a float4
+	float pad2; // To pad the last float3 to a float4
 };
 
 struct PointLight {
 public:
 	PointLight() { ZeroMemory(this, sizeof(this)); }
-	PointLight(DirectX::XMFLOAT4 diffuse, DirectX::XMFLOAT4 specular, DirectX::XMFLOAT3 position, float range, float attenuationDistanceUNorm)
-		: Diffuse(diffuse),
-		  Specular(specular),
-		  Position(position),
+	PointLight(DirectX::XMFLOAT3 color, DirectX::XMFLOAT3 position, float range, float invRange)
+		: Color(color),
 		  Range(range),
-		  AttenuationDistanceUNorm(attenuationDistanceUNorm) {
+		  Position(position),
+		  InvRange(invRange) {
 	}
 
-	DirectX::XMFLOAT4 Diffuse;
-	DirectX::XMFLOAT4 Specular;
-
-	DirectX::XMFLOAT3 Position;
+	DirectX::XMFLOAT3 Color;
 	float Range;
 
-	float AttenuationDistanceUNorm;
-
-private:
-	float pad[3]; // To pad the last float3 to a float4
+	DirectX::XMFLOAT3 Position;	
+	float InvRange;
 };
 
 struct SpotLight {
 	SpotLight() { ZeroMemory(this, sizeof(this)); }
-	SpotLight(DirectX::XMFLOAT4 diffuse, DirectX::XMFLOAT4 specular, DirectX::XMFLOAT3 position, float range, DirectX::XMFLOAT3 direction, float attenuationDistanceUNorm, float cosInnerConeAngle, float cosOuterConeAngle)
-		: Diffuse(diffuse),
-		  Specular(specular),
-		  Position(position),
+	SpotLight(DirectX::XMFLOAT3 color, DirectX::XMFLOAT3 position, float range, float invRange, DirectX::XMFLOAT3 direction, float cosOuterConeAngle, float invCosConeDifference)
+		: Color(color),
 		  Range(range),
+		  Position(position),
+		  InvRange(invRange),
 		  Direction(direction),
-		  AttenuationDistanceUNorm(attenuationDistanceUNorm),
-		  CosInnerConeAngle(cosInnerConeAngle),
-		  CosOuterConeAngle(cosOuterConeAngle) {
+		  CosOuterConeAngle(cosOuterConeAngle),
+		  InvCosConeDifference(invCosConeDifference) {
 	}
 
-	DirectX::XMFLOAT4 Diffuse;
-	DirectX::XMFLOAT4 Specular;
-
-	DirectX::XMFLOAT3 Position;
+	DirectX::XMFLOAT3 Color;
 	float Range;
 
-	DirectX::XMFLOAT3 Direction;
-	float AttenuationDistanceUNorm;
+	DirectX::XMFLOAT3 Position;
+	float InvRange;
 
-	float CosInnerConeAngle;
+	DirectX::XMFLOAT3 Direction;
+
 	float CosOuterConeAngle;
+	float InvCosConeDifference;
 
 private:
-	float pad[2]; // To pad the last float3 to a float4
+	float pad[3];
 };
 
 } // End of namespace Common

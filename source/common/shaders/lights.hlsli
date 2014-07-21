@@ -8,37 +8,34 @@
 #define LIGHTS_SHADER_H
 
 struct DirectionalLight {
-	float4 Diffuse;
-	float4 Specular;
-	float3 Direction;
+	float3 Color;
 	float pad;
+
+	float3 Direction;
+	float pad2;
 };
 
 struct PointLight { 
-	float4 Diffuse;
-	float4 Specular;
-
-	float3 Position;
+	float3 Color;
 	float Range;
 
-	float AttenuationDistanceUNorm;
-	float3 pad;
+	float3 Position;
+	float InvRange;
 };
 
 struct SpotLight {
-	float4 Diffuse;
-	float4 Specular;
-
-	float3 Position;
+	float3 Color;
 	float Range;
 
+	float3 Position;
+	float InvRange;
+
 	float3 Direction;
-	float AttenuationDistanceUNorm;
 
-	float CosInnerConeAngle;
 	float CosOuterConeAngle;
+	float InvCosConeDifference;
 
-	float2 pad;
+	float3 pad;
 };
 
 #endif

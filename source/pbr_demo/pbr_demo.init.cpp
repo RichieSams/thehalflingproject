@@ -9,6 +9,7 @@
 #include "pbr_demo/shader_constants.h"
 
 #include "common/model.h"
+#include "common/model_loading.h"
 #include "common/geometry_generator.h"
 #include "common/math.h"
 #include "common/halfling_model_file.h"
@@ -28,7 +29,7 @@ namespace PBRDemo {
 void LoadScene(std::atomic<bool> *sceneIsLoaded, 
                ID3D11Device *device, 
                Common::TextureManager *textureManager, Common::ModelManager *modelManager, 
-               std::vector<ModelToLoad> *modelsToLoad, 
+               std::vector<Common::ModelToLoad *> *modelsToLoad, 
                std::vector<std::pair<Common::Model *, DirectX::XMMATRIX>, Common::Allocator16ByteAligned<std::pair<Common::Model *, DirectX::XMMATRIX> > > *modelList, 
                std::vector<std::pair<Common::Model *, std::vector<DirectX::XMMATRIX, Common::Allocator16ByteAligned<DirectX::XMMATRIX> > *> > *instancedModelList,
 			   uint modelInstanceThreshold);
@@ -112,57 +113,70 @@ void PBRDemo::LoadSceneJson() {
 		std::string type = models[i]["Type"].asString();
 
 		if (_stricmp(type.c_str(), "file") == 0) {
-			FileModel model;
-			model.FilePath = models[i]["FilePath"].asString();
-			m_modelsToLoad.emplace_back(model, instanceVector);
+			std::string filePath = models[i]["FilePath"].asString();
+
+			Common::FileModelToLoad *model = new Common::FileModelToLoad(filePath, instanceVector);
+			m_modelsToLoad.push_back(model);
 		} else if (_stricmp(type.c_str(), "plane") == 0) {
-			PlaneModel model;
-			model.Width = models[i]["Width"].asSingle();
-			model.Depth = models[i]["Depth"].asSingle();
-			model.X_Subdivisions = models[i]["X-Subdivisions"].asUInt();
-			model.Z_Subdivisions = models[i]["Z-Subdivisions"].asUInt();
-			model.X_TextureTiling = models[i]["X-TextureTiling"].asSingle();
-			model.Z_TextureTiling = models[i]["Z-TextureTiling"].asSingle();
+			float width = models[i]["Width"].asSingle();
+			float depth = models[i]["Depth"].asSingle();
+			uint x_subdivisions = models[i]["X-Subdivisions"].asUInt();
+			uint z_subdivisions = models[i]["Z-Subdivisions"].asUInt();
+			float x_textureTiling = models[i]["X-TextureTiling"].asSingle();
+			float z_textureTiling = models[i]["Z-TextureTiling"].asSingle();
 
-			model.Material.HMATFilePath = models[i]["Material"]["HMATFilePath"].asString();
+			Common::ModelToLoadMaterial material;
+			material.HMATFilePath = models[i]["Material"]["HMATFilePath"].asString();
 			Json::Value textureDefinitions = models[i]["Material"]["TextureDefinitions"];
 			for (uint j = 0; j < textureDefinitions.size(); ++j) {
-				TextureDescription description;
+				Common::TextureDescription description;
 				description.FilePath = textureDefinitions[j]["FilePath"].asString();
 				description.Sampler = Common::ParseSamplerTypeFromString(textureDefinitions[j]["Sampler"].asString(), Common::LINEAR_WRAP);
-				model.Material.Textures.push_back(description);
+
+				material.Textures.push_back(description);
 			}
-			m_modelsToLoad.emplace_back(model, instanceVector);
+
+			Common::PlaneModelToLoad *model = new Common::PlaneModelToLoad(width, depth, x_subdivisions, z_subdivisions, x_textureTiling, z_textureTiling, material, instanceVector);
+
+			m_modelsToLoad.push_back(model);
 		} else if (_stricmp(type.c_str(), "box") == 0) {
-			BoxModel model;
-			model.Width = models[i]["Width"].asSingle();
-			model.Depth = models[i]["Depth"].asSingle();
-			model.Height = models[i]["Height"].asSingle();
+			float width = models[i]["Width"].asSingle();
+			float depth = models[i]["Depth"].asSingle();
+			float height = models[i]["Height"].asSingle();
 			
-			model.Material.HMATFilePath = models[i]["Material"]["HMATFilePath"].asString();
+			Common::ModelToLoadMaterial material;
+			material.HMATFilePath = models[i]["Material"]["HMATFilePath"].asString();
 			Json::Value textureDefinitions = models[i]["Material"]["TextureDefinitions"];
 			for (uint j = 0; j < textureDefinitions.size(); ++j) {
-				TextureDescription description;
+				Common::TextureDescription description;
 				description.FilePath = textureDefinitions[j]["FilePath"].asString();
 				description.Sampler = Common::ParseSamplerTypeFromString(textureDefinitions[j]["Sampler"].asString(), Common::LINEAR_WRAP);
-				model.Material.Textures.push_back(description);
-			}
-			m_modelsToLoad.emplace_back(model, instanceVector);
-		} else if (_stricmp(type.c_str(), "sphere") == 0) {
-			SphereModel model;
-			model.Radius = models[i]["Radius"].asSingle();
-			model.SliceCount = models[i]["SliceCount"].asUInt();
-			model.StackCount = models[i]["StackCount"].asUInt();
 
-			model.Material.HMATFilePath = models[i]["Material"]["HMATFilePath"].asString();
+				material.Textures.push_back(description);
+			}
+
+			Common::BoxModelToLoad *model = new Common::BoxModelToLoad(width, depth, height, material, instanceVector);
+
+			m_modelsToLoad.push_back(model);
+		} else if (_stricmp(type.c_str(), "sphere") == 0) {
+			float radius = models[i]["Radius"].asSingle();
+			uint sliceCount = models[i]["SliceCount"].asUInt();
+			uint stackCount = models[i]["StackCount"].asUInt();
+
+			Common::ModelToLoadMaterial material;
+			material.HMATFilePath = models[i]["Material"]["HMATFilePath"].asString();
 			Json::Value textureDefinitions = models[i]["Material"]["TextureDefinitions"];
 			for (uint j = 0; j < textureDefinitions.size(); ++j) {
-				TextureDescription description;
+				Common::TextureDescription description;
 				description.FilePath = textureDefinitions[j]["FilePath"].asString();
 				description.Sampler = Common::ParseSamplerTypeFromString(textureDefinitions[j]["Sampler"].asString(), Common::LINEAR_WRAP);
-				model.Material.Textures.push_back(description);
+
+				material.Textures.push_back(description);
 			}
-			m_modelsToLoad.emplace_back(model, instanceVector);
+
+			Common::SphereModelToLoad *model = new Common::SphereModelToLoad(radius, sliceCount, stackCount, material, instanceVector);
+
+			m_modelsToLoad.push_back(model);
 		}
 	}
 
@@ -374,90 +388,17 @@ void PBRDemo::InitTweakBar() {
 void LoadScene(std::atomic<bool> *sceneIsLoaded, 
                ID3D11Device *device, 
                Common::TextureManager *textureManager, Common::ModelManager *modelManager, 
-               std::vector<ModelToLoad> *modelsToLoad, 
+               std::vector<Common::ModelToLoad *> *modelsToLoad, 
                std::vector<std::pair<Common::Model *, DirectX::XMMATRIX>, Common::Allocator16ByteAligned<std::pair<Common::Model *, DirectX::XMMATRIX> > > *modelList, 
                std::vector<std::pair<Common::Model *, std::vector<DirectX::XMMATRIX, Common::Allocator16ByteAligned<DirectX::XMMATRIX> > *> > *instancedModelList,
 			   uint modelInstanceThreshold) {
-	// WARNING: Do not parallelize this code until you make TextureManager and ModelManager thread safe
 	for (auto iter = modelsToLoad->begin(); iter != modelsToLoad->end(); ++iter) {
-		if (iter->Type == ModelType::FILE) {
-			FileModel *model = static_cast<FileModel *>(iter->ModelData);
-			std::wstring wideFilePath(model->FilePath.begin(), model->FilePath.end());
+		Common::Model *newModel = (*iter)->CreateModel(device, textureManager, modelManager);
 
-			Common::Model *newModel = modelManager->GetModel(device, textureManager, wideFilePath.c_str());
-
-			if (iter->Instances->size() > modelInstanceThreshold) {
-				instancedModelList->emplace_back(newModel, iter->Instances);
-			} else {
-				modelList->emplace_back(newModel, (*iter->Instances)[0]);
-			}
-			break;
+		if ((*iter)->Instances->size() > modelInstanceThreshold) {
+			instancedModelList->emplace_back(newModel, (*iter)->Instances);
 		} else {
-			Common::GeometryGenerator::MeshData meshData;
-			Common::ModelSubset *subset = new Common::ModelSubset[1];
-			ModelMaterial *material;
-
-			if (iter->Type == ModelType::PLANE) {
-				PlaneModel *model = static_cast<PlaneModel *>(iter->ModelData);
-				material = &model->Material;
-
-				Common::GeometryGenerator::CreateGrid(model->Width, model->Depth, model->X_Subdivisions, model->Z_Subdivisions, &meshData, model->X_TextureTiling, model->Z_TextureTiling);
-				subset->AABB_min = DirectX::XMFLOAT3(-model->Width * 0.5f, 0.0f, -model->Depth * 0.5f);
-				subset->AABB_max = DirectX::XMFLOAT3(model->Width * 0.5f, 0.0f, model->Depth * 0.5f);
-			} else if (iter->Type == ModelType::BOX) {
-				BoxModel *model = static_cast<BoxModel *>(iter->ModelData);
-				material = &model->Material;
-
-				Common::GeometryGenerator::CreateBox(model->Width, model->Height, model->Depth, &meshData);
-				subset->AABB_min = DirectX::XMFLOAT3(-model->Width * 0.5f, -model->Height * 0.5f, -model->Depth * 0.5f);
-				subset->AABB_max = DirectX::XMFLOAT3(model->Width * 0.5f, model->Height * 0.5f, model->Depth * 0.5f);
-			} else if (iter->Type == ModelType::SPHERE) {
-				SphereModel *model = static_cast<SphereModel *>(iter->ModelData);
-				material = &model->Material;
-
-				Common::GeometryGenerator::CreateSphere(model->Radius, model->SliceCount, model->StackCount, &meshData);
-				subset->AABB_min = DirectX::XMFLOAT3(-model->Radius, -model->Radius, -model->Radius);
-				subset->AABB_max = DirectX::XMFLOAT3(model->Radius, model->Radius, model->Radius);
-			}
-
-			subset->IndexStart = 0u;
-			subset->IndexCount = static_cast<uint>(meshData.Indices.size());
-			subset->VertexStart = 0u;
-			subset->VertexCount = static_cast<uint>(meshData.Vertices.size());
-
-			// subset->ShaderIndex = ??????
-
-			for (uint i = 0; i < material->Textures.size(); ++i) {
-				std::wstring wideStr(material->Textures[i].FilePath.begin(), material->Textures[i].FilePath.end());
-				subset->TextureSRVs.emplace_back(textureManager->GetSRVFromFile(device, wideStr, D3D11_USAGE_IMMUTABLE));
-				subset->TextureSamplers.emplace_back(material->Textures[i].Sampler);
-			}
-
-			struct Vertex {
-				DirectX::XMFLOAT3 pos;
-				DirectX::XMFLOAT3 normal;
-				DirectX::XMFLOAT2 texCoord;
-				DirectX::XMFLOAT3 tangent;
-			};
-
-			Vertex *vertices = new Vertex[meshData.Vertices.size()];
-			for (uint i = 0; i < meshData.Vertices.size(); ++i) {
-				vertices[i].pos = meshData.Vertices[i].Position;
-				vertices[i].normal = meshData.Vertices[i].Normal;
-				vertices[i].texCoord = meshData.Vertices[i].TexCoord;
-				vertices[i].tangent = meshData.Vertices[i].Tangent;
-			}
-
-			Common::Model *newModel = new Common::Model();
-			newModel->CreateVertexBuffer(device, vertices, sizeof(Vertex), static_cast<uint>(meshData.Vertices.size()));
-			newModel->CreateIndexBuffer(device, &meshData.Indices[0], static_cast<uint>(meshData.Indices.size()), DisposeAfterUse::NO);
-			newModel->CreateSubsets(subset, 1);
-
-			if (iter->Instances->size() > modelInstanceThreshold) {
-				instancedModelList->emplace_back(newModel, iter->Instances);
-			} else {
-				modelList->emplace_back(newModel, (*iter->Instances)[0]);
-			}
+			modelList->emplace_back(newModel, (*(*iter)->Instances)[0]);
 		}
 	}
 

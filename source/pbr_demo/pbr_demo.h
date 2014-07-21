@@ -15,7 +15,6 @@
 #include "common/texture_manager.h"
 #include "common/model_manager.h"
 #include "common/console.h"
-#include "common/model.h"
 #include "common/texture2d.h"
 #include "common/structured_buffer.h"
 #include "common/device_states.h"
@@ -32,81 +31,12 @@
 #include <thread>
 
 
-namespace PBRDemo {
-
-namespace ModelType {
-	enum Flag {
-		FILE,
-		PLANE,
-		BOX,
-		SPHERE
-	};
+namespace Common {
+class Model;
+class ModelToLoad;
 }
 
-struct FileModel {
-	std::string FilePath;
-};
-
-struct TextureDescription {
-	std::string FilePath;
-	Common::TextureSampler Sampler;
-};
-
-struct ModelMaterial {
-	std::string HMATFilePath;
-	std::vector<TextureDescription> Textures;
-};
-
-struct PlaneModel {
-	float Width;
-	float Depth;
-	uint X_Subdivisions;
-	uint Z_Subdivisions;
-	float X_TextureTiling;
-	float Z_TextureTiling;
-	ModelMaterial Material;
-};
-
-struct BoxModel {
-	float Width;
-	float Depth;
-	float Height;
-	ModelMaterial Material;
-};
-
-struct SphereModel {
-	float Radius;
-	uint SliceCount;
-	uint StackCount;
-	ModelMaterial Material;
-};
-
-struct ModelToLoad {
-	ModelToLoad(FileModel &fileModel, std::vector<DirectX::XMMATRIX, Common::Allocator16ByteAligned<DirectX::XMMATRIX> > *instances)
-		: Type(ModelType::FILE),
-		  ModelData(new FileModel(fileModel)),
-		  Instances(instances) {
-	}
-	ModelToLoad(PlaneModel &planeModel, std::vector<DirectX::XMMATRIX, Common::Allocator16ByteAligned<DirectX::XMMATRIX> > *instances)
-		: Type(ModelType::PLANE),
-		  ModelData(new PlaneModel(planeModel)),
-		  Instances(instances) {
-	}
-	ModelToLoad(BoxModel &boxModel, std::vector<DirectX::XMMATRIX, Common::Allocator16ByteAligned<DirectX::XMMATRIX> > *instances)
-		: Type(ModelType::BOX),
-		  ModelData(new BoxModel(boxModel)),
-		  Instances(instances) {
-	}
-	ModelToLoad(SphereModel &sphereModel, std::vector<DirectX::XMMATRIX, Common::Allocator16ByteAligned<DirectX::XMMATRIX> > *instances)
-		: Type(ModelType::SPHERE),
-		  ModelData(new SphereModel(sphereModel)),
-		  Instances(instances) {
-	}
-
-	ModelType::Flag Type;
-	void *ModelData;
-	std::vector<DirectX::XMMATRIX, Common::Allocator16ByteAligned<DirectX::XMMATRIX> > *Instances;
-};
+namespace PBRDemo {
 
 class PBRDemo : public Halfling::HalflingEngine {
 public:
@@ -135,7 +65,7 @@ private:
 
 	Common::StructuredBuffer<DirectX::XMVECTOR> *m_instanceBuffer;
 
-	std::vector<ModelToLoad> m_modelsToLoad;
+	std::vector<Common::ModelToLoad *> m_modelsToLoad;
 	std::atomic<bool> m_sceneLoaded;
 	bool m_sceneIsSetup;
 	std::thread m_sceneLoaderThread;

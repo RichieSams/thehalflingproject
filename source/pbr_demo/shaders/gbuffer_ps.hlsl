@@ -10,9 +10,17 @@
 
 
 struct GBuffer {
-	float4 diffuseAndRoughness    : SV_Target0;
-	float4 specAndMetal           : SV_Target1;
-	float2 normal                 : SV_Target2;
+	// RBG base color
+	// Diffuse and Spec colors are calculated as follows:
+	// DiffuseColor = BaseColor - BaseColor * Metallic;
+	// SpecColor = lerp(0.08 * Specular.xxx, BaseColor, Metallic)
+	float3 baseColor                : SV_Target0;
+	// R: Roughness
+	// G: Specular
+	// B: Metallic
+	float3 roughnessSpecAndMetal    : SV_Target1;
+	// RG spherical encode normal
+	float2 normal                   : SV_Target2;
 };
 
 
@@ -29,17 +37,15 @@ void GBufferPS(GBufferShaderPixelIn input, out GBuffer gbuffer) {
 	}
 
 	// Initialize
-	float3 diffuse = float3(0.5f, 0.5f, 0.5f);
-	float3 specular = float3(0.5f, 0.5f, 0.5f);
+	float3 baseColor = float3(0.5f, 0.5f, 0.5f);
+	float specular = 0.5f;
 	float3 normal = float3(0.0f, 0.0f, 1.0f);
 	float metallic = 0.0f;
 	float roughness = 0.5f;
-	float opacity = 1.0f;
 
-	GetMaterialInfo(normalize(input.normal), input.tangent, textureSamples, diffuse, specular, normal, metallic, roughness, opacity);
+	GetMaterialInfo(normalize(input.normal), input.tangent, textureSamples, baseColor, specular, normal, metallic, roughness);
 
-	gbuffer.diffuseAndRoughness = float4(diffuse, roughness);
-	gbuffer.specAndMetal = float4(specular, metallic);
+	gbuffer.baseColor = float4(baseColor, 0.0f);
+	gbuffer.roughnessSpecAndMetal = float4(roughness, specular, metallic, 0.0f);
 	gbuffer.normal = CartesianToSpherical(normal);
-
 }

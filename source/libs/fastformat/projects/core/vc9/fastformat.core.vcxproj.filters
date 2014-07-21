@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{00000000-0000-0000-0000-000000000000}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{00000000-0000-0000-0000-000000000000}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Header Files\STLSoft Header Files">
+      <UniqueIdentifier>{388013c3-2d64-4ca3-b256-534bea24111f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\STLSoft Header Files\STLSoft">
+      <UniqueIdentifier>{a4a4a151-a6b8-44bb-b765-b96f14e5256c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\STLSoft Header Files\PlatformSTL">
+      <UniqueIdentifier>{9ff74987-6913-4477-9d44-cca05aea4895}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\STLSoft Header Files\UNIXSTL">
+      <UniqueIdentifier>{2c9a6c30-9d00-4d89-8c7c-d4b9185ffc8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\STLSoft Header Files\WinSTL">
+      <UniqueIdentifier>{0da9bfba-add9-4926-986a-8376fd612af8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\FastFormat Header Files">
+      <UniqueIdentifier>{4e70ea2e-0738-43d4-84a0-4f9b98d144ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\UNIXem Header Files">
+      <UniqueIdentifier>{4c2ffbb4-5aa1-48fb-86bd-a24fe254aae8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{00000000-0000-0000-0000-000000000000}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx</Extensions>
+    </Filter>
+    <Filter Include="Script Files">
+      <UniqueIdentifier>{00000000-0000-0000-0000-000000000000}</UniqueIdentifier>
+      <Extensions>rb</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\src\api.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\fmt_cache.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\fmt_spec_defect_handlers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\init_code_strings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\memory_pool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\replacements.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\snprintf.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\scripts\make_hdrs.rb">
+      <Filter>Script Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

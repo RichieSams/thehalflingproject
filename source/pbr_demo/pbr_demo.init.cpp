@@ -182,20 +182,20 @@ void PBRDemo::LoadSceneJson() {
 
 	Json::Value directionalLight = root["DirectionalLight"];
 	if (!directionalLight.isNull()) {
-		m_directionalLight.Diffuse = DirectX::XMFLOAT4(directionalLight["Diffuse"][0u].asSingle(), directionalLight["Diffuse"][1u].asSingle(), directionalLight["Diffuse"][2u].asSingle(), 1.0f);
-		m_directionalLight.Specular = DirectX::XMFLOAT4(directionalLight["Specular"][0u].asSingle(), directionalLight["Specular"][1u].asSingle(), directionalLight["Specular"][2u].asSingle(), 1.0f);
+		m_directionalLight.Color = DirectX::XMFLOAT3(directionalLight["Color"][0u].asSingle(), directionalLight["Color"][1u].asSingle(), directionalLight["Color"][2u].asSingle());
 		m_directionalLight.Direction = DirectX::XMFLOAT3(directionalLight["Direction"][0u].asSingle(), directionalLight["Direction"][1u].asSingle(), directionalLight["Direction"][2u].asSingle());
 	}
 
 	Json::Value pointLights = root["PointLights"];
 	for (uint i = 0; i < pointLights.size(); ++i) {
-		
 		if (pointLights[i]["NumberOfLights"].isNull()) {
-			m_pointLights.emplace_back(DirectX::XMFLOAT4(pointLights[i]["Diffuse"][0u].asSingle(), pointLights[i]["Diffuse"][1u].asSingle(), pointLights[i]["Diffuse"][2u].asSingle(), 1.0f),
-			                           DirectX::XMFLOAT4(pointLights[i]["Specular"][0u].asSingle(), pointLights[i]["Specular"][1u].asSingle(), pointLights[i]["Specular"][2u].asSingle(), 1.0f),
+			float range = pointLights[i]["Range"].asSingle();
+			float invRange = 1 / range;
+			
+			m_pointLights.emplace_back(DirectX::XMFLOAT3(pointLights[i]["Color"][0u].asSingle(), pointLights[i]["Color"][1u].asSingle(), pointLights[i]["Color"][2u].asSingle()),
 			                           DirectX::XMFLOAT3(pointLights[i]["Position"][0u].asSingle(), pointLights[i]["Position"][1u].asSingle(), pointLights[i]["Position"][2u].asSingle()),
-			                           pointLights[i]["Range"].asSingle(),
-			                           pointLights[i]["AttenuationDistanceUNorm"].asSingle());
+			                           range,
+			                           invRange);
 
 			// All three values must exist for a linear velocity to be valid
 			if (!pointLights[i]["LinearVelocity"].isNull() && !pointLights[i]["AABB_min"].isNull() && !pointLights[i]["AABB_max"]) {
@@ -217,11 +217,13 @@ void PBRDemo::LoadSceneJson() {
 
 				DirectX::XMFLOAT2 rangeRange(pointLights[i]["RangeRange"][0u].asSingle(), pointLights[i]["RangeRange"][1u].asSingle());
 
-				m_pointLights.emplace_back(DirectX::XMFLOAT4(Common::RandF(), Common::RandF(), Common::RandF(), 1.0f),
-										   DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+				float range = Common::RandF(rangeRange.x, rangeRange.y);
+				float invRange = 1 / range;
+
+				m_pointLights.emplace_back(DirectX::XMFLOAT3(Common::RandF(), Common::RandF(), Common::RandF()),
 										   DirectX::XMFLOAT3(Common::RandF(AABB_min.x, AABB_max.x), Common::RandF(AABB_min.y, AABB_max.y), Common::RandF(AABB_min.z, AABB_max.z)),
-										   Common::RandF(rangeRange.x, rangeRange.y),
-										   pointLights[i]["AttenuationDistanceUNorm"].asSingle());
+										   range,
+										   invRange);
 
 				DirectX::XMFLOAT3 linearVelocityMin(0.0f, 0.0f, 0.0f);
 				DirectX::XMFLOAT3 linearVelocityMax(0.0f, 0.0f, 0.0f);
@@ -254,14 +256,19 @@ void PBRDemo::LoadSceneJson() {
 	Json::Value spotLights = root["SpotLights"];
 	for (uint i = 0; i < spotLights.size(); ++i) {
 		if (spotLights[i]["NumberOfLights"] == Json::Value::null) {
-			m_spotLights.emplace_back(DirectX::XMFLOAT4(spotLights[i]["Diffuse"][0u].asSingle(), spotLights[i]["Diffuse"][1u].asSingle(), spotLights[i]["Diffuse"][2u].asSingle(), 1.0f),
-			                          DirectX::XMFLOAT4(spotLights[i]["Specular"][0u].asSingle(), spotLights[i]["Specular"][1u].asSingle(), spotLights[i]["Specular"][2u].asSingle(), 1.0f),
+			float range = spotLights[i]["Range"].asSingle();
+			float invRange = 1 / range;
+
+			float innerConeAngle(spotLights[i]["InnerConeAngle"].asSingle());
+			float outerConeAngle(spotLights[i]["OuterConeAngle"].asSingle());
+
+			m_spotLights.emplace_back(DirectX::XMFLOAT3(spotLights[i]["Color"][0u].asSingle(), spotLights[i]["Color"][1u].asSingle(), spotLights[i]["Color"][2u].asSingle()),
 			                          DirectX::XMFLOAT3(spotLights[i]["Position"][0u].asSingle(), spotLights[i]["Position"][1u].asSingle(), spotLights[i]["Position"][2u].asSingle()),
-			                          spotLights[i]["Range"].asSingle(),
+			                          range,
+									  invRange,
 			                          DirectX::XMFLOAT3(spotLights[i]["Direction"][0u].asSingle(), spotLights[i]["Direction"][1u].asSingle(), spotLights[i]["Direction"][2u].asSingle()),
-			                          spotLights[i]["AttenuationDistanceUNorm"].asSingle(),
-			                          std::cos(spotLights[i]["InnerConeAngle"].asSingle()),
-			                          std::cos(spotLights[i]["OuterConeAngle"].asSingle()));
+			                          std::cos(outerConeAngle),
+			                          std::acos(outerConeAngle - innerConeAngle));
 
 			DirectX::XMFLOAT3 linearVelocity(0.0f, 0.0f, 0.0f);
 			DirectX::XMFLOAT3 AABB_min(0.0f, 0.0f, 0.0f);
@@ -307,20 +314,20 @@ void PBRDemo::LoadSceneJson() {
 				DirectX::XMFLOAT3 AABB_max(spotLights[i]["AABB_max"][0u].asSingle(), spotLights[i]["AABB_max"][1u].asSingle(), spotLights[i]["AABB_max"][2u].asSingle());
 
 				DirectX::XMFLOAT2 rangeRange(spotLights[i]["RangeRange"][0u].asSingle(), spotLights[i]["RangeRange"][1u].asSingle());
+				float range = Common::RandF(rangeRange.x, rangeRange.y);
+				float invRange = 1 / range;
+
 				DirectX::XMFLOAT2 outerAngleRange(spotLights[i]["OuterAngleRange"][0u].asSingle(), spotLights[i]["OuterAngleRange"][1u].asSingle());
 				float outerAngle = Common::RandF(outerAngleRange.x, outerAngleRange.y);
-				float innerAngle = outerAngle - spotLights[i]["InnerAngleDifference"].asSingle();
-				float cosOuterAngle = std::cos(outerAngle);
-				float cosInnerAngle = std::cos(innerAngle);
+				float angleDifference = spotLights[i]["InnerAngleDifference"].asSingle();
 
-				m_spotLights.emplace_back(DirectX::XMFLOAT4(Common::RandF(), Common::RandF(), Common::RandF(), 1.0f),
-				                          DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+				m_spotLights.emplace_back(DirectX::XMFLOAT3(Common::RandF(), Common::RandF(), Common::RandF()),
 				                          DirectX::XMFLOAT3(Common::RandF(AABB_min.x, AABB_max.x), Common::RandF(AABB_min.y, AABB_max.y), Common::RandF(AABB_min.z, AABB_max.z)),
-				                          Common::RandF(rangeRange.x, rangeRange.y),
+				                          range,
+										  invRange,
 				                          DirectX::XMFLOAT3(Common::RandF(-1.0f, 1.0f), Common::RandF(-1.0f, 1.0f), Common::RandF(-1.0f, 1.0f)),
-				                          spotLights[i]["AttenuationDistanceUNorm"].asSingle(),
-				                          cosInnerAngle,
-				                          cosOuterAngle);
+				                          std::cos(outerAngle),
+				                          std::acos(angleDifference));
 
 				DirectX::XMFLOAT3 linearVelocityMin(0.0f, 0.0f, 0.0f);
 				DirectX::XMFLOAT3 linearVelocityMax(0.0f, 0.0f, 0.0f);
@@ -380,8 +387,7 @@ void PBRDemo::InitTweakBar() {
 	TwAddVarRW(m_settingsBar, "Wireframe", TwType::TW_TYPE_BOOLCPP, &m_wireframe, "");
 	TwAddVarRW(m_settingsBar, "Animate Lights", TW_TYPE_BOOLCPP, &m_animateLights, "");
 
-	TwAddVarRW(m_settingsBar, "Directional Light Diffuse", TW_TYPE_COLOR3F, &m_directionalLight.Diffuse, "");
-	TwAddVarRW(m_settingsBar, "Directional Light Specular", TW_TYPE_COLOR3F, &m_directionalLight.Specular, "");
+	TwAddVarRW(m_settingsBar, "Directional Light Color", TW_TYPE_COLOR3F, &m_directionalLight.Color, "");
 	TwAddVarRW(m_settingsBar, "Directional Light Direction", TW_TYPE_DIR3F, &m_directionalLight.Direction, "");
 }
 

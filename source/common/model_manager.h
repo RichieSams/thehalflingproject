@@ -18,14 +18,20 @@ namespace Common {
 
 class ModelManager {
 public:
+	ModelManager()
+		: m_unnamedModelIncrementer(0u) {
+	}
 	~ModelManager();
 
 private:
 	std::unordered_map<std::wstring, Model *> m_modelCache;
 	std::mutex m_cacheLock;
 
+	uint m_unnamedModelIncrementer;
+
 public:
 	Model *GetModel(ID3D11Device *device, Common::TextureManager *textureManager, std::wstring filePath);
+	Model *CreateUnnamedModel();
 };
 
 } // End of namespace Common

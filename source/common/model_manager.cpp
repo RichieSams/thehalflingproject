@@ -8,6 +8,8 @@
 
 #include "common/halfling_model_file.h"
 
+#include <fastformat/fastformat.hpp>
+
 
 namespace Common {
 
@@ -32,6 +34,23 @@ Model *ModelManager::GetModel(ID3D11Device *device, Common::TextureManager *text
 
 	// Write
 	m_modelCache[filePath] = newModel;
+
+	// The mutex will unlock when 'guard' goes out of scope and destructs
+
+	return newModel;
+}
+
+Model *ModelManager::CreateUnnamedModel() {
+	// Lock the cache before writing
+	std::lock_guard<std::mutex> guard(m_cacheLock);
+
+	// Write
+	std::wstring newModelName;
+	fastformat::write(newModelName, L"unnamedModel", m_unnamedModelIncrementer++);
+
+	Model *newModel = new Model();
+
+	m_modelCache[newModelName] = newModel;
 
 	// The mutex will unlock when 'guard' goes out of scope and destructs
 

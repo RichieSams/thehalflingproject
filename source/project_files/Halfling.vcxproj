@@ -28,6 +28,7 @@
     <ClCompile Include="..\common\geometry_generator.cpp" />
     <ClCompile Include="..\common\halfling_model_file.cpp" />
     <ClCompile Include="..\common\light_animator.cpp" />
+    <ClCompile Include="..\common\material_shader_manager.cpp" />
     <ClCompile Include="..\common\model.cpp" />
     <ClCompile Include="..\common\model_loading.cpp" />
     <ClCompile Include="..\common\model_manager.cpp" />
@@ -70,6 +71,7 @@
     <ClInclude Include="..\common\profiler.h" />
     <ClInclude Include="..\common\rect.h" />
     <ClInclude Include="..\common\shader.h" />
+    <ClInclude Include="..\common\material_shader_manager.h" />
     <ClInclude Include="..\common\sprite_font.h" />
     <ClInclude Include="..\common\sprite_renderer.h" />
     <ClInclude Include="..\common\string_util.h" />

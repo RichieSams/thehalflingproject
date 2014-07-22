@@ -96,6 +96,9 @@
     <ClCompile Include="..\common\model_loading.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="..\common\material_shader_manager.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\common\halfling_sys.h">
@@ -210,6 +213,9 @@
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="..\common\model_loading.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\material_shader_manager.h">
       <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>

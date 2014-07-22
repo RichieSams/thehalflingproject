@@ -146,4 +146,6 @@ public:
 	}
 };
 
+typedef PixelShader<> MaterialShader;
+
 } // End of namespace Common

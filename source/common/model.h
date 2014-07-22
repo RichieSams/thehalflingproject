@@ -29,7 +29,7 @@ struct ModelSubset {
 	DirectX::XMFLOAT3 AABB_min;
 	DirectX::XMFLOAT3 AABB_max;
 
-	uint ShaderIndex;
+	size_t ShaderHandle;
 
 	std::vector<ID3D11ShaderResourceView *> TextureSRVs;
 	std::vector<TextureSampler> TextureSamplers;

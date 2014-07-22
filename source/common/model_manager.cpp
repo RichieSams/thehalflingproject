@@ -7,6 +7,8 @@
 #include "common/model_manager.h"
 
 #include "common/halfling_model_file.h"
+#include "common/texture_manager.h"
+#include "common/material_shader_manager.h"
 
 #include <fastformat/fastformat.hpp>
 
@@ -19,7 +21,7 @@ ModelManager::~ModelManager() {
 	}
 }
 
-Model *ModelManager::GetModel(ID3D11Device *device, Common::TextureManager *textureManager, std::wstring filePath) {
+Model *ModelManager::GetModel(ID3D11Device *device, Common::TextureManager *textureManager, Common::MaterialShaderManager *materialShaderManager, std::wstring filePath) {
 	// First check the cache
 	auto iter = m_modelCache.find(filePath);
 	if (iter != m_modelCache.end()) {
@@ -27,7 +29,7 @@ Model *ModelManager::GetModel(ID3D11Device *device, Common::TextureManager *text
 	}
 
 	// Else create it from scratch
-	Model *newModel = Common::HalflingModelFile::Load(device, textureManager, filePath.c_str());
+	Model *newModel = Common::HalflingModelFile::Load(device, textureManager, materialShaderManager, filePath.c_str());
 
 	// Lock the cache before writing
 	std::lock_guard<std::mutex> guard(m_cacheLock);

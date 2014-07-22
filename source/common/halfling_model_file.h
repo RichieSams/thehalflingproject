@@ -7,10 +7,12 @@
 #pragma once
 
 #include "common/model.h"
-#include "common/texture_manager.h"
 
 
 namespace Common {
+
+class TextureManager;
+class MaterialShaderManager;
 
 class HalflingModelFile {
 private:
@@ -59,7 +61,7 @@ private:
 	static const byte kFileFormatVersion = 3;
 
 public:
-	static Common::Model *Load(ID3D11Device *device, Common::TextureManager *textureManager, const wchar *filePath);
+	static Common::Model *Load(ID3D11Device *device, Common::TextureManager *textureManager, Common::MaterialShaderManager *materialShaderManager, const wchar *filePath);
 	static void Write(const wchar *filepath, 
 	                  uint numVertices, uint numIndices, 
 	                  D3D11_BUFFER_DESC *vertexBufferDesc,

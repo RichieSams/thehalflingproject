@@ -14,6 +14,7 @@
 #include "common/camera.h"
 #include "common/texture_manager.h"
 #include "common/model_manager.h"
+#include "common/material_shader_manager.h"
 #include "common/console.h"
 #include "common/texture2d.h"
 #include "common/structured_buffer.h"
@@ -55,6 +56,7 @@ private:
 
 	Common::TextureManager m_textureManager;
 	Common::ModelManager m_modelManager;
+	Common::MaterialShaderManager m_materialShaderManager;
 	Common::Console m_console;
 	bool m_showConsole;
 

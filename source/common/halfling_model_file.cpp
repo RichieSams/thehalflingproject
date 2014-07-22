@@ -6,16 +6,19 @@
 
 #include "common/halfling_model_file.h"
 
+#include "common/texture_manager.h"
+#include "common/material_shader_manager.h"
 #include "common/file_io_util.h"
 #include "common/memory_stream.h"
 #include "common/endian.h"
+#include "common/string_util.h"
 
 #include <string>
 #include <fstream>
 
 namespace Common {
 
-Common::Model *Common::HalflingModelFile::Load(ID3D11Device *device, Common::TextureManager *textureManager, const wchar *filePath) {
+Common::Model *Common::HalflingModelFile::Load(ID3D11Device *device, Common::TextureManager *textureManager, Common::MaterialShaderManager *materialShaderManager, const wchar *filePath) {
 	// Read the entire file into memory
 	DWORD bytesRead;
 	char *fileBuffer = ReadWholeFile(filePath, &bytesRead);
@@ -137,8 +140,8 @@ Common::Model *Common::HalflingModelFile::Load(ID3D11Device *device, Common::Tex
 
 		MaterialTableData materialData = materialTable[subsets[i].MaterialIndex];
 
-		// TODO: Actually figure out how to do shader index....
-		std::string hmatFilePath = stringTable[materialData.HMATFilePathIndex];
+		std::wstring hmatFilePath = Common::ToWideStr(stringTable[materialData.HMATFilePathIndex]);
+		modelSubsets[i].ShaderHandle = materialShaderManager->CreateShader(device, hmatFilePath);
 
 		for (uint j = 0; j < materialData.Textures.size(); ++j) {
 			std::wstring wideFileName(stringTable[materialData.Textures[j].FilePathIndex].begin(), stringTable[materialData.Textures[j].FilePathIndex].end());

@@ -28,7 +28,7 @@ namespace PBRDemo {
 
 void LoadScene(std::atomic<bool> *sceneIsLoaded, 
                ID3D11Device *device, 
-               Common::TextureManager *textureManager, Common::ModelManager *modelManager, 
+               Common::TextureManager *textureManager, Common::ModelManager *modelManager, Common::MaterialShaderManager *materialShaderManager,
                std::vector<Common::ModelToLoad *> *modelsToLoad, 
                std::vector<std::pair<Common::Model *, DirectX::XMMATRIX>, Common::Allocator16ByteAligned<std::pair<Common::Model *, DirectX::XMMATRIX> > > *modelList, 
                std::vector<std::pair<Common::Model *, std::vector<DirectX::XMMATRIX, Common::Allocator16ByteAligned<DirectX::XMMATRIX> > *> > *instancedModelList,
@@ -49,7 +49,7 @@ bool PBRDemo::Initialize(LPCTSTR mainWndCaption, uint32 screenWidth, uint32 scre
 	// TODO: Make TextureManager thread safe
 	// HACK: ModelManager isn't thread safe. Same argument as TextureManager
 	// TODO: Make ModelManager thread safe
-	m_sceneLoaderThread = std::thread(LoadScene, &m_sceneLoaded, m_device, &m_textureManager, &m_modelManager, &m_modelsToLoad, &m_models, &m_instancedModels, m_modelInstanceThreshold);
+	m_sceneLoaderThread = std::thread(LoadScene, &m_sceneLoaded, m_device, &m_textureManager, &m_modelManager, &m_materialShaderManager, &m_modelsToLoad, &m_models, &m_instancedModels, m_modelInstanceThreshold);
 
 	LoadShaders();
 
@@ -126,11 +126,11 @@ void PBRDemo::LoadSceneJson() {
 			float z_textureTiling = models[i]["Z-TextureTiling"].asSingle();
 
 			Common::ModelToLoadMaterial material;
-			material.HMATFilePath = models[i]["Material"]["HMATFilePath"].asString();
+			material.HMATFilePath = Common::ToWideStr(models[i]["Material"]["HMATFilePath"].asString());
 			Json::Value textureDefinitions = models[i]["Material"]["TextureDefinitions"];
 			for (uint j = 0; j < textureDefinitions.size(); ++j) {
 				Common::TextureDescription description;
-				description.FilePath = textureDefinitions[j]["FilePath"].asString();
+				description.FilePath = Common::ToWideStr(textureDefinitions[j]["FilePath"].asString());
 				description.Sampler = Common::ParseSamplerTypeFromString(textureDefinitions[j]["Sampler"].asString(), Common::LINEAR_WRAP);
 
 				material.Textures.push_back(description);
@@ -145,11 +145,11 @@ void PBRDemo::LoadSceneJson() {
 			float height = models[i]["Height"].asSingle();
 			
 			Common::ModelToLoadMaterial material;
-			material.HMATFilePath = models[i]["Material"]["HMATFilePath"].asString();
+			material.HMATFilePath = Common::ToWideStr(models[i]["Material"]["HMATFilePath"].asString());
 			Json::Value textureDefinitions = models[i]["Material"]["TextureDefinitions"];
 			for (uint j = 0; j < textureDefinitions.size(); ++j) {
 				Common::TextureDescription description;
-				description.FilePath = textureDefinitions[j]["FilePath"].asString();
+				description.FilePath = Common::ToWideStr(textureDefinitions[j]["FilePath"].asString());
 				description.Sampler = Common::ParseSamplerTypeFromString(textureDefinitions[j]["Sampler"].asString(), Common::LINEAR_WRAP);
 
 				material.Textures.push_back(description);
@@ -164,11 +164,11 @@ void PBRDemo::LoadSceneJson() {
 			uint stackCount = models[i]["StackCount"].asUInt();
 
 			Common::ModelToLoadMaterial material;
-			material.HMATFilePath = models[i]["Material"]["HMATFilePath"].asString();
+			material.HMATFilePath = Common::ToWideStr(models[i]["Material"]["HMATFilePath"].asString());
 			Json::Value textureDefinitions = models[i]["Material"]["TextureDefinitions"];
 			for (uint j = 0; j < textureDefinitions.size(); ++j) {
 				Common::TextureDescription description;
-				description.FilePath = textureDefinitions[j]["FilePath"].asString();
+				description.FilePath = Common::ToWideStr(textureDefinitions[j]["FilePath"].asString());
 				description.Sampler = Common::ParseSamplerTypeFromString(textureDefinitions[j]["Sampler"].asString(), Common::LINEAR_WRAP);
 
 				material.Textures.push_back(description);
@@ -393,13 +393,13 @@ void PBRDemo::InitTweakBar() {
 
 void LoadScene(std::atomic<bool> *sceneIsLoaded, 
                ID3D11Device *device, 
-               Common::TextureManager *textureManager, Common::ModelManager *modelManager, 
+               Common::TextureManager *textureManager, Common::ModelManager *modelManager, Common::MaterialShaderManager *materialShaderManager,
                std::vector<Common::ModelToLoad *> *modelsToLoad, 
                std::vector<std::pair<Common::Model *, DirectX::XMMATRIX>, Common::Allocator16ByteAligned<std::pair<Common::Model *, DirectX::XMMATRIX> > > *modelList, 
                std::vector<std::pair<Common::Model *, std::vector<DirectX::XMMATRIX, Common::Allocator16ByteAligned<DirectX::XMMATRIX> > *> > *instancedModelList,
 			   uint modelInstanceThreshold) {
 	for (auto iter = modelsToLoad->begin(); iter != modelsToLoad->end(); ++iter) {
-		Common::Model *newModel = (*iter)->CreateModel(device, textureManager, modelManager);
+		Common::Model *newModel = (*iter)->CreateModel(device, textureManager, modelManager, materialShaderManager);
 
 		if ((*iter)->Instances->size() > modelInstanceThreshold) {
 			instancedModelList->emplace_back(newModel, (*iter)->Instances);

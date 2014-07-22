@@ -8,13 +8,14 @@
 
 #include "common/model.h"
 
-#include "common/texture_manager.h"
-
 #include <unordered_map>
 #include <mutex>
 
 
 namespace Common {
+
+class TextureManager;
+class MaterialShaderManager;
 
 class ModelManager {
 public:
@@ -30,7 +31,7 @@ private:
 	uint m_unnamedModelIncrementer;
 
 public:
-	Model *GetModel(ID3D11Device *device, Common::TextureManager *textureManager, std::wstring filePath);
+	Model *GetModel(ID3D11Device *device, Common::TextureManager *textureManager, Common::MaterialShaderManager *materialShaderManager, std::wstring filePath);
 	Model *CreateUnnamedModel();
 };
 

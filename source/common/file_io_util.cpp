@@ -22,7 +22,9 @@ char *ReadWholeFile(const wchar *name, DWORD *bytesRead) {
 
 	DWORD fileSize = (DWORD)size.QuadPart;
 	char *fileBuffer = new char[fileSize];
-	ReadFile(hFile, fileBuffer, fileSize, bytesRead, NULL);
+	if (!ReadFile(hFile, fileBuffer, fileSize, bytesRead, NULL)) {
+		return nullptr;
+	}
 
 	CloseHandle(hFile);
 

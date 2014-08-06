@@ -45,13 +45,9 @@
 		"DirectionalLight" : {
 			"description" : "",
 			"type" : "object",
-			"required" : ["Diffuse", "Specular", "Direction"],
+			"required" : ["Color", "Direction"],
 			"properties" : {
-				"Diffuse" : {
-					"description" : "",
-					"$ref" : "#/definitions/float3"
-				},
-				"Specular" : {
+				"Color" : {
 					"description" : "",
 					"$ref" : "#/definitions/float3"
 				},
@@ -109,7 +105,7 @@
 		},
 		"material" : {
 			"type" : "object",
-			"required" : ["Name", "MaterialFilePath"],
+			"required" : ["Name", "HMATFilePath"],
 			"properties" : {
 				"Name" : {
 					"description" : "The unique name of the material",

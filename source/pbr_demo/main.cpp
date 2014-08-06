@@ -7,7 +7,11 @@
 #include "pbr_demo/pbr_demo.h"
 
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
+int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow) {
+	DBG_UNREFERENCED_PARAMETER(hPrevInstance);
+	DBG_UNREFERENCED_PARAMETER(lpCmdLine);
+	DBG_UNREFERENCED_PARAMETER(nCmdShow);
+
 	#ifdef _DEBUG
 	ID3D11Debug *debugInterface = nullptr;
 	#endif
@@ -15,9 +19,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	// Force scope so we can guarantee the destructor is called before we try to use ReportLiveDeviceObjects
 	{
 		PBRDemo::PBRDemo app(hInstance);
-		DBG_UNREFERENCED_PARAMETER(hPrevInstance);
-		DBG_UNREFERENCED_PARAMETER(lpCmdLine);
-		DBG_UNREFERENCED_PARAMETER(nCmdShow);
 
 		app.Initialize(L"Physically Based Rendering Demo", 1280, 720, false);
 

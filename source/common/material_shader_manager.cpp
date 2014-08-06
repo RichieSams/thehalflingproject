@@ -15,6 +15,10 @@ MaterialShaderManager::~MaterialShaderManager() {
 	}
 }
 
+void MaterialShaderManager::Initialize(ID3D11Device *device, const wchar *defaultMaterialShaderFilePath) {
+	m_defaultMaterialShader = new Common::MaterialShader(defaultMaterialShaderFilePath, device, false, false);
+}
+
 size_t MaterialShaderManager::CreateShader(ID3D11Device *device, const std::wstring filePath) {
 	// First check the cache
 	auto iter = m_shaderIdLookup.find(filePath);
@@ -48,7 +52,7 @@ Common::MaterialShader *MaterialShaderManager::GetShader(size_t handle) {
 	std::lock_guard<std::mutex> guard(m_cacheLock);
 
 	if (handle >= m_shaderCache.size()) {
-		return false;
+		return m_defaultMaterialShader;
 	}
 
 	// The mutex will unlock when 'guard' goes out of scope and destructs

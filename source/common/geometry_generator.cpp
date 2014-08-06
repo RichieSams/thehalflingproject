@@ -41,6 +41,7 @@ void GeometryGenerator::CreateGrid(float width, float depth, uint m, uint n, Mes
 
 			meshData->Vertices[(i * n) + j].Position = DirectX::XMFLOAT3(x, 0.0f, z);
 			meshData->Vertices[(i * n) + j].Normal = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
+			meshData->Vertices[(i * n) + j].Tangent = DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f);
 
 			// Stretch texture over grid.
 			meshData->Vertices[(i * n) + j].TexCoord.x = j * du * textureTilingX;

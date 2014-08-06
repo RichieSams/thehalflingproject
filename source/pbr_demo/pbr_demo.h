@@ -105,7 +105,6 @@ private:
 	// Shaders
 	Common::VertexShader<Common::DefaultShaderConstantType, GBufferVertexShaderObjectConstants> *m_gbufferVertexShader;
 	Common::VertexShader<InstancedGBufferVertexShaderFrameConstants, InstancedGBufferVertexShaderObjectConstants> *m_instancedGBufferVertexShader;
-	Common::PixelShader<Common::DefaultShaderConstantType> *m_gbufferPixelShader;
 
 	Common::VertexShader<> *m_fullscreenTriangleVertexShader;
 	Common::ComputeShader<TiledCullFinalGatherComputeShaderFrameConstants, Common::DefaultShaderConstantType> *m_tiledCullFinalGatherComputeShader;

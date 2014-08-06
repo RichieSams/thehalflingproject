@@ -107,9 +107,6 @@ void PBRDemo::RenderMainPass() {
 	ID3D11RasterizerState *rasterState = m_wireframe ? m_rasterizerStates.Wireframe() : m_rasterizerStates.BackFaceCull();
 	m_immediateContext->RSSetState(rasterState);
 
-	// Set the pixel shader
-	m_gbufferPixelShader->BindToPipeline(m_immediateContext);
-
 	m_immediateContext->IASetInputLayout(m_defaultInputLayout);
 	m_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
@@ -162,10 +159,7 @@ void PBRDemo::RenderMainPass() {
 		for (uint i = 0; i < m_instancedModels.size(); ++i) {
 			SetInstancedGBufferVertexShaderObjectConstants(offsets[i]);
 
-			for (uint j = 0; j < m_instancedModels[i].first->GetSubsetCount(); ++j) {
-				// Draw the models
-				m_instancedModels[i].first->DrawInstancedSubset(m_immediateContext, static_cast<uint>(m_instancedModels[i].second->size()), j);
-			}
+			m_instancedModels[i].first->DrawInstancedSubset(m_immediateContext, static_cast<uint>(m_instancedModels[i].second->size()), &m_materialShaderManager);
 		}
 	}
 
@@ -182,12 +176,8 @@ void PBRDemo::RenderMainPass() {
 			// GBuffer pass and Forward pass share the same Vertex cbPerFrame signature
 			SetGBufferVertexShaderObjectConstants(worldMatrix, worldViewProjection);
 
-			for (uint j = 0; j < iter->first->GetSubsetCount(); ++j) {
-				//SetGBufferPixelShaderConstants(iter->first->GetSubsetMaterial(j), iter->first->GetSubsetTextureFlags(j));
-
-				// Draw the models
-				iter->first->DrawSubset(m_immediateContext, j);
-			}
+			// Draw the models
+			iter->first->DrawSubset(m_immediateContext, &m_materialShaderManager);
 		}
 	}
 

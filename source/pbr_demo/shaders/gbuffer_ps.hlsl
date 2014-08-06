@@ -45,7 +45,7 @@ void GBufferPS(GBufferShaderPixelIn input, out GBuffer gbuffer) {
 
 	GetMaterialInfo(normalize(input.normal), input.tangent, textureSamples, baseColor, specular, normal, metallic, roughness);
 
-	gbuffer.baseColor = float4(baseColor, 0.0f);
+	gbuffer.baseColor = baseColor;
 	gbuffer.roughnessSpecAndMetal = float4(roughness, specular, metallic, 0.0f);
 	gbuffer.normal = CartesianToSpherical(normal);
 }

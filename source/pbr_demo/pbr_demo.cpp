@@ -45,7 +45,6 @@ PBRDemo::PBRDemo(HINSTANCE hinstance)
 	  m_pointLightBuffer(nullptr),
 	  m_spotLightBuffer(nullptr),
 	  m_gbufferVertexShader(nullptr),
-	  m_gbufferPixelShader(nullptr),
 	  m_fullscreenTriangleVertexShader(nullptr),
 	  m_tiledCullFinalGatherComputeShader(nullptr),
 	  m_postProcessPixelShader(nullptr) {
@@ -56,9 +55,7 @@ void PBRDemo::Shutdown() {
 	delete m_pointLightBuffer;
 	delete m_spotLightBuffer;
 	delete m_instanceBuffer;
-	delete(m_gbufferVertexShader);
 	delete(m_instancedGBufferVertexShader);
-	delete(m_gbufferPixelShader);
 	delete(m_fullscreenTriangleVertexShader);
 	delete(m_tiledCullFinalGatherComputeShader);
 	delete(m_postProcessPixelShader);

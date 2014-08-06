@@ -18,7 +18,7 @@
 
 namespace Common {
 
-Common::Model *Common::HalflingModelFile::Load(ID3D11Device *device, Common::TextureManager *textureManager, Common::MaterialShaderManager *materialShaderManager, const wchar *filePath) {
+Common::Model *Common::HalflingModelFile::Load(ID3D11Device *device, Common::TextureManager *textureManager, Common::MaterialShaderManager *materialShaderManager, Common::SamplerStates *samplerStates, const wchar *filePath) {
 	// Read the entire file into memory
 	DWORD bytesRead;
 	char *fileBuffer = ReadWholeFile(filePath, &bytesRead);
@@ -146,7 +146,7 @@ Common::Model *Common::HalflingModelFile::Load(ID3D11Device *device, Common::Tex
 		for (uint j = 0; j < materialData.Textures.size(); ++j) {
 			std::wstring wideFileName(stringTable[materialData.Textures[j].FilePathIndex].begin(), stringTable[materialData.Textures[j].FilePathIndex].end());
 			modelSubsets[i].TextureSRVs.push_back(textureManager->GetSRVFromFile(device, wideFileName, D3D11_USAGE_IMMUTABLE));
-			modelSubsets[i].TextureSamplers.push_back(static_cast<TextureSampler>(materialData.Textures[j].Sampler));
+			modelSubsets[i].TextureSamplers.push_back(Common::GetSamplerStateFromSamplerType(static_cast<TextureSampler>(materialData.Textures[j].Sampler), samplerStates));
 		}
 	}
 
@@ -272,7 +272,7 @@ void HalflingModelFile::VerifyFileIntegrity(const wchar *filepath) {
 
 	// String table
 	std::string *stringTable = nullptr;
-	uint32 numStrings;
+	uint32 numStrings = 0;
 	if ((flags & HAS_STRING_TABLE) == HAS_STRING_TABLE) {
 		fin.readUInt32(&numStrings);
 

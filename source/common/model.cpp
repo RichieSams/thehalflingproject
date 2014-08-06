@@ -6,6 +6,7 @@
 
 #include "common/model.h"
 
+#include "common/material_shader_manager.h"
 
 
 namespace Common {
@@ -75,7 +76,27 @@ void Model::CreateSubsets(ModelSubset *subsetArray, uint subsetCount, DisposeAft
 	DirectX::XMStoreFloat3(&m_AABB_max, AABB_max);
 }
 
-void Model::DrawSubset(ID3D11DeviceContext *deviceContext, int subsetId) {
+void DrawIndexed_Helper(ID3D11DeviceContext *deviceContext, Common::MaterialShaderManager *materialShaderManager, const ModelSubset &subset) {
+	materialShaderManager->GetShader(subset.ShaderHandle)->BindToPipeline(deviceContext);
+	
+	if (subset.TextureSRVs.size() > 0) {
+		deviceContext->PSSetShaderResources(0, static_cast<uint>(subset.TextureSRVs.size()), &subset.TextureSRVs[0]);
+	}
+
+	deviceContext->DrawIndexed(subset.IndexCount, subset.IndexStart, subset.VertexStart);
+}
+
+void DrawIndexedInstanced_Helper(ID3D11DeviceContext *deviceContext, Common::MaterialShaderManager *materialShaderManager, uint indexCountPerInstance, uint instanceCount, const ModelSubset &subset) {
+	materialShaderManager->GetShader(subset.ShaderHandle)->BindToPipeline(deviceContext);
+
+	if (subset.TextureSRVs.size() > 0) {
+		deviceContext->PSSetShaderResources(0, static_cast<uint>(subset.TextureSRVs.size()), &subset.TextureSRVs[0]);
+	}
+
+	deviceContext->DrawIndexedInstanced(indexCountPerInstance, instanceCount, subset.IndexStart, subset.VertexStart, 0);
+}
+
+void Model::DrawSubset(ID3D11DeviceContext *deviceContext, Common::MaterialShaderManager *materialShaderManager, int subsetId) {
 	assert(subsetId >= -1 && subsetId < (int)m_subsetCount);
 
 	uint offset = 0;
@@ -85,40 +106,24 @@ void Model::DrawSubset(ID3D11DeviceContext *deviceContext, int subsetId) {
 
 	if (subsetId == -1) {
 		for (uint i = 0; i < m_subsetCount; ++i) {
-			if (m_subsets[i].TextureSRVs.size() > 0) {
-				deviceContext->PSSetShaderResources(0, static_cast<uint>(m_subsets[i].TextureSRVs.size()), &m_subsets[i].TextureSRVs[0]);
-			}
-
-			deviceContext->DrawIndexed(m_subsets[i].IndexCount, m_subsets[i].IndexStart, m_subsets[i].VertexStart);
+			DrawIndexed_Helper(deviceContext, materialShaderManager, m_subsets[i]);
 		}
 	} else {
-		if (m_subsets[subsetId].TextureSRVs.size() > 0) {
-			deviceContext->PSSetShaderResources(0, static_cast<uint>(m_subsets[subsetId].TextureSRVs.size()), &m_subsets[subsetId].TextureSRVs[0]);
-		}
-
-		deviceContext->DrawIndexed(m_subsets[subsetId].IndexCount, m_subsets[subsetId].IndexStart, m_subsets[subsetId].VertexStart);
+		DrawIndexed_Helper(deviceContext, materialShaderManager, m_subsets[subsetId]);
 	}
 }
 
-void Model::DrawInstancedSubset(ID3D11DeviceContext *deviceContext, uint instanceCount, uint indexCountPerInstance, int subsetId) {
+void Model::DrawInstancedSubset(ID3D11DeviceContext *deviceContext, uint instanceCount, Common::MaterialShaderManager *materialShaderManager, uint indexCountPerInstance, int subsetId) {
 	uint offset = 0;
 	deviceContext->IASetVertexBuffers(0, 1, &m_vertexBuffer, &m_vertexStride, &offset);
 	deviceContext->IASetIndexBuffer(m_indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
 	if (subsetId == -1) {
 		for (uint i = 0; i < m_subsetCount; ++i) {
-			if (m_subsets[i].TextureSRVs.size() > 0) {
-				deviceContext->PSSetShaderResources(0, static_cast<uint>(m_subsets[i].TextureSRVs.size()), &m_subsets[i].TextureSRVs[0]);
-			}
-			
-			deviceContext->DrawIndexedInstanced(indexCountPerInstance == 0 ? m_subsets[i].IndexCount : indexCountPerInstance, instanceCount, m_subsets[i].IndexStart, m_subsets[i].VertexStart, 0);
+			DrawIndexedInstanced_Helper(deviceContext, materialShaderManager, indexCountPerInstance == 0 ? m_subsets[i].IndexCount : indexCountPerInstance, instanceCount, m_subsets[i]);
 		}
 	} else {
-		if (m_subsets[subsetId].TextureSRVs.size() > 0) {
-			deviceContext->PSSetShaderResources(0, static_cast<uint>(m_subsets[subsetId].TextureSRVs.size()), &m_subsets[subsetId].TextureSRVs[0]);
-		}
-
-		deviceContext->DrawIndexedInstanced(indexCountPerInstance == 0 ? m_subsets[subsetId].IndexCount : indexCountPerInstance, instanceCount, m_subsets[subsetId].IndexStart, m_subsets[subsetId].VertexStart, 0);
+		DrawIndexedInstanced_Helper(deviceContext, materialShaderManager, indexCountPerInstance == 0 ? m_subsets[subsetId].IndexCount : indexCountPerInstance, instanceCount, m_subsets[subsetId]);
 	}
 }
 
@@ -161,7 +166,7 @@ void InstancedModel::UnMapInstanceBuffer(ID3D11DeviceContext *deviceContext) {
 	deviceContext->Unmap(m_instanceBuffer, 0);
 }
 
-void InstancedModel::DrawInstancedSubset(ID3D11DeviceContext *deviceContext, uint instanceCount, uint indexCountPerInstance, int subsetId) {
+void InstancedModel::DrawInstancedSubset(ID3D11DeviceContext *deviceContext, uint instanceCount, Common::MaterialShaderManager *materialShaderManager, uint indexCountPerInstance, int subsetId) {
 	assert(m_instanceBuffer);
 	assert(instanceCount <= m_maxInstanceCount);
 
@@ -173,18 +178,10 @@ void InstancedModel::DrawInstancedSubset(ID3D11DeviceContext *deviceContext, uin
 
 	if (subsetId == -1) {
 		for (uint i = 0; i < m_subsetCount; ++i) {
-			if (m_subsets[i].TextureSRVs.size() > 0) {
-				deviceContext->PSSetShaderResources(0, static_cast<uint>(m_subsets[i].TextureSRVs.size()), &m_subsets[i].TextureSRVs[0]);
-			}
-
-			deviceContext->DrawIndexedInstanced(indexCountPerInstance == 0 ? m_subsets[i].IndexCount : indexCountPerInstance, instanceCount, m_subsets[i].IndexStart, m_subsets[i].VertexStart, 0);
+			DrawIndexedInstanced_Helper(deviceContext, materialShaderManager, indexCountPerInstance == 0 ? m_subsets[i].IndexCount : indexCountPerInstance, instanceCount, m_subsets[i]);
 		}
 	} else {
-		if (m_subsets[subsetId].TextureSRVs.size() > 0) {
-			deviceContext->PSSetShaderResources(0, static_cast<uint>(m_subsets[subsetId].TextureSRVs.size()), &m_subsets[subsetId].TextureSRVs[0]);
-		}
-
-		deviceContext->DrawIndexedInstanced(indexCountPerInstance == 0 ? m_subsets[subsetId].IndexCount : indexCountPerInstance, instanceCount, m_subsets[subsetId].IndexStart, m_subsets[subsetId].VertexStart, 0);
+		DrawIndexedInstanced_Helper(deviceContext, materialShaderManager, indexCountPerInstance == 0 ? m_subsets[subsetId].IndexCount : indexCountPerInstance, instanceCount, m_subsets[subsetId]);
 	}
 }
 

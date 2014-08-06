@@ -11,6 +11,7 @@
 #include "common/model_manager.h"
 #include "common/texture_manager.h"
 #include "common/material_shader_manager.h"
+#include "common/device_states.h"
 
 
 namespace Common {
@@ -33,9 +34,33 @@ TextureSampler ParseSamplerTypeFromString(std::string &inputString, TextureSampl
 	}
 }
 
+ID3D11SamplerState *GetSamplerStateFromSamplerType(TextureSampler samplerType, SamplerStates *samplerStates) {
+	switch (samplerType) {
+	case Common::LINEAR_CLAMP:
+		return samplerStates->LinearClamp();
+		break;
+	case Common::LINEAR_BORDER:
+		return samplerStates->LinearBorder();
+		break;
+	case Common::LINEAR_WRAP:
+		return samplerStates->Linear();
+		break;
+	case Common::POINT_CLAMP:
+		return samplerStates->Point();
+		break;
+	case Common::POINT_WRAP:
+		return samplerStates->PointWrap();
+		break;
+	case Common::ANISOTROPIC_WRAP:
+	default:
+		return samplerStates->Anisotropic();
+		break;
+	}
+}
 
-Model *FileModelToLoad::CreateModel(ID3D11Device *device, Common::TextureManager *textureManager, Common::ModelManager *modelManager, Common::MaterialShaderManager *materialShaderManager) {
-	return m_modelManager->GetModel(m_device, m_textureManager, materialShaderManager, m_filePath.c_str());
+
+Model *FileModelToLoad::CreateModel(ID3D11Device *device, Common::TextureManager *textureManager, Common::ModelManager *modelManager, Common::MaterialShaderManager *materialShaderManager, Common::SamplerStates *samplerStates) {
+	return m_modelManager->GetModel(m_device, m_textureManager, materialShaderManager, samplerStates, m_filePath.c_str());
 }
 
 struct Vertex {
@@ -45,7 +70,7 @@ struct Vertex {
 	DirectX::XMFLOAT3 tangent;
 };
 
-Model *PlaneModelToLoad::CreateModel(ID3D11Device *device, Common::TextureManager *textureManager, Common::ModelManager *modelManager, Common::MaterialShaderManager *materialShaderManager) {
+Model *PlaneModelToLoad::CreateModel(ID3D11Device *device, Common::TextureManager *textureManager, Common::ModelManager *modelManager, Common::MaterialShaderManager *materialShaderManager, Common::SamplerStates *samplerStates) {
 	Common::GeometryGenerator::MeshData meshData;
 	Common::ModelSubset *subset = new Common::ModelSubset[1];
 
@@ -62,7 +87,7 @@ Model *PlaneModelToLoad::CreateModel(ID3D11Device *device, Common::TextureManage
 
 	for (uint i = 0; i < m_material.Textures.size(); ++i) {
 		subset->TextureSRVs.push_back(textureManager->GetSRVFromFile(device, m_material.Textures[i].FilePath, D3D11_USAGE_IMMUTABLE));
-		subset->TextureSamplers.push_back(m_material.Textures[i].Sampler);
+		subset->TextureSamplers.push_back(GetSamplerStateFromSamplerType(m_material.Textures[i].Sampler, samplerStates));
 	}
 
 	Vertex *vertices = new Vertex[meshData.Vertices.size()];
@@ -81,7 +106,7 @@ Model *PlaneModelToLoad::CreateModel(ID3D11Device *device, Common::TextureManage
 	return newModel;
 }
 
-Model *BoxModelToLoad::CreateModel(ID3D11Device *device, Common::TextureManager *textureManager, Common::ModelManager *modelManager, Common::MaterialShaderManager *materialShaderManager) {
+Model *BoxModelToLoad::CreateModel(ID3D11Device *device, Common::TextureManager *textureManager, Common::ModelManager *modelManager, Common::MaterialShaderManager *materialShaderManager, Common::SamplerStates *samplerStates) {
 	Common::GeometryGenerator::MeshData meshData;
 	Common::ModelSubset *subset = new Common::ModelSubset[1];
 
@@ -98,7 +123,7 @@ Model *BoxModelToLoad::CreateModel(ID3D11Device *device, Common::TextureManager 
 
 	for (uint i = 0; i < m_material.Textures.size(); ++i) {
 		subset->TextureSRVs.push_back(textureManager->GetSRVFromFile(device, m_material.Textures[i].FilePath, D3D11_USAGE_IMMUTABLE));
-		subset->TextureSamplers.push_back(m_material.Textures[i].Sampler);
+		subset->TextureSamplers.push_back(GetSamplerStateFromSamplerType(m_material.Textures[i].Sampler, samplerStates));
 	}
 
 	Vertex *vertices = new Vertex[meshData.Vertices.size()];
@@ -117,7 +142,7 @@ Model *BoxModelToLoad::CreateModel(ID3D11Device *device, Common::TextureManager 
 	return newModel;
 }
 
-Model *SphereModelToLoad::CreateModel(ID3D11Device *device, Common::TextureManager *textureManager, Common::ModelManager *modelManager, Common::MaterialShaderManager *materialShaderManager) {
+Model *SphereModelToLoad::CreateModel(ID3D11Device *device, Common::TextureManager *textureManager, Common::ModelManager *modelManager, Common::MaterialShaderManager *materialShaderManager, Common::SamplerStates *samplerStates) {
 	Common::GeometryGenerator::MeshData meshData;
 	Common::ModelSubset *subset = new Common::ModelSubset[1];
 
@@ -134,7 +159,7 @@ Model *SphereModelToLoad::CreateModel(ID3D11Device *device, Common::TextureManag
 
 	for (uint i = 0; i < m_material.Textures.size(); ++i) {
 		subset->TextureSRVs.push_back(textureManager->GetSRVFromFile(device, m_material.Textures[i].FilePath, D3D11_USAGE_IMMUTABLE));
-		subset->TextureSamplers.push_back(m_material.Textures[i].Sampler);
+		subset->TextureSamplers.push_back(GetSamplerStateFromSamplerType(m_material.Textures[i].Sampler, samplerStates));
 	}
 
 	Vertex *vertices = new Vertex[meshData.Vertices.size()];
@@ -152,5 +177,7 @@ Model *SphereModelToLoad::CreateModel(ID3D11Device *device, Common::TextureManag
 
 	return newModel;
 }
+
+
 
 } // End of namespace Common

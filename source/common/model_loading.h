@@ -16,6 +16,7 @@
 
 
 struct ID3D11Device;
+struct ID3D11SamplerState;
 
 namespace Common {
 
@@ -38,11 +39,13 @@ enum TextureSampler {
  */
 TextureSampler ParseSamplerTypeFromString(std::string &inputString, Common::TextureSampler defaultType);
 
-
 class Model;
 class ModelManager;
 class TextureManager;
 class MaterialShaderManager;
+class SamplerStates;
+
+ID3D11SamplerState *GetSamplerStateFromSamplerType(TextureSampler samplerType, SamplerStates *samplerStates);
 
 struct TextureDescription {
 	std::wstring FilePath;
@@ -68,7 +71,7 @@ public:
 	std::vector<DirectX::XMMATRIX, Common::Allocator16ByteAligned<DirectX::XMMATRIX> > *Instances;
 
 public:
-	virtual Model *CreateModel(ID3D11Device *device, Common::TextureManager *textureManager, Common::ModelManager *modelManager, Common::MaterialShaderManager *materialShaderManager) = 0;
+	virtual Model *CreateModel(ID3D11Device *device, Common::TextureManager *textureManager, Common::ModelManager *modelManager, Common::MaterialShaderManager *materialShaderManager, Common::SamplerStates *samplerStates) = 0;
 };
 
 
@@ -86,7 +89,7 @@ private:
 	Common::ModelManager *m_modelManager;
 
 public:
-	Model *CreateModel(ID3D11Device *device, Common::TextureManager *textureManager, Common::ModelManager *modelManager, Common::MaterialShaderManager *materialShaderManager);
+	Model *CreateModel(ID3D11Device *device, Common::TextureManager *textureManager, Common::ModelManager *modelManager, Common::MaterialShaderManager *materialShaderManager, Common::SamplerStates *samplerStates);
 };
 
 
@@ -113,7 +116,7 @@ private:
 	ModelToLoadMaterial m_material;
 
 public:
-	Model *CreateModel(ID3D11Device *device, Common::TextureManager *textureManager, Common::ModelManager *modelManager, Common::MaterialShaderManager *materialShaderManager);
+	Model *CreateModel(ID3D11Device *device, Common::TextureManager *textureManager, Common::ModelManager *modelManager, Common::MaterialShaderManager *materialShaderManager, Common::SamplerStates *samplerStates);
 };
 
 
@@ -134,7 +137,7 @@ private:
 	ModelToLoadMaterial m_material;
 
 public:
-	Model *CreateModel(ID3D11Device *device, Common::TextureManager *textureManager, Common::ModelManager *modelManager, Common::MaterialShaderManager *materialShaderManager);
+	Model *CreateModel(ID3D11Device *device, Common::TextureManager *textureManager, Common::ModelManager *modelManager, Common::MaterialShaderManager *materialShaderManager, Common::SamplerStates *samplerStates);
 };
 
 
@@ -155,7 +158,7 @@ private:
 	ModelToLoadMaterial m_material;
 
 public:
-	Model *CreateModel(ID3D11Device *device, Common::TextureManager *textureManager, Common::ModelManager *modelManager, Common::MaterialShaderManager *materialShaderManager);
+	Model *CreateModel(ID3D11Device *device, Common::TextureManager *textureManager, Common::ModelManager *modelManager, Common::MaterialShaderManager *materialShaderManager, Common::SamplerStates *samplerStates);
 };
 
 } // End of namespace Common

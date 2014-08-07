@@ -23,18 +23,21 @@ struct GBuffer {
 	float2 normal                   : SV_Target2;
 };
 
-
-Texture2D gTextures[TEXTURE_COUNT] : register(t0);
-SamplerState gSamplers[TEXTURE_COUNT] : register(s0);
+#if TEXTURE_COUNT != 0
+	Texture2D gTextures[TEXTURE_COUNT] : register(t0);
+	SamplerState gSamplers[TEXTURE_COUNT] : register(s0);
+#endif
 
 
 void GBufferPS(GBufferShaderPixelIn input, out GBuffer gbuffer) {
-	float4 textureSamples[TEXTURE_COUNT];
+	#if TEXTURE_COUNT != 0
+		float4 textureSamples[TEXTURE_COUNT];
 
-	[unroll]
-	for (uint i = 0; i < TEXTURE_COUNT; ++i) {
-		textureSamples[i] = gTextures[i].Sample(gSamplers[i], input.texCoord);
-	}
+		[unroll]
+		for (uint i = 0; i < TEXTURE_COUNT; ++i) {
+			textureSamples[i] = gTextures[i].Sample(gSamplers[i], input.texCoord);
+		}
+	#endif
 
 	// Initialize
 	float3 baseColor = float3(0.5f, 0.5f, 0.5f);
@@ -43,7 +46,11 @@ void GBufferPS(GBufferShaderPixelIn input, out GBuffer gbuffer) {
 	float metallic = 0.0f;
 	float roughness = 0.5f;
 
-	GetMaterialInfo(normalize(input.normal), input.tangent, textureSamples, baseColor, specular, normal, metallic, roughness);
+	#if TEXTURE_COUNT == 0
+		GetMaterialInfo(normalize(input.normal), input.tangent, baseColor, specular, normal, metallic, roughness);
+	#else
+		GetMaterialInfo(normalize(input.normal), input.tangent, textureSamples, baseColor, specular, normal, metallic, roughness);
+	#endif
 
 	gbuffer.baseColor = baseColor;
 	gbuffer.roughnessSpecAndMetal = float4(roughness, specular, metallic, 0.0f);

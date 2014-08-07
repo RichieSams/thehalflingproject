@@ -86,7 +86,13 @@
     <FxCompile Include="..\pbr_demo\shaders\tiled_cull_final_gather_cs.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="..\pbr_demo\materials\simple.hmat.hlsl">
+    <FxCompile Include="..\pbr_demo\materials\metal.hmat.hlsl">
+      <Filter>Materials</Filter>
+    </FxCompile>
+    <FxCompile Include="..\pbr_demo\materials\nonmetal.hmat.hlsl">
+      <Filter>Materials</Filter>
+    </FxCompile>
+    <FxCompile Include="..\pbr_demo\materials\matte_gray.hmat.hlsl">
       <Filter>Materials</Filter>
     </FxCompile>
   </ItemGroup>

@@ -12,8 +12,152 @@
 	"ModelInstanceThreshold" : 1,
 	"Materials" : [
 		{
-			"Name" : "pine",
-			"HMATFilePath" : "simple.hmat",
+			"Name" : "matte_gray",
+			"HMATFilePath" : "matte_gray.hmat"
+		},
+		{
+			"Name" : "old_clay_brick",
+			"HMATFilePath" : "nonmetal.hmat",
+			"TextureDefinitions" : [
+				{
+					"FilePath" : "T_Brick_Clay_Old_D.dds",
+					"Sampler" : "anisotropic_wrap"
+				},
+				{
+					"FilePath" : "T_Brick_Clay_Old_N.dds",
+					"Sampler" : "anisotropic_wrap"
+				}
+			]
+		},
+		{
+			"Name" : "cut_stone_brick",
+			"HMATFilePath" : "nonmetal.hmat",
+			"TextureDefinitions" : [
+				{
+					"FilePath" : "T_Brick_Cut_Stone_D.dds",
+					"Sampler" : "anisotropic_wrap"
+				},
+				{
+					"FilePath" : "T_Brick_Cut_Stone_N.dds",
+					"Sampler" : "anisotropic_wrap"
+				}
+			]
+		},
+		{
+			"Name" : "rough_cobblestone",
+			"HMATFilePath" : "nonmetal.hmat",
+			"TextureDefinitions" : [
+				{
+					"FilePath" : "T_CobbleStone_Rough_D.dds",
+					"Sampler" : "anisotropic_wrap"
+				},
+				{
+					"FilePath" : "T_CobbleStone_Rough_N.dds",
+					"Sampler" : "anisotropic_wrap"
+				}
+			]
+		},
+		{
+			"Name" : "moss",
+			"HMATFilePath" : "nonmetal.hmat",
+			"TextureDefinitions" : [
+				{
+					"FilePath" : "T_Ground_Moss_D.dds",
+					"Sampler" : "anisotropic_wrap"
+				},
+				{
+					"FilePath" : "T_Ground_Moss_N.dds",
+					"Sampler" : "anisotropic_wrap"
+				}
+			]
+		},
+		{
+			"Name" : "copper",
+			"HMATFilePath" : "metal.hmat",
+			"TextureDefinitions" : [
+				{
+					"FilePath" : "T_Metal_Copper_D.dds",
+					"Sampler" : "anisotropic_wrap"
+				},
+				{
+					"FilePath" : "T_Metal_Copper_N.dds",
+					"Sampler" : "anisotropic_wrap"
+				}
+			]
+		},
+		{
+			"Name" : "gold",
+			"HMATFilePath" : "metal.hmat",
+			"TextureDefinitions" : [
+				{
+					"FilePath" : "T_Metal_Gold_D.dds",
+					"Sampler" : "anisotropic_wrap"
+				},
+				{
+					"FilePath" : "T_Metal_Gold_N.dds",
+					"Sampler" : "anisotropic_wrap"
+				}
+			]
+		},
+		{
+			"Name" : "steel",
+			"HMATFilePath" : "metal.hmat",
+			"TextureDefinitions" : [
+				{
+					"FilePath" : "T_Metal_Steel_D.dds",
+					"Sampler" : "anisotropic_wrap"
+				},
+				{
+					"FilePath" : "T_Metal_Steel_N.dds",
+					"Sampler" : "anisotropic_wrap"
+				}
+			]
+		},
+		{
+			"Name" : "basalt_rock",
+			"HMATFilePath" : "nonmetal.hmat",
+			"TextureDefinitions" : [
+				{
+					"FilePath" : "T_Rock_Basalt_D.dds",
+					"Sampler" : "anisotropic_wrap"
+				},
+				{
+					"FilePath" : "T_Rock_Basalt_N.dds",
+					"Sampler" : "anisotropic_wrap"
+				}
+			]
+		},
+		{
+			"Name" : "slate_rock",
+			"HMATFilePath" : "nonmetal.hmat",
+			"TextureDefinitions" : [
+				{
+					"FilePath" : "T_Rock_Slate_D.dds",
+					"Sampler" : "anisotropic_wrap"
+				},
+				{
+					"FilePath" : "T_Rock_Slate_N.dds",
+					"Sampler" : "anisotropic_wrap"
+				}
+			]
+		},
+		{
+			"Name" : "oak_wood",
+			"HMATFilePath" : "nonmetal.hmat",
+			"TextureDefinitions" : [
+				{
+					"FilePath" : "T_Rock_Slate_D.dds",
+					"Sampler" : "anisotropic_wrap"
+				},
+				{
+					"FilePath" : "T_Rock_Slate_N.dds",
+					"Sampler" : "anisotropic_wrap"
+				}
+			]
+		},
+		{
+			"Name" : "pine_wood",
+			"HMATFilePath" : "nonmetal.hmat",
 			"TextureDefinitions" : [
 				{
 					"FilePath" : "T_Wood_Pine_D.dds",
@@ -24,18 +168,32 @@
 					"Sampler" : "anisotropic_wrap"
 				}
 			]
+		},
+		{
+			"Name" : "walnut_wood",
+			"HMATFilePath" : "nonmetal.hmat",
+			"TextureDefinitions" : [
+				{
+					"FilePath" : "T_Wood_Walnut_D.dds",
+					"Sampler" : "anisotropic_wrap"
+				},
+				{
+					"FilePath" : "T_Wood_Walnut_N.dds",
+					"Sampler" : "anisotropic_wrap"
+				}
+			]
 		}
 	],
     "Models" : [
         {
             "Type" : "plane",
-            "Width" : 100,
-            "Depth" : 100,
-			"X-Subdivisions" : 10,
-			"Z-Subdivisions" : 10,
+            "Width" : 200.0,
+            "Depth" : 200.0,
+			"X-Subdivisions" : 2,
+			"Z-Subdivisions" : 2,
 			"X-TextureTiling" : 1.0,
 			"Z-TextureTiling" : 1.0,
-			"Material" : "pine",
+			"Material" : "matte_gray",
             "Instances" : [
                 [1.0, 0.0, 0.0, 0.0,
                  0.0, 1.0, 0.0, 0.0,
@@ -45,17 +203,316 @@
         },
         {
             "Type" :  "sphere",
-            "Radius" : 20.0,
+            "Radius" : 10.0,
             "SliceCount" : 20,
             "StackCount" : 20,
-			"Material" : "pine",
+			"Material" : "old_clay_brick",
             "Instances" : [
                 [1.0, 0.0, 0.0, 0.0,
                  0.0, 1.0, 0.0, 0.0,
                  0.0, 0.0, 1.0, 0.0,
-                 0.0, 20.0, 0.0, 1.0]
+                 -75.0, 10.0, -45.0, 1.0]
             ]
-        }
+        },
+		{
+			"Type" : "box",
+			"Width" : 20.0,
+			"Height" : 20.0,
+			"Depth" : 20.0,
+			"Material" : "old_clay_brick",
+			"Instances" : [
+				[1.0, 0.0, 0.0, 0.0,
+                 0.0, 1.0, 0.0, 0.0,
+                 0.0, 0.0, 1.0, 0.0,
+                 -45.0, 10.0, -45.0, 1.0]
+			]
+		},
+		{
+            "Type" :  "sphere",
+            "Radius" : 10.0,
+            "SliceCount" : 20,
+            "StackCount" : 20,
+			"Material" : "cut_stone_brick",
+            "Instances" : [
+                [1.0, 0.0, 0.0, 0.0,
+                 0.0, 1.0, 0.0, 0.0,
+                 0.0, 0.0, 1.0, 0.0,
+                 -15.0, 10.0, -45.0, 1.0]
+            ]
+        },
+		{
+			"Type" : "box",
+			"Width" : 20.0,
+			"Height" : 20.0,
+			"Depth" : 20.0,
+			"Material" : "cut_stone_brick",
+			"Instances" : [
+				[1.0, 0.0, 0.0, 0.0,
+                 0.0, 1.0, 0.0, 0.0,
+                 0.0, 0.0, 1.0, 0.0,
+                 15.0, 10.0, -45.0, 1.0]
+			]
+		},
+		{
+            "Type" :  "sphere",
+            "Radius" : 10.0,
+            "SliceCount" : 20,
+            "StackCount" : 20,
+			"Material" : "rough_cobblestone",
+            "Instances" : [
+                [1.0, 0.0, 0.0, 0.0,
+                 0.0, 1.0, 0.0, 0.0,
+                 0.0, 0.0, 1.0, 0.0,
+                 45.0, 10.0, -45.0, 1.0]
+            ]
+        },
+		{
+			"Type" : "box",
+			"Width" : 20.0,
+			"Height" : 20.0,
+			"Depth" : 20.0,
+			"Material" : "rough_cobblestone",
+			"Instances" : [
+				[1.0, 0.0, 0.0, 0.0,
+                 0.0, 1.0, 0.0, 0.0,
+                 0.0, 0.0, 1.0, 0.0,
+                 75.0, 10.0, -45.0, 1.0]
+			]
+		},
+		{
+            "Type" :  "sphere",
+            "Radius" : 10.0,
+            "SliceCount" : 20,
+            "StackCount" : 20,
+			"Material" : "moss",
+            "Instances" : [
+                [1.0, 0.0, 0.0, 0.0,
+                 0.0, 1.0, 0.0, 0.0,
+                 0.0, 0.0, 1.0, 0.0,
+                 -75.0, 10.0, -15.0, 1.0]
+            ]
+        },
+		{
+			"Type" : "box",
+			"Width" : 20.0,
+			"Height" : 20.0,
+			"Depth" : 20.0,
+			"Material" : "moss",
+			"Instances" : [
+				[1.0, 0.0, 0.0, 0.0,
+                 0.0, 1.0, 0.0, 0.0,
+                 0.0, 0.0, 1.0, 0.0,
+                 -45.0, 10.0, -15.0, 1.0]
+			]
+		},
+		{
+            "Type" :  "sphere",
+            "Radius" : 10.0,
+            "SliceCount" : 20,
+            "StackCount" : 20,
+			"Material" : "copper",
+            "Instances" : [
+                [1.0, 0.0, 0.0, 0.0,
+                 0.0, 1.0, 0.0, 0.0,
+                 0.0, 0.0, 1.0, 0.0,
+                 -15.0, 10.0, -15.0, 1.0]
+            ]
+        },
+		{
+			"Type" : "box",
+			"Width" : 20.0,
+			"Height" : 20.0,
+			"Depth" : 20.0,
+			"Material" : "copper",
+			"Instances" : [
+				[1.0, 0.0, 0.0, 0.0,
+                 0.0, 1.0, 0.0, 0.0,
+                 0.0, 0.0, 1.0, 0.0,
+                 15.0, 10.0, -15.0, 1.0]
+			]
+		},
+		{
+            "Type" :  "sphere",
+            "Radius" : 10.0,
+            "SliceCount" : 20,
+            "StackCount" : 20,
+			"Material" : "gold",
+            "Instances" : [
+                [1.0, 0.0, 0.0, 0.0,
+                 0.0, 1.0, 0.0, 0.0,
+                 0.0, 0.0, 1.0, 0.0,
+                 45.0, 10.0, -15.0, 1.0]
+            ]
+        },
+		{
+			"Type" : "box",
+			"Width" : 20.0,
+			"Height" : 20.0,
+			"Depth" : 20.0,
+			"Material" : "gold",
+			"Instances" : [
+				[1.0, 0.0, 0.0, 0.0,
+                 0.0, 1.0, 0.0, 0.0,
+                 0.0, 0.0, 1.0, 0.0,
+                 75.0, 10.0, -15.0, 1.0]
+			]
+		},
+		{
+            "Type" :  "sphere",
+            "Radius" : 10.0,
+            "SliceCount" : 20,
+            "StackCount" : 20,
+			"Material" : "steel",
+            "Instances" : [
+                [1.0, 0.0, 0.0, 0.0,
+                 0.0, 1.0, 0.0, 0.0,
+                 0.0, 0.0, 1.0, 0.0,
+                 -75.0, 10.0, 15.0, 1.0]
+            ]
+        },
+		{
+			"Type" : "box",
+			"Width" : 20.0,
+			"Height" : 20.0,
+			"Depth" : 20.0,
+			"Material" : "steel",
+			"Instances" : [
+				[1.0, 0.0, 0.0, 0.0,
+                 0.0, 1.0, 0.0, 0.0,
+                 0.0, 0.0, 1.0, 0.0,
+                 -45.0, 10.0, 15.0, 1.0]
+			]
+		},
+		{
+            "Type" :  "sphere",
+            "Radius" : 10.0,
+            "SliceCount" : 20,
+            "StackCount" : 20,
+			"Material" : "basalt_rock",
+            "Instances" : [
+                [1.0, 0.0, 0.0, 0.0,
+                 0.0, 1.0, 0.0, 0.0,
+                 0.0, 0.0, 1.0, 0.0,
+                 -15.0, 10.0, 15.0, 1.0]
+            ]
+        },
+		{
+			"Type" : "box",
+			"Width" : 20.0,
+			"Height" : 20.0,
+			"Depth" : 20.0,
+			"Material" : "basalt_rock",
+			"Instances" : [
+				[1.0, 0.0, 0.0, 0.0,
+                 0.0, 1.0, 0.0, 0.0,
+                 0.0, 0.0, 1.0, 0.0,
+                 15.0, 10.0, 15.0, 1.0]
+			]
+		},
+		{
+            "Type" :  "sphere",
+            "Radius" : 10.0,
+            "SliceCount" : 20,
+            "StackCount" : 20,
+			"Material" : "slate_rock",
+            "Instances" : [
+                [1.0, 0.0, 0.0, 0.0,
+                 0.0, 1.0, 0.0, 0.0,
+                 0.0, 0.0, 1.0, 0.0,
+                 45.0, 10.0, 15.0, 1.0]
+            ]
+        },
+		{
+			"Type" : "box",
+			"Width" : 20.0,
+			"Height" : 20.0,
+			"Depth" : 20.0,
+			"Material" : "slate_rock",
+			"Instances" : [
+				[1.0, 0.0, 0.0, 0.0,
+                 0.0, 1.0, 0.0, 0.0,
+                 0.0, 0.0, 1.0, 0.0,
+                 75.0, 10.0, 15.0, 1.0]
+			]
+		},
+		{
+            "Type" :  "sphere",
+            "Radius" : 10.0,
+            "SliceCount" : 20,
+            "StackCount" : 20,
+			"Material" : "oak_wood",
+            "Instances" : [
+                [1.0, 0.0, 0.0, 0.0,
+                 0.0, 1.0, 0.0, 0.0,
+                 0.0, 0.0, 1.0, 0.0,
+                 -75.0, 10.0, 45.0, 1.0]
+            ]
+        },
+		{
+			"Type" : "box",
+			"Width" : 20.0,
+			"Height" : 20.0,
+			"Depth" : 20.0,
+			"Material" : "oak_wood",
+			"Instances" : [
+				[1.0, 0.0, 0.0, 0.0,
+                 0.0, 1.0, 0.0, 0.0,
+                 0.0, 0.0, 1.0, 0.0,
+                 -45.0, 10.0, 45.0, 1.0]
+			]
+		},
+		{
+            "Type" :  "sphere",
+            "Radius" : 10.0,
+            "SliceCount" : 20,
+            "StackCount" : 20,
+			"Material" : "pine_wood",
+            "Instances" : [
+                [1.0, 0.0, 0.0, 0.0,
+                 0.0, 1.0, 0.0, 0.0,
+                 0.0, 0.0, 1.0, 0.0,
+                 -15.0, 10.0, 45.0, 1.0]
+            ]
+        },
+		{
+			"Type" : "box",
+			"Width" : 20.0,
+			"Height" : 20.0,
+			"Depth" : 20.0,
+			"Material" : "pine_wood",
+			"Instances" : [
+				[1.0, 0.0, 0.0, 0.0,
+                 0.0, 1.0, 0.0, 0.0,
+                 0.0, 0.0, 1.0, 0.0,
+                 15.0, 10.0, 45.0, 1.0]
+			]
+		},
+		{
+            "Type" :  "sphere",
+            "Radius" : 10.0,
+            "SliceCount" : 20,
+            "StackCount" : 20,
+			"Material" : "walnut_wood",
+            "Instances" : [
+                [1.0, 0.0, 0.0, 0.0,
+                 0.0, 1.0, 0.0, 0.0,
+                 0.0, 0.0, 1.0, 0.0,
+                 45.0, 10.0, 45.0, 1.0]
+            ]
+        },
+		{
+			"Type" : "box",
+			"Width" : 20.0,
+			"Height" : 20.0,
+			"Depth" : 20.0,
+			"Material" : "walnut_wood",
+			"Instances" : [
+				[1.0, 0.0, 0.0, 0.0,
+                 0.0, 1.0, 0.0, 0.0,
+                 0.0, 0.0, 1.0, 0.0,
+                 75.0, 10.0, 45.0, 1.0]
+			]
+		}
     ],
 	"DirectionalLight" : {
 		"Color" : [1.0, 0.976, 0.89],

@@ -35,7 +35,7 @@ struct TiledCullFinalGatherComputeShaderFrameConstants {
 	DirectX::XMMATRIX Projection;
 	DirectX::XMMATRIX InvViewProjection;
 
-	Common::DirectionalLight DirectionalLight;
+	Common::ShaderDirectionalLight DirectionalLight;
 
 	DirectX::XMFLOAT3 EyePosition;
 	uint NumPointLightsToDraw;

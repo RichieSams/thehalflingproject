@@ -34,6 +34,16 @@ void LoadScene(std::atomic<bool> *sceneIsLoaded,
                std::vector<std::pair<Common::Model *, std::vector<DirectX::XMMATRIX, Common::Allocator16ByteAligned<DirectX::XMMATRIX> > *> > *instancedModelList,
 			   uint modelInstanceThreshold);
 
+void TW_CALL GetDirectionalLightColorCallback(void *value, void *clientData);
+void TW_CALL SetDirectionalLightColorCallback(const void *value, void *clientData);
+
+void TW_CALL GetDirectionalLightIntensityCallback(void *value, void *clientData);
+void TW_CALL SetDirectionalLightIntensityCallback(const void *value, void *clientData);
+
+void TW_CALL GetDirectionalLightDirectionCallback(void *value, void *clientData);
+void TW_CALL SetDirectionalLightDirectionCallback(const void *value, void *clientData);
+
+
 bool PBRDemo::Initialize(LPCTSTR mainWndCaption, uint32 screenWidth, uint32 screenHeight, bool fullscreen) {
 	LoadSceneJson();
 
@@ -58,10 +68,10 @@ bool PBRDemo::Initialize(LPCTSTR mainWndCaption, uint32 screenWidth, uint32 scre
 	// Create light buffers
 	// This has to be done after the Engine has been Initialized so we have a valid m_device
 	if (m_pointLights.size() > 0) {
-		m_pointLightBuffer = new Common::StructuredBuffer<Common::PointLight>(m_device, static_cast<uint>(m_pointLights.size()), D3D11_BIND_SHADER_RESOURCE, true);
+		m_pointLightBuffer = new Common::StructuredBuffer<Common::ShaderPointLight>(m_device, static_cast<uint>(m_pointLights.size()), D3D11_BIND_SHADER_RESOURCE, true);
 	}
 	if (m_spotLights.size() > 0) {
-		m_spotLightBuffer = new Common::StructuredBuffer<Common::SpotLight>(m_device, static_cast<uint>(m_spotLights.size()), D3D11_BIND_SHADER_RESOURCE, true);
+		m_spotLightBuffer = new Common::StructuredBuffer<Common::ShaderSpotLight>(m_device, static_cast<uint>(m_spotLights.size()), D3D11_BIND_SHADER_RESOURCE, true);
 	}
 
 	m_spriteRenderer.Initialize(m_device);
@@ -184,8 +194,9 @@ void PBRDemo::LoadSceneJson() {
 
 	Json::Value directionalLight = root["DirectionalLight"];
 	if (!directionalLight.isNull()) {
-		m_directionalLight.Color = DirectX::XMFLOAT3(directionalLight["Color"][0u].asSingle(), directionalLight["Color"][1u].asSingle(), directionalLight["Color"][2u].asSingle());
-		m_directionalLight.Direction = DirectX::XMFLOAT3(directionalLight["Direction"][0u].asSingle(), directionalLight["Direction"][1u].asSingle(), directionalLight["Direction"][2u].asSingle());
+		m_directionalLight.SetColor(DirectX::XMFLOAT3(directionalLight["Color"][0u].asSingle(), directionalLight["Color"][1u].asSingle(), directionalLight["Color"][2u].asSingle()));
+		m_directionalLight.SetDirection(DirectX::XMFLOAT3(directionalLight["Direction"][0u].asSingle(), directionalLight["Direction"][1u].asSingle(), directionalLight["Direction"][2u].asSingle()));
+		m_directionalLight.SetIntensity(directionalLight["Intensity"].asSingle());
 	}
 
 	Json::Value pointLights = root["PointLights"];
@@ -196,8 +207,8 @@ void PBRDemo::LoadSceneJson() {
 			
 			m_pointLights.emplace_back(DirectX::XMFLOAT3(pointLights[i]["Color"][0u].asSingle(), pointLights[i]["Color"][1u].asSingle(), pointLights[i]["Color"][2u].asSingle()),
 			                           DirectX::XMFLOAT3(pointLights[i]["Position"][0u].asSingle(), pointLights[i]["Position"][1u].asSingle(), pointLights[i]["Position"][2u].asSingle()),
-			                           range,
-			                           invRange);
+									   pointLights[i]["Lumens"].asSingle(),
+									   range);
 
 			// All three values must exist for a linear velocity to be valid
 			if (!pointLights[i]["LinearVelocity"].isNull() && !pointLights[i]["AABB_min"].isNull() && !pointLights[i]["AABB_max"]) {
@@ -224,8 +235,8 @@ void PBRDemo::LoadSceneJson() {
 
 				m_pointLights.emplace_back(DirectX::XMFLOAT3(Common::RandF(), Common::RandF(), Common::RandF()),
 										   DirectX::XMFLOAT3(Common::RandF(AABB_min.x, AABB_max.x), Common::RandF(AABB_min.y, AABB_max.y), Common::RandF(AABB_min.z, AABB_max.z)),
-										   range,
-										   invRange);
+										   Common::RandF(2000.0f, 10000.0f),
+										   range);
 
 				DirectX::XMFLOAT3 linearVelocityMin(0.0f, 0.0f, 0.0f);
 				DirectX::XMFLOAT3 linearVelocityMax(0.0f, 0.0f, 0.0f);
@@ -266,18 +277,18 @@ void PBRDemo::LoadSceneJson() {
 
 			m_spotLights.emplace_back(DirectX::XMFLOAT3(spotLights[i]["Color"][0u].asSingle(), spotLights[i]["Color"][1u].asSingle(), spotLights[i]["Color"][2u].asSingle()),
 			                          DirectX::XMFLOAT3(spotLights[i]["Position"][0u].asSingle(), spotLights[i]["Position"][1u].asSingle(), spotLights[i]["Position"][2u].asSingle()),
-			                          range,
-									  invRange,
+			                          spotLights[i]["Lumens"].asSingle(),
+									  range,
 			                          DirectX::XMFLOAT3(spotLights[i]["Direction"][0u].asSingle(), spotLights[i]["Direction"][1u].asSingle(), spotLights[i]["Direction"][2u].asSingle()),
-			                          std::cos(outerConeAngle),
-			                          std::acos(outerConeAngle - innerConeAngle));
+			                          outerConeAngle,
+			                          outerConeAngle - innerConeAngle);
 
 			DirectX::XMFLOAT3 linearVelocity(0.0f, 0.0f, 0.0f);
 			DirectX::XMFLOAT3 AABB_min(0.0f, 0.0f, 0.0f);
 			DirectX::XMFLOAT3 AABB_max(0.0f, 0.0f, 0.0f);
 			DirectX::XMFLOAT3 angularVelocity(0.0f, 0.0f, 0.0f);
 
-			if (!spotLights[i]["LinearVelocity"].isNull() && !pointLights[i]["AABB_min"].isNull() && !pointLights[i]["AABB_max"]) {
+			if (!spotLights[i]["LinearVelocity"].isNull() && !spotLights[i]["AABB_min"].isNull() && !spotLights[i]["AABB_max"]) {
 				linearVelocity.x = spotLights[i]["LinearVelocity"][0u].asSingle();
 				linearVelocity.y = spotLights[i]["LinearVelocity"][1u].asSingle();
 				linearVelocity.z = spotLights[i]["LinearVelocity"][2u].asSingle();
@@ -325,11 +336,11 @@ void PBRDemo::LoadSceneJson() {
 
 				m_spotLights.emplace_back(DirectX::XMFLOAT3(Common::RandF(), Common::RandF(), Common::RandF()),
 				                          DirectX::XMFLOAT3(Common::RandF(AABB_min.x, AABB_max.x), Common::RandF(AABB_min.y, AABB_max.y), Common::RandF(AABB_min.z, AABB_max.z)),
-				                          range,
-										  invRange,
+				                          Common::RandF(2000.0f, 10000.0f),
+										  range,
 				                          DirectX::XMFLOAT3(Common::RandF(-1.0f, 1.0f), Common::RandF(-1.0f, 1.0f), Common::RandF(-1.0f, 1.0f)),
-				                          std::cos(outerAngle),
-				                          std::acos(angleDifference));
+				                          outerAngle,
+				                          angleDifference);
 
 				DirectX::XMFLOAT3 linearVelocityMin(0.0f, 0.0f, 0.0f);
 				DirectX::XMFLOAT3 linearVelocityMax(0.0f, 0.0f, 0.0f);
@@ -373,6 +384,30 @@ void PBRDemo::LoadSceneJson() {
 	}
 }
 
+void TW_CALL GetDirectionalLightColorCallback(void *value, void *clientData) {
+	*static_cast<DirectX::XMFLOAT3 *>(value) = static_cast<const Common::DirectionalLight *>(clientData)->GetColor();
+}
+
+void TW_CALL SetDirectionalLightColorCallback(const void *value, void *clientData) {
+	static_cast<Common::DirectionalLight *>(clientData)->SetColor(*static_cast<const DirectX::XMFLOAT3 *>(value));
+}
+
+void TW_CALL GetDirectionalLightIntensityCallback(void *value, void *clientData) {
+	*static_cast<float *>(value) = static_cast<const Common::DirectionalLight *>(clientData)->GetIntensity();
+}
+
+void TW_CALL SetDirectionalLightIntensityCallback(const void *value, void *clientData) {
+	static_cast<Common::DirectionalLight *>(clientData)->SetIntensity(*static_cast<const float *>(value));
+}
+
+void TW_CALL GetDirectionalLightDirectionCallback(void *value, void *clientData) {
+	*static_cast<DirectX::XMFLOAT3 *>(value) = static_cast<const Common::DirectionalLight *>(clientData)->GetDirection();
+}
+
+void TW_CALL SetDirectionalLightDirectionCallback(const void *value, void *clientData) {
+	static_cast<Common::DirectionalLight *>(clientData)->SetDirection(*static_cast<const DirectX::XMFLOAT3 *>(value));
+}
+
 void PBRDemo::InitTweakBar() {
 	TwInit(TW_DIRECT3D11, m_device);
 
@@ -389,8 +424,9 @@ void PBRDemo::InitTweakBar() {
 	TwAddVarRW(m_settingsBar, "Wireframe", TwType::TW_TYPE_BOOLCPP, &m_wireframe, "");
 	TwAddVarRW(m_settingsBar, "Animate Lights", TW_TYPE_BOOLCPP, &m_animateLights, "");
 
-	TwAddVarRW(m_settingsBar, "Directional Light Color", TW_TYPE_COLOR3F, &m_directionalLight.Color, "");
-	TwAddVarRW(m_settingsBar, "Directional Light Direction", TW_TYPE_DIR3F, &m_directionalLight.Direction, "");
+	TwAddVarCB(m_settingsBar, "Directional Light Color", TW_TYPE_COLOR3F, SetDirectionalLightColorCallback, GetDirectionalLightColorCallback, &m_directionalLight, "");
+	TwAddVarCB(m_settingsBar, "Directional Light Intensity", TW_TYPE_FLOAT, SetDirectionalLightIntensityCallback, GetDirectionalLightIntensityCallback, &m_directionalLight, " min=1.0 max=20.0 ");
+	TwAddVarCB(m_settingsBar, "Directional Light Direction", TW_TYPE_DIR3F, SetDirectionalLightDirectionCallback, GetDirectionalLightDirectionCallback, &m_directionalLight, "");
 }
 
 void LoadScene(std::atomic<bool> *sceneIsLoaded, 

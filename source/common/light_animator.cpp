@@ -10,9 +10,11 @@
 namespace Common {
 
 void PointLightAnimator::AnimateLight(double deltaTime) {
-	float xPosition = m_velocity.x * static_cast<float>(deltaTime) + (*m_lightList)[m_index].Position.x;
-	float yPosition = m_velocity.y * static_cast<float>(deltaTime) + (*m_lightList)[m_index].Position.y;
-	float zPosition = m_velocity.z * static_cast<float>(deltaTime) + (*m_lightList)[m_index].Position.z;
+	DirectX::XMFLOAT3 position((*m_lightList)[m_index].GetPosition());
+
+	float xPosition = m_velocity.x * static_cast<float>(deltaTime)+position.x;
+	float yPosition = m_velocity.y * static_cast<float>(deltaTime)+position.y;
+	float zPosition = m_velocity.z * static_cast<float>(deltaTime)+position.z;
 
 	// Check x for out of bounds
 	if (xPosition > m_positiveBounds.x) {
@@ -41,16 +43,18 @@ void PointLightAnimator::AnimateLight(double deltaTime) {
 		m_velocity.z = -m_velocity.z;
 	}
 
-	(*m_lightList)[m_index].Position = {xPosition, yPosition, zPosition};
+	(*m_lightList)[m_index].SetPosition(DirectX::XMFLOAT3(xPosition, yPosition, zPosition));
 }
 
 
 void SpotLightAnimator::AnimateLight(double deltaTime) {
 	// Move the light
 	if (m_velocity.x != 0.0f || m_velocity.y != 0.0f || m_velocity.z == 0.0f) {
-		float xPosition = m_velocity.x * static_cast<float>(deltaTime) + (*m_lightList)[m_index].Position.x;
-		float yPosition = m_velocity.y * static_cast<float>(deltaTime) + (*m_lightList)[m_index].Position.y;
-		float zPosition = m_velocity.z * static_cast<float>(deltaTime) + (*m_lightList)[m_index].Position.z;
+		DirectX::XMFLOAT3 position((*m_lightList)[m_index].GetPosition());
+
+		float xPosition = m_velocity.x * static_cast<float>(deltaTime) + position.x;
+		float yPosition = m_velocity.y * static_cast<float>(deltaTime) + position.y;
+		float zPosition = m_velocity.z * static_cast<float>(deltaTime) + position.z;
 
 		// Check x for out of bounds
 		if (xPosition > m_positiveBounds.x) {
@@ -79,13 +83,17 @@ void SpotLightAnimator::AnimateLight(double deltaTime) {
 			m_velocity.z = -m_velocity.z;
 		}
 
-		(*m_lightList)[m_index].Position = {xPosition, yPosition, zPosition};
+		(*m_lightList)[m_index].SetPosition(DirectX::XMFLOAT3(xPosition, yPosition, zPosition));
 	}
 
 	// Rotate the light
 	if (m_angularVelocity.x != 0.0f || m_angularVelocity.y != 0.0f || m_angularVelocity.z == 0.0f) {
-		DirectX::XMVECTOR temp = DirectX::XMVector3Transform(DirectX::XMLoadFloat3(&(*m_lightList)[m_index].Direction), DirectX::XMMatrixRotationRollPitchYaw(m_angularVelocity.x, m_angularVelocity.y, m_angularVelocity.z));
-		DirectX::XMStoreFloat3(&(*m_lightList)[m_index].Direction, temp);
+		DirectX::XMFLOAT3 direction((*m_lightList)[m_index].GetDirection());
+
+		DirectX::XMVECTOR temp = DirectX::XMVector3Transform(DirectX::XMLoadFloat3(&direction), DirectX::XMMatrixRotationRollPitchYaw(m_angularVelocity.x, m_angularVelocity.y, m_angularVelocity.z));
+		DirectX::XMStoreFloat3(&direction, temp);
+
+		(*m_lightList)[m_index].SetDirection(direction);
 	}
 }
 

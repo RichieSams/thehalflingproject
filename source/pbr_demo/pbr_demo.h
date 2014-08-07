@@ -113,8 +113,8 @@ private:
 
 	// Shader Buffers
 	// We assume there is only one directional light. Therefore, it is stored in a cbuffer
-	Common::StructuredBuffer<Common::PointLight> *m_pointLightBuffer;
-	Common::StructuredBuffer<Common::SpotLight> *m_spotLightBuffer;
+	Common::StructuredBuffer<Common::ShaderPointLight> *m_pointLightBuffer;
+	Common::StructuredBuffer<Common::ShaderSpotLight> *m_spotLightBuffer;
 
 	Common::BlendStates m_blendStates;
 	Common::DepthStencilStates m_depthStencilStates;

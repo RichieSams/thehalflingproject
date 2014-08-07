@@ -27,6 +27,7 @@
     <ClCompile Include="..\common\file_io_util.cpp" />
     <ClCompile Include="..\common\geometry_generator.cpp" />
     <ClCompile Include="..\common\halfling_model_file.cpp" />
+    <ClCompile Include="..\common\lights.cpp" />
     <ClCompile Include="..\common\light_animator.cpp" />
     <ClCompile Include="..\common\material_shader_manager.cpp" />
     <ClCompile Include="..\common\model.cpp" />

@@ -75,7 +75,7 @@ float SpotAttenuation(float3 lightVector, float3 spotDirection, float cosOuterCo
 
 
 void AccumulateCookTorranceDirectionalLight(DirectionalLight light, SurfaceProperties surfProps, float3 toEye, inout float4 outColor) {
-	float L = light.Direction;
+	float3 L = float3(light.Direction.x, -light.Direction.y, -light.Direction.z);
 	float3 H = normalize(toEye + L);
 	float3 N = surfProps.Normal;
 
@@ -98,7 +98,7 @@ void AccumulateCookTorranceDirectionalLight(DirectionalLight light, SurfacePrope
 	float3 specularBRDFValue = (specularDistribution * specularGeomVisibility) * specularFresnel;
 
 	// Composite with the final color
-	outColor += float4(light.Color, 1.0f) * (NoL * (float4(diffuseBRDFValue, 1.0f) + float4(specularBRDFValue, 1.0f)));
+	outColor += float4(light.Irradiance, 1.0f) * (NoL * (float4(diffuseBRDFValue, 1.0f) + float4(specularBRDFValue, 1.0f)));
 }
 
 void AccumulateCookTorrancePointLight(PointLight light, SurfaceProperties surfProps, float3 toEye, inout float4 outColor) {
@@ -136,7 +136,7 @@ void AccumulateCookTorrancePointLight(PointLight light, SurfaceProperties surfPr
 	float lightRadiusMask = Square(saturate(1 - Square(sqrDistance * Square(light.InvRange))));
 
 	// Composite with the final color
-	outColor += float4(light.Color, 1.0f) * ((attenuation * lightRadiusMask * NoL) * (float4(diffuseBRDFValue, 1.0f) + float4(specularBRDFValue, 1.0f)));
+	outColor += float4(light.Irradiance, 1.0f) * ((attenuation * lightRadiusMask * NoL) * (float4(diffuseBRDFValue, 1.0f) + float4(specularBRDFValue, 1.0f)));
 }
 
 void AccumulateCookTorranceSpotLight(SpotLight light, SurfaceProperties surfProps, float3 toEye, inout float4 outColor) {
@@ -177,7 +177,7 @@ void AccumulateCookTorranceSpotLight(SpotLight light, SurfaceProperties surfProp
 	float spotAttenuation = SpotAttenuation(L, light.Direction, light.CosOuterConeAngle, light.InvCosConeDifference);
 
 	// Composite with the final color
-	outColor += float4(light.Color, 1.0f) * ((attenuation * lightRadiusMask * spotAttenuation * NoL) * (float4(diffuseBRDFValue, 1.0f) + float4(specularBRDFValue, 1.0f)));
+	outColor += float4(light.Irradiance, 1.0f) * ((attenuation * lightRadiusMask * spotAttenuation * NoL) * (float4(diffuseBRDFValue, 1.0f) + float4(specularBRDFValue, 1.0f)));
 }
 
 

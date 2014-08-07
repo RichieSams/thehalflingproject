@@ -265,7 +265,7 @@ void PBRDemo::SetTiledCullFinalGatherShaderConstants(DirectX::XMMATRIX &worldVie
 	computeShaderFrameConstants.WorldView = worldViewMatrix;
 	computeShaderFrameConstants.Projection = projMatrix;
 	computeShaderFrameConstants.InvViewProjection = invViewProjMatrix;
-	computeShaderFrameConstants.DirectionalLight = m_directionalLight;
+	computeShaderFrameConstants.DirectionalLight = m_directionalLight.GetShaderPackedLight();
 	computeShaderFrameConstants.EyePosition = m_camera.GetCameraPosition();
 	computeShaderFrameConstants.NumPointLightsToDraw = m_numPointLightsToDraw;
 	computeShaderFrameConstants.CameraClipPlanes.x = m_nearClip;
@@ -279,9 +279,9 @@ void PBRDemo::SetLightBuffers() {
 	if (m_numPointLightsToDraw > 0) {
 		assert(m_pointLightBuffer->NumElements() >= (int)m_numPointLightsToDraw);
 
-		Common::PointLight *pointLightArray = m_pointLightBuffer->MapDiscard(m_immediateContext);
+		Common::ShaderPointLight *pointLightArray = m_pointLightBuffer->MapDiscard(m_immediateContext);
 		for (unsigned int i = 0; i < m_numPointLightsToDraw; ++i) {
-			pointLightArray[i] = m_pointLights[i];
+			pointLightArray[i] = m_pointLights[i].GetShaderPackedLight();
 		}
 		m_pointLightBuffer->Unmap(m_immediateContext);
 	}
@@ -289,9 +289,9 @@ void PBRDemo::SetLightBuffers() {
 	if (m_numSpotLightsToDraw > 0) {
 		assert(m_spotLightBuffer->NumElements() >= (int)m_numSpotLightsToDraw);
 
-		Common::SpotLight *spotLightArray = m_spotLightBuffer->MapDiscard(m_immediateContext);
+		Common::ShaderSpotLight *spotLightArray = m_spotLightBuffer->MapDiscard(m_immediateContext);
 		for (unsigned int i = 0; i < m_numSpotLightsToDraw; ++i) {
-			spotLightArray[i] = m_spotLights[i];
+			spotLightArray[i] = m_spotLights[i].GetShaderPackedLight();
 		}
 		m_spotLightBuffer->Unmap(m_immediateContext);
 	}

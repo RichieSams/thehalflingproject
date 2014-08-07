@@ -99,6 +99,9 @@
     <ClCompile Include="..\common\material_shader_manager.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="..\common\lights.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\common\halfling_sys.h">

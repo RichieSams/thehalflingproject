@@ -8,7 +8,7 @@
 #define LIGHTS_SHADER_H
 
 struct DirectionalLight {
-	float3 Color;
+	float3 Irradiance;
 	float pad;
 
 	float3 Direction;
@@ -16,7 +16,7 @@ struct DirectionalLight {
 };
 
 struct PointLight { 
-	float3 Color;
+	float3 Irradiance;
 	float Range;
 
 	float3 Position;
@@ -24,7 +24,7 @@ struct PointLight {
 };
 
 struct SpotLight {
-	float3 Color;
+	float3 Irradiance;
 	float Range;
 
 	float3 Position;

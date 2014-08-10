@@ -4,9 +4,9 @@
  * Copyright Adrian Astley 2013 - 2014
  */
 
-#include "obj_hfm_converter/hmf_converter.h"
+#include "hmf_converter/hmf_converter.h"
 
-#include "obj_hfm_converter/util.h"
+#include "hmf_converter/util.h"
 
 #include "common/typedefs.h"
 #include "common/halfling_model_file.h"

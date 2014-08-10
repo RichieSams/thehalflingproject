@@ -87,9 +87,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\source\obj_hfm_converter\hmf_converter.cpp" />
-    <ClCompile Include="..\source\obj_hfm_converter\main.cpp" />
-    <ClCompile Include="..\source\obj_hfm_converter\util.cpp" />
+    <ClCompile Include="..\source\hmf_converter\hmf_converter.cpp" />
+    <ClCompile Include="..\source\hmf_converter\main.cpp" />
+    <ClCompile Include="..\source\hmf_converter\util.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Halfling.vcxproj">
@@ -102,8 +102,8 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\source\obj_hfm_converter\hmf_converter.h" />
-    <ClInclude Include="..\source\obj_hfm_converter\util.h" />
+    <ClInclude Include="..\source\hmf_converter\hmf_converter.h" />
+    <ClInclude Include="..\source\hmf_converter\util.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

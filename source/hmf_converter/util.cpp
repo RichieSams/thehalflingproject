@@ -4,7 +4,7 @@
  * Copyright Adrian Astley 2013 - 2014
  */
 
-#include "obj_hfm_converter/util.h"
+#include "hmf_converter/util.h"
 
 #include "common/file_io_util.h"
 #include "common/memory_stream.h"

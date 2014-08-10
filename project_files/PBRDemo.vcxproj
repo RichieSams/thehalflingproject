@@ -68,31 +68,31 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\..\build\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
-    <IntDir>..\..\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>../;../libs/AntTweakBar/include;../libs/json-cpp/include;../libs/stlsoft/include;../libs/fastformat/include;$(IncludePath)</IncludePath>
-    <LibraryPath>../libs/AntTweakBar/lib;../libs/json-cpp/lib/$(Platform)/$(Configuration);../libs/fastformat/lib/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
+    <OutDir>..\build\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>..\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IncludePath>../source/;../source/libs/AntTweakBar/include;../source/libs/json-cpp/include;../source/libs/stlsoft/include;../source/libs/fastformat/include;$(IncludePath)</IncludePath>
+    <LibraryPath>../source/libs/AntTweakBar/lib;../source/libs/json-cpp/lib/$(Platform)/$(Configuration);../source/libs/fastformat/lib/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>../;../libs/AntTweakBar/include;../libs/json-cpp/include;../libs/stlsoft/include;../libs/fastformat/include;$(IncludePath)</IncludePath>
-    <LibraryPath>../libs/AntTweakBar/lib;../libs/json-cpp/lib/$(Platform)/$(Configuration);../libs/fastformat/lib/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
+    <IncludePath>../source/;../source/libs/AntTweakBar/include;../source/libs/json-cpp/include;../source/libs/stlsoft/include;../source/libs/fastformat/include;$(IncludePath)</IncludePath>
+    <LibraryPath>../source/libs/AntTweakBar/lib;../source/libs/json-cpp/lib/$(Platform)/$(Configuration);../source/libs/fastformat/lib/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\..\build\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
-    <IntDir>..\..\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir>..\build\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>..\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\..\build\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
-    <IntDir>..\..\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>../;../libs/AntTweakBar/include;../libs/json-cpp/include;../libs/stlsoft/include;../libs/fastformat/include;$(IncludePath)</IncludePath>
-    <LibraryPath>../libs/AntTweakBar/lib;../libs/json-cpp/lib/$(Platform)/$(Configuration);../libs/fastformat/lib/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
+    <OutDir>..\build\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>..\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IncludePath>../source/;../source/libs/AntTweakBar/include;../source/libs/json-cpp/include;../source/libs/stlsoft/include;../source/libs/fastformat/include;$(IncludePath)</IncludePath>
+    <LibraryPath>../source/libs/AntTweakBar/lib;../source/libs/json-cpp/lib/$(Platform)/$(Configuration);../source/libs/fastformat/lib/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>../;../libs/AntTweakBar/include;../libs/json-cpp/include;../libs/stlsoft/include;../libs/fastformat/include;$(IncludePath)</IncludePath>
-    <LibraryPath>../libs/AntTweakBar/lib;../libs/json-cpp/lib/$(Platform)/$(Configuration);../libs/fastformat/lib/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
+    <IncludePath>../source/;../source/libs/AntTweakBar/include;../source/libs/json-cpp/include;../source/libs/stlsoft/include;../source/libs/fastformat/include;$(IncludePath)</IncludePath>
+    <LibraryPath>../source/libs/AntTweakBar/lib;../source/libs/json-cpp/lib/$(Platform)/$(Configuration);../source/libs/fastformat/lib/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\..\build\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
-    <IntDir>..\..\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir>..\build\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>..\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -108,19 +108,19 @@
       <AdditionalDependencies>d3d11.lib;AntTweakBar.lib;gdiplus.lib;json-cppd.lib;fastformatd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <FxCompile>
-      <AdditionalIncludeDirectories>../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../source/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderModel>5.0</ShaderModel>
     </FxCompile>
     <PostBuildEvent>
-      <Command>XCOPY "$(SolutionDir)..\libs\AntTweakBar\lib\AntTweakBar.dll" "$(OutDir)" /D /K /Y
-XCOPY "$(SolutionDir)..\pbr_demo\resources\*" "$(OutDir)" /D /K /Y /E
+      <Command>XCOPY "$(SolutionDir)..\source\libs\AntTweakBar\lib\AntTweakBar.dll" "$(OutDir)" /D /K /Y
+XCOPY "$(SolutionDir)..\source\pbr_demo\resources\*" "$(OutDir)" /D /K /Y /E
 XCOPY "$(OutDir)..\Halfling\sprite_vertex_shader.cso" "$(OutDir)" /D /K /Y
 XCOPY "$(OutDir)..\Halfling\sprite_instanced_vertex_shader.cso" "$(OutDir)" /D /K /Y
 XCOPY "$(OutDir)..\Halfling\sprite_pixel_shader.cso" "$(OutDir)" /D /K /Y
 XCOPY "$(OutDir)..\Halfling\sprite_sampled_pixel_shader.cso" "$(OutDir)" /D /K /Y</Command>
     </PostBuildEvent>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../source/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -137,19 +137,19 @@ XCOPY "$(OutDir)..\Halfling\sprite_sampled_pixel_shader.cso" "$(OutDir)" /D /K /
       <AdditionalDependencies>d3d11.lib;AntTweakBar.lib;gdiplus.lib;json-cppd.lib;fastformatd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <FxCompile>
-      <AdditionalIncludeDirectories>../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../source/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderModel>5.0</ShaderModel>
     </FxCompile>
     <PostBuildEvent>
-      <Command>XCOPY "$(SolutionDir)..\libs\AntTweakBar\lib\AntTweakBar64.dll" "$(OutDir)" /D /K /Y
-XCOPY "$(SolutionDir)..\pbr_demo\resources\*" "$(OutDir)" /D /K /Y /E
+      <Command>XCOPY "$(SolutionDir)..\source\libs\AntTweakBar\lib\AntTweakBar64.dll" "$(OutDir)" /D /K /Y
+XCOPY "$(SolutionDir)..\source\pbr_demo\resources\*" "$(OutDir)" /D /K /Y /E
 XCOPY "$(OutDir)..\Halfling\sprite_vertex_shader.cso" "$(OutDir)" /D /K /Y
 XCOPY "$(OutDir)..\Halfling\sprite_instanced_vertex_shader.cso" "$(OutDir)" /D /K /Y
 XCOPY "$(OutDir)..\Halfling\sprite_pixel_shader.cso" "$(OutDir)" /D /K /Y
 XCOPY "$(OutDir)..\Halfling\sprite_sampled_pixel_shader.cso" "$(OutDir)" /D /K /Y</Command>
     </PostBuildEvent>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../source/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -170,19 +170,19 @@ XCOPY "$(OutDir)..\Halfling\sprite_sampled_pixel_shader.cso" "$(OutDir)" /D /K /
       <AdditionalDependencies>d3d11.lib;AntTweakBar.lib;gdiplus.lib;json-cpp.lib;fastformat.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <FxCompile>
-      <AdditionalIncludeDirectories>../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../source/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderModel>5.0</ShaderModel>
     </FxCompile>
     <PostBuildEvent>
-      <Command>XCOPY "$(SolutionDir)..\libs\AntTweakBar\lib\AntTweakBar.dll" "$(OutDir)" /D /K /Y
-XCOPY "$(SolutionDir)..\pbr_demo\resources\*" "$(OutDir)" /D /K /Y /E
+      <Command>XCOPY "$(SolutionDir)..\source\libs\AntTweakBar\lib\AntTweakBar.dll" "$(OutDir)" /D /K /Y
+XCOPY "$(SolutionDir)..\source\pbr_demo\resources\*" "$(OutDir)" /D /K /Y /E
 XCOPY "$(OutDir)..\Halfling\sprite_vertex_shader.cso" "$(OutDir)" /D /K /Y
 XCOPY "$(OutDir)..\Halfling\sprite_instanced_vertex_shader.cso" "$(OutDir)" /D /K /Y
 XCOPY "$(OutDir)..\Halfling\sprite_pixel_shader.cso" "$(OutDir)" /D /K /Y
 XCOPY "$(OutDir)..\Halfling\sprite_sampled_pixel_shader.cso" "$(OutDir)" /D /K /Y</Command>
     </PostBuildEvent>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../source/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -203,19 +203,19 @@ XCOPY "$(OutDir)..\Halfling\sprite_sampled_pixel_shader.cso" "$(OutDir)" /D /K /
       <AdditionalDependencies>d3d11.lib;AntTweakBar.lib;gdiplus.lib;json-cpp.lib;fastformat.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <FxCompile>
-      <AdditionalIncludeDirectories>../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../source/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderModel>5.0</ShaderModel>
     </FxCompile>
     <PostBuildEvent>
-      <Command>XCOPY "$(SolutionDir)..\libs\AntTweakBar\lib\AntTweakBar64.dll" "$(OutDir)" /D /K /Y
-XCOPY "$(SolutionDir)..\pbr_demo\resources\*" "$(OutDir)" /D /K /Y /E
+      <Command>XCOPY "$(SolutionDir)..\source\libs\AntTweakBar\lib\AntTweakBar64.dll" "$(OutDir)" /D /K /Y
+XCOPY "$(SolutionDir)..\source\pbr_demo\resources\*" "$(OutDir)" /D /K /Y /E
 XCOPY "$(OutDir)..\Halfling\sprite_vertex_shader.cso" "$(OutDir)" /D /K /Y
 XCOPY "$(OutDir)..\Halfling\sprite_instanced_vertex_shader.cso" "$(OutDir)" /D /K /Y
 XCOPY "$(OutDir)..\Halfling\sprite_pixel_shader.cso" "$(OutDir)" /D /K /Y
 XCOPY "$(OutDir)..\Halfling\sprite_sampled_pixel_shader.cso" "$(OutDir)" /D /K /Y</Command>
     </PostBuildEvent>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../source/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -224,31 +224,31 @@ XCOPY "$(OutDir)..\Halfling\sprite_sampled_pixel_shader.cso" "$(OutDir)" /D /K /
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\pbr_demo\main.cpp" />
-    <ClCompile Include="..\pbr_demo\pbr_demo.cpp" />
-    <ClCompile Include="..\pbr_demo\pbr_demo.draw.cpp" />
-    <ClCompile Include="..\pbr_demo\pbr_demo.init.cpp" />
-    <ClCompile Include="..\pbr_demo\pbr_demo.update.cpp" />
+    <ClCompile Include="..\source\pbr_demo\main.cpp" />
+    <ClCompile Include="..\source\pbr_demo\pbr_demo.cpp" />
+    <ClCompile Include="..\source\pbr_demo\pbr_demo.draw.cpp" />
+    <ClCompile Include="..\source\pbr_demo\pbr_demo.init.cpp" />
+    <ClCompile Include="..\source\pbr_demo\pbr_demo.update.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\pbr_demo\pbr_demo.h" />
-    <ClInclude Include="..\pbr_demo\shader_constants.h" />
-    <ClInclude Include="..\pbr_demo\shader_defines.h" />
+    <ClInclude Include="..\source\pbr_demo\pbr_demo.h" />
+    <ClInclude Include="..\source\pbr_demo\shader_constants.h" />
+    <ClInclude Include="..\source\pbr_demo\shader_defines.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\pbr_demo\resources\scene.json" />
-    <None Include="..\pbr_demo\shaders\hlsl_util.hlsli" />
-    <None Include="..\pbr_demo\shaders\types.hlsli" />
-    <None Include="..\pbr_demo\tempIcon.ico" />
+    <None Include="..\source\pbr_demo\resources\scene.json" />
+    <None Include="..\source\pbr_demo\shaders\hlsl_util.hlsli" />
+    <None Include="..\source\pbr_demo\shaders\types.hlsli" />
+    <None Include="..\source\pbr_demo\tempIcon.ico" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="PBRDemo.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\pbr_demo\materials\example.hmat.hlsl">
+    <None Include="..\source\pbr_demo\materials\example.hmat.hlsl">
       <FileType>Document</FileType>
     </None>
-    <FxCompile Include="..\pbr_demo\materials\matte_gray.hmat.hlsl">
+    <FxCompile Include="..\source\pbr_demo\materials\matte_gray.hmat.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
@@ -262,7 +262,7 @@ XCOPY "$(OutDir)..\Halfling\sprite_sampled_pixel_shader.cso" "$(OutDir)" /D /K /
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename)</ObjectFileOutput>
     </FxCompile>
-    <FxCompile Include="..\pbr_demo\materials\metal.hmat.hlsl">
+    <FxCompile Include="..\source\pbr_demo\materials\metal.hmat.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
@@ -276,7 +276,7 @@ XCOPY "$(OutDir)..\Halfling\sprite_sampled_pixel_shader.cso" "$(OutDir)" /D /K /
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename)</ObjectFileOutput>
     </FxCompile>
-    <FxCompile Include="..\pbr_demo\materials\nonmetal.hmat.hlsl">
+    <FxCompile Include="..\source\pbr_demo\materials\nonmetal.hmat.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
@@ -290,7 +290,7 @@ XCOPY "$(OutDir)..\Halfling\sprite_sampled_pixel_shader.cso" "$(OutDir)" /D /K /
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename)</ObjectFileOutput>
     </FxCompile>
-    <FxCompile Include="..\pbr_demo\shaders\fullscreen_triangle_vs.hlsl">
+    <FxCompile Include="..\source\pbr_demo\shaders\fullscreen_triangle_vs.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">FullScreenTriangleVS</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">FullScreenTriangleVS</EntryPointName>
@@ -300,7 +300,7 @@ XCOPY "$(OutDir)..\Halfling\sprite_sampled_pixel_shader.cso" "$(OutDir)" /D /K /
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">FullScreenTriangleVS</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
-    <None Include="..\pbr_demo\shaders\gbuffer_ps.hlsl">
+    <None Include="..\source\pbr_demo\shaders\gbuffer_ps.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">GBufferPS</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">GBufferPS</EntryPointName>
@@ -311,7 +311,7 @@ XCOPY "$(OutDir)..\Halfling\sprite_sampled_pixel_shader.cso" "$(OutDir)" /D /K /
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <FileType>Document</FileType>
     </None>
-    <FxCompile Include="..\pbr_demo\shaders\gbuffer_vs.hlsl">
+    <FxCompile Include="..\source\pbr_demo\shaders\gbuffer_vs.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">GBufferVS</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">GBufferVS</EntryPointName>
@@ -321,7 +321,7 @@ XCOPY "$(OutDir)..\Halfling\sprite_sampled_pixel_shader.cso" "$(OutDir)" /D /K /
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">GBufferVS</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
-    <FxCompile Include="..\pbr_demo\shaders\instanced_gbuffer_vs.hlsl">
+    <FxCompile Include="..\source\pbr_demo\shaders\instanced_gbuffer_vs.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">InstancedGBufferVS</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">InstancedGBufferVS</EntryPointName>
@@ -331,7 +331,7 @@ XCOPY "$(OutDir)..\Halfling\sprite_sampled_pixel_shader.cso" "$(OutDir)" /D /K /
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">InstancedGBufferVS</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
-    <FxCompile Include="..\pbr_demo\shaders\post_process_ps.hlsl">
+    <FxCompile Include="..\source\pbr_demo\shaders\post_process_ps.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">PostProcessPS</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">PostProcessPS</EntryPointName>
@@ -341,7 +341,7 @@ XCOPY "$(OutDir)..\Halfling\sprite_sampled_pixel_shader.cso" "$(OutDir)" /D /K /
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">PostProcessPS</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="..\pbr_demo\shaders\tiled_cull_final_gather_cs.hlsl">
+    <FxCompile Include="..\source\pbr_demo\shaders\tiled_cull_final_gather_cs.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">ComputeShaderTileCS</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compute</ShaderType>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">ComputeShaderTileCS</EntryPointName>

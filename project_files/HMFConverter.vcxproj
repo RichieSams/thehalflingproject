@@ -42,17 +42,17 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\..\build\$(Configuration)\$(ProjectName)\</OutDir>
-    <IntDir>..\..\obj\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>../;../libs/rlutil/;../libs/assimp/include/;../libs/json-cpp/include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\libs\assimp\lib\debug;..\libs\json-cpp\build\debug;$(LibraryPath)</LibraryPath>
+    <OutDir>..\build\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>..\obj\$(Configuration)\$(ProjectName)\</IntDir>
+    <IncludePath>../source/;../source/libs/rlutil/;../source/libs/assimp/include/;../source/libs/json-cpp/include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\source\libs\assimp\lib\debug;..\source\libs\json-cpp\build\debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\..\build\$(Configuration)\$(ProjectName)\</OutDir>
-    <IntDir>..\..\obj\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>../;../libs/rlutil/;../libs/assimp/include/;../libs/json-cpp/include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\libs\assimp\lib\release;..\libs\json-cpp\build\release;$(LibraryPath)</LibraryPath>
+    <OutDir>..\build\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>..\obj\$(Configuration)\$(ProjectName)\</IntDir>
+    <IncludePath>../source/;../source/libs/rlutil/;../source/libs/assimp/include/;../source/libs/json-cpp/include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\source\libs\assimp\lib\release;..\source\libs\json-cpp\build\release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -87,9 +87,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\obj_hfm_converter\hmf_converter.cpp" />
-    <ClCompile Include="..\obj_hfm_converter\main.cpp" />
-    <ClCompile Include="..\obj_hfm_converter\util.cpp" />
+    <ClCompile Include="..\source\obj_hfm_converter\hmf_converter.cpp" />
+    <ClCompile Include="..\source\obj_hfm_converter\main.cpp" />
+    <ClCompile Include="..\source\obj_hfm_converter\util.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Halfling.vcxproj">
@@ -97,13 +97,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\tools\texconv\texconv.exe">
+    <Content Include="..\tools\texconv\texconv.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\obj_hfm_converter\hmf_converter.h" />
-    <ClInclude Include="..\obj_hfm_converter\util.h" />
+    <ClInclude Include="..\source\obj_hfm_converter\hmf_converter.h" />
+    <ClInclude Include="..\source\obj_hfm_converter\util.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

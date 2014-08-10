@@ -21,235 +21,235 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\halfling\halfling_engine.cpp">
+    <ClCompile Include="..\source\halfling\halfling_engine.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\common\dxerr.cpp">
+    <ClCompile Include="..\source\common\dxerr.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\common\d3d_util.cpp">
+    <ClCompile Include="..\source\common\d3d_util.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\common\camera.cpp">
+    <ClCompile Include="..\source\common\camera.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\common\geometry_generator.cpp">
+    <ClCompile Include="..\source\common\geometry_generator.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\common\texture2d.cpp">
+    <ClCompile Include="..\source\common\texture2d.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\common\texture_manager.cpp">
+    <ClCompile Include="..\source\common\texture_manager.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\common\sprite_renderer.cpp">
+    <ClCompile Include="..\source\common\sprite_renderer.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\common\sprite_font.cpp">
+    <ClCompile Include="..\source\common\sprite_font.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\common\device_states.cpp">
+    <ClCompile Include="..\source\common\device_states.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\common\light_animator.cpp">
+    <ClCompile Include="..\source\common\light_animator.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\common\clock.cpp">
+    <ClCompile Include="..\source\common\clock.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\common\timer.cpp">
+    <ClCompile Include="..\source\common\timer.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\common\profiler.cpp">
+    <ClCompile Include="..\source\common\profiler.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\common\console.cpp">
+    <ClCompile Include="..\source\common\console.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\common\model.cpp">
+    <ClCompile Include="..\source\common\model.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\common\halfling_model_file.cpp">
+    <ClCompile Include="..\source\common\halfling_model_file.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\common\file_io_util.cpp">
+    <ClCompile Include="..\source\common\file_io_util.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\libs\inih\ini.c">
+    <ClCompile Include="..\source\libs\inih\ini.c">
       <Filter>Libs\inih</Filter>
     </ClCompile>
-    <ClCompile Include="..\libs\inih\INIReader.cpp">
+    <ClCompile Include="..\source\libs\inih\INIReader.cpp">
       <Filter>Libs\inih</Filter>
     </ClCompile>
-    <ClCompile Include="..\libs\DirectXTex\DDSTextureLoader.cpp">
+    <ClCompile Include="..\source\libs\DirectXTex\DDSTextureLoader.cpp">
       <Filter>Libs\DirectXTex</Filter>
     </ClCompile>
-    <ClCompile Include="..\common\model_manager.cpp">
+    <ClCompile Include="..\source\common\model_manager.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\common\shader.cpp">
+    <ClCompile Include="..\source\common\shader.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\common\string_util.cpp">
+    <ClCompile Include="..\source\common\string_util.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\common\model_loading.cpp">
+    <ClCompile Include="..\source\common\model_loading.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\common\material_shader_manager.cpp">
+    <ClCompile Include="..\source\common\material_shader_manager.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\common\lights.cpp">
+    <ClCompile Include="..\source\common\lights.cpp">
       <Filter>Common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\common\halfling_sys.h">
+    <ClInclude Include="..\source\common\halfling_sys.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\typedefs.h">
+    <ClInclude Include="..\source\common\typedefs.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\halfling\halfling_engine.h">
+    <ClInclude Include="..\source\halfling\halfling_engine.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\d3d_util.h">
+    <ClInclude Include="..\source\common\d3d_util.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\dxerr.h">
+    <ClInclude Include="..\source\common\dxerr.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\vector.h">
+    <ClInclude Include="..\source\common\vector.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\camera.h">
+    <ClInclude Include="..\source\common\camera.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\math.h">
+    <ClInclude Include="..\source\common\math.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\lights.h">
+    <ClInclude Include="..\source\common\lights.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\geometry_generator.h">
+    <ClInclude Include="..\source\common\geometry_generator.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\structured_buffer.h">
+    <ClInclude Include="..\source\common\structured_buffer.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\model.h">
+    <ClInclude Include="..\source\common\model.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\materials.h">
+    <ClInclude Include="..\source\common\materials.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\texture2d.h">
+    <ClInclude Include="..\source\common\texture2d.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\texture_manager.h">
+    <ClInclude Include="..\source\common\texture_manager.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\sprite_renderer.h">
+    <ClInclude Include="..\source\common\sprite_renderer.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\sprite_font.h">
+    <ClInclude Include="..\source\common\sprite_font.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\device_states.h">
+    <ClInclude Include="..\source\common\device_states.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\light_animator.h">
+    <ClInclude Include="..\source\common\light_animator.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\file_io_util.h">
+    <ClInclude Include="..\source\common\file_io_util.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\string_util.h">
+    <ClInclude Include="..\source\common\string_util.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\clock.h">
+    <ClInclude Include="..\source\common\clock.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\memory_stream.h">
+    <ClInclude Include="..\source\common\memory_stream.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\profiler.h">
+    <ClInclude Include="..\source\common\profiler.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\timer.h">
+    <ClInclude Include="..\source\common\timer.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\hash.h">
+    <ClInclude Include="..\source\common\hash.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\console.h">
+    <ClInclude Include="..\source\common\console.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\rect.h">
+    <ClInclude Include="..\source\common\rect.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\endian.h">
+    <ClInclude Include="..\source\common\endian.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\console_progress_bar.h">
+    <ClInclude Include="..\source\common\console_progress_bar.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\halfling_model_file.h">
+    <ClInclude Include="..\source\common\halfling_model_file.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\libs\inih\INIReader.h">
+    <ClInclude Include="..\source\libs\inih\INIReader.h">
       <Filter>Libs\inih</Filter>
     </ClInclude>
-    <ClInclude Include="..\libs\inih\ini.h">
+    <ClInclude Include="..\source\libs\inih\ini.h">
       <Filter>Libs\inih</Filter>
     </ClInclude>
-    <ClInclude Include="..\libs\DirectXTex\DDSTextureLoader.h">
+    <ClInclude Include="..\source\libs\DirectXTex\DDSTextureLoader.h">
       <Filter>Libs\DirectXTex</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\model_manager.h">
+    <ClInclude Include="..\source\common\model_manager.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\shader.h">
+    <ClInclude Include="..\source\common\shader.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\allocator_16_byte_aligned.h">
+    <ClInclude Include="..\source\common\allocator_16_byte_aligned.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\model_loading.h">
+    <ClInclude Include="..\source\common\model_loading.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\material_shader_manager.h">
+    <ClInclude Include="..\source\common\material_shader_manager.h">
       <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\common\shaders\lights.hlsli">
+    <None Include="..\source\common\shaders\lights.hlsli">
       <Filter>Common\Shaders</Filter>
     </None>
-    <None Include="..\common\shaders\materials.hlsli">
+    <None Include="..\source\common\shaders\materials.hlsli">
       <Filter>Common\Shaders</Filter>
     </None>
-    <None Include="..\common\shaders\light_functions.hlsli">
+    <None Include="..\source\common\shaders\light_functions.hlsli">
       <Filter>Common\Shaders</Filter>
     </None>
-    <None Include="..\common\shaders\sprite_header.hlsli">
+    <None Include="..\source\common\shaders\sprite_header.hlsli">
       <Filter>Common\Shaders</Filter>
     </None>
-    <None Include="..\common\shaders\hlsl_util.hlsli">
+    <None Include="..\source\common\shaders\hlsl_util.hlsli">
       <Filter>Common\Shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\common\shaders\sprite_vertex_shader.hlsl">
+    <FxCompile Include="..\source\common\shaders\sprite_vertex_shader.hlsl">
       <Filter>Common\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="..\common\shaders\sprite_pixel_shader.hlsl">
+    <FxCompile Include="..\source\common\shaders\sprite_pixel_shader.hlsl">
       <Filter>Common\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="..\common\shaders\sprite_instanced_vertex_shader.hlsl">
+    <FxCompile Include="..\source\common\shaders\sprite_instanced_vertex_shader.hlsl">
       <Filter>Common\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="..\common\shaders\sprite_sampled_pixel_shader.hlsl">
+    <FxCompile Include="..\source\common\shaders\sprite_sampled_pixel_shader.hlsl">
       <Filter>Common\Shaders</Filter>
     </FxCompile>
   </ItemGroup>

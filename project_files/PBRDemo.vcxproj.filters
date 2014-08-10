@@ -1,50 +1,50 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="..\pbr_demo\pbr_demo.cpp">
+    <ClCompile Include="..\source\pbr_demo\pbr_demo.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\pbr_demo\pbr_demo.draw.cpp">
+    <ClCompile Include="..\source\pbr_demo\pbr_demo.draw.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\pbr_demo\pbr_demo.init.cpp">
+    <ClCompile Include="..\source\pbr_demo\pbr_demo.init.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\pbr_demo\pbr_demo.update.cpp">
+    <ClCompile Include="..\source\pbr_demo\pbr_demo.update.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\pbr_demo\main.cpp">
+    <ClCompile Include="..\source\pbr_demo\main.cpp">
       <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\pbr_demo\pbr_demo.h">
+    <ClInclude Include="..\source\pbr_demo\pbr_demo.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\pbr_demo\shader_constants.h">
+    <ClInclude Include="..\source\pbr_demo\shader_constants.h">
       <Filter>Shader Logic</Filter>
     </ClInclude>
-    <ClInclude Include="..\pbr_demo\shader_defines.h">
+    <ClInclude Include="..\source\pbr_demo\shader_defines.h">
       <Filter>Shader Logic</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\pbr_demo\tempIcon.ico">
+    <None Include="..\source\pbr_demo\tempIcon.ico">
       <Filter>Resources</Filter>
     </None>
-    <None Include="..\pbr_demo\shaders\hlsl_util.hlsli">
+    <None Include="..\source\pbr_demo\shaders\hlsl_util.hlsli">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="..\pbr_demo\shaders\types.hlsli">
+    <None Include="..\source\pbr_demo\shaders\types.hlsli">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="..\pbr_demo\materials\example.hmat.hlsl">
+    <None Include="..\source\pbr_demo\materials\example.hmat.hlsl">
       <Filter>Materials</Filter>
     </None>
-    <None Include="..\pbr_demo\shaders\gbuffer_ps.hlsl">
+    <None Include="..\source\pbr_demo\shaders\gbuffer_ps.hlsl">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="..\pbr_demo\resources\scene.json">
+    <None Include="..\source\pbr_demo\resources\scene.json">
       <Filter>Core</Filter>
     </None>
   </ItemGroup>
@@ -71,28 +71,28 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\pbr_demo\shaders\fullscreen_triangle_vs.hlsl">
+    <FxCompile Include="..\source\pbr_demo\shaders\fullscreen_triangle_vs.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="..\pbr_demo\shaders\gbuffer_vs.hlsl">
+    <FxCompile Include="..\source\pbr_demo\shaders\gbuffer_vs.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="..\pbr_demo\shaders\instanced_gbuffer_vs.hlsl">
+    <FxCompile Include="..\source\pbr_demo\shaders\instanced_gbuffer_vs.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="..\pbr_demo\shaders\post_process_ps.hlsl">
+    <FxCompile Include="..\source\pbr_demo\shaders\post_process_ps.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="..\pbr_demo\shaders\tiled_cull_final_gather_cs.hlsl">
+    <FxCompile Include="..\source\pbr_demo\shaders\tiled_cull_final_gather_cs.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="..\pbr_demo\materials\metal.hmat.hlsl">
+    <FxCompile Include="..\source\pbr_demo\materials\metal.hmat.hlsl">
       <Filter>Materials</Filter>
     </FxCompile>
-    <FxCompile Include="..\pbr_demo\materials\nonmetal.hmat.hlsl">
+    <FxCompile Include="..\source\pbr_demo\materials\nonmetal.hmat.hlsl">
       <Filter>Materials</Filter>
     </FxCompile>
-    <FxCompile Include="..\pbr_demo\materials\matte_gray.hmat.hlsl">
+    <FxCompile Include="..\source\pbr_demo\materials\matte_gray.hmat.hlsl">
       <Filter>Materials</Filter>
     </FxCompile>
   </ItemGroup>

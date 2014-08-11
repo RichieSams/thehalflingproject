@@ -7,8 +7,10 @@
 #pragma once
 
 #include "common/typedefs.h"
+
 #include "graphics/d3d_util.h"
 #include "graphics/shader.h"
+
 #include "scene/model_loading.h"
 
 #include <DirectXMath.h>

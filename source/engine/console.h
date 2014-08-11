@@ -6,9 +6,10 @@
 
 #pragma once
 
+#include "common/rect.h"
+
 #include "graphics/sprite_renderer.h"
 #include "graphics/sprite_font.h"
-#include "common/rect.h"
 
 #include <deque>
 #include <unordered_map>

@@ -11,19 +11,22 @@
 #include "pbr_demo/shader_constants.h"
 
 #include "common/vector.h"
+#include "common/allocator_16_byte_aligned.h"
+
 #include "scene/camera.h"
+#include "scene/lights.h"
+#include "scene/light_animator.h"
+
 #include "engine/texture_manager.h"
 #include "engine/model_manager.h"
 #include "engine/material_shader_manager.h"
 #include "engine/console.h"
+
 #include "graphics/texture2d.h"
 #include "graphics/structured_buffer.h"
 #include "graphics/device_states.h"
 #include "graphics/sprite_renderer.h"
 #include "graphics/sprite_font.h"
-#include "scene/lights.h"
-#include "scene/light_animator.h"
-#include "common/allocator_16_byte_aligned.h"
 #include "graphics/shader.h"
 
 #include <vector>

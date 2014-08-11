@@ -7,7 +7,9 @@
 #include "engine/texture_manager.h"
 
 #include "common/halfling_sys.h"
+
 #include "graphics/d3d_util.h"
+
 #include "DDSTextureLoader.h"
 
 

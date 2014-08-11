@@ -8,14 +8,15 @@
 
 #include "pbr_demo/shader_constants.h"
 
-#include "scene/model.h"
-#include "scene/model_loading.h"
-#include "scene/geometry_generator.h"
 #include "common/math.h"
-#include "scene/halfling_model_file.h"
 #include "common/string_util.h"
 #include "common/file_io_util.h"
 #include "common/memory_stream.h"
+
+#include "scene/halfling_model_file.h"
+#include "scene/model.h"
+#include "scene/model_loading.h"
+#include "scene/geometry_generator.h"
 
 #include <algorithm>
 #include <iostream>

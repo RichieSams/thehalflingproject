@@ -16,6 +16,7 @@
 #include "graphics/sprite_font.h"
 
 #include "common/halfling_sys.h"
+
 #include "graphics/d3d_util.h"
 
 #include <d3d11.h>

@@ -7,6 +7,7 @@
 #pragma once
 
 #include "common/typedefs.h"
+
 #include "graphics/d3d_util.h"
 
 #include <d3d11.h>

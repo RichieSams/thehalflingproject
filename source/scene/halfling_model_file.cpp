@@ -6,12 +6,13 @@
 
 #include "scene/halfling_model_file.h"
 
-#include "engine/texture_manager.h"
-#include "engine/material_shader_manager.h"
 #include "common/file_io_util.h"
 #include "common/memory_stream.h"
 #include "common/endian.h"
 #include "common/string_util.h"
+
+#include "engine/texture_manager.h"
+#include "engine/material_shader_manager.h"
 
 #include <string>
 #include <fstream>

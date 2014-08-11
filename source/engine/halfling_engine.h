@@ -7,6 +7,7 @@
 #pragma once
 
 #include "common/halfling_sys.h"
+
 #include "engine/clock.h"
 
 #include <d3d11.h>

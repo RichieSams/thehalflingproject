@@ -5,8 +5,8 @@
  */
 
 #include "types.hlsli"
-#include "common/shaders/materials.hlsli"
-#include "common/shaders/hlsl_util.hlsli"
+#include "graphics/shaders/materials.hlsli"
+#include "graphics/shaders/hlsl_util.hlsli"
 
 
 struct GBuffer {

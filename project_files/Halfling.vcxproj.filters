@@ -1,14 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Core">
-      <UniqueIdentifier>{4fdf668e-69b9-4dcf-b10e-812c9a94be7a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Common">
       <UniqueIdentifier>{9b149d28-97e2-4b3b-ba12-b8bdff49bdef}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Common\Shaders">
-      <UniqueIdentifier>{92ce2470-b55b-422e-a7dd-9c54340e2989}</UniqueIdentifier>
     </Filter>
     <Filter Include="Libs">
       <UniqueIdentifier>{6d36b1e0-88a7-4410-b493-4afbdf6d3bf6}</UniqueIdentifier>
@@ -19,62 +13,20 @@
     <Filter Include="Libs\DirectXTex">
       <UniqueIdentifier>{7534ffc7-88be-4c54-9a72-a936233b2267}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Graphics">
+      <UniqueIdentifier>{7adb6b24-884d-4e79-8c20-6c957fc78648}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{bb757a39-10c9-4e58-9fe7-616c004a08f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Shaders">
+      <UniqueIdentifier>{e1b32b7e-62c2-4bef-83f3-2e4d6babf336}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{c8e72daa-9992-4946-907e-0e3165ab959c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\source\halfling\halfling_engine.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\common\dxerr.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\common\d3d_util.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\common\camera.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\common\geometry_generator.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\common\texture2d.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\common\texture_manager.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\common\sprite_renderer.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\common\sprite_font.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\common\device_states.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\common\light_animator.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\common\clock.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\common\timer.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\common\profiler.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\common\console.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\common\model.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\common\halfling_model_file.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\common\file_io_util.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
     <ClCompile Include="..\source\libs\inih\ini.c">
       <Filter>Libs\inih</Filter>
     </ClCompile>
@@ -84,119 +36,80 @@
     <ClCompile Include="..\source\libs\DirectXTex\DDSTextureLoader.cpp">
       <Filter>Libs\DirectXTex</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\common\model_manager.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\common\shader.cpp">
+    <ClCompile Include="..\source\common\file_io_util.cpp">
       <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="..\source\common\string_util.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\common\model_loading.cpp">
-      <Filter>Common</Filter>
+    <ClCompile Include="..\source\graphics\d3d_util.cpp">
+      <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\common\material_shader_manager.cpp">
-      <Filter>Common</Filter>
+    <ClCompile Include="..\source\graphics\device_states.cpp">
+      <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\common\lights.cpp">
-      <Filter>Common</Filter>
+    <ClCompile Include="..\source\graphics\dxerr.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\graphics\shader.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\graphics\sprite_font.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\graphics\sprite_renderer.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\graphics\texture2d.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\scene\camera.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\scene\geometry_generator.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\scene\halfling_model_file.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\scene\light_animator.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\scene\lights.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\scene\model.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\scene\model_loading.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\engine\clock.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\engine\console.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\engine\halfling_engine.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\engine\material_shader_manager.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\engine\model_manager.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\engine\profiler.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\engine\texture_manager.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\engine\timer.cpp">
+      <Filter>Engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\source\common\halfling_sys.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\common\typedefs.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\halfling\halfling_engine.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\common\d3d_util.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\common\dxerr.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\common\vector.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\common\camera.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\common\math.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\common\lights.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\common\geometry_generator.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\common\structured_buffer.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\common\model.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\common\materials.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\common\texture2d.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\common\texture_manager.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\common\sprite_renderer.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\common\sprite_font.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\common\device_states.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\common\light_animator.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\common\file_io_util.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\common\string_util.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\common\clock.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\common\memory_stream.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\common\profiler.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\common\timer.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\common\hash.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\common\console.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\common\rect.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\common\endian.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\common\console_progress_bar.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\common\halfling_model_file.h">
-      <Filter>Common</Filter>
-    </ClInclude>
     <ClInclude Include="..\source\libs\inih\INIReader.h">
       <Filter>Libs\inih</Filter>
     </ClInclude>
@@ -206,51 +119,144 @@
     <ClInclude Include="..\source\libs\DirectXTex\DDSTextureLoader.h">
       <Filter>Libs\DirectXTex</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\common\model_manager.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\common\shader.h">
-      <Filter>Common</Filter>
-    </ClInclude>
     <ClInclude Include="..\source\common\allocator_16_byte_aligned.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\common\model_loading.h">
+    <ClInclude Include="..\source\common\endian.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\common\material_shader_manager.h">
+    <ClInclude Include="..\source\common\file_io_util.h">
       <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\common\halfling_sys.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\common\hash.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\common\math.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\common\memory_stream.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\common\rect.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\common\string_util.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\common\typedefs.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\common\vector.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\graphics\d3d_util.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\graphics\device_states.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\graphics\dxerr.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\graphics\shader.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\graphics\sprite_font.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\graphics\sprite_renderer.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\graphics\structured_buffer.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\graphics\texture2d.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\scene\camera.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\scene\geometry_generator.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\scene\halfling_model_file.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\scene\light_animator.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\scene\lights.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\scene\materials.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\scene\model.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\scene\model_loading.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\engine\clock.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\engine\console.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\engine\console_progress_bar.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\engine\halfling_engine.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\engine\material_shader_manager.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\engine\model_manager.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\engine\profiler.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\engine\texture_manager.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\engine\timer.h">
+      <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\source\common\shaders\lights.hlsli">
-      <Filter>Common\Shaders</Filter>
+    <None Include="..\source\graphics\shaders\hlsl_util.hlsli">
+      <Filter>Graphics\Shaders</Filter>
     </None>
-    <None Include="..\source\common\shaders\materials.hlsli">
-      <Filter>Common\Shaders</Filter>
+    <None Include="..\source\graphics\shaders\light_functions.hlsli">
+      <Filter>Graphics\Shaders</Filter>
     </None>
-    <None Include="..\source\common\shaders\light_functions.hlsli">
-      <Filter>Common\Shaders</Filter>
+    <None Include="..\source\graphics\shaders\lights.hlsli">
+      <Filter>Graphics\Shaders</Filter>
     </None>
-    <None Include="..\source\common\shaders\sprite_header.hlsli">
-      <Filter>Common\Shaders</Filter>
+    <None Include="..\source\graphics\shaders\materials.hlsli">
+      <Filter>Graphics\Shaders</Filter>
     </None>
-    <None Include="..\source\common\shaders\hlsl_util.hlsli">
-      <Filter>Common\Shaders</Filter>
+    <None Include="..\source\graphics\shaders\sprite_header.hlsli">
+      <Filter>Graphics\Shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\source\common\shaders\sprite_vertex_shader.hlsl">
-      <Filter>Common\Shaders</Filter>
+    <FxCompile Include="..\source\graphics\shaders\sprite_instanced_vertex_shader.hlsl">
+      <Filter>Graphics\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="..\source\common\shaders\sprite_pixel_shader.hlsl">
-      <Filter>Common\Shaders</Filter>
+    <FxCompile Include="..\source\graphics\shaders\sprite_pixel_shader.hlsl">
+      <Filter>Graphics\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="..\source\common\shaders\sprite_instanced_vertex_shader.hlsl">
-      <Filter>Common\Shaders</Filter>
+    <FxCompile Include="..\source\graphics\shaders\sprite_sampled_pixel_shader.hlsl">
+      <Filter>Graphics\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="..\source\common\shaders\sprite_sampled_pixel_shader.hlsl">
-      <Filter>Common\Shaders</Filter>
+    <FxCompile Include="..\source\graphics\shaders\sprite_vertex_shader.hlsl">
+      <Filter>Graphics\Shaders</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

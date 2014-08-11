@@ -11,9 +11,9 @@
 
 
 #include "pbr_demo/shaders/types.hlsli"
-#include "common/shaders/lights.hlsli"
-#include "common/shaders/light_functions.hlsli"
-#include "common/shaders/hlsl_util.hlsli"
+#include "graphics/shaders/lights.hlsli"
+#include "graphics/shaders/light_functions.hlsli"
+#include "graphics/shaders/hlsl_util.hlsli"
 #include "pbr_demo/shader_defines.h"
 
 

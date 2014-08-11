@@ -6,25 +6,25 @@
 
 #pragma once
 
-#include "halfling/halfling_engine.h"
+#include "engine/halfling_engine.h"
 
 #include "pbr_demo/shader_constants.h"
 
 #include "common/vector.h"
-#include "common/camera.h"
-#include "common/texture_manager.h"
-#include "common/model_manager.h"
-#include "common/material_shader_manager.h"
-#include "common/console.h"
-#include "common/texture2d.h"
-#include "common/structured_buffer.h"
-#include "common/device_states.h"
-#include "common/sprite_renderer.h"
-#include "common/sprite_font.h"
-#include "common/lights.h"
-#include "common/light_animator.h"
+#include "scene/camera.h"
+#include "engine/texture_manager.h"
+#include "engine/model_manager.h"
+#include "engine/material_shader_manager.h"
+#include "engine/console.h"
+#include "graphics/texture2d.h"
+#include "graphics/structured_buffer.h"
+#include "graphics/device_states.h"
+#include "graphics/sprite_renderer.h"
+#include "graphics/sprite_font.h"
+#include "scene/lights.h"
+#include "scene/light_animator.h"
 #include "common/allocator_16_byte_aligned.h"
-#include "common/shader.h"
+#include "graphics/shader.h"
 
 #include <vector>
 #include <AntTweakBar.h>
@@ -32,14 +32,14 @@
 #include <thread>
 
 
-namespace Common {
+namespace Scene {
 class Model;
 class ModelToLoad;
 }
 
 namespace PBRDemo {
 
-class PBRDemo : public Halfling::HalflingEngine {
+class PBRDemo : public Engine::HalflingEngine {
 public:
 	PBRDemo(HINSTANCE hinstance);
 
@@ -50,24 +50,24 @@ private:
 	float m_farClip;
 
 	Common::Vector2 m_mouseLastPos;
-	Common::Camera m_camera;
+	Scene::Camera m_camera;
 	float m_cameraPanFactor;
 	float m_cameraScrollFactor;
 
-	Common::TextureManager m_textureManager;
-	Common::ModelManager m_modelManager;
-	Common::MaterialShaderManager m_materialShaderManager;
-	Common::Console m_console;
+	Engine::TextureManager m_textureManager;
+	Engine::ModelManager m_modelManager;
+	Engine::MaterialShaderManager m_materialShaderManager;
+	Engine::Console m_console;
 	bool m_showConsole;
 
 	DirectX::XMMATRIX m_globalWorldTransform;
 
-	std::vector<std::pair<Common::Model *, DirectX::XMMATRIX>, Common::Allocator16ByteAligned<std::pair<Common::Model *, DirectX::XMMATRIX> > > m_models;
-	std::vector<std::pair<Common::Model *, std::vector<DirectX::XMMATRIX, Common::Allocator16ByteAligned<DirectX::XMMATRIX> > *> > m_instancedModels;
+	std::vector<std::pair<Scene::Model *, DirectX::XMMATRIX>, Common::Allocator16ByteAligned<std::pair<Scene::Model *, DirectX::XMMATRIX> > > m_models;
+	std::vector<std::pair<Scene::Model *, std::vector<DirectX::XMMATRIX, Common::Allocator16ByteAligned<DirectX::XMMATRIX> > *> > m_instancedModels;
 
-	Common::StructuredBuffer<DirectX::XMVECTOR> *m_instanceBuffer;
+	Graphics::StructuredBuffer<DirectX::XMVECTOR> *m_instanceBuffer;
 
-	std::vector<Common::ModelToLoad *> m_modelsToLoad;
+	std::vector<Scene::ModelToLoad *> m_modelsToLoad;
 	std::atomic<bool> m_sceneLoaded;
 	bool m_sceneIsSetup;
 	std::thread m_sceneLoaderThread;
@@ -75,11 +75,11 @@ private:
 	float m_sceneScaleFactor;
 	uint m_modelInstanceThreshold;
 
-	Common::DirectionalLight m_directionalLight;
-	std::vector<Common::PointLight> m_pointLights;
-	std::vector<Common::PointLightAnimator> m_pointLightAnimators;
-	std::vector<Common::SpotLight> m_spotLights;
-	std::vector<Common::SpotLightAnimator> m_spotLightAnimators;
+	Scene::DirectionalLight m_directionalLight;
+	std::vector<Scene::PointLight> m_pointLights;
+	std::vector<Scene::PointLightAnimator> m_pointLightAnimators;
+	std::vector<Scene::SpotLight> m_spotLights;
+	std::vector<Scene::SpotLightAnimator> m_spotLightAnimators;
 
 	bool m_vsync;
 	bool m_wireframe;
@@ -91,39 +91,39 @@ private:
 	ID3D11InputLayout *m_defaultInputLayout;
 	ID3D11InputLayout *m_debugObjectInputLayout;
 
-	Common::Depth2D *m_depthStencilBuffer;
+	Graphics::Depth2D *m_depthStencilBuffer;
 	D3D11_VIEWPORT m_screenViewport;
 
-	Common::Texture2D *m_hdrOutput;
+	Graphics::Texture2D *m_hdrOutput;
 
-	std::vector<Common::Texture2D *> m_gBuffers;
+	std::vector<Graphics::Texture2D *> m_gBuffers;
 	std::vector<ID3D11ShaderResourceView *> m_gBufferSRVs;
 	std::vector<ID3D11RenderTargetView *> m_gBufferRTVs;
 
 	TwBar *m_settingsBar;
 
 	// Shaders
-	Common::VertexShader<Common::DefaultShaderConstantType, GBufferVertexShaderObjectConstants> *m_gbufferVertexShader;
-	Common::VertexShader<InstancedGBufferVertexShaderFrameConstants, InstancedGBufferVertexShaderObjectConstants> *m_instancedGBufferVertexShader;
+	Graphics::VertexShader<Graphics::DefaultShaderConstantType, GBufferVertexShaderObjectConstants> *m_gbufferVertexShader;
+	Graphics::VertexShader<InstancedGBufferVertexShaderFrameConstants, InstancedGBufferVertexShaderObjectConstants> *m_instancedGBufferVertexShader;
 
-	Common::VertexShader<> *m_fullscreenTriangleVertexShader;
-	Common::ComputeShader<TiledCullFinalGatherComputeShaderFrameConstants, Common::DefaultShaderConstantType> *m_tiledCullFinalGatherComputeShader;
+	Graphics::VertexShader<> *m_fullscreenTriangleVertexShader;
+	Graphics::ComputeShader<TiledCullFinalGatherComputeShaderFrameConstants, Graphics::DefaultShaderConstantType> *m_tiledCullFinalGatherComputeShader;
 
-	Common::PixelShader<> *m_postProcessPixelShader;
+	Graphics::PixelShader<> *m_postProcessPixelShader;
 
 	// Shader Buffers
 	// We assume there is only one directional light. Therefore, it is stored in a cbuffer
-	Common::StructuredBuffer<Common::ShaderPointLight> *m_pointLightBuffer;
-	Common::StructuredBuffer<Common::ShaderSpotLight> *m_spotLightBuffer;
+	Graphics::StructuredBuffer<Scene::ShaderPointLight> *m_pointLightBuffer;
+	Graphics::StructuredBuffer<Scene::ShaderSpotLight> *m_spotLightBuffer;
 
-	Common::BlendStates m_blendStates;
-	Common::DepthStencilStates m_depthStencilStates;
-	Common::RasterizerStates m_rasterizerStates;
-	Common::SamplerStates m_samplerStates;
+	Graphics::BlendStates m_blendStates;
+	Graphics::DepthStencilStates m_depthStencilStates;
+	Graphics::RasterizerStates m_rasterizerStates;
+	Graphics::SamplerStates m_samplerStates;
 
-	Common::SpriteRenderer m_spriteRenderer;
-	Common::SpriteFont m_timesNewRoman12Font;
-	Common::SpriteFont m_courierNew10Font;
+	Graphics::SpriteRenderer m_spriteRenderer;
+	Graphics::SpriteFont m_timesNewRoman12Font;
+	Graphics::SpriteFont m_courierNew10Font;
 
 public:
 	// Inherited methods
@@ -164,7 +164,7 @@ private:
 	void SetInstancedForwardVertexShaderFrameConstants(DirectX::XMMATRIX &viewProjMatrix);
 	void SetInstancedForwardVertexShaderObjectConstants(uint startIndex);
 	void SetForwardPixelShaderFrameConstants();
-	void SetForwardPixelShaderObjectConstants(const Common::BlinnPhongMaterial &material, uint textureFlags);
+	void SetForwardPixelShaderObjectConstants(const Scene::BlinnPhongMaterial &material, uint textureFlags);
 
 	void SetGBufferVertexShaderObjectConstants(DirectX::XMMATRIX &worldMatrix, DirectX::XMMATRIX &worldViewProjMatrix);
 	void SetInstancedGBufferVertexShaderFrameConstants(DirectX::XMMATRIX &viewProjMatrix);

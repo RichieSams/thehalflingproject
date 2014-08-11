@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "common/materials.h"
-#include "common/lights.h"
+#include "scene/materials.h"
+#include "scene/lights.h"
 
 #include "DirectXMath.h"
 
@@ -35,7 +35,7 @@ struct TiledCullFinalGatherComputeShaderFrameConstants {
 	DirectX::XMMATRIX Projection;
 	DirectX::XMMATRIX InvViewProjection;
 
-	Common::ShaderDirectionalLight DirectionalLight;
+	Scene::ShaderDirectionalLight DirectionalLight;
 
 	DirectX::XMFLOAT3 EyePosition;
 	uint NumPointLightsToDraw;

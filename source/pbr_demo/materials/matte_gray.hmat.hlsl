@@ -6,7 +6,7 @@
 
 #define TEXTURE_COUNT 0
 
-#include "common/shaders/hlsl_util.hlsli"
+#include "graphics/shaders/hlsl_util.hlsli"
 
 
 void GetMaterialInfo(in float3 surfaceNormal, float3 surfaceTangent,

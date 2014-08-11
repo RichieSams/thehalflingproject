@@ -8,11 +8,11 @@
 
 #include "pbr_demo/shader_constants.h"
 
-#include "common/model.h"
-#include "common/model_loading.h"
-#include "common/geometry_generator.h"
+#include "scene/model.h"
+#include "scene/model_loading.h"
+#include "scene/geometry_generator.h"
 #include "common/math.h"
-#include "common/halfling_model_file.h"
+#include "scene/halfling_model_file.h"
 #include "common/string_util.h"
 #include "common/file_io_util.h"
 #include "common/memory_stream.h"
@@ -28,10 +28,10 @@ namespace PBRDemo {
 
 void LoadScene(std::atomic<bool> *sceneIsLoaded, 
                ID3D11Device *device, 
-               Common::TextureManager *textureManager, Common::ModelManager *modelManager, Common::MaterialShaderManager *materialShaderManager, Common::SamplerStates *samplerStates,
-               std::vector<Common::ModelToLoad *> *modelsToLoad, 
-               std::vector<std::pair<Common::Model *, DirectX::XMMATRIX>, Common::Allocator16ByteAligned<std::pair<Common::Model *, DirectX::XMMATRIX> > > *modelList, 
-               std::vector<std::pair<Common::Model *, std::vector<DirectX::XMMATRIX, Common::Allocator16ByteAligned<DirectX::XMMATRIX> > *> > *instancedModelList,
+               Engine::TextureManager *textureManager, Engine::ModelManager *modelManager, Engine::MaterialShaderManager *materialShaderManager, Graphics::SamplerStates *samplerStates,
+               std::vector<Scene::ModelToLoad *> *modelsToLoad, 
+               std::vector<std::pair<Scene::Model *, DirectX::XMMATRIX>, Common::Allocator16ByteAligned<std::pair<Scene::Model *, DirectX::XMMATRIX> > > *modelList, 
+               std::vector<std::pair<Scene::Model *, std::vector<DirectX::XMMATRIX, Common::Allocator16ByteAligned<DirectX::XMMATRIX> > *> > *instancedModelList,
 			   uint modelInstanceThreshold);
 
 void TW_CALL GetDirectionalLightColorCallback(void *value, void *clientData);
@@ -48,7 +48,7 @@ bool PBRDemo::Initialize(LPCTSTR mainWndCaption, uint32 screenWidth, uint32 scre
 	LoadSceneJson();
 
 	// Initialize the Engine
-	if (!Halfling::HalflingEngine::Initialize(mainWndCaption, screenWidth, screenHeight, fullscreen)) {
+	if (!Engine::HalflingEngine::Initialize(mainWndCaption, screenWidth, screenHeight, fullscreen)) {
 		return false;
 	}
 
@@ -63,20 +63,20 @@ bool PBRDemo::Initialize(LPCTSTR mainWndCaption, uint32 screenWidth, uint32 scre
 
 	LoadShaders();
 
-	m_instanceBuffer = new Common::StructuredBuffer<DirectX::XMVECTOR>(m_device, kMaxInstanceVectorsPerFrame, D3D11_BIND_SHADER_RESOURCE, true);
+	m_instanceBuffer = new Graphics::StructuredBuffer<DirectX::XMVECTOR>(m_device, kMaxInstanceVectorsPerFrame, D3D11_BIND_SHADER_RESOURCE, true);
 
 	// Create light buffers
 	// This has to be done after the Engine has been Initialized so we have a valid m_device
 	if (m_pointLights.size() > 0) {
-		m_pointLightBuffer = new Common::StructuredBuffer<Common::ShaderPointLight>(m_device, static_cast<uint>(m_pointLights.size()), D3D11_BIND_SHADER_RESOURCE, true);
+		m_pointLightBuffer = new Graphics::StructuredBuffer<Scene::ShaderPointLight>(m_device, static_cast<uint>(m_pointLights.size()), D3D11_BIND_SHADER_RESOURCE, true);
 	}
 	if (m_spotLights.size() > 0) {
-		m_spotLightBuffer = new Common::StructuredBuffer<Common::ShaderSpotLight>(m_device, static_cast<uint>(m_spotLights.size()), D3D11_BIND_SHADER_RESOURCE, true);
+		m_spotLightBuffer = new Graphics::StructuredBuffer<Scene::ShaderSpotLight>(m_device, static_cast<uint>(m_spotLights.size()), D3D11_BIND_SHADER_RESOURCE, true);
 	}
 
 	m_spriteRenderer.Initialize(m_device);
-	m_timesNewRoman12Font.Initialize(L"Times New Roman", 12, Common::SpriteFont::Regular, true, m_device);
-	m_courierNew10Font.Initialize(L"Courier New", 12, Common::SpriteFont::Regular, true, m_device);
+	m_timesNewRoman12Font.Initialize(L"Times New Roman", 12, Graphics::SpriteFont::Regular, true, m_device);
+	m_courierNew10Font.Initialize(L"Courier New", 12, Graphics::SpriteFont::Regular, true, m_device);
 
 	// Initialize the console
 	m_console.Initialize(Common::Rect(20, m_clientHeight - 320, m_clientWidth - 20, m_clientHeight - 10), &m_spriteRenderer, &m_courierNew10Font);
@@ -110,21 +110,21 @@ void PBRDemo::LoadSceneJson() {
 	m_modelInstanceThreshold = root.get("ModelInstanceThreshold", m_modelInstanceThreshold).asUInt();
 
 	Json::Value materials = root["Materials"];
-	std::unordered_map<std::string, Common::ModelToLoadMaterial> materialMap;
+	std::unordered_map<std::string, Scene::ModelToLoadMaterial> materialMap;
 
 	for (uint i = 0; i < materials.size(); ++i) {
 		Json::Value materialValue = materials[i];
 
 		std::string materialName = materials[i]["Name"].asString();
 
-		Common::ModelToLoadMaterial material;
+		Scene::ModelToLoadMaterial material;
 		material.HMATFilePath = Common::ToWideStr(materials[i]["HMATFilePath"].asString());
 
 		Json::Value textureDefinitions = materials[i]["TextureDefinitions"];
 		for (uint j = 0; j < textureDefinitions.size(); ++j) {
-			Common::TextureDescription description;
+			Scene::TextureDescription description;
 			description.FilePath = Common::ToWideStr(textureDefinitions[j]["FilePath"].asString());
-			description.Sampler = Common::ParseSamplerTypeFromString(textureDefinitions[j]["Sampler"].asString(), Common::LINEAR_WRAP);
+			description.Sampler = Scene::ParseSamplerTypeFromString(textureDefinitions[j]["Sampler"].asString(), Scene::LINEAR_WRAP);
 
 			material.Textures.push_back(description);
 		}
@@ -148,7 +148,7 @@ void PBRDemo::LoadSceneJson() {
 		if (_stricmp(type.c_str(), "file") == 0) {
 			std::string filePath = models[i]["FilePath"].asString();
 
-			Common::FileModelToLoad *model = new Common::FileModelToLoad(filePath, instanceVector);
+			Scene::FileModelToLoad *model = new Scene::FileModelToLoad(filePath, instanceVector);
 			m_modelsToLoad.push_back(model);
 		} else if (_stricmp(type.c_str(), "plane") == 0) {
 			float width = models[i]["Width"].asSingle();
@@ -162,7 +162,7 @@ void PBRDemo::LoadSceneJson() {
 			auto iter = materialMap.find(materialName);
 			AssertMsg(iter != materialMap.end(), L"Material not defined: " << Common::ToWideStr(materialName));
 
-			Common::PlaneModelToLoad *model = new Common::PlaneModelToLoad(width, depth, x_subdivisions, z_subdivisions, x_textureTiling, z_textureTiling, iter->second, instanceVector);
+			Scene::PlaneModelToLoad *model = new Scene::PlaneModelToLoad(width, depth, x_subdivisions, z_subdivisions, x_textureTiling, z_textureTiling, iter->second, instanceVector);
 
 			m_modelsToLoad.push_back(model);
 		} else if (_stricmp(type.c_str(), "box") == 0) {
@@ -174,7 +174,7 @@ void PBRDemo::LoadSceneJson() {
 			auto iter = materialMap.find(materialName);
 			AssertMsg(iter != materialMap.end(), L"Material not defined: " << Common::ToWideStr(materialName));
 
-			Common::BoxModelToLoad *model = new Common::BoxModelToLoad(width, depth, height, iter->second, instanceVector);
+			Scene::BoxModelToLoad *model = new Scene::BoxModelToLoad(width, depth, height, iter->second, instanceVector);
 
 			m_modelsToLoad.push_back(model);
 		} else if (_stricmp(type.c_str(), "sphere") == 0) {
@@ -186,7 +186,7 @@ void PBRDemo::LoadSceneJson() {
 			auto iter = materialMap.find(materialName);
 			AssertMsg(iter != materialMap.end(), L"Material not defined: " << Common::ToWideStr(materialName));
 
-			Common::SphereModelToLoad *model = new Common::SphereModelToLoad(radius, sliceCount, stackCount, iter->second, instanceVector);
+			Scene::SphereModelToLoad *model = new Scene::SphereModelToLoad(radius, sliceCount, stackCount, iter->second, instanceVector);
 
 			m_modelsToLoad.push_back(model);
 		}
@@ -385,27 +385,27 @@ void PBRDemo::LoadSceneJson() {
 }
 
 void TW_CALL GetDirectionalLightColorCallback(void *value, void *clientData) {
-	*static_cast<DirectX::XMFLOAT3 *>(value) = static_cast<const Common::DirectionalLight *>(clientData)->GetColor();
+	*static_cast<DirectX::XMFLOAT3 *>(value) = static_cast<const Scene::DirectionalLight *>(clientData)->GetColor();
 }
 
 void TW_CALL SetDirectionalLightColorCallback(const void *value, void *clientData) {
-	static_cast<Common::DirectionalLight *>(clientData)->SetColor(*static_cast<const DirectX::XMFLOAT3 *>(value));
+	static_cast<Scene::DirectionalLight *>(clientData)->SetColor(*static_cast<const DirectX::XMFLOAT3 *>(value));
 }
 
 void TW_CALL GetDirectionalLightIntensityCallback(void *value, void *clientData) {
-	*static_cast<float *>(value) = static_cast<const Common::DirectionalLight *>(clientData)->GetIntensity();
+	*static_cast<float *>(value) = static_cast<const Scene::DirectionalLight *>(clientData)->GetIntensity();
 }
 
 void TW_CALL SetDirectionalLightIntensityCallback(const void *value, void *clientData) {
-	static_cast<Common::DirectionalLight *>(clientData)->SetIntensity(*static_cast<const float *>(value));
+	static_cast<Scene::DirectionalLight *>(clientData)->SetIntensity(*static_cast<const float *>(value));
 }
 
 void TW_CALL GetDirectionalLightDirectionCallback(void *value, void *clientData) {
-	*static_cast<DirectX::XMFLOAT3 *>(value) = static_cast<const Common::DirectionalLight *>(clientData)->GetDirection();
+	*static_cast<DirectX::XMFLOAT3 *>(value) = static_cast<const Scene::DirectionalLight *>(clientData)->GetDirection();
 }
 
 void TW_CALL SetDirectionalLightDirectionCallback(const void *value, void *clientData) {
-	static_cast<Common::DirectionalLight *>(clientData)->SetDirection(*static_cast<const DirectX::XMFLOAT3 *>(value));
+	static_cast<Scene::DirectionalLight *>(clientData)->SetDirection(*static_cast<const DirectX::XMFLOAT3 *>(value));
 }
 
 void PBRDemo::InitTweakBar() {
@@ -431,13 +431,13 @@ void PBRDemo::InitTweakBar() {
 
 void LoadScene(std::atomic<bool> *sceneIsLoaded, 
                ID3D11Device *device, 
-               Common::TextureManager *textureManager, Common::ModelManager *modelManager, Common::MaterialShaderManager *materialShaderManager, Common::SamplerStates *samplerStates,
-               std::vector<Common::ModelToLoad *> *modelsToLoad, 
-               std::vector<std::pair<Common::Model *, DirectX::XMMATRIX>, Common::Allocator16ByteAligned<std::pair<Common::Model *, DirectX::XMMATRIX> > > *modelList, 
-               std::vector<std::pair<Common::Model *, std::vector<DirectX::XMMATRIX, Common::Allocator16ByteAligned<DirectX::XMMATRIX> > *> > *instancedModelList,
+               Engine::TextureManager *textureManager, Engine::ModelManager *modelManager, Engine::MaterialShaderManager *materialShaderManager, Graphics::SamplerStates *samplerStates,
+               std::vector<Scene::ModelToLoad *> *modelsToLoad, 
+               std::vector<std::pair<Scene::Model *, DirectX::XMMATRIX>, Common::Allocator16ByteAligned<std::pair<Scene::Model *, DirectX::XMMATRIX> > > *modelList, 
+               std::vector<std::pair<Scene::Model *, std::vector<DirectX::XMMATRIX, Common::Allocator16ByteAligned<DirectX::XMMATRIX> > *> > *instancedModelList,
 			   uint modelInstanceThreshold) {
 	for (auto iter = modelsToLoad->begin(); iter != modelsToLoad->end(); ++iter) {
-		Common::Model *newModel = (*iter)->CreateModel(device, textureManager, modelManager, materialShaderManager, samplerStates);
+		Scene::Model *newModel = (*iter)->CreateModel(device, textureManager, modelManager, materialShaderManager, samplerStates);
 
 		if ((*iter)->Instances->size() > modelInstanceThreshold) {
 			instancedModelList->emplace_back(newModel, (*iter)->Instances);
@@ -457,11 +457,11 @@ void PBRDemo::LoadShaders() {
 		{"TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0}
 	};
 
-	m_gbufferVertexShader = new Common::VertexShader<Common::DefaultShaderConstantType, GBufferVertexShaderObjectConstants>(L"gbuffer_vs.cso", m_device, false, true, &m_defaultInputLayout, vertexDesc, 4);
-	m_instancedGBufferVertexShader = new Common::VertexShader<InstancedGBufferVertexShaderFrameConstants, InstancedGBufferVertexShaderObjectConstants>(L"instanced_gbuffer_vs.cso", m_device, true, true);
-	m_fullscreenTriangleVertexShader = new Common::VertexShader<>(L"fullscreen_triangle_vs.cso", m_device, false, false);
-	m_tiledCullFinalGatherComputeShader = new Common::ComputeShader<TiledCullFinalGatherComputeShaderFrameConstants, Common::DefaultShaderConstantType>(L"tiled_cull_final_gather_cs.cso", m_device, true, false);
-	m_postProcessPixelShader = new Common::PixelShader<>(L"post_process_ps.cso", m_device, false, false);
+	m_gbufferVertexShader = new Graphics::VertexShader<Graphics::DefaultShaderConstantType, GBufferVertexShaderObjectConstants>(L"gbuffer_vs.cso", m_device, false, true, &m_defaultInputLayout, vertexDesc, 4);
+	m_instancedGBufferVertexShader = new Graphics::VertexShader<InstancedGBufferVertexShaderFrameConstants, InstancedGBufferVertexShaderObjectConstants>(L"instanced_gbuffer_vs.cso", m_device, true, true);
+	m_fullscreenTriangleVertexShader = new Graphics::VertexShader<>(L"fullscreen_triangle_vs.cso", m_device, false, false);
+	m_tiledCullFinalGatherComputeShader = new Graphics::ComputeShader<TiledCullFinalGatherComputeShaderFrameConstants, Graphics::DefaultShaderConstantType>(L"tiled_cull_final_gather_cs.cso", m_device, true, false);
+	m_postProcessPixelShader = new Graphics::PixelShader<>(L"post_process_ps.cso", m_device, false, false);
 }
 
 } // End of namespace PBRDemo

@@ -61,7 +61,7 @@ void PBRDemo::DrawFrame(double deltaTime) {
 		// Clear the render target view
 		m_immediateContext->ClearRenderTargetView(m_backbufferRTV, DirectX::Colors::LightGray);
 
-		m_spriteRenderer.Begin(m_immediateContext, Common::SpriteRenderer::Point);
+		m_spriteRenderer.Begin(m_immediateContext, Graphics::SpriteRenderer::Point);
 		DirectX::XMFLOAT4X4 transform {2.0f, 0.0f, 0.0f, 0.0f,
 		                               0.0f, 2.0f, 0.0f, 0.0f,
 		                               0.0f, 0.0f, 2.0f, 0.0f,
@@ -279,7 +279,7 @@ void PBRDemo::SetLightBuffers() {
 	if (m_numPointLightsToDraw > 0) {
 		assert(m_pointLightBuffer->NumElements() >= (int)m_numPointLightsToDraw);
 
-		Common::ShaderPointLight *pointLightArray = m_pointLightBuffer->MapDiscard(m_immediateContext);
+		Scene::ShaderPointLight *pointLightArray = m_pointLightBuffer->MapDiscard(m_immediateContext);
 		for (unsigned int i = 0; i < m_numPointLightsToDraw; ++i) {
 			pointLightArray[i] = m_pointLights[i].GetShaderPackedLight();
 		}
@@ -289,7 +289,7 @@ void PBRDemo::SetLightBuffers() {
 	if (m_numSpotLightsToDraw > 0) {
 		assert(m_spotLightBuffer->NumElements() >= (int)m_numSpotLightsToDraw);
 
-		Common::ShaderSpotLight *spotLightArray = m_spotLightBuffer->MapDiscard(m_immediateContext);
+		Scene::ShaderSpotLight *spotLightArray = m_spotLightBuffer->MapDiscard(m_immediateContext);
 		for (unsigned int i = 0; i < m_numSpotLightsToDraw; ++i) {
 			spotLightArray[i] = m_spotLights[i].GetShaderPackedLight();
 		}
@@ -330,7 +330,7 @@ void PBRDemo::PostProcess() {
 void PBRDemo::RenderHUD() {
 	m_immediateContext->OMSetRenderTargets(1, &m_backbufferRTV, nullptr);
 
-	m_spriteRenderer.Begin(m_immediateContext, Common::SpriteRenderer::Point);
+	m_spriteRenderer.Begin(m_immediateContext, Graphics::SpriteRenderer::Point);
 	std::wstring output;
 	fastformat::write(output, L"FPS: ", m_fps, L"\nFrame Time: ", m_frameTime, L" (ms)");
 	

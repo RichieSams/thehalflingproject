@@ -16,11 +16,11 @@ LRESULT PBRDemo::MsgProc(HWND hwnd, uint msg, WPARAM wParam, LPARAM lParam) {
 	}
 
 	// Let the base engine handle any events that we don't handle
-	return Halfling::HalflingEngine::MsgProc(hwnd, msg, wParam, lParam);
+	return Engine::HalflingEngine::MsgProc(hwnd, msg, wParam, lParam);
 }
 
 PBRDemo::PBRDemo(HINSTANCE hinstance)
-	: Halfling::HalflingEngine(hinstance),
+	: Engine::HalflingEngine(hinstance),
 	  m_nearClip(0.1f),
 	  m_farClip(5000.0f),
 	  m_cameraPanFactor(1.0f),
@@ -75,7 +75,7 @@ void PBRDemo::Shutdown() {
 
 	TwTerminate();
 
-	Halfling::HalflingEngine::Shutdown();
+	Engine::HalflingEngine::Shutdown();
 }
 
 void PBRDemo::OnResize() {
@@ -125,33 +125,33 @@ void PBRDemo::OnResize() {
 		sampleDesc.Quality = 0;
 	}
 
-	m_depthStencilBuffer = new Common::Depth2D(m_device, m_clientWidth, m_clientHeight,
+	m_depthStencilBuffer = new Graphics::Depth2D(m_device, m_clientWidth, m_clientHeight,
 											   D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE,
 											   sampleDesc, m_stencil);
 
 	// Create the HDR output texture
-	m_hdrOutput = new Common::Texture2D(m_device, m_clientWidth, m_clientHeight, 
+	m_hdrOutput = new Graphics::Texture2D(m_device, m_clientWidth, m_clientHeight, 
 	                                    DXGI_FORMAT_R16G16B16A16_FLOAT, 
 	                                    D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS,
 	                                    1);
 
 	// Create the gBuffers
 	// Diffuse Albedo
-	m_gBuffers.push_back(new Common::Texture2D(m_device, m_clientWidth, m_clientHeight,
+	m_gBuffers.push_back(new Graphics::Texture2D(m_device, m_clientWidth, m_clientHeight,
 	                     DXGI_FORMAT_R11G11B10_FLOAT,
 	                     D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE,
 	                     1,
 	                     sampleDesc));
 
 	// Specular Albedo and Spec Power
-	m_gBuffers.push_back(new Common::Texture2D(m_device, m_clientWidth, m_clientHeight,
+	m_gBuffers.push_back(new Graphics::Texture2D(m_device, m_clientWidth, m_clientHeight,
 	                     DXGI_FORMAT_R8G8B8A8_UNORM,
 	                     D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE,
 	                     1,
 	                     sampleDesc));
 
 	// Normal
-	m_gBuffers.push_back(new Common::Texture2D(m_device, m_clientWidth, m_clientHeight,
+	m_gBuffers.push_back(new Graphics::Texture2D(m_device, m_clientWidth, m_clientHeight,
 	                     DXGI_FORMAT_R16G16_FLOAT,
 	                     D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE,
 	                     1,

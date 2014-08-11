@@ -160,12 +160,6 @@ private:
 	/** Renders the frame statistics and the settings bar */
 	void RenderHUD();
 
-	void SetForwardVertexShaderObjectConstants(DirectX::XMMATRIX &worldMatrix, DirectX::XMMATRIX &worldViewProjMatrix);
-	void SetInstancedForwardVertexShaderFrameConstants(DirectX::XMMATRIX &viewProjMatrix);
-	void SetInstancedForwardVertexShaderObjectConstants(uint startIndex);
-	void SetForwardPixelShaderFrameConstants();
-	void SetForwardPixelShaderObjectConstants(const Scene::BlinnPhongMaterial &material, uint textureFlags);
-
 	void SetGBufferVertexShaderObjectConstants(DirectX::XMMATRIX &worldMatrix, DirectX::XMMATRIX &worldViewProjMatrix);
 	void SetInstancedGBufferVertexShaderFrameConstants(DirectX::XMMATRIX &viewProjMatrix);
 	void SetInstancedGBufferVertexShaderObjectConstants(uint startIndex);

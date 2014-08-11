@@ -9,7 +9,7 @@
 #include "scene/materials.h"
 #include "scene/lights.h"
 
-#include "DirectXMath.h"
+#include <DirectXMath.h>
 
 
 namespace PBRDemo {

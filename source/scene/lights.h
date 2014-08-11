@@ -8,7 +8,7 @@
 
 #include "common/halfling_sys.h"
 
-#include "DirectXMath.h"
+#include <DirectXMath.h>
 
 
 namespace Scene {

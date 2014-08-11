@@ -10,7 +10,8 @@
 
 #include "scene/materials.h"
 
-#include "DirectXMath.h"
+#include <DirectXMath.h>
+
 #include <vector>
 
 

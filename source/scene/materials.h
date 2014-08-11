@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "DirectXMath.h"
+#include <DirectXMath.h>
 
 
 namespace Scene {

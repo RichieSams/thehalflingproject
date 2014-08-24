@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\source\common\file_io_util.cpp" />
+    <ClCompile Include="..\source\common\math.cpp" />
     <ClCompile Include="..\source\common\string_util.cpp" />
     <ClCompile Include="..\source\engine\clock.cpp" />
     <ClCompile Include="..\source\engine\console.cpp" />

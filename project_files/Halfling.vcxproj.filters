@@ -108,6 +108,9 @@
     <ClCompile Include="..\source\engine\timer.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
+    <ClCompile Include="..\source\common\math.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\source\libs\inih\INIReader.h">

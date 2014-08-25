@@ -151,7 +151,6 @@ private:
 	void LoadSceneJson();
 	void InitTweakBar();
 	void LoadShaders();
-	void CreateLights(const DirectX::XMFLOAT3 &sceneSizeMin, const DirectX::XMFLOAT3 &sceneSizeMax);
 
 	// Rendering methods
 	/** Renders the geometry */

@@ -31,7 +31,7 @@ private:
 	uint m_unnamedModelIncrementer;
 
 public:
-	Scene::Model *GetModel(ID3D11Device *device, Engine::TextureManager *textureManager, Engine::MaterialShaderManager *materialShaderManager, Graphics::SamplerStates *samplerStates, std::wstring filePath);
+	Scene::Model *GetModel(ID3D11Device *device, Engine::TextureManager *textureManager, Engine::MaterialShaderManager *materialShaderManager, Graphics::SamplerStateManager *samplerStateManager, std::wstring filePath);
 	Scene::Model *CreateUnnamedModel();
 };
 

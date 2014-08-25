@@ -17,12 +17,23 @@
 
 #include <d3d11.h>
 
-
 namespace Graphics {
 
-class BlendStates {
+namespace BlendState {
+	enum Flag {
+		BLEND_DISABLED,
+		ADDITIVE_BLEND,
+		ALPHA_BLEND,
+		PM_ALPHA_BLEND,
+		NO_COLOR,
+		ALPHA_TO_COVERAGE,
+		OPACITY_BLEND
+	};
+}
+
+class BlendStateManager {
 public:
-	~BlendStates();
+	~BlendStateManager();
 
 private:
 	ID3D11BlendState *m_blendDisabled;
@@ -54,9 +65,22 @@ public:
 };
 
 
-class RasterizerStates {
+namespace RasterizerState {
+	enum Flag {
+		NO_CULL,
+		CULL_BACKFACES,
+		CULL_BACKFACES_SCISSOR,
+		CULL_FRONTFACES,
+		CULL_FRONTFACES_SCISSOR,
+		NO_CULL_NO_MS,
+		NO_CULL_SCISSOR,
+		WIREFRAME
+	};
+}
+
+class RasterizerStateManager {
 public:
-	~RasterizerStates();
+	~RasterizerStateManager();
 
 private:
 	ID3D11RasterizerState *m_noCull;
@@ -91,9 +115,21 @@ public:
 };
 
 
-class DepthStencilStates {
+namespace DepthStencilState {
+	enum Flag {
+		DEPTH_DISABLED,
+		DEPTH_ENABLED,
+		REVERSE_DEPTH_ENABLED,
+		DEPTH_WRITE_ENABLED,
+		REVERSE_DEPTH_WRITE_ENABLED,
+		DEPTH_STENCIL_WRITE_ENABLED,
+		STENCIL_ENABLED
+	};
+}
+
+class DepthStencilStateManager {
 public:
-	~DepthStencilStates();
+	~DepthStencilStateManager();
 
 private:
 	ID3D11DepthStencilState *m_depthDisabled;
@@ -125,9 +161,22 @@ public:
 };
 
 
-class SamplerStates {
+namespace SamplerState {
+	enum Flag {
+		LINEAR,
+		LINEAR_CLAMP,
+		LINEAR_BORDER,
+		POINT,
+		POINT_WRAP,
+		ANISOTROPIC,
+		SHADOW_MAP,
+		SHADOW_MAP_PCF,
+	};
+}
+
+class SamplerStateManager {
 public:
-	~SamplerStates();
+	~SamplerStateManager();
 
 private:
 	ID3D11SamplerState *m_linear;

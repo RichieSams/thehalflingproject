@@ -36,33 +36,33 @@ TextureSampler ParseSamplerTypeFromString(std::string &inputString, TextureSampl
 	}
 }
 
-ID3D11SamplerState *GetSamplerStateFromSamplerType(TextureSampler samplerType, Graphics::SamplerStates *samplerStates) {
+ID3D11SamplerState *GetSamplerStateFromSamplerType(TextureSampler samplerType, Graphics::SamplerStateManager *samplerStateManager) {
 	switch (samplerType) {
 	case LINEAR_CLAMP:
-		return samplerStates->LinearClamp();
+		return samplerStateManager->LinearClamp();
 		break;
 	case LINEAR_BORDER:
-		return samplerStates->LinearBorder();
+		return samplerStateManager->LinearBorder();
 		break;
 	case LINEAR_WRAP:
-		return samplerStates->Linear();
+		return samplerStateManager->Linear();
 		break;
 	case POINT_CLAMP:
-		return samplerStates->Point();
+		return samplerStateManager->Point();
 		break;
 	case POINT_WRAP:
-		return samplerStates->PointWrap();
+		return samplerStateManager->PointWrap();
 		break;
 	case ANISOTROPIC_WRAP:
 	default:
-		return samplerStates->Anisotropic();
+		return samplerStateManager->Anisotropic();
 		break;
 	}
 }
 
 
-Model *FileModelToLoad::CreateModel(ID3D11Device *device, Engine::TextureManager *textureManager, Engine::ModelManager *modelManager, Engine::MaterialShaderManager *materialShaderManager, Graphics::SamplerStates *samplerStates) {
-	return m_modelManager->GetModel(m_device, m_textureManager, materialShaderManager, samplerStates, m_filePath.c_str());
+Model *FileModelToLoad::CreateModel(ID3D11Device *device, Engine::TextureManager *textureManager, Engine::ModelManager *modelManager, Engine::MaterialShaderManager *materialShaderManager, Graphics::SamplerStateManager *samplerStateManager) {
+	return m_modelManager->GetModel(m_device, m_textureManager, materialShaderManager, samplerStateManager, m_filePath.c_str());
 }
 
 struct Vertex {
@@ -72,7 +72,7 @@ struct Vertex {
 	DirectX::XMFLOAT3 tangent;
 };
 
-Model *PlaneModelToLoad::CreateModel(ID3D11Device *device, Engine::TextureManager *textureManager, Engine::ModelManager *modelManager, Engine::MaterialShaderManager *materialShaderManager, Graphics::SamplerStates *samplerStates) {
+Model *PlaneModelToLoad::CreateModel(ID3D11Device *device, Engine::TextureManager *textureManager, Engine::ModelManager *modelManager, Engine::MaterialShaderManager *materialShaderManager, Graphics::SamplerStateManager *samplerStateManager) {
 	GeometryGenerator::MeshData meshData;
 	ModelSubset *subset = new ModelSubset[1];
 
@@ -89,7 +89,7 @@ Model *PlaneModelToLoad::CreateModel(ID3D11Device *device, Engine::TextureManage
 
 	for (uint i = 0; i < m_material.Textures.size(); ++i) {
 		subset->TextureSRVs.push_back(textureManager->GetSRVFromFile(device, m_material.Textures[i].FilePath, D3D11_USAGE_IMMUTABLE));
-		subset->TextureSamplers.push_back(GetSamplerStateFromSamplerType(m_material.Textures[i].Sampler, samplerStates));
+		subset->TextureSamplers.push_back(GetSamplerStateFromSamplerType(m_material.Textures[i].Sampler, samplerStateManager));
 	}
 
 	Vertex *vertices = new Vertex[meshData.Vertices.size()];
@@ -108,7 +108,7 @@ Model *PlaneModelToLoad::CreateModel(ID3D11Device *device, Engine::TextureManage
 	return newModel;
 }
 
-Model *BoxModelToLoad::CreateModel(ID3D11Device *device, Engine::TextureManager *textureManager, Engine::ModelManager *modelManager, Engine::MaterialShaderManager *materialShaderManager, Graphics::SamplerStates *samplerStates) {
+Model *BoxModelToLoad::CreateModel(ID3D11Device *device, Engine::TextureManager *textureManager, Engine::ModelManager *modelManager, Engine::MaterialShaderManager *materialShaderManager, Graphics::SamplerStateManager *samplerStateManager) {
 	GeometryGenerator::MeshData meshData;
 	ModelSubset *subset = new ModelSubset[1];
 
@@ -125,7 +125,7 @@ Model *BoxModelToLoad::CreateModel(ID3D11Device *device, Engine::TextureManager 
 
 	for (uint i = 0; i < m_material.Textures.size(); ++i) {
 		subset->TextureSRVs.push_back(textureManager->GetSRVFromFile(device, m_material.Textures[i].FilePath, D3D11_USAGE_IMMUTABLE));
-		subset->TextureSamplers.push_back(GetSamplerStateFromSamplerType(m_material.Textures[i].Sampler, samplerStates));
+		subset->TextureSamplers.push_back(GetSamplerStateFromSamplerType(m_material.Textures[i].Sampler, samplerStateManager));
 	}
 
 	Vertex *vertices = new Vertex[meshData.Vertices.size()];
@@ -144,7 +144,7 @@ Model *BoxModelToLoad::CreateModel(ID3D11Device *device, Engine::TextureManager 
 	return newModel;
 }
 
-Model *SphereModelToLoad::CreateModel(ID3D11Device *device, Engine::TextureManager *textureManager, Engine::ModelManager *modelManager, Engine::MaterialShaderManager *materialShaderManager, Graphics::SamplerStates *samplerStates) {
+Model *SphereModelToLoad::CreateModel(ID3D11Device *device, Engine::TextureManager *textureManager, Engine::ModelManager *modelManager, Engine::MaterialShaderManager *materialShaderManager, Graphics::SamplerStateManager *samplerStateManager) {
 	GeometryGenerator::MeshData meshData;
 	ModelSubset *subset = new ModelSubset[1];
 
@@ -161,7 +161,7 @@ Model *SphereModelToLoad::CreateModel(ID3D11Device *device, Engine::TextureManag
 
 	for (uint i = 0; i < m_material.Textures.size(); ++i) {
 		subset->TextureSRVs.push_back(textureManager->GetSRVFromFile(device, m_material.Textures[i].FilePath, D3D11_USAGE_IMMUTABLE));
-		subset->TextureSamplers.push_back(GetSamplerStateFromSamplerType(m_material.Textures[i].Sampler, samplerStates));
+		subset->TextureSamplers.push_back(GetSamplerStateFromSamplerType(m_material.Textures[i].Sampler, samplerStateManager));
 	}
 
 	Vertex *vertices = new Vertex[meshData.Vertices.size()];

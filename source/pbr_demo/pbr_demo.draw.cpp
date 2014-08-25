@@ -93,18 +93,18 @@ void PBRDemo::RenderMainPass() {
 	m_immediateContext->ClearDepthStencilView(m_depthStencilBuffer->GetDepthStencil(), D3D11_CLEAR_DEPTH, 0.0f, 0);
 
 	// Set States
-	ID3D11SamplerState *samplerState[6] {m_samplerStates.Anisotropic(),  // Diffuse
-	                                     m_samplerStates.Anisotropic(),  // Spec color
-	                                     m_samplerStates.Linear(),       // Spec power
-	                                     m_samplerStates.PointWrap(),    // Alpha
-	                                     m_samplerStates.Linear(),       // Displacement
-	                                     m_samplerStates.Linear()};      // Normal
+	ID3D11SamplerState *samplerState[6] {m_samplerStateManager.Anisotropic(),  // Diffuse
+	                                     m_samplerStateManager.Anisotropic(),  // Spec color
+	                                     m_samplerStateManager.Linear(),       // Spec power
+	                                     m_samplerStateManager.PointWrap(),    // Alpha
+	                                     m_samplerStateManager.Linear(),       // Displacement
+	                                     m_samplerStateManager.Linear()};      // Normal
 	m_immediateContext->PSSetSamplers(0, 6, samplerState);
 
 	float blendFactor[4] = {1.0f, 1.0f, 1.0f, 1.0f};
-	m_immediateContext->OMSetBlendState(m_blendStates.BlendDisabled(), blendFactor, 0xFFFFFFFF);
-	m_immediateContext->OMSetDepthStencilState(m_depthStencilStates.ReverseDepthWriteEnabled(), 0);
-	ID3D11RasterizerState *rasterState = m_wireframe ? m_rasterizerStates.Wireframe() : m_rasterizerStates.BackFaceCull();
+	m_immediateContext->OMSetBlendState(m_blendStateManager.BlendDisabled(), blendFactor, 0xFFFFFFFF);
+	m_immediateContext->OMSetDepthStencilState(m_depthStencilStateManager.ReverseDepthWriteEnabled(), 0);
+	ID3D11RasterizerState *rasterState = m_wireframe ? m_rasterizerStateManager.Wireframe() : m_rasterizerStateManager.BackFaceCull();
 	m_immediateContext->RSSetState(rasterState);
 
 	m_immediateContext->IASetInputLayout(m_defaultInputLayout);
@@ -309,9 +309,9 @@ void PBRDemo::PostProcess() {
 	m_fullscreenTriangleVertexShader->BindToPipeline(m_immediateContext);
 	m_postProcessPixelShader->BindToPipeline(m_immediateContext);
 
-	m_immediateContext->RSSetState(m_rasterizerStates.NoCull());
+	m_immediateContext->RSSetState(m_rasterizerStateManager.NoCull());
 	float blendFactor[4] = {1.0f, 1.0f, 1.0f, 1.0f};
-	m_immediateContext->OMSetBlendState(m_blendStates.BlendDisabled(), blendFactor, 0xFFFFFFFF);
+	m_immediateContext->OMSetBlendState(m_blendStateManager.BlendDisabled(), blendFactor, 0xFFFFFFFF);
 
 	m_immediateContext->IASetVertexBuffers(0, 0, 0, 0, 0);
 	m_immediateContext->IASetIndexBuffer(0, DXGI_FORMAT_R32_UINT, 0);

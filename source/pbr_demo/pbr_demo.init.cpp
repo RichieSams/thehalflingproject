@@ -29,7 +29,7 @@ namespace PBRDemo {
 
 void LoadScene(std::atomic<bool> *sceneIsLoaded, 
                ID3D11Device *device, 
-               Engine::TextureManager *textureManager, Engine::ModelManager *modelManager, Engine::MaterialShaderManager *materialShaderManager, Graphics::SamplerStates *samplerStates,
+               Engine::TextureManager *textureManager, Engine::ModelManager *modelManager, Engine::MaterialShaderManager *materialShaderManager, Graphics::SamplerStateManager *samplerStateManager,
                std::vector<Scene::ModelToLoad *> *modelsToLoad, 
                std::vector<std::pair<Scene::Model *, DirectX::XMMATRIX>, Common::Allocator16ByteAligned<std::pair<Scene::Model *, DirectX::XMMATRIX> > > *modelList, 
                std::vector<std::pair<Scene::Model *, std::vector<DirectX::XMMATRIX, Common::Allocator16ByteAligned<DirectX::XMMATRIX> > *> > *instancedModelList,
@@ -60,7 +60,7 @@ bool PBRDemo::Initialize(LPCTSTR mainWndCaption, uint32 screenWidth, uint32 scre
 	// TODO: Make TextureManager thread safe
 	// HACK: ModelManager isn't thread safe. Same argument as TextureManager
 	// TODO: Make ModelManager thread safe
-	m_sceneLoaderThread = std::thread(LoadScene, &m_sceneLoaded, m_device, &m_textureManager, &m_modelManager, &m_materialShaderManager, &m_samplerStates, &m_modelsToLoad, &m_models, &m_instancedModels, m_modelInstanceThreshold);
+	m_sceneLoaderThread = std::thread(LoadScene, &m_sceneLoaded, m_device, &m_textureManager, &m_modelManager, &m_materialShaderManager, &m_samplerStateManager, &m_modelsToLoad, &m_models, &m_instancedModels, m_modelInstanceThreshold);
 
 	LoadShaders();
 
@@ -82,10 +82,10 @@ bool PBRDemo::Initialize(LPCTSTR mainWndCaption, uint32 screenWidth, uint32 scre
 	// Initialize the console
 	m_console.Initialize(Common::Rect(20, m_clientHeight - 320, m_clientWidth - 20, m_clientHeight - 10), &m_spriteRenderer, &m_courierNew10Font);
 
-	m_blendStates.Initialize(m_device);
-	m_depthStencilStates.Initialize(m_device);
-	m_rasterizerStates.Initialize(m_device);
-	m_samplerStates.Initialize(m_device);
+	m_blendStateManager.Initialize(m_device);
+	m_depthStencilStateManager.Initialize(m_device);
+	m_rasterizerStateManager.Initialize(m_device);
+	m_samplerStateManager.Initialize(m_device);
 
 	return true;
 }
@@ -432,13 +432,13 @@ void PBRDemo::InitTweakBar() {
 
 void LoadScene(std::atomic<bool> *sceneIsLoaded, 
                ID3D11Device *device, 
-               Engine::TextureManager *textureManager, Engine::ModelManager *modelManager, Engine::MaterialShaderManager *materialShaderManager, Graphics::SamplerStates *samplerStates,
+               Engine::TextureManager *textureManager, Engine::ModelManager *modelManager, Engine::MaterialShaderManager *materialShaderManager, Graphics::SamplerStateManager *samplerStateManager,
                std::vector<Scene::ModelToLoad *> *modelsToLoad, 
                std::vector<std::pair<Scene::Model *, DirectX::XMMATRIX>, Common::Allocator16ByteAligned<std::pair<Scene::Model *, DirectX::XMMATRIX> > > *modelList, 
                std::vector<std::pair<Scene::Model *, std::vector<DirectX::XMMATRIX, Common::Allocator16ByteAligned<DirectX::XMMATRIX> > *> > *instancedModelList,
 			   uint modelInstanceThreshold) {
 	for (auto iter = modelsToLoad->begin(); iter != modelsToLoad->end(); ++iter) {
-		Scene::Model *newModel = (*iter)->CreateModel(device, textureManager, modelManager, materialShaderManager, samplerStates);
+		Scene::Model *newModel = (*iter)->CreateModel(device, textureManager, modelManager, materialShaderManager, samplerStateManager);
 
 		if ((*iter)->Instances->size() > modelInstanceThreshold) {
 			instancedModelList->emplace_back(newModel, (*iter)->Instances);

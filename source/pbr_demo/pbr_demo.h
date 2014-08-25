@@ -119,10 +119,10 @@ private:
 	Graphics::StructuredBuffer<Scene::ShaderPointLight> *m_pointLightBuffer;
 	Graphics::StructuredBuffer<Scene::ShaderSpotLight> *m_spotLightBuffer;
 
-	Graphics::BlendStates m_blendStates;
-	Graphics::DepthStencilStates m_depthStencilStates;
-	Graphics::RasterizerStates m_rasterizerStates;
-	Graphics::SamplerStates m_samplerStates;
+	Graphics::BlendStateManager m_blendStateManager;
+	Graphics::DepthStencilStateManager m_depthStencilStateManager;
+	Graphics::RasterizerStateManager m_rasterizerStateManager;
+	Graphics::SamplerStateManager m_samplerStateManager;
 
 	Graphics::SpriteRenderer m_spriteRenderer;
 	Graphics::SpriteFont m_timesNewRoman12Font;

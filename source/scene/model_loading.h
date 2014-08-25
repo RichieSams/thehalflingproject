@@ -26,7 +26,7 @@ class MaterialShaderManager;
 }
 
 namespace Graphics {
-class SamplerStates;
+class SamplerStateManager;
 }
 
 namespace Scene {
@@ -52,7 +52,7 @@ enum TextureSampler {
  */
 TextureSampler ParseSamplerTypeFromString(std::string &inputString, TextureSampler defaultType);
 
-ID3D11SamplerState *GetSamplerStateFromSamplerType(TextureSampler samplerType, Graphics::SamplerStates *samplerStates);
+ID3D11SamplerState *GetSamplerStateFromSamplerType(TextureSampler samplerType, Graphics::SamplerStateManager *samplerStateManager);
 
 struct TextureDescription {
 	std::wstring FilePath;
@@ -78,7 +78,7 @@ public:
 	std::vector<DirectX::XMMATRIX, Common::Allocator16ByteAligned<DirectX::XMMATRIX> > *Instances;
 
 public:
-	virtual Model *CreateModel(ID3D11Device *device, Engine::TextureManager *textureManager, Engine::ModelManager *modelManager, Engine::MaterialShaderManager *materialShaderManager, Graphics::SamplerStates *samplerStates) = 0;
+	virtual Model *CreateModel(ID3D11Device *device, Engine::TextureManager *textureManager, Engine::ModelManager *modelManager, Engine::MaterialShaderManager *materialShaderManager, Graphics::SamplerStateManager *samplerStateManager) = 0;
 };
 
 
@@ -96,7 +96,7 @@ private:
 	Engine::ModelManager *m_modelManager;
 
 public:
-	Model *CreateModel(ID3D11Device *device, Engine::TextureManager *textureManager, Engine::ModelManager *modelManager, Engine::MaterialShaderManager *materialShaderManager, Graphics::SamplerStates *samplerStates);
+	Model *CreateModel(ID3D11Device *device, Engine::TextureManager *textureManager, Engine::ModelManager *modelManager, Engine::MaterialShaderManager *materialShaderManager, Graphics::SamplerStateManager *samplerStateManager);
 };
 
 
@@ -123,7 +123,7 @@ private:
 	ModelToLoadMaterial m_material;
 
 public:
-	Model *CreateModel(ID3D11Device *device, Engine::TextureManager *textureManager, Engine::ModelManager *modelManager, Engine::MaterialShaderManager *materialShaderManager, Graphics::SamplerStates *samplerStates);
+	Model *CreateModel(ID3D11Device *device, Engine::TextureManager *textureManager, Engine::ModelManager *modelManager, Engine::MaterialShaderManager *materialShaderManager, Graphics::SamplerStateManager *samplerStateManager);
 };
 
 
@@ -144,7 +144,7 @@ private:
 	ModelToLoadMaterial m_material;
 
 public:
-	Model *CreateModel(ID3D11Device *device, Engine::TextureManager *textureManager, Engine::ModelManager *modelManager, Engine::MaterialShaderManager *materialShaderManager, Graphics::SamplerStates *samplerStates);
+	Model *CreateModel(ID3D11Device *device, Engine::TextureManager *textureManager, Engine::ModelManager *modelManager, Engine::MaterialShaderManager *materialShaderManager, Graphics::SamplerStateManager *samplerStateManager);
 };
 
 
@@ -165,7 +165,7 @@ private:
 	ModelToLoadMaterial m_material;
 
 public:
-	Model *CreateModel(ID3D11Device *device, Engine::TextureManager *textureManager, Engine::ModelManager *modelManager, Engine::MaterialShaderManager *materialShaderManager, Graphics::SamplerStates *samplerStates);
+	Model *CreateModel(ID3D11Device *device, Engine::TextureManager *textureManager, Engine::ModelManager *modelManager, Engine::MaterialShaderManager *materialShaderManager, Graphics::SamplerStateManager *samplerStateManager);
 };
 
 } // End of namespace Scene

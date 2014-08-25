@@ -19,7 +19,7 @@
 
 namespace Scene {
 
-Model *HalflingModelFile::Load(ID3D11Device *device, Engine::TextureManager *textureManager, Engine::MaterialShaderManager *materialShaderManager, Graphics::SamplerStates *samplerStates, const wchar *filePath) {
+Model *HalflingModelFile::Load(ID3D11Device *device, Engine::TextureManager *textureManager, Engine::MaterialShaderManager *materialShaderManager, Graphics::SamplerStateManager *samplerStateManager, const wchar *filePath) {
 	// Read the entire file into memory
 	DWORD bytesRead;
 	char *fileBuffer = Common::ReadWholeFile(filePath, &bytesRead);
@@ -147,7 +147,7 @@ Model *HalflingModelFile::Load(ID3D11Device *device, Engine::TextureManager *tex
 		for (uint j = 0; j < materialData.Textures.size(); ++j) {
 			std::wstring wideFileName(stringTable[materialData.Textures[j].FilePathIndex].begin(), stringTable[materialData.Textures[j].FilePathIndex].end());
 			modelSubsets[i].TextureSRVs.push_back(textureManager->GetSRVFromFile(device, wideFileName, D3D11_USAGE_IMMUTABLE));
-			modelSubsets[i].TextureSamplers.push_back(GetSamplerStateFromSamplerType(static_cast<TextureSampler>(materialData.Textures[j].Sampler), samplerStates));
+			modelSubsets[i].TextureSamplers.push_back(GetSamplerStateFromSamplerType(static_cast<TextureSampler>(materialData.Textures[j].Sampler), samplerStateManager));
 		}
 	}
 

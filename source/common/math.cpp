@@ -9,60 +9,85 @@
 
 namespace Common {
 
-float2 float2::operator+(const float2 &rhs) {
+float2 &float2::operator+=(const float2 &rhs) {
 	X += rhs.X;
 	Y += rhs.Y;
 
 	return *this;
 }
 
-float2 float2::operator-(const float2 &rhs) {
+float2 &float2::operator-=(const float2 &rhs) {
 	X -= rhs.X;
 	Y -= rhs.Y;
 
 	return *this;
 }
 
-float2 float2::operator*(const float2 &rhs) {
+float2 &float2::operator*=(const float2 &rhs) {
 	X *= rhs.X;
 	Y *= rhs.Y;
 
 	return *this;
 }
 
-float2 float2::operator/(const float2 &rhs) {
+float2 &float2::operator/=(const float2 &rhs) {
 	X /= rhs.X;
 	Y /= rhs.Y;
 
 	return *this;
 }
 
-float2 float2::operator+(float rhs) {
+float2 &float2::operator+=(float rhs) {
 	X += rhs;
 	Y += rhs;
 
 	return *this;
 }
 
-float2 float2::operator-(float rhs) {
+float2 &float2::operator-=(float rhs) {
 	X -= rhs;
 	Y -= rhs;
 
 	return *this;
 }
 
-float2 float2::operator*(float rhs) {
+float2 &float2::operator*=(float rhs) {
 	X *= rhs;
 	Y *= rhs;
 
 	return *this;
 }
 
-float2 float2::operator/(float rhs) {
+float2 &float2::operator/=(float rhs) {
 	X /= rhs;
 	Y /= rhs;
 
 	return *this;
+}
+
+float2 &float2::operator=(const float2 &rhs) {
+	if (this != &rhs) {
+		X = rhs.X;
+		Y = rhs.Y;
+	}
+
+	return *this;
+}
+
+float2 operator+(const float2 &lhs, const float2 &rhs) {
+	return float2(lhs.X + rhs.X, lhs.Y + rhs.Y);
+}
+
+float2 operator-(const float2 &lhs, const float2 &rhs) {
+	return float2(lhs.X - rhs.X, lhs.Y - rhs.Y);
+}
+
+float2 operator*(const float2 &lhs, const float2 &rhs) {
+	return float2(lhs.X * rhs.X, lhs.Y * rhs.Y);
+}
+
+float2 operator/(const float2 &lhs, const float2 &rhs) {
+	return float2(lhs.X / rhs.X, lhs.Y / rhs.Y);
 }
 
 float2 operator+(float lhs, const float2 &rhs) {
@@ -82,7 +107,7 @@ float2 operator/(float lhs, const float2 &rhs) {
 }
 
 
-float3 float3::operator+(const float3 &rhs) {
+float3 &float3::operator+=(const float3 &rhs) {
 	X += rhs.X;
 	Y += rhs.Y;
 	Z += rhs.Z;
@@ -90,7 +115,7 @@ float3 float3::operator+(const float3 &rhs) {
 	return *this;
 }
 
-float3 float3::operator-(const float3 &rhs) {
+float3 &float3::operator-=(const float3 &rhs) {
 	X -= rhs.X;
 	Y -= rhs.Y;
 	Z -= rhs.Z;
@@ -98,7 +123,7 @@ float3 float3::operator-(const float3 &rhs) {
 	return *this;
 }
 
-float3 float3::operator*(const float3 &rhs) {
+float3 &float3::operator*=(const float3 &rhs) {
 	X *= rhs.X;
 	Y *= rhs.Y;
 	Z *= rhs.Z;
@@ -106,7 +131,7 @@ float3 float3::operator*(const float3 &rhs) {
 	return *this;
 }
 
-float3 float3::operator/(const float3 &rhs) {
+float3 &float3::operator/=(const float3 &rhs) {
 	X /= rhs.X;
 	Y /= rhs.Y;
 	Z /= rhs.Z;
@@ -114,7 +139,7 @@ float3 float3::operator/(const float3 &rhs) {
 	return *this;
 }
 
-float3 float3::operator+(float rhs) {
+float3 &float3::operator+=(float rhs) {
 	X += rhs;
 	Y += rhs;
 	Z += rhs;
@@ -122,7 +147,7 @@ float3 float3::operator+(float rhs) {
 	return *this;
 }
 
-float3 float3::operator-(float rhs) {
+float3 &float3::operator-=(float rhs) {
 	X -= rhs;
 	Y -= rhs;
 	Z -= rhs;
@@ -130,7 +155,7 @@ float3 float3::operator-(float rhs) {
 	return *this;
 }
 
-float3 float3::operator*(float rhs) {
+float3 &float3::operator*=(float rhs) {
 	X *= rhs;
 	Y *= rhs;
 	Z *= rhs;
@@ -138,12 +163,38 @@ float3 float3::operator*(float rhs) {
 	return *this;
 }
 
-float3 float3::operator/(float rhs) {
+float3 &float3::operator/=(float rhs) {
 	X /= rhs;
 	Y /= rhs;
 	Z /= rhs;
 
 	return *this;
+}
+
+float3 &float3::operator=(const float3 &rhs) {
+	if (this != &rhs) {
+		X = rhs.X;
+		Y = rhs.Y;
+		Z = rhs.Z;
+	}
+
+	return *this;
+}
+
+float3 operator+(const float3 &lhs, const float3 &rhs) {
+	return float3(lhs.X + rhs.X, lhs.Y + rhs.Y, lhs.Z + rhs.Z);
+}
+
+float3 operator-(const float3 &lhs, const float3 &rhs) {
+	return float3(lhs.X - rhs.X, lhs.Y - rhs.Y, lhs.Z - rhs.Z);
+}
+
+float3 operator*(const float3 &lhs, const float3 &rhs) {
+	return float3(lhs.X * rhs.X, lhs.Y * rhs.Y, lhs.Z * rhs.Z);
+}
+
+float3 operator/(const float3 &lhs, const float3 &rhs) {
+	return float3(lhs.X / rhs.X, lhs.Y / rhs.Y, lhs.Z / rhs.Z);
 }
 
 float3 operator+(float lhs, const float3 &rhs) {
@@ -163,7 +214,7 @@ float3 operator/(float lhs, const float3 &rhs) {
 }
 
 
-float4 float4::operator+(const float4 &rhs) {
+float4 &float4::operator+=(const float4 &rhs) {
 	X += rhs.X;
 	Y += rhs.Y;
 	Z += rhs.Z;
@@ -172,7 +223,7 @@ float4 float4::operator+(const float4 &rhs) {
 	return *this;
 }
 
-float4 float4::operator-(const float4 &rhs) {
+float4 &float4::operator-=(const float4 &rhs) {
 	X -= rhs.X;
 	Y -= rhs.Y;
 	Z -= rhs.Z;
@@ -181,7 +232,7 @@ float4 float4::operator-(const float4 &rhs) {
 	return *this;
 }
 
-float4 float4::operator*(const float4 &rhs) {
+float4 &float4::operator*=(const float4 &rhs) {
 	X *= rhs.X;
 	Y *= rhs.Y;
 	Z *= rhs.Z;
@@ -190,7 +241,7 @@ float4 float4::operator*(const float4 &rhs) {
 	return *this;
 }
 
-float4 float4::operator/(const float4 &rhs) {
+float4 &float4::operator/=(const float4 &rhs) {
 	X /= rhs.X;
 	Y /= rhs.Y;
 	Z /= rhs.Z;
@@ -199,7 +250,7 @@ float4 float4::operator/(const float4 &rhs) {
 	return *this;
 }
 
-float4 float4::operator+(float rhs) {
+float4 &float4::operator+=(float rhs) {
 	X += rhs;
 	Y += rhs;
 	Z += rhs;
@@ -208,7 +259,7 @@ float4 float4::operator+(float rhs) {
 	return *this;
 }
 
-float4 float4::operator-(float rhs) {
+float4 &float4::operator-=(float rhs) {
 	X -= rhs;
 	Y -= rhs;
 	Z -= rhs;
@@ -217,7 +268,7 @@ float4 float4::operator-(float rhs) {
 	return *this;
 }
 
-float4 float4::operator*(float rhs) {
+float4 &float4::operator*=(float rhs) {
 	X *= rhs;
 	Y *= rhs;
 	Z *= rhs;
@@ -226,13 +277,40 @@ float4 float4::operator*(float rhs) {
 	return *this;
 }
 
-float4 float4::operator/(float rhs) {
+float4 &float4::operator/=(float rhs) {
 	X /= rhs;
 	Y /= rhs;
 	Z /= rhs;
 	W /= rhs;
 
 	return *this;
+}
+
+float4 &float4::operator=(const float4 &rhs) {
+	if (this != &rhs) {
+		X = rhs.X;
+		Y = rhs.Y;
+		Z = rhs.Z;
+		W = rhs.W;
+	}
+
+	return *this;
+}
+
+float4 operator+(const float4 &lhs, const float4 &rhs) {
+	return float4(lhs.X + rhs.X, lhs.Y + rhs.Y, lhs.Z + rhs.Z, lhs.W + rhs.W);
+}
+
+float4 operator-(const float4 &lhs, const float4 &rhs) {
+	return float4(lhs.X - rhs.X, lhs.Y - rhs.Y, lhs.Z - rhs.Z, lhs.W - rhs.W);
+}
+
+float4 operator*(const float4 &lhs, const float4 &rhs) {
+	return float4(lhs.X * rhs.X, lhs.Y * rhs.Y, lhs.Z * rhs.Z, lhs.W * rhs.W);
+}
+
+float4 operator/(const float4 &lhs, const float4 &rhs) {
+	return float4(lhs.X / rhs.X, lhs.Y / rhs.Y, lhs.Z / rhs.Z, lhs.W / rhs.W);
 }
 
 float4 operator+(float lhs, const float4 &rhs) {

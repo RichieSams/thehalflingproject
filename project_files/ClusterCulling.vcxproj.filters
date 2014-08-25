@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\source\cluster_culling\cluster_culling.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\cluster_culling\cluster_culling.draw.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\cluster_culling\cluster_culling.init.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\cluster_culling\cluster_culling.update.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\cluster_culling\main.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\source\cluster_culling\cluster_culling.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\cluster_culling\shader_constants.h">
+      <Filter>Shader Logic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\cluster_culling\shader_defines.h">
+      <Filter>Shader Logic</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\source\cluster_culling\tempIcon.ico">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="..\source\cluster_culling\shaders\hlsl_util.hlsli">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\source\cluster_culling\shaders\types.hlsli">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\source\cluster_culling\materials\example.hmat.hlsl">
+      <Filter>Materials</Filter>
+    </None>
+    <None Include="..\source\cluster_culling\shaders\gbuffer_ps.hlsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\source\cluster_culling\resources\scene.json">
+      <Filter>Core</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Core">
+      <UniqueIdentifier>{434d1833-aaa9-4448-9a01-756c4009b527}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{72b745cb-9348-4e32-8a39-66ada565c8f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader Logic">
+      <UniqueIdentifier>{429decc3-816e-40bf-948a-766e90cc87ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{ade00db2-9f6f-4eb0-ac29-ffb4d6a3afda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Materials">
+      <UniqueIdentifier>{96beb857-5ef2-4a3a-9262-893e42b47cfc}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\source\cluster_culling\shaders\fullscreen_triangle_vs.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\source\cluster_culling\shaders\gbuffer_vs.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\source\cluster_culling\shaders\instanced_gbuffer_vs.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\source\cluster_culling\shaders\post_process_ps.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\source\cluster_culling\shaders\tiled_cull_final_gather_cs.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\source\cluster_culling\materials\metal.hmat.hlsl">
+      <Filter>Materials</Filter>
+    </FxCompile>
+    <FxCompile Include="..\source\cluster_culling\materials\nonmetal.hmat.hlsl">
+      <Filter>Materials</Filter>
+    </FxCompile>
+    <FxCompile Include="..\source\cluster_culling\materials\matte_gray.hmat.hlsl">
+      <Filter>Materials</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ClusterCulling.rc">
+      <Filter>Resources</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

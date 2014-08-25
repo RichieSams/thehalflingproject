@@ -1,0 +1,42 @@
+// The json-cpp library allows us to use C-style comments
+// However, comments are not allowed in *true* json. So if you want to test your
+// scene against the scene.schema.json, using a standard schema validator, you
+// will need to remove all the comments before running the validator.
+
+// See example_scene.json and scene.schema.json for syntax information
+
+{
+	"NearClip" : 0.1,
+	"FarClip" : 800.0,
+	"SceneScaleFactor" : 1.0,
+	"ModelInstanceThreshold" : 1,
+	"Materials" : [
+		{
+			"Name" : "matte_gray",
+			"HMATFilePath" : "matte_gray.hmat"
+		}
+	],
+    "Models" : [
+        {
+            "Type" : "plane",
+            "Width" : 200.0,
+            "Depth" : 200.0,
+			"X-Subdivisions" : 2,
+			"Z-Subdivisions" : 2,
+			"X-TextureTiling" : 1.0,
+			"Z-TextureTiling" : 1.0,
+			"Material" : "matte_gray",
+            "Instances" : [
+                [1.0, 0.0, 0.0, 0.0,
+                 0.0, 1.0, 0.0, 0.0,
+                 0.0, 0.0, 1.0, 0.0,
+                 0.0, 0.0, 0.0, 1.0]
+            ]
+        }
+	],
+	"DirectionalLight" : {
+		"Color" : [1.0, 0.976, 0.89],
+		"Direction" : [-0.57735, -0.57735, -0.57735],
+		"Intensity" : 3.0
+	}
+}

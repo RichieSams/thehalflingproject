@@ -53,6 +53,6 @@ void GBufferPS(GBufferShaderPixelIn input, out GBuffer gbuffer) {
 	#endif
 
 	gbuffer.baseColor = baseColor;
-	gbuffer.roughnessSpecAndMetal = float4(roughness, specular, metallic, 0.0f);
+	gbuffer.roughnessSpecAndMetal = float3(roughness, specular, metallic);
 	gbuffer.normal = CartesianToSpherical(normal);
 }

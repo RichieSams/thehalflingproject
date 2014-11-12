@@ -6,14 +6,18 @@
 
 #pragma once
 
-#include <DirectXMath.h>
+#include "graphics/shader.h"
+
+#include <vector>
 
 
 namespace Scene {
 
-struct BlinnPhongMaterial {
-	DirectX::XMFLOAT4 Diffuse;
-	DirectX::XMFLOAT4 Specular; // w = SpecPower
+struct Material {
+	Graphics::MaterialShader *Shader;
+	std::vector<ID3D11ShaderResourceView *> TextureSRVs;
+	std::vector<ID3D11SamplerState *> TextureSamplers;
 };
 
 } // End of namespace Scene
+

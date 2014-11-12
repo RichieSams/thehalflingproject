@@ -230,7 +230,7 @@
       <OutputFile>$(OutDir)$(TargetName)d$(TargetExt)</OutputFile>
     </Link>
     <Lib>
-      <AdditionalDependencies>AntTweakBar.lib;gdiplus.lib;user32.lib;fastformatd.lib</AdditionalDependencies>
+      <AdditionalDependencies>AntTweakBar.lib;fastformatd.lib</AdditionalDependencies>
     </Lib>
     <FxCompile>
       <AdditionalIncludeDirectories>../source/</AdditionalIncludeDirectories>
@@ -251,7 +251,7 @@
       <OutputFile>$(OutDir)$(TargetName)d$(TargetExt)</OutputFile>
     </Link>
     <Lib>
-      <AdditionalDependencies>AntTweakBar.lib;gdiplus.lib;user32.lib;fastformatd.lib</AdditionalDependencies>
+      <AdditionalDependencies>AntTweakBar.lib;fastformatd.lib</AdditionalDependencies>
     </Lib>
     <FxCompile>
       <AdditionalIncludeDirectories>../source/</AdditionalIncludeDirectories>
@@ -279,7 +279,7 @@
       <ShaderModel>5.0</ShaderModel>
     </FxCompile>
     <Lib>
-      <AdditionalDependencies>AntTweakBar.lib;gdiplus.lib;user32.lib;fastformat.lib</AdditionalDependencies>
+      <AdditionalDependencies>AntTweakBar.lib;fastformat.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -303,7 +303,7 @@
       <ShaderModel>5.0</ShaderModel>
     </FxCompile>
     <Lib>
-      <AdditionalDependencies>AntTweakBar.lib;gdiplus.lib;user32.lib;fastformat.lib</AdditionalDependencies>
+      <AdditionalDependencies>AntTweakBar.lib;fastformat.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -7,8 +7,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Halfling", "Halfling.vcxpro
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PBRDemo", "PBRDemo.vcxproj", "{E886DA04-6632-4E24-9994-2FF1C0AEBA5A}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ClusterCulling", "ClusterCulling.vcxproj", "{6FEA7168-E966-4688-A073-8F6838D9F194}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -33,14 +31,6 @@ Global
 		{E886DA04-6632-4E24-9994-2FF1C0AEBA5A}.Release|Win32.Build.0 = Release|Win32
 		{E886DA04-6632-4E24-9994-2FF1C0AEBA5A}.Release|x64.ActiveCfg = Release|x64
 		{E886DA04-6632-4E24-9994-2FF1C0AEBA5A}.Release|x64.Build.0 = Release|x64
-		{6FEA7168-E966-4688-A073-8F6838D9F194}.Debug|Win32.ActiveCfg = Debug|Win32
-		{6FEA7168-E966-4688-A073-8F6838D9F194}.Debug|Win32.Build.0 = Debug|Win32
-		{6FEA7168-E966-4688-A073-8F6838D9F194}.Debug|x64.ActiveCfg = Debug|x64
-		{6FEA7168-E966-4688-A073-8F6838D9F194}.Debug|x64.Build.0 = Debug|x64
-		{6FEA7168-E966-4688-A073-8F6838D9F194}.Release|Win32.ActiveCfg = Release|Win32
-		{6FEA7168-E966-4688-A073-8F6838D9F194}.Release|Win32.Build.0 = Release|Win32
-		{6FEA7168-E966-4688-A073-8F6838D9F194}.Release|x64.ActiveCfg = Release|x64
-		{6FEA7168-E966-4688-A073-8F6838D9F194}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

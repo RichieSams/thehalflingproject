@@ -75,7 +75,7 @@ protected:
 	DirectX::XMFLOAT3 m_AABB_min;
 	DirectX::XMFLOAT3 m_AABB_max;
 
-	DisposeAfterUse::Flag m_disposeSubsetArray;
+	DisposeAfterUse m_disposeSubsetArray;
 
 public:
 	/* Returns the number of subsets the model has */
@@ -114,7 +114,7 @@ public:
 	 * @param vertexCount        The number of vertices
 	 * @param disposeAfterUse    If YES, the function will call delete[] on 'vertices' when it finishes
 	 */
-	void CreateVertexBuffer(ID3D11Device *device, void *vertices, size_t vertexStride, uint vertexCount, DisposeAfterUse::Flag disposeAfterUse = DisposeAfterUse::YES);
+	void CreateVertexBuffer(ID3D11Device *device, void *vertices, size_t vertexStride, uint vertexCount, DisposeAfterUse disposeAfterUse = DisposeAfterUse::YES);
 	/**
 	 * Creates the vertex buffer for the model. All subsets share the same vertex buffer.
 	 *
@@ -127,7 +127,7 @@ public:
 	 * @param vertexBufferDesc    The vertex buffer description
 	 * @param disposeAfterUse     If YES, the function will call delete[] on 'vertices' when it finishes
 	 */
-	void CreateVertexBuffer(ID3D11Device *device, void *vertices, uint vertexCount, D3D11_BUFFER_DESC vertexBufferDesc, DisposeAfterUse::Flag disposeAfterUse = DisposeAfterUse::YES);
+	void CreateVertexBuffer(ID3D11Device *device, void *vertices, uint vertexCount, D3D11_BUFFER_DESC vertexBufferDesc, DisposeAfterUse disposeAfterUse = DisposeAfterUse::YES);
 	/**
 	 * Creates the index buffer for the model. All subsets share the same index buffer.
 	 * Assumes D3D11_USAGE_IMMUTABLE with no cpu access flags and no misc flags.
@@ -140,7 +140,7 @@ public:
 	 * @param indexCount         The number of indices
 	 * @param disposeAfterUse    If YES, the function will call delete[] on 'indices' when it finishes
 	 */
-	void CreateIndexBuffer(ID3D11Device *device, uint *indices, uint indexCount, DisposeAfterUse::Flag disposeAfterUse = DisposeAfterUse::YES);
+	void CreateIndexBuffer(ID3D11Device *device, uint *indices, uint indexCount, DisposeAfterUse disposeAfterUse = DisposeAfterUse::YES);
 	/**
 	 * Creates the index buffer for the model. All subsets share the same index buffer.
 	 *
@@ -153,7 +153,7 @@ public:
 	 * @param indexBufferDesc    The index buffer description
 	 * @param disposeAfterUse    If YES, the function will call delete[] on 'indices' when it finishes
 	 */
-	void CreateIndexBuffer(ID3D11Device *device, uint *indices, uint indexCount, D3D11_BUFFER_DESC indexBufferDesc, DisposeAfterUse::Flag disposeAfterUse = DisposeAfterUse::YES);
+	void CreateIndexBuffer(ID3D11Device *device, uint *indices, uint indexCount, D3D11_BUFFER_DESC indexBufferDesc, DisposeAfterUse disposeAfterUse = DisposeAfterUse::YES);
 	/**
 	 * Sets the subsets for the model
 	 *
@@ -161,7 +161,7 @@ public:
 	 * @param subsetCount        The number of subsets
 	 * @param disposeAfterUse    If YES, the function will call delete[] on 'indices' in the Model destructor
 	 */
-	void CreateSubsets(ModelSubset *subsetArray, uint subsetCount, DisposeAfterUse::Flag disposeAfterUse = DisposeAfterUse::YES);
+	void CreateSubsets(ModelSubset *subsetArray, uint subsetCount, DisposeAfterUse disposeAfterUse = DisposeAfterUse::YES);
 
 	/**
 	 * Binds the model's vertex and index buffers, then binds the texture SRVS, before finally drawing the geometry
@@ -224,7 +224,7 @@ public:
 	 * @param instanceData        [Optional] Data to fill the instance buffer with
 	 * @param disposeAfterUse     If YES, the function will call delete[] on 'instanceData' when it finishes
 	 */
-	void CreateInstanceBuffer(ID3D11Device *device, size_t instanceStride, uint maxInstanceCount, void *instanceData = nullptr, DisposeAfterUse::Flag disposeAfterUse = DisposeAfterUse::YES);
+	void CreateInstanceBuffer(ID3D11Device *device, size_t instanceStride, uint maxInstanceCount, void *instanceData = nullptr, DisposeAfterUse disposeAfterUse = DisposeAfterUse::YES);
 	/**
 	 * Creates the instance buffer for the model
 	 *
@@ -234,7 +234,7 @@ public:
 	 * @param instanceData          [Optional] Data to fill the instance buffer with
 	 * @param disposeAfterUse       If YES, the function will call delete[] on 'instanceData' when it finishes
 	 */
-	void CreateInstanceBuffer(ID3D11Device *device, D3D11_BUFFER_DESC instanceBufferDesc, void *instanceData = nullptr, DisposeAfterUse::Flag disposeAfterUse = DisposeAfterUse::YES);
+	void CreateInstanceBuffer(ID3D11Device *device, D3D11_BUFFER_DESC instanceBufferDesc, void *instanceData = nullptr, DisposeAfterUse disposeAfterUse = DisposeAfterUse::YES);
 
 	/**
 	 * Maps the instance buffer to local memory so that it can be written to

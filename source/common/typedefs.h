@@ -22,6 +22,7 @@ typedef unsigned __int64    uint64;
 
 typedef wchar_t wchar;
 
-namespace DisposeAfterUse {
-enum Flag { NO, YES };
-}
+enum class DisposeAfterUse {
+	NO, 
+	YES 
+};

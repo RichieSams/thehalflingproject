@@ -11,7 +11,7 @@
 
 namespace Scene {
 
-void Model::CreateVertexBuffer(ID3D11Device *device, void *vertices, size_t vertexStride, uint vertexCount, DisposeAfterUse::Flag disposeAfterUse) {
+void Model::CreateVertexBuffer(ID3D11Device *device, void *vertices, size_t vertexStride, uint vertexCount, DisposeAfterUse disposeAfterUse) {
 	D3D11_BUFFER_DESC vbd;
 	vbd.Usage = D3D11_USAGE_IMMUTABLE;
 	vbd.ByteWidth = static_cast<uint>(vertexStride) * vertexCount;
@@ -23,7 +23,7 @@ void Model::CreateVertexBuffer(ID3D11Device *device, void *vertices, size_t vert
 	CreateVertexBuffer(device, vertices, vertexCount, vbd, disposeAfterUse);
 }
 
-void Model::CreateVertexBuffer(ID3D11Device *device, void *vertices, uint vertexCount, D3D11_BUFFER_DESC vertexBufferDesc, DisposeAfterUse::Flag disposeAfterUse) {
+void Model::CreateVertexBuffer(ID3D11Device *device, void *vertices, uint vertexCount, D3D11_BUFFER_DESC vertexBufferDesc, DisposeAfterUse disposeAfterUse) {
 	m_vertexStride = vertexBufferDesc.ByteWidth / vertexCount;
 	
 	D3D11_SUBRESOURCE_DATA vInitData;
@@ -36,7 +36,7 @@ void Model::CreateVertexBuffer(ID3D11Device *device, void *vertices, uint vertex
 	}
 }
 
-void Model::CreateIndexBuffer(ID3D11Device *device, uint *indices, uint indexCount, DisposeAfterUse::Flag disposeAfterUse) {
+void Model::CreateIndexBuffer(ID3D11Device *device, uint *indices, uint indexCount, DisposeAfterUse disposeAfterUse) {
 	D3D11_BUFFER_DESC ibd;
 	ibd.Usage = D3D11_USAGE_IMMUTABLE;
 	ibd.ByteWidth = sizeof(uint) * indexCount;
@@ -48,7 +48,7 @@ void Model::CreateIndexBuffer(ID3D11Device *device, uint *indices, uint indexCou
 	CreateIndexBuffer(device, indices, indexCount, ibd, disposeAfterUse);
 }
 
-void Model::CreateIndexBuffer(ID3D11Device *device, uint *indices, uint indexCount, D3D11_BUFFER_DESC indexBufferDesc, DisposeAfterUse::Flag disposeAfterUse) {
+void Model::CreateIndexBuffer(ID3D11Device *device, uint *indices, uint indexCount, D3D11_BUFFER_DESC indexBufferDesc, DisposeAfterUse disposeAfterUse) {
 	D3D11_SUBRESOURCE_DATA iInitData;
 	iInitData.pSysMem = indices;
 	
@@ -59,7 +59,7 @@ void Model::CreateIndexBuffer(ID3D11Device *device, uint *indices, uint indexCou
 	}
 }
 
-void Model::CreateSubsets(ModelSubset *subsetArray, uint subsetCount, DisposeAfterUse::Flag disposeAfterUse) {
+void Model::CreateSubsets(ModelSubset *subsetArray, uint subsetCount, DisposeAfterUse disposeAfterUse) {
 	m_subsets = subsetArray;
 	m_subsetCount = subsetCount;
 	m_disposeSubsetArray = disposeAfterUse;
@@ -128,7 +128,7 @@ void Model::DrawInstancedSubset(ID3D11DeviceContext *deviceContext, uint instanc
 }
 
 
-void InstancedModel::CreateInstanceBuffer(ID3D11Device *device, size_t instanceStride, uint maxInstanceCount, void *instanceData, DisposeAfterUse::Flag disposeAfterUse) {
+void InstancedModel::CreateInstanceBuffer(ID3D11Device *device, size_t instanceStride, uint maxInstanceCount, void *instanceData, DisposeAfterUse disposeAfterUse) {
 	m_instanceStride = static_cast<uint>(instanceStride);
 	m_maxInstanceCount = maxInstanceCount;
 
@@ -143,7 +143,7 @@ void InstancedModel::CreateInstanceBuffer(ID3D11Device *device, size_t instanceS
 	CreateInstanceBuffer(device, instbd, instanceData, disposeAfterUse);
 }
 
-void InstancedModel::CreateInstanceBuffer(ID3D11Device *device, D3D11_BUFFER_DESC instanceBufferDesc, void *instanceData, DisposeAfterUse::Flag disposeAfterUse) {
+void InstancedModel::CreateInstanceBuffer(ID3D11Device *device, D3D11_BUFFER_DESC instanceBufferDesc, void *instanceData, DisposeAfterUse disposeAfterUse) {
 	D3D11_SUBRESOURCE_DATA iInitData;
 	iInitData.pSysMem = instanceData;
 

@@ -19,17 +19,15 @@
 
 namespace Graphics {
 
-namespace BlendState {
-	enum Flag {
-		BLEND_DISABLED,
-		ADDITIVE_BLEND,
-		ALPHA_BLEND,
-		PM_ALPHA_BLEND,
-		NO_COLOR,
-		ALPHA_TO_COVERAGE,
-		OPACITY_BLEND
-	};
-}
+enum class BlendState {
+	BLEND_DISABLED,
+	ADDITIVE_BLEND,
+	ALPHA_BLEND,
+	PM_ALPHA_BLEND,
+	NO_COLOR,
+	ALPHA_TO_COVERAGE,
+	OPACITY_BLEND
+};
 
 class BlendStateManager {
 public:
@@ -65,18 +63,16 @@ public:
 };
 
 
-namespace RasterizerState {
-	enum Flag {
-		NO_CULL,
-		CULL_BACKFACES,
-		CULL_BACKFACES_SCISSOR,
-		CULL_FRONTFACES,
-		CULL_FRONTFACES_SCISSOR,
-		NO_CULL_NO_MS,
-		NO_CULL_SCISSOR,
-		WIREFRAME
-	};
-}
+enum class  RasterizerState {
+	NO_CULL,
+	CULL_BACKFACES,
+	CULL_BACKFACES_SCISSOR,
+	CULL_FRONTFACES,
+	CULL_FRONTFACES_SCISSOR,
+	NO_CULL_NO_MS,
+	NO_CULL_SCISSOR,
+	WIREFRAME
+};
 
 class RasterizerStateManager {
 public:
@@ -115,17 +111,15 @@ public:
 };
 
 
-namespace DepthStencilState {
-	enum Flag {
-		DEPTH_DISABLED,
-		DEPTH_ENABLED,
-		REVERSE_DEPTH_ENABLED,
-		DEPTH_WRITE_ENABLED,
-		REVERSE_DEPTH_WRITE_ENABLED,
-		DEPTH_STENCIL_WRITE_ENABLED,
-		STENCIL_ENABLED
-	};
-}
+enum class DepthStencilState {
+	DEPTH_DISABLED,
+	DEPTH_ENABLED,
+	REVERSE_DEPTH_ENABLED,
+	DEPTH_WRITE_ENABLED,
+	REVERSE_DEPTH_WRITE_ENABLED,
+	DEPTH_STENCIL_WRITE_ENABLED,
+	STENCIL_ENABLED
+};
 
 class DepthStencilStateManager {
 public:
@@ -161,18 +155,16 @@ public:
 };
 
 
-namespace SamplerState {
-	enum Flag {
-		LINEAR,
-		LINEAR_CLAMP,
-		LINEAR_BORDER,
-		POINT,
-		POINT_WRAP,
-		ANISOTROPIC,
-		SHADOW_MAP,
-		SHADOW_MAP_PCF,
-	};
-}
+enum class SamplerState {
+	LINEAR,
+	LINEAR_CLAMP,
+	LINEAR_BORDER,
+	POINT,
+	POINT_WRAP,
+	ANISOTROPIC,
+	SHADOW_MAP,
+	SHADOW_MAP_PCF,
+};
 
 class SamplerStateManager {
 public:

@@ -142,12 +142,12 @@ Model *HalflingModelFile::Load(ID3D11Device *device, Engine::TextureManager *tex
 		MaterialTableData materialData = materialTable[subsets[i].MaterialIndex];
 
 		std::wstring hmatFilePath = Common::ToWideStr(stringTable[materialData.HMATFilePathIndex]);
-		modelSubsets[i].ShaderHandle = materialShaderManager->CreateShader(device, hmatFilePath);
+		modelSubsets[i].Material->Shader = materialShaderManager->GetShader(device, hmatFilePath);
 
 		for (uint j = 0; j < materialData.Textures.size(); ++j) {
 			std::wstring wideFileName(stringTable[materialData.Textures[j].FilePathIndex].begin(), stringTable[materialData.Textures[j].FilePathIndex].end());
-			modelSubsets[i].TextureSRVs.push_back(textureManager->GetSRVFromFile(device, wideFileName, D3D11_USAGE_IMMUTABLE));
-			modelSubsets[i].TextureSamplers.push_back(GetSamplerStateFromSamplerType(static_cast<TextureSampler>(materialData.Textures[j].Sampler), samplerStateManager));
+			modelSubsets[i].Material->TextureSRVs.push_back(textureManager->GetSRVFromFile(device, wideFileName, D3D11_USAGE_IMMUTABLE));
+			modelSubsets[i].Material->TextureSamplers.push_back(GetSamplerStateFromSamplerType(static_cast<TextureSampler>(materialData.Textures[j].Sampler), samplerStateManager));
 		}
 	}
 

@@ -159,7 +159,7 @@ void PBRDemo::RenderMainPass() {
 		for (uint i = 0; i < m_instancedModels.size(); ++i) {
 			SetInstancedGBufferVertexShaderObjectConstants(offsets[i]);
 
-			m_instancedModels[i].first->DrawInstancedSubset(m_immediateContext, static_cast<uint>(m_instancedModels[i].second->size()), &m_materialShaderManager);
+			m_instancedModels[i].first->DrawInstancedSubset(m_immediateContext, static_cast<uint>(m_instancedModels[i].second->size()));
 		}
 	}
 
@@ -177,7 +177,7 @@ void PBRDemo::RenderMainPass() {
 			SetGBufferVertexShaderObjectConstants(worldMatrix, worldViewProjection);
 
 			// Draw the models
-			iter->first->DrawSubset(m_immediateContext, &m_materialShaderManager);
+			iter->first->DrawSubset(m_immediateContext);
 		}
 	}
 

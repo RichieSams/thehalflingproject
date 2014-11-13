@@ -12,6 +12,7 @@
 #include "graphics/shader.h"
 
 #include "scene/model_loading.h"
+#include "scene/materials.h"
 
 #include <DirectXMath.h>
 #include <vector>
@@ -30,10 +31,7 @@ struct ModelSubset {
 	DirectX::XMFLOAT3 AABB_min;
 	DirectX::XMFLOAT3 AABB_max;
 
-	size_t ShaderHandle;
-
-	std::vector<ID3D11ShaderResourceView *> TextureSRVs;
-	std::vector<ID3D11SamplerState *> TextureSamplers;
+	Scene::Material *Material;
 };
 
 /** 
@@ -172,7 +170,7 @@ public:
 	 * @param deviceContext    A DirectX device context
 	 * @param subsetId         The subset to draw. If the it is -1, all the subsets will be drawn.
 	 */
-	void DrawSubset(ID3D11DeviceContext *deviceContext, Engine::MaterialShaderManager *materialShaderManager, int subsetId = -1);
+	void DrawSubset(ID3D11DeviceContext *deviceContext, int subsetId = -1);
 	/**
 	 * Identical to DrawSubsets, except it uses ID3D11DeviceContext::DrawInstancedIndexed() instead of 
 	 * ID3D11DeviceContext::DrawIndexed(). This function does not bind an extra buffer to the vertex shader
@@ -186,7 +184,7 @@ public:
 	 * @param indexCountPerInstance    The number of indices per instance. If 0, the function will use the subset index count
 	 * @param subsetId                 The subset to draw. If it is -1, all the subsets will be drawn.
 	 */
-	virtual void DrawInstancedSubset(ID3D11DeviceContext *deviceContext, uint instanceCount, Engine::MaterialShaderManager *materialShaderManager, uint indexCountPerInstance = 0, int subsetId = -1);
+	virtual void DrawInstancedSubset(ID3D11DeviceContext *deviceContext, uint instanceCount, uint indexCountPerInstance = 0, int subsetId = -1);
 };
 
 
@@ -263,7 +261,7 @@ public:
 	 * @param indexCountPerInstance    The number of indices per instance. If 0, the function will use the subset index count
 	 * @param subsetId                 The subset to draw. If it is -1, all the subsets will be drawn.
 	 */
-	void DrawInstancedSubset(ID3D11DeviceContext *deviceContext, uint instanceCount, Engine::MaterialShaderManager *materialShaderManager, uint indexCountPerInstance = 0, int subsetId = -1);
+	void DrawInstancedSubset(ID3D11DeviceContext *deviceContext, uint instanceCount, uint indexCountPerInstance = 0, int subsetId = -1);
 };
 
 } // End of namespace Scene

@@ -85,11 +85,11 @@ Model *PlaneModelToLoad::CreateModel(ID3D11Device *device, Engine::TextureManage
 	subset->VertexStart = 0u;
 	subset->VertexCount = static_cast<uint>(meshData.Vertices.size());
 
-	subset->ShaderHandle = materialShaderManager->CreateShader(device, m_material.HMATFilePath);
+	subset->Material->Shader = materialShaderManager->GetShader(device, m_material.HMATFilePath);
 
 	for (uint i = 0; i < m_material.Textures.size(); ++i) {
-		subset->TextureSRVs.push_back(textureManager->GetSRVFromFile(device, m_material.Textures[i].FilePath, D3D11_USAGE_IMMUTABLE));
-		subset->TextureSamplers.push_back(GetSamplerStateFromSamplerType(m_material.Textures[i].Sampler, samplerStateManager));
+		subset->Material->TextureSRVs.push_back(textureManager->GetSRVFromFile(device, m_material.Textures[i].FilePath, D3D11_USAGE_IMMUTABLE));
+		subset->Material->TextureSamplers.push_back(GetSamplerStateFromSamplerType(m_material.Textures[i].Sampler, samplerStateManager));
 	}
 
 	Vertex *vertices = new Vertex[meshData.Vertices.size()];
@@ -121,11 +121,11 @@ Model *BoxModelToLoad::CreateModel(ID3D11Device *device, Engine::TextureManager 
 	subset->VertexStart = 0u;
 	subset->VertexCount = static_cast<uint>(meshData.Vertices.size());
 
-	subset->ShaderHandle = materialShaderManager->CreateShader(device, m_material.HMATFilePath);
+	subset->Material->Shader = materialShaderManager->GetShader(device, m_material.HMATFilePath);
 
 	for (uint i = 0; i < m_material.Textures.size(); ++i) {
-		subset->TextureSRVs.push_back(textureManager->GetSRVFromFile(device, m_material.Textures[i].FilePath, D3D11_USAGE_IMMUTABLE));
-		subset->TextureSamplers.push_back(GetSamplerStateFromSamplerType(m_material.Textures[i].Sampler, samplerStateManager));
+		subset->Material->TextureSRVs.push_back(textureManager->GetSRVFromFile(device, m_material.Textures[i].FilePath, D3D11_USAGE_IMMUTABLE));
+		subset->Material->TextureSamplers.push_back(GetSamplerStateFromSamplerType(m_material.Textures[i].Sampler, samplerStateManager));
 	}
 
 	Vertex *vertices = new Vertex[meshData.Vertices.size()];
@@ -157,11 +157,11 @@ Model *SphereModelToLoad::CreateModel(ID3D11Device *device, Engine::TextureManag
 	subset->VertexStart = 0u;
 	subset->VertexCount = static_cast<uint>(meshData.Vertices.size());
 
-	subset->ShaderHandle = materialShaderManager->CreateShader(device, m_material.HMATFilePath);
+	subset->Material->Shader = materialShaderManager->GetShader(device, m_material.HMATFilePath);
 
 	for (uint i = 0; i < m_material.Textures.size(); ++i) {
-		subset->TextureSRVs.push_back(textureManager->GetSRVFromFile(device, m_material.Textures[i].FilePath, D3D11_USAGE_IMMUTABLE));
-		subset->TextureSamplers.push_back(GetSamplerStateFromSamplerType(m_material.Textures[i].Sampler, samplerStateManager));
+		subset->Material->TextureSRVs.push_back(textureManager->GetSRVFromFile(device, m_material.Textures[i].FilePath, D3D11_USAGE_IMMUTABLE));
+		subset->Material->TextureSamplers.push_back(GetSamplerStateFromSamplerType(m_material.Textures[i].Sampler, samplerStateManager));
 	}
 
 	Vertex *vertices = new Vertex[meshData.Vertices.size()];

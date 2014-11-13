@@ -76,27 +76,31 @@ void Model::CreateSubsets(ModelSubset *subsetArray, uint subsetCount, DisposeAft
 	DirectX::XMStoreFloat3(&m_AABB_max, AABB_max);
 }
 
-void DrawIndexed_Helper(ID3D11DeviceContext *deviceContext, Engine::MaterialShaderManager *materialShaderManager, const ModelSubset &subset) {
-	materialShaderManager->GetShader(subset.ShaderHandle)->BindToPipeline(deviceContext);
+void DrawIndexed_Helper(ID3D11DeviceContext *deviceContext, const ModelSubset &subset) {
+	subset.Material->Shader->BindToPipeline(deviceContext);
 	
-	if (subset.TextureSRVs.size() > 0) {
-		deviceContext->PSSetShaderResources(0, static_cast<uint>(subset.TextureSRVs.size()), &subset.TextureSRVs[0]);
+	size_t numTextures = subset.Material->TextureSRVs.size();
+	if (numTextures > 0) {
+		deviceContext->PSSetShaderResources(0, static_cast<uint>(numTextures), &subset.Material->TextureSRVs[0]);
+		deviceContext->PSSetSamplers(0, static_cast<uint>(numTextures), &subset.Material->TextureSamplers[0]);
 	}
 
 	deviceContext->DrawIndexed(subset.IndexCount, subset.IndexStart, subset.VertexStart);
 }
 
-void DrawIndexedInstanced_Helper(ID3D11DeviceContext *deviceContext, Engine::MaterialShaderManager *materialShaderManager, uint indexCountPerInstance, uint instanceCount, const ModelSubset &subset) {
-	materialShaderManager->GetShader(subset.ShaderHandle)->BindToPipeline(deviceContext);
+void DrawIndexedInstanced_Helper(ID3D11DeviceContext *deviceContext, uint indexCountPerInstance, uint instanceCount, const ModelSubset &subset) {
+	subset.Material->Shader->BindToPipeline(deviceContext);
 
-	if (subset.TextureSRVs.size() > 0) {
-		deviceContext->PSSetShaderResources(0, static_cast<uint>(subset.TextureSRVs.size()), &subset.TextureSRVs[0]);
+	size_t numTextures = subset.Material->TextureSRVs.size();
+	if (numTextures > 0) {
+		deviceContext->PSSetShaderResources(0, static_cast<uint>(numTextures), &subset.Material->TextureSRVs[0]);
+		deviceContext->PSSetSamplers(0, static_cast<uint>(numTextures), &subset.Material->TextureSamplers[0]);
 	}
 
 	deviceContext->DrawIndexedInstanced(indexCountPerInstance, instanceCount, subset.IndexStart, subset.VertexStart, 0);
 }
 
-void Model::DrawSubset(ID3D11DeviceContext *deviceContext, Engine::MaterialShaderManager *materialShaderManager, int subsetId) {
+void Model::DrawSubset(ID3D11DeviceContext *deviceContext, int subsetId) {
 	assert(subsetId >= -1 && subsetId < (int)m_subsetCount);
 
 	uint offset = 0;
@@ -106,24 +110,24 @@ void Model::DrawSubset(ID3D11DeviceContext *deviceContext, Engine::MaterialShade
 
 	if (subsetId == -1) {
 		for (uint i = 0; i < m_subsetCount; ++i) {
-			DrawIndexed_Helper(deviceContext, materialShaderManager, m_subsets[i]);
+			DrawIndexed_Helper(deviceContext, m_subsets[i]);
 		}
 	} else {
-		DrawIndexed_Helper(deviceContext, materialShaderManager, m_subsets[subsetId]);
+		DrawIndexed_Helper(deviceContext, m_subsets[subsetId]);
 	}
 }
 
-void Model::DrawInstancedSubset(ID3D11DeviceContext *deviceContext, uint instanceCount, Engine::MaterialShaderManager *materialShaderManager, uint indexCountPerInstance, int subsetId) {
+void Model::DrawInstancedSubset(ID3D11DeviceContext *deviceContext, uint instanceCount, uint indexCountPerInstance, int subsetId) {
 	uint offset = 0;
 	deviceContext->IASetVertexBuffers(0, 1, &m_vertexBuffer, &m_vertexStride, &offset);
 	deviceContext->IASetIndexBuffer(m_indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
 	if (subsetId == -1) {
 		for (uint i = 0; i < m_subsetCount; ++i) {
-			DrawIndexedInstanced_Helper(deviceContext, materialShaderManager, indexCountPerInstance == 0 ? m_subsets[i].IndexCount : indexCountPerInstance, instanceCount, m_subsets[i]);
+			DrawIndexedInstanced_Helper(deviceContext, indexCountPerInstance == 0 ? m_subsets[i].IndexCount : indexCountPerInstance, instanceCount, m_subsets[i]);
 		}
 	} else {
-		DrawIndexedInstanced_Helper(deviceContext, materialShaderManager, indexCountPerInstance == 0 ? m_subsets[subsetId].IndexCount : indexCountPerInstance, instanceCount, m_subsets[subsetId]);
+		DrawIndexedInstanced_Helper(deviceContext, indexCountPerInstance == 0 ? m_subsets[subsetId].IndexCount : indexCountPerInstance, instanceCount, m_subsets[subsetId]);
 	}
 }
 
@@ -166,7 +170,7 @@ void InstancedModel::UnMapInstanceBuffer(ID3D11DeviceContext *deviceContext) {
 	deviceContext->Unmap(m_instanceBuffer, 0);
 }
 
-void InstancedModel::DrawInstancedSubset(ID3D11DeviceContext *deviceContext, uint instanceCount, Engine::MaterialShaderManager *materialShaderManager, uint indexCountPerInstance, int subsetId) {
+void InstancedModel::DrawInstancedSubset(ID3D11DeviceContext *deviceContext, uint instanceCount, uint indexCountPerInstance, int subsetId) {
 	assert(m_instanceBuffer);
 	assert(instanceCount <= m_maxInstanceCount);
 
@@ -178,10 +182,10 @@ void InstancedModel::DrawInstancedSubset(ID3D11DeviceContext *deviceContext, uin
 
 	if (subsetId == -1) {
 		for (uint i = 0; i < m_subsetCount; ++i) {
-			DrawIndexedInstanced_Helper(deviceContext, materialShaderManager, indexCountPerInstance == 0 ? m_subsets[i].IndexCount : indexCountPerInstance, instanceCount, m_subsets[i]);
+			DrawIndexedInstanced_Helper(deviceContext, indexCountPerInstance == 0 ? m_subsets[i].IndexCount : indexCountPerInstance, instanceCount, m_subsets[i]);
 		}
 	} else {
-		DrawIndexedInstanced_Helper(deviceContext, materialShaderManager, indexCountPerInstance == 0 ? m_subsets[subsetId].IndexCount : indexCountPerInstance, instanceCount, m_subsets[subsetId]);
+		DrawIndexedInstanced_Helper(deviceContext, indexCountPerInstance == 0 ? m_subsets[subsetId].IndexCount : indexCountPerInstance, instanceCount, m_subsets[subsetId]);
 	}
 }
 

@@ -114,6 +114,9 @@
     <ClCompile Include="..\source\common\linear_allocator.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="..\source\graphics\commands.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
     <ClCompile Include="..\source\engine\material_cache.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
@@ -236,8 +239,17 @@
     <ClInclude Include="..\source\engine\timer.h">
       <Filter>Engine</Filter>
     </ClInclude>
+    <ClInclude Include="..\source\graphics\command_bucket.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
     <ClInclude Include="..\source\common\linear_allocator.h">
       <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\graphics\commands.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\graphics\graphics_state.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\source\engine\material_cache.h">
       <Filter>Engine</Filter>

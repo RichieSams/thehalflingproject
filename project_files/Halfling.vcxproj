@@ -32,6 +32,7 @@
     <ClCompile Include="..\source\engine\profiler.cpp" />
     <ClCompile Include="..\source\engine\texture_manager.cpp" />
     <ClCompile Include="..\source\engine\timer.cpp" />
+    <ClCompile Include="..\source\graphics\commands.cpp" />
     <ClCompile Include="..\source\graphics\d3d_util.cpp" />
     <ClCompile Include="..\source\graphics\device_states.cpp" />
     <ClCompile Include="..\source\graphics\dxerr.cpp" />
@@ -74,9 +75,12 @@
     <ClInclude Include="..\source\engine\profiler.h" />
     <ClInclude Include="..\source\engine\texture_manager.h" />
     <ClInclude Include="..\source\engine\timer.h" />
+    <ClInclude Include="..\source\graphics\commands.h" />
+    <ClInclude Include="..\source\graphics\command_bucket.h" />
     <ClInclude Include="..\source\graphics\d3d_util.h" />
     <ClInclude Include="..\source\graphics\device_states.h" />
     <ClInclude Include="..\source\graphics\dxerr.h" />
+    <ClInclude Include="..\source\graphics\graphics_state.h" />
     <ClInclude Include="..\source\graphics\shader.h" />
     <ClInclude Include="..\source\graphics\sprite_font.h" />
     <ClInclude Include="..\source\graphics\sprite_renderer.h" />

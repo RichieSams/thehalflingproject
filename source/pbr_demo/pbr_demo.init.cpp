@@ -57,12 +57,12 @@ bool PBRDemo::Initialize(LPCTSTR mainWndCaption, uint32 screenWidth, uint32 scre
 
 	InitTweakBar();
 
-	// HACK: TextureManager isn't thread safe. It works right now because we can guarantee the
-	//       main thread won't access TextureManager. Also LoadScene() is completely serial.
-	// TODO: Make TextureManager thread safe
-	// HACK: ModelManager isn't thread safe. Same argument as TextureManager
-	// TODO: Make ModelManager thread safe
-	m_sceneLoaderThread = std::thread(LoadScene, &m_sceneLoaded, m_device, &m_textureManager, &m_modelManager, &m_materialShaderManager, &m_samplerStateManager, &m_modelsToLoad, &m_models, &m_instancedModels, m_modelInstanceThreshold);
+	m_blendStateManager.Initialize(m_device);
+	m_depthStencilStateManager.Initialize(m_device);
+	m_rasterizerStateManager.Initialize(m_device);
+	m_samplerStateManager.Initialize(m_device);
+
+	m_sceneLoaderThread = std::thread(LoadScene, &m_sceneLoaded, m_device, &m_textureManager, &m_modelManager, &m_materialShaderManager, &m_materialCache, &m_samplerStateManager, &m_modelsToLoad, &m_models, &m_instancedModels, m_modelInstanceThreshold);
 
 	LoadShaders();
 
@@ -84,10 +84,7 @@ bool PBRDemo::Initialize(LPCTSTR mainWndCaption, uint32 screenWidth, uint32 scre
 	// Initialize the console
 	m_console.Initialize(Common::Rect(20, m_clientHeight - 320, m_clientWidth - 20, m_clientHeight - 10), &m_spriteRenderer, &m_courierNew10Font);
 
-	m_blendStateManager.Initialize(m_device);
-	m_depthStencilStateManager.Initialize(m_device);
-	m_rasterizerStateManager.Initialize(m_device);
-	m_samplerStateManager.Initialize(m_device);
+	
 
 	return true;
 }

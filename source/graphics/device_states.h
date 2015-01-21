@@ -91,14 +91,14 @@ private:
 public:
 	void Initialize(ID3D11Device *device);
 
-	ID3D11RasterizerState *NoCull() { return m_noCull; };
-	ID3D11RasterizerState *BackFaceCull() { return m_cullBackFaces; };
-	ID3D11RasterizerState *BackFaceCullScissor() { return m_cullBackFacesScissor; };
-	ID3D11RasterizerState *FrontFaceCull() { return m_cullFrontFaces; };
-	ID3D11RasterizerState *FrontFaceCullScissor() { return m_cullFrontFacesScissor; };
-	ID3D11RasterizerState *NoCullNoMS() { return m_noCullNoMS; };
-	ID3D11RasterizerState *NoCullScissor() { return m_noCullScissor; };
-	ID3D11RasterizerState *Wireframe() { return m_wireframe; };
+	inline ID3D11RasterizerState *NoCull() { return m_noCull; };
+	inline ID3D11RasterizerState *BackFaceCull() { return m_cullBackFaces; };
+	inline ID3D11RasterizerState *BackFaceCullScissor() { return m_cullBackFacesScissor; };
+	inline ID3D11RasterizerState *FrontFaceCull() { return m_cullFrontFaces; };
+	inline ID3D11RasterizerState *FrontFaceCullScissor() { return m_cullFrontFacesScissor; };
+	inline ID3D11RasterizerState *NoCullNoMS() { return m_noCullNoMS; };
+	inline ID3D11RasterizerState *NoCullScissor() { return m_noCullScissor; };
+	inline ID3D11RasterizerState *Wireframe() { return m_wireframe; };
 
 	static D3D11_RASTERIZER_DESC NoCullDesc();
 	static D3D11_RASTERIZER_DESC FrontFaceCullDesc();
@@ -137,13 +137,13 @@ private:
 public:
 	void Initialize(ID3D11Device *device);
 
-	ID3D11DepthStencilState *DepthDisabled() { return m_depthDisabled; };
-	ID3D11DepthStencilState *DepthEnabled() { return m_depthEnabled; };
-	ID3D11DepthStencilState *ReverseDepthEnabled() { return m_revDepthEnabled; };
-	ID3D11DepthStencilState *DepthWriteEnabled() { return m_depthWriteEnabled; };
-	ID3D11DepthStencilState *ReverseDepthWriteEnabled() { return m_revDepthWriteEnabled; };
-	ID3D11DepthStencilState *DepthStencilWriteEnabled() { return m_depthStencilWriteEnabled; };
-	ID3D11DepthStencilState *StencilTestEnabled() { return m_depthStencilWriteEnabled; };
+	inline ID3D11DepthStencilState *DepthDisabled() { return m_depthDisabled; };
+	inline ID3D11DepthStencilState *DepthEnabled() { return m_depthEnabled; };
+	inline ID3D11DepthStencilState *ReverseDepthEnabled() { return m_revDepthEnabled; };
+	inline ID3D11DepthStencilState *DepthWriteEnabled() { return m_depthWriteEnabled; };
+	inline ID3D11DepthStencilState *ReverseDepthWriteEnabled() { return m_revDepthWriteEnabled; };
+	inline ID3D11DepthStencilState *DepthStencilWriteEnabled() { return m_depthStencilWriteEnabled; };
+	inline ID3D11DepthStencilState *StencilTestEnabled() { return m_depthStencilWriteEnabled; };
 
 	static D3D11_DEPTH_STENCIL_DESC DepthDisabledDesc();
 	static D3D11_DEPTH_STENCIL_DESC DepthEnabledDesc();
@@ -183,14 +183,14 @@ private:
 public:
 	void Initialize(ID3D11Device *device);
 
-	ID3D11SamplerState *Linear() { return m_linear; };
-	ID3D11SamplerState *LinearClamp() { return m_linearClamp; };
-	ID3D11SamplerState *LinearBorder() { return m_linearBorder; };
-	ID3D11SamplerState *Point() { return m_point; };
-	ID3D11SamplerState *PointWrap() { return m_pointWrap; }
-	ID3D11SamplerState *Anisotropic() { return m_anisotropic; };
-	ID3D11SamplerState *ShadowMap() { return m_shadowMap; };
-	ID3D11SamplerState *ShadowMapPCF() { return m_shadowMapPCF; };
+	inline ID3D11SamplerState *Linear() { return m_linear; };
+	inline ID3D11SamplerState *LinearClamp() { return m_linearClamp; };
+	inline ID3D11SamplerState *LinearBorder() { return m_linearBorder; };
+	inline ID3D11SamplerState *Point() { return m_point; };
+	inline ID3D11SamplerState *PointWrap() { return m_pointWrap; }
+	inline ID3D11SamplerState *Anisotropic() { return m_anisotropic; };
+	inline ID3D11SamplerState *ShadowMap() { return m_shadowMap; };
+	inline ID3D11SamplerState *ShadowMapPCF() { return m_shadowMapPCF; };
 
 	static D3D11_SAMPLER_DESC LinearDesc();
 	static D3D11_SAMPLER_DESC LinearClampDesc();

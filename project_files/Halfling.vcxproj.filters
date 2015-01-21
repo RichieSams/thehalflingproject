@@ -111,6 +111,9 @@
     <ClCompile Include="..\source\common\math.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="..\source\common\linear_allocator.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
     <ClCompile Include="..\source\engine\material_cache.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
@@ -232,6 +235,9 @@
     </ClInclude>
     <ClInclude Include="..\source\engine\timer.h">
       <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\common\linear_allocator.h">
+      <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="..\source\engine\material_cache.h">
       <Filter>Engine</Filter>

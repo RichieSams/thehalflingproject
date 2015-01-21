@@ -11,7 +11,7 @@
 #include <type_traits>
 
 inline size_t hash_combiner(size_t left, size_t right) {
-	return left ^ right + 0x9e3779b9 + (left << 6) + (left >> 2);
+	return left ^ right + 0x9e3779b9ull + (left << 6) + (left >> 2);
 }
 
 namespace std {

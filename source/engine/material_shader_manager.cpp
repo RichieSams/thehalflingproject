@@ -25,7 +25,9 @@ Graphics::MaterialShader *MaterialShaderManager::GetShader(ID3D11Device *device,
 	std::lock_guard<std::mutex> guard(m_cacheLock);
 
 	// Write
-	auto returnArg = m_shaderCache.emplace(filePath, Graphics::MaterialShader(filePath.c_str(), device, false, false));
+	auto returnArg = m_shaderCache.emplace(std::piecewise_construct,
+										   std::forward_as_tuple(filePath),
+										   std::forward_as_tuple(filePath.c_str(), device, false, false));
 
 	// Return the created element
 	return &((*returnArg.first).second);

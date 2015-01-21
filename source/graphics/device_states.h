@@ -45,6 +45,27 @@ private:
 public:
 	void Initialize(ID3D11Device *device);
 
+	inline ID3D11BlendState *GetD3DState(BlendState state) {
+		switch (state) {
+		case BlendState::BLEND_DISABLED:
+			return m_blendDisabled;
+		case BlendState::ADDITIVE_BLEND:
+			return m_additiveBlend;
+		case BlendState::ALPHA_BLEND:
+			return m_alphaBlend;
+		case BlendState::PM_ALPHA_BLEND:
+			return m_pmAlphaBlend;
+		case BlendState::NO_COLOR:
+			return m_noColor;
+		case BlendState::ALPHA_TO_COVERAGE:
+			return m_alphaToCoverage;
+		case BlendState::OPACITY_BLEND:
+			return m_opacityBlend;
+		default:
+			return nullptr;
+		}
+	}
+
 	inline ID3D11BlendState *BlendDisabled() { return m_blendDisabled; };
 	inline ID3D11BlendState *AdditiveBlend() { return m_additiveBlend; };
 	inline ID3D11BlendState *AlphaBlend() { return m_alphaBlend; };
@@ -91,6 +112,29 @@ private:
 public:
 	void Initialize(ID3D11Device *device);
 
+	inline ID3D11RasterizerState *GetD3DState(RasterizerState state) {
+		switch (state) {
+		case Graphics::RasterizerState::NO_CULL:
+			return m_noCull;
+		case Graphics::RasterizerState::CULL_BACKFACES:
+			return m_cullBackFaces;
+		case Graphics::RasterizerState::CULL_BACKFACES_SCISSOR:
+			return m_cullBackFacesScissor;
+		case Graphics::RasterizerState::CULL_FRONTFACES:
+			return m_cullFrontFaces;
+		case Graphics::RasterizerState::CULL_FRONTFACES_SCISSOR:
+			return m_cullBackFacesScissor;
+		case Graphics::RasterizerState::NO_CULL_NO_MS:
+			return m_noCullNoMS;
+		case Graphics::RasterizerState::NO_CULL_SCISSOR:
+			return m_noCullScissor;
+		case Graphics::RasterizerState::WIREFRAME:
+			return m_wireframe;
+		default:
+			return nullptr;
+		}
+	}
+
 	inline ID3D11RasterizerState *NoCull() { return m_noCull; };
 	inline ID3D11RasterizerState *BackFaceCull() { return m_cullBackFaces; };
 	inline ID3D11RasterizerState *BackFaceCullScissor() { return m_cullBackFacesScissor; };
@@ -136,6 +180,27 @@ private:
 
 public:
 	void Initialize(ID3D11Device *device);
+
+	inline ID3D11DepthStencilState *GetD3DState(DepthStencilState state) {
+		switch (state) {
+		case Graphics::DepthStencilState::DEPTH_DISABLED:
+			return m_depthDisabled;
+		case Graphics::DepthStencilState::DEPTH_ENABLED:
+			return m_depthEnabled;
+		case Graphics::DepthStencilState::REVERSE_DEPTH_ENABLED:
+			return m_revDepthEnabled;
+		case Graphics::DepthStencilState::DEPTH_WRITE_ENABLED:
+			return m_depthWriteEnabled;
+		case Graphics::DepthStencilState::REVERSE_DEPTH_WRITE_ENABLED:
+			return m_revDepthWriteEnabled;
+		case Graphics::DepthStencilState::DEPTH_STENCIL_WRITE_ENABLED:
+			return m_depthStencilWriteEnabled;
+		case Graphics::DepthStencilState::STENCIL_ENABLED:
+			return m_stencilEnabled;
+		default:
+			return nullptr;
+		}
+	}
 
 	inline ID3D11DepthStencilState *DepthDisabled() { return m_depthDisabled; };
 	inline ID3D11DepthStencilState *DepthEnabled() { return m_depthEnabled; };

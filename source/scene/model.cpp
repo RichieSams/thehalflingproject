@@ -177,7 +177,7 @@ void InstancedModel::DrawInstancedSubset(ID3D11DeviceContext *deviceContext, uin
 	ID3D11Buffer *vbs[] = {m_vertexBuffer, m_instanceBuffer};
 	uint strides[] = {m_vertexStride, m_instanceStride};
 	uint offsets[] = {0, 0};
-	deviceContext->IASetVertexBuffers(0, 2, vbs, strides, offsets);
+	deviceContext->IASetVertexBuffers(0, 2u, vbs, strides, offsets);
 	deviceContext->IASetIndexBuffer(m_indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
 	if (subsetId == -1) {

@@ -53,6 +53,8 @@ bool PBRDemo::Initialize(LPCTSTR mainWndCaption, uint32 screenWidth, uint32 scre
 		return false;
 	}
 
+	m_materialShaderManager.Initialize(m_device, L"matte_gray.hmat");
+
 	InitTweakBar();
 
 	// HACK: TextureManager isn't thread safe. It works right now because we can guarantee the

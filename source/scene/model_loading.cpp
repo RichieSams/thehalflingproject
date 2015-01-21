@@ -12,6 +12,7 @@
 #include "engine/model_manager.h"
 #include "engine/texture_manager.h"
 #include "engine/material_shader_manager.h"
+#include "engine/material_cache.h"
 
 #include "graphics/device_states.h"
 
@@ -61,8 +62,8 @@ ID3D11SamplerState *GetSamplerStateFromSamplerType(TextureSampler samplerType, G
 }
 
 
-Model *FileModelToLoad::CreateModel(ID3D11Device *device, Engine::TextureManager *textureManager, Engine::ModelManager *modelManager, Engine::MaterialShaderManager *materialShaderManager, Graphics::SamplerStateManager *samplerStateManager) {
-	return m_modelManager->GetModel(m_device, m_textureManager, materialShaderManager, samplerStateManager, m_filePath.c_str());
+Model *FileModelToLoad::CreateModel(ID3D11Device *device, Engine::TextureManager *textureManager, Engine::ModelManager *modelManager, Engine::MaterialShaderManager *materialShaderManager, Engine::MaterialCache *materialCache, Graphics::SamplerStateManager *samplerStateManager) {
+	return m_modelManager->GetModel(m_device, m_textureManager, materialShaderManager, materialCache, samplerStateManager, m_filePath.c_str());
 }
 
 struct Vertex {
@@ -72,7 +73,7 @@ struct Vertex {
 	DirectX::XMFLOAT3 tangent;
 };
 
-Model *PlaneModelToLoad::CreateModel(ID3D11Device *device, Engine::TextureManager *textureManager, Engine::ModelManager *modelManager, Engine::MaterialShaderManager *materialShaderManager, Graphics::SamplerStateManager *samplerStateManager) {
+Model *PlaneModelToLoad::CreateModel(ID3D11Device *device, Engine::TextureManager *textureManager, Engine::ModelManager *modelManager, Engine::MaterialShaderManager *materialShaderManager, Engine::MaterialCache *materialCache, Graphics::SamplerStateManager *samplerStateManager) {
 	GeometryGenerator::MeshData meshData;
 	ModelSubset *subset = new ModelSubset[1];
 
@@ -85,12 +86,15 @@ Model *PlaneModelToLoad::CreateModel(ID3D11Device *device, Engine::TextureManage
 	subset->VertexStart = 0u;
 	subset->VertexCount = static_cast<uint>(meshData.Vertices.size());
 
-	subset->Material->Shader = materialShaderManager->GetShader(device, m_material.HMATFilePath);
-
+	Graphics::MaterialShader *shader = materialShaderManager->GetShader(device, m_material.HMATFilePath);
+	std::vector<ID3D11ShaderResourceView *> textureSRVs;
+	std::vector<ID3D11SamplerState *> textureSamplers;
 	for (uint i = 0; i < m_material.Textures.size(); ++i) {
-		subset->Material->TextureSRVs.push_back(textureManager->GetSRVFromFile(device, m_material.Textures[i].FilePath, D3D11_USAGE_IMMUTABLE));
-		subset->Material->TextureSamplers.push_back(GetSamplerStateFromSamplerType(m_material.Textures[i].Sampler, samplerStateManager));
+		textureSRVs.push_back(textureManager->GetSRVFromFile(device, m_material.Textures[i].FilePath, D3D11_USAGE_IMMUTABLE));
+		textureSamplers.push_back(GetSamplerStateFromSamplerType(m_material.Textures[i].Sampler, samplerStateManager));
 	}
+
+	subset->Material = materialCache->getMaterial(shader, textureSRVs, textureSamplers);
 
 	Vertex *vertices = new Vertex[meshData.Vertices.size()];
 	for (uint i = 0; i < meshData.Vertices.size(); ++i) {
@@ -108,7 +112,7 @@ Model *PlaneModelToLoad::CreateModel(ID3D11Device *device, Engine::TextureManage
 	return newModel;
 }
 
-Model *BoxModelToLoad::CreateModel(ID3D11Device *device, Engine::TextureManager *textureManager, Engine::ModelManager *modelManager, Engine::MaterialShaderManager *materialShaderManager, Graphics::SamplerStateManager *samplerStateManager) {
+Model *BoxModelToLoad::CreateModel(ID3D11Device *device, Engine::TextureManager *textureManager, Engine::ModelManager *modelManager, Engine::MaterialShaderManager *materialShaderManager, Engine::MaterialCache *materialCache, Graphics::SamplerStateManager *samplerStateManager) {
 	GeometryGenerator::MeshData meshData;
 	ModelSubset *subset = new ModelSubset[1];
 
@@ -121,12 +125,15 @@ Model *BoxModelToLoad::CreateModel(ID3D11Device *device, Engine::TextureManager 
 	subset->VertexStart = 0u;
 	subset->VertexCount = static_cast<uint>(meshData.Vertices.size());
 
-	subset->Material->Shader = materialShaderManager->GetShader(device, m_material.HMATFilePath);
-
+	Graphics::MaterialShader *shader = materialShaderManager->GetShader(device, m_material.HMATFilePath);
+	std::vector<ID3D11ShaderResourceView *> textureSRVs;
+	std::vector<ID3D11SamplerState *> textureSamplers;
 	for (uint i = 0; i < m_material.Textures.size(); ++i) {
-		subset->Material->TextureSRVs.push_back(textureManager->GetSRVFromFile(device, m_material.Textures[i].FilePath, D3D11_USAGE_IMMUTABLE));
-		subset->Material->TextureSamplers.push_back(GetSamplerStateFromSamplerType(m_material.Textures[i].Sampler, samplerStateManager));
+		textureSRVs.push_back(textureManager->GetSRVFromFile(device, m_material.Textures[i].FilePath, D3D11_USAGE_IMMUTABLE));
+		textureSamplers.push_back(GetSamplerStateFromSamplerType(m_material.Textures[i].Sampler, samplerStateManager));
 	}
+
+	subset->Material = materialCache->getMaterial(shader, textureSRVs, textureSamplers);
 
 	Vertex *vertices = new Vertex[meshData.Vertices.size()];
 	for (uint i = 0; i < meshData.Vertices.size(); ++i) {
@@ -144,7 +151,7 @@ Model *BoxModelToLoad::CreateModel(ID3D11Device *device, Engine::TextureManager 
 	return newModel;
 }
 
-Model *SphereModelToLoad::CreateModel(ID3D11Device *device, Engine::TextureManager *textureManager, Engine::ModelManager *modelManager, Engine::MaterialShaderManager *materialShaderManager, Graphics::SamplerStateManager *samplerStateManager) {
+Model *SphereModelToLoad::CreateModel(ID3D11Device *device, Engine::TextureManager *textureManager, Engine::ModelManager *modelManager, Engine::MaterialShaderManager *materialShaderManager, Engine::MaterialCache *materialCache, Graphics::SamplerStateManager *samplerStateManager) {
 	GeometryGenerator::MeshData meshData;
 	ModelSubset *subset = new ModelSubset[1];
 
@@ -157,12 +164,15 @@ Model *SphereModelToLoad::CreateModel(ID3D11Device *device, Engine::TextureManag
 	subset->VertexStart = 0u;
 	subset->VertexCount = static_cast<uint>(meshData.Vertices.size());
 
-	subset->Material->Shader = materialShaderManager->GetShader(device, m_material.HMATFilePath);
-
+	Graphics::MaterialShader *shader = materialShaderManager->GetShader(device, m_material.HMATFilePath);
+	std::vector<ID3D11ShaderResourceView *> textureSRVs;
+	std::vector<ID3D11SamplerState *> textureSamplers;
 	for (uint i = 0; i < m_material.Textures.size(); ++i) {
-		subset->Material->TextureSRVs.push_back(textureManager->GetSRVFromFile(device, m_material.Textures[i].FilePath, D3D11_USAGE_IMMUTABLE));
-		subset->Material->TextureSamplers.push_back(GetSamplerStateFromSamplerType(m_material.Textures[i].Sampler, samplerStateManager));
+		textureSRVs.push_back(textureManager->GetSRVFromFile(device, m_material.Textures[i].FilePath, D3D11_USAGE_IMMUTABLE));
+		textureSamplers.push_back(GetSamplerStateFromSamplerType(m_material.Textures[i].Sampler, samplerStateManager));
 	}
+
+	subset->Material = materialCache->getMaterial(shader, textureSRVs, textureSamplers);
 
 	Vertex *vertices = new Vertex[meshData.Vertices.size()];
 	for (uint i = 0; i < meshData.Vertices.size(); ++i) {

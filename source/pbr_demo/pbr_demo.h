@@ -20,6 +20,7 @@
 #include "engine/texture_manager.h"
 #include "engine/model_manager.h"
 #include "engine/material_shader_manager.h"
+#include "engine/material_cache.h"
 #include "engine/console.h"
 
 #include "graphics/texture2d.h"
@@ -60,6 +61,7 @@ private:
 	Engine::TextureManager m_textureManager;
 	Engine::ModelManager m_modelManager;
 	Engine::MaterialShaderManager m_materialShaderManager;
+	Engine::MaterialCache m_materialCache;
 	Engine::Console m_console;
 	bool m_showConsole;
 

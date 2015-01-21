@@ -13,6 +13,7 @@ namespace Scene {
 
 class TextureManager;
 class MaterialShaderManager;
+class MaterialCache;
 
 class HalflingModelFile {
 private:
@@ -61,7 +62,7 @@ private:
 	static const byte kFileFormatVersion = 3;
 
 public:
-	static Model *Load(ID3D11Device *device, Engine::TextureManager *textureManager, Engine::MaterialShaderManager *materialShaderManager, Graphics::SamplerStateManager *samplerStateManager, const wchar *filePath);
+	static Model *Load(ID3D11Device *device, Engine::TextureManager *textureManager, Engine::MaterialShaderManager *materialShaderManager, Engine::MaterialCache *materialCache, Graphics::SamplerStateManager *samplerStateManager, const wchar *filePath);
 	static void Write(const wchar *filepath, 
 	                  uint numVertices, uint numIndices, 
 	                  D3D11_BUFFER_DESC *vertexBufferDesc,

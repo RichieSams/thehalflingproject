@@ -16,6 +16,7 @@ namespace Engine {
 
 class TextureManager;
 class MaterialShaderManager;
+class MaterialCache;
 
 class ModelManager {
 public:
@@ -31,7 +32,7 @@ private:
 	uint m_unnamedModelIncrementer;
 
 public:
-	Scene::Model *GetModel(ID3D11Device *device, Engine::TextureManager *textureManager, Engine::MaterialShaderManager *materialShaderManager, Graphics::SamplerStateManager *samplerStateManager, std::wstring filePath);
+	Scene::Model *GetModel(ID3D11Device *device, Engine::TextureManager *textureManager, Engine::MaterialShaderManager *materialShaderManager, Engine::MaterialCache *materialCache, Graphics::SamplerStateManager *samplerStateManager, std::wstring filePath);
 	Scene::Model *CreateUnnamedModel();
 };
 

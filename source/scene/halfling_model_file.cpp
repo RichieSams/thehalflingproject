@@ -13,13 +13,14 @@
 
 #include "engine/texture_manager.h"
 #include "engine/material_shader_manager.h"
+#include "engine/material_cache.h"
 
 #include <string>
 #include <fstream>
 
 namespace Scene {
 
-Model *HalflingModelFile::Load(ID3D11Device *device, Engine::TextureManager *textureManager, Engine::MaterialShaderManager *materialShaderManager, Graphics::SamplerStateManager *samplerStateManager, const wchar *filePath) {
+Model *HalflingModelFile::Load(ID3D11Device *device, Engine::TextureManager *textureManager, Engine::MaterialShaderManager *materialShaderManager, Engine::MaterialCache *materialCache, Graphics::SamplerStateManager *samplerStateManager, const wchar *filePath) {
 	// Read the entire file into memory
 	DWORD bytesRead;
 	char *fileBuffer = Common::ReadWholeFile(filePath, &bytesRead);
@@ -142,13 +143,16 @@ Model *HalflingModelFile::Load(ID3D11Device *device, Engine::TextureManager *tex
 		MaterialTableData materialData = materialTable[subsets[i].MaterialIndex];
 
 		std::wstring hmatFilePath = Common::ToWideStr(stringTable[materialData.HMATFilePathIndex]);
-		modelSubsets[i].Material->Shader = materialShaderManager->GetShader(device, hmatFilePath);
-
+		Graphics::MaterialShader *shader = materialShaderManager->GetShader(device, hmatFilePath);
+		std::vector<ID3D11ShaderResourceView *> textureSRVs;
+		std::vector<ID3D11SamplerState *> textureSamplers;
 		for (uint j = 0; j < materialData.Textures.size(); ++j) {
 			std::wstring wideFileName(stringTable[materialData.Textures[j].FilePathIndex].begin(), stringTable[materialData.Textures[j].FilePathIndex].end());
-			modelSubsets[i].Material->TextureSRVs.push_back(textureManager->GetSRVFromFile(device, wideFileName, D3D11_USAGE_IMMUTABLE));
-			modelSubsets[i].Material->TextureSamplers.push_back(GetSamplerStateFromSamplerType(static_cast<TextureSampler>(materialData.Textures[j].Sampler), samplerStateManager));
+			textureSRVs.push_back(textureManager->GetSRVFromFile(device, wideFileName, D3D11_USAGE_IMMUTABLE));
+			textureSamplers.push_back(GetSamplerStateFromSamplerType(static_cast<TextureSampler>(materialData.Textures[j].Sampler), samplerStateManager));
 		}
+
+		modelSubsets[i].Material = materialCache->getMaterial(shader, textureSRVs, textureSamplers);
 	}
 
 	// Cleanup

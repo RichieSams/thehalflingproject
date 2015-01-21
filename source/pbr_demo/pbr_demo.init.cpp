@@ -29,7 +29,7 @@ namespace PBRDemo {
 
 void LoadScene(std::atomic<bool> *sceneIsLoaded, 
                ID3D11Device *device, 
-               Engine::TextureManager *textureManager, Engine::ModelManager *modelManager, Engine::MaterialShaderManager *materialShaderManager, Graphics::SamplerStateManager *samplerStateManager,
+               Engine::TextureManager *textureManager, Engine::ModelManager *modelManager, Engine::MaterialShaderManager *materialShaderManager, Engine::MaterialCache *materialCache, Graphics::SamplerStateManager *samplerStateManager,
                std::vector<Scene::ModelToLoad *> *modelsToLoad, 
                std::vector<std::pair<Scene::Model *, DirectX::XMMATRIX>, Common::Allocator16ByteAligned<std::pair<Scene::Model *, DirectX::XMMATRIX> > > *modelList, 
                std::vector<std::pair<Scene::Model *, std::vector<DirectX::XMMATRIX, Common::Allocator16ByteAligned<DirectX::XMMATRIX> > *> > *instancedModelList,
@@ -432,13 +432,13 @@ void PBRDemo::InitTweakBar() {
 
 void LoadScene(std::atomic<bool> *sceneIsLoaded, 
                ID3D11Device *device, 
-               Engine::TextureManager *textureManager, Engine::ModelManager *modelManager, Engine::MaterialShaderManager *materialShaderManager, Graphics::SamplerStateManager *samplerStateManager,
+               Engine::TextureManager *textureManager, Engine::ModelManager *modelManager, Engine::MaterialShaderManager *materialShaderManager, Engine::MaterialCache *materialCache, Graphics::SamplerStateManager *samplerStateManager,
                std::vector<Scene::ModelToLoad *> *modelsToLoad, 
                std::vector<std::pair<Scene::Model *, DirectX::XMMATRIX>, Common::Allocator16ByteAligned<std::pair<Scene::Model *, DirectX::XMMATRIX> > > *modelList, 
                std::vector<std::pair<Scene::Model *, std::vector<DirectX::XMMATRIX, Common::Allocator16ByteAligned<DirectX::XMMATRIX> > *> > *instancedModelList,
 			   uint modelInstanceThreshold) {
 	for (auto iter = modelsToLoad->begin(); iter != modelsToLoad->end(); ++iter) {
-		Scene::Model *newModel = (*iter)->CreateModel(device, textureManager, modelManager, materialShaderManager, samplerStateManager);
+		Scene::Model *newModel = (*iter)->CreateModel(device, textureManager, modelManager, materialShaderManager, materialCache, samplerStateManager);
 
 		if ((*iter)->Instances->size() > modelInstanceThreshold) {
 			instancedModelList->emplace_back(newModel, (*iter)->Instances);

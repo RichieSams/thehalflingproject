@@ -31,7 +31,7 @@ struct ModelSubset {
 	DirectX::XMFLOAT3 AABB_min;
 	DirectX::XMFLOAT3 AABB_max;
 
-	Scene::Material *Material;
+	const Scene::Material *Material;
 };
 
 /** 

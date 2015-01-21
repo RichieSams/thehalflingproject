@@ -25,6 +25,7 @@
     <ClCompile Include="..\source\engine\clock.cpp" />
     <ClCompile Include="..\source\engine\console.cpp" />
     <ClCompile Include="..\source\engine\halfling_engine.cpp" />
+    <ClCompile Include="..\source\engine\material_cache.cpp" />
     <ClCompile Include="..\source\engine\material_shader_manager.cpp" />
     <ClCompile Include="..\source\engine\model_manager.cpp" />
     <ClCompile Include="..\source\engine\profiler.cpp" />
@@ -57,6 +58,7 @@
     <ClInclude Include="..\source\common\math.h" />
     <ClInclude Include="..\source\common\memory_stream.h" />
     <ClInclude Include="..\source\common\rect.h" />
+    <ClInclude Include="..\source\common\std_vector_compare.h" />
     <ClInclude Include="..\source\common\string_util.h" />
     <ClInclude Include="..\source\common\typedefs.h" />
     <ClInclude Include="..\source\common\vector.h" />
@@ -64,6 +66,7 @@
     <ClInclude Include="..\source\engine\console.h" />
     <ClInclude Include="..\source\engine\console_progress_bar.h" />
     <ClInclude Include="..\source\engine\halfling_engine.h" />
+    <ClInclude Include="..\source\engine\material_cache.h" />
     <ClInclude Include="..\source\engine\material_shader_manager.h" />
     <ClInclude Include="..\source\engine\model_manager.h" />
     <ClInclude Include="..\source\engine\profiler.h" />

@@ -8,6 +8,7 @@
 
 #include "engine/texture_manager.h"
 #include "engine/material_shader_manager.h"
+#include "engine/material_cache.h"
 
 #include "scene/halfling_model_file.h"
 
@@ -22,7 +23,7 @@ ModelManager::~ModelManager() {
 	}
 }
 
-Scene::Model *ModelManager::GetModel(ID3D11Device *device, TextureManager *textureManager, MaterialShaderManager *materialShaderManager, Graphics::SamplerStateManager *samplerStateManager, std::wstring filePath) {
+Scene::Model *ModelManager::GetModel(ID3D11Device *device, TextureManager *textureManager, MaterialShaderManager *materialShaderManager, Engine::MaterialCache *materialCache, Graphics::SamplerStateManager *samplerStateManager, std::wstring filePath) {
 	// First check the cache
 	auto iter = m_modelCache.find(filePath);
 	if (iter != m_modelCache.end()) {
@@ -30,7 +31,7 @@ Scene::Model *ModelManager::GetModel(ID3D11Device *device, TextureManager *textu
 	}
 
 	// Else create it from scratch
-	Scene::Model *newModel = Scene::HalflingModelFile::Load(device, textureManager, materialShaderManager, samplerStateManager, filePath.c_str());
+	Scene::Model *newModel = Scene::HalflingModelFile::Load(device, textureManager, materialShaderManager, materialCache, samplerStateManager, filePath.c_str());
 
 	// Lock the cache before writing
 	std::lock_guard<std::mutex> guard(m_cacheLock);

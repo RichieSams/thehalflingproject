@@ -111,6 +111,9 @@
     <ClCompile Include="..\source\common\math.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="..\source\engine\material_cache.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\source\libs\inih\INIReader.h">
@@ -229,6 +232,12 @@
     </ClInclude>
     <ClInclude Include="..\source\engine\timer.h">
       <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\engine\material_cache.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\common\std_vector_compare.h">
+      <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

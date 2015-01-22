@@ -9,6 +9,23 @@
 
 namespace Common {
 
+LinearAllocator::LinearAllocator(size_t pageSize)
+	: m_pageSize(pageSize) {
+	  m_currentPage = m_firstPage = new Page(pageSize);
+}
+
+LinearAllocator::~LinearAllocator() {
+	Page *currentPage = m_firstPage;
+	Page *pageToDelete;
+
+	do {
+		pageToDelete = currentPage;
+		currentPage = currentPage->NextPage;
+
+		delete pageToDelete;
+	} while (currentPage != nullptr);
+}
+
 void *LinearAllocator::Allocate(size_t size) {
     if (m_current + size >= m_end) {
         // Allocate a new page;

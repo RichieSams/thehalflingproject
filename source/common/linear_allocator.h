@@ -13,10 +13,8 @@ namespace Common {
 
 class LinearAllocator {
 public:
-    LinearAllocator(size_t pageSize)
-            : m_pageSize(pageSize) {
-        m_currentPage = m_firstPage = new Page(pageSize);
-    }
+    LinearAllocator(size_t pageSize);
+	~LinearAllocator();
 
 private:
     struct Page {

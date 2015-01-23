@@ -149,7 +149,7 @@ class Draw : public CommandBase<Draw>, public DrawCommandBase {
 public:
 	Draw()
 		: m_vertexCount(0u),
-			m_vertexStart(0u) {
+		  m_vertexStart(0u) {
 	}
 
 private:
@@ -171,8 +171,8 @@ class DrawIndexed : public CommandBase<DrawIndexed>, public DrawCommandBase {
 public:
 	DrawIndexed()
 		: m_indexCount(0u),
-			m_indexStart(0u),
-			m_vertexStart(0u) {
+		  m_indexStart(0u),
+		  m_vertexStart(0u) {
 	}
 
 private:
@@ -186,20 +186,20 @@ public:
 	inline void SetVertexStart(uint vertexStart) { m_vertexStart = vertexStart; }
 
 	static void Execute(ID3D11Device *device, ID3D11DeviceContext *context,
-						BlendStateManager *blendStateManager, RasterizerStateManager *rasterizerStateManager, DepthStencilStateManager *depthStencilStateManager,
-						GraphicsState *currentGraphicsState,
-						const void *data);
+	                    BlendStateManager *blendStateManager, RasterizerStateManager *rasterizerStateManager, DepthStencilStateManager *depthStencilStateManager,
+	                    GraphicsState *currentGraphicsState,
+	                    const void *data);
 };
 
 
 class DrawIndexedInstanced : public CommandBase<DrawIndexed>, public DrawCommandBase {
 	DrawIndexedInstanced()
 		: m_indexCountPerInstance(0u),
-			m_instanceCount(0u),
-			m_instanceStart(0u),
-			m_indexCount(0u),
-			m_indexStart(0u),
-			m_vertexStart(0u) {
+		  m_instanceCount(0u),
+		  m_instanceStart(0u),
+		  m_indexCount(0u),
+		  m_indexStart(0u),
+		  m_vertexStart(0u) {
 	}
 
 private:
@@ -220,17 +220,17 @@ public:
 	inline void SetInputLayout(ID3D11InputLayout *inputLayout) { m_inputLayout = inputLayout; }
 
 	static void Execute(ID3D11Device *device, ID3D11DeviceContext *context,
-						BlendStateManager *blendStateManager, RasterizerStateManager *rasterizerStateManager, DepthStencilStateManager *depthStencilStateManager,
-						GraphicsState *currentGraphicsState,
-						const void *data);
+	                    BlendStateManager *blendStateManager, RasterizerStateManager *rasterizerStateManager, DepthStencilStateManager *depthStencilStateManager,
+	                    GraphicsState *currentGraphicsState,
+	                    const void *data);
 };
 
 class MapDataToConstantBuffer : public CommandBase<MapDataToConstantBuffer> {
 public:
 	MapDataToConstantBuffer()
 		: m_constantBuffer(nullptr),
-			m_data(nullptr),
-			m_dataSize(0ull) {
+		  m_data(nullptr),
+		  m_dataSize(0ull) {
 	}
 
 private:
@@ -240,9 +240,9 @@ private:
 
 public:
 	static void Execute(ID3D11Device *device, ID3D11DeviceContext *context,
-						BlendStateManager *blendStateManager, RasterizerStateManager *rasterizerStateManager, DepthStencilStateManager *depthStencilStateManager,
-						GraphicsState *currentGraphicsState,
-						const void *data);
+	                    BlendStateManager *blendStateManager, RasterizerStateManager *rasterizerStateManager, DepthStencilStateManager *depthStencilStateManager,
+	                    GraphicsState *currentGraphicsState,
+	                    const void *data);
 };
 
 } // End of namespace Commands

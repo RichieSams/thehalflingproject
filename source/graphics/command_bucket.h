@@ -96,7 +96,7 @@ public:
 		m_commands[currentPos].Key = key;
 		m_commands[currentPos].FirstNode = node;
 
-		return reinterpret_cast<U *>(GetCommandData(node));
+		return new(GetCommandData(node)) U;
 	}
 
 	/**
@@ -116,7 +116,7 @@ public:
 		AssertMsg(previousNode->NextNode == nullptr, "This Command has already had another command appended to it. Only append to the last Command created");
 		previousNode->NextNode = newNode;
 
-		return newNode->CommandData;
+		return new(GetCommandData(newNode)) U;
 	}
 
 	/**

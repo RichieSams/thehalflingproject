@@ -110,7 +110,7 @@ public:
 	U *AppendCommand(void *previousCommand) {
 		CommandNode *newNode = AllocateCommand<U>();
 
-		CommandNode *previousNode = reinterpret_cast<CommandNode *>(previousCommand - sizeof(CommandNode));
+		CommandNode *previousNode = reinterpret_cast<CommandNode *>(reinterpret_cast<byte *>(previousCommand) - sizeof(CommandNode));
 		// Make sure this command hasn't already been appended to
 		AssertMsg(previousNode->NextNode == nullptr, "This Command has already had another command appended to it. Only append to the last Command created");
 		previousNode->NextNode = newNode;

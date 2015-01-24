@@ -127,7 +127,7 @@ public:
 	 */
 	void Submit(ID3D11Device *device, ID3D11DeviceContext *context, BlendStateManager *blendStateManager, RasterizerStateManager *rasterizerStateManager, DepthStencilStateManager *depthStencilStateManager, GraphicsState *currentGraphicsState) {
 		// Sort the commands
-		std::sort(std::begin(m_commands), std::end(m_commands), CommandSortFunction);
+		std::sort(m_commands, m_commands + m_nextFreeCommand, CommandSortFunction<SortKeyType>);
 
 		// Execute the commands
 		for (uint i = 0; i < m_nextFreeCommand; ++i) {

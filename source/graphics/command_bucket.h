@@ -133,10 +133,10 @@ public:
 		for (uint i = 0; i < m_nextFreeCommand; ++i) {
 			CommandNode *node = m_commands[i].FirstNode;
 
-			while (node->NextNode != nullptr) {
+			do {
 				node->ExecuteFunction(device, context, blendStateManager, rasterizerStateManager, depthStencilStateManager, currentGraphicsState, GetCommandData(node));
 				node = node->NextNode;
-			}
+			} while (node != nullptr);
 		}
 	}
     

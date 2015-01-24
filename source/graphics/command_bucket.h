@@ -22,7 +22,31 @@ typedef void (*CommandExecuteFunctionPtr)(ID3D11Device *device, ID3D11DeviceCont
                                           GraphicsState *currentGraphicsState, 
                                           const void *data);
 
-template <typename SortKeyType, size_t Size>
+struct CommandNode {
+	CommandNode *NextNode;
+	CommandExecuteFunctionPtr ExecuteFunction;
+	CommandDisposeFunctionPtr DisposeFunction;
+};
+
+template <typename SortKeyType>
+struct CommandPacket {
+	CommandPacket()
+		: Key(),
+		FirstNode(nullptr) {}
+
+	CommandPacket(SortKeyType key, CommandNode *node)
+		: Key(key),
+		FirstNode(node) {}
+
+	SortKeyType Key;
+	CommandNode *FirstNode;
+};
+
+template <typename SortKeyType>
+bool CommandSortFunction(CommandPacket<SortKeyType> const& lhs, CommandPacket<SortKeyType> const& rhs) {
+	return lhs.Key < rhs.Key;
+}
+
 /**
  * A bucket for sending graphics commands to. Submitted commands are not immediately
  * sent to the GPU. Rather, they are cached. When Submit() is called, the commands
@@ -31,32 +55,8 @@ template <typename SortKeyType, size_t Size>
  * NOTE: Commands can be grouped into 'packets' using AppendCommand(). The packet as
  * a whole will be sorted, but the order inside the packet will be preserved.
  */
-class CommandBucket {
-private:  
-    struct CommandNode {
-        CommandNode *NextNode;
-        CommandExecuteFunctionPtr ExecuteFunction;
-    };
-    
-    struct CommandPacket {
-		CommandPacket() 
-			: Key(),
-			  FirstNode(nullptr) {
-		}
-
-        CommandPacket(SortKeyType key, CommandNode *node)
-            : Key(key),
-              FirstNode(node) {
-        }
-
-        SortKeyType Key;
-        CommandNode *FirstNode;
-    };
-    
-    bool CommandSortFunction(CommandPacket const& lhs, CommandPacket const& rhs) {
-        return lhs.Key < rhs.Key;
-    }
-    
+template <typename SortKeyType, size_t Size>
+class CommandBucket { 
 public:
     /**
      * Create a new CommandBucket
@@ -75,7 +75,7 @@ public:
 private:
     Common::LinearAllocator *m_allocator;
 
-	CommandPacket m_commands[Size];
+	CommandPacket<SortKeyType> m_commands[Size];
     uint m_nextFreeCommand;
     
 public:

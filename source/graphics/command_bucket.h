@@ -67,13 +67,13 @@ public:
 	 *
 	 * NOTE: T must have operator< implemented in order for the sort to function properly
      */
-    CommandBucket(Common::LinearAllocator *allocator) 
-        : m_allocator(allocator),
+    CommandBucket(size_t allocatorPageSize) 
+        : m_allocator(allocatorPageSize),
           m_nextFreeCommand(0u) {
     }
     
 private:
-    Common::LinearAllocator *m_allocator;
+    Common::LinearAllocator m_allocator;
 
 	CommandPacket<SortKeyType> m_commands[Size];
     uint m_nextFreeCommand;
@@ -148,7 +148,7 @@ private:
     template <typename U>
 	CommandNode *AllocateCommand() {
 		// We have to allocate enough room to fit all of the data of U. 
-		CommandNode *newNode = reinterpret_cast<CommandNode *>(m_allocator->Allocate(sizeof(CommandNode) + sizeof(U)));
+		CommandNode *newNode = reinterpret_cast<CommandNode *>(m_allocator.Allocate(sizeof(CommandNode) + sizeof(U)));
 		newNode->NextNode = nullptr;
 		newNode->ExecuteFunction = &U::Execute;
 

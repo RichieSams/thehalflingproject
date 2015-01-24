@@ -37,6 +37,10 @@ public:
 	                    const void *data) {
 		static_cast<Derived *>(this)->Execute(device, context, data);
 	}
+
+	static void Dispose(const void *data) {
+		static_cast<Derived *>(this)->Dispose(data);
+	}
 };
 
 class DrawCommandBase {
@@ -159,6 +163,8 @@ public:
 	                    BlendStateManager *blendStateManager, RasterizerStateManager *rasterizerStateManager, DepthStencilStateManager *depthStencilStateManager, 
 	                    GraphicsState *currentGraphicsState, 
 	                    const void *data);
+
+	static void Dispose(const void *data);
 };
 
 
@@ -184,10 +190,13 @@ public:
 	                    BlendStateManager *blendStateManager, RasterizerStateManager *rasterizerStateManager, DepthStencilStateManager *depthStencilStateManager,
 	                    GraphicsState *currentGraphicsState,
 	                    const void *data);
+
+	static void Dispose(const void *data);
 };
 
 
 class DrawIndexedInstanced : public CommandBase<DrawIndexed>, public DrawCommandBase {
+public:
 	DrawIndexedInstanced()
 		: m_indexCountPerInstance(0u),
 		  m_instanceCount(0u),
@@ -217,6 +226,8 @@ public:
 	                    BlendStateManager *blendStateManager, RasterizerStateManager *rasterizerStateManager, DepthStencilStateManager *depthStencilStateManager,
 	                    GraphicsState *currentGraphicsState,
 	                    const void *data);
+
+	static void Dispose(const void *data);
 };
 
 template <typename T>
@@ -238,6 +249,8 @@ public:
 	                    BlendStateManager *blendStateManager, RasterizerStateManager *rasterizerStateManager, DepthStencilStateManager *depthStencilStateManager,
 	                    GraphicsState *currentGraphicsState,
 	                    const void *data);
+
+	static void Dispose(const void *data);
 };
 
 template <typename T>
@@ -254,6 +267,11 @@ void Graphics::Commands::MapDataToConstantBuffer<T>::Execute(ID3D11Device *devic
 	HR(context->Map(command->m_constantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
 	memcpy(mappedResource.pData, &command->m_constantBufferData, sizeof(command->m_constantBufferData));
 	context->Unmap(command->m_constantBuffer, 0);
+}
+
+template <typename T>
+void Graphics::Commands::MapDataToConstantBuffer<T>::Dispose(const void *data) {
+	// No Op since class is a POS
 }
 
 
@@ -275,6 +293,7 @@ public:
 	                    GraphicsState *currentGraphicsState,
 	                    const void *data);
 
+	static void Dispose(const void *data);
 };
 
 
@@ -296,6 +315,7 @@ public:
 	                    GraphicsState *currentGraphicsState,
 	                    const void *data);
 
+	static void Dispose(const void *data);
 };
 
 } // End of namespace Commands

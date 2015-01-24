@@ -21,6 +21,7 @@ typedef void (*CommandExecuteFunctionPtr)(ID3D11Device *device, ID3D11DeviceCont
                                           BlendStateManager *blendStateManager, RasterizerStateManager *rasterizerStateManager, DepthStencilStateManager *depthStencilStateManager, 
                                           GraphicsState *currentGraphicsState, 
                                           const void *data);
+typedef void (*CommandDisposeFunctionPtr)(const void *data);
 
 struct CommandNode {
 	CommandNode *NextNode;
@@ -144,6 +145,16 @@ public:
 	 * Clears the bucket of all commands        
 	 */
 	void Clear() {
+		// Dispose the commands
+		for (uint i = 0; i < m_nextFreeCommand; ++i) {
+			CommandNode *node = m_commands[i].FirstNode;
+
+			do {
+				node->DisposeFunction(GetCommandData(node));
+				node = node->NextNode;
+			} while (node != nullptr);
+		}
+
 		m_allocator.Reset();
 		m_nextFreeCommand = 0u;
 	}
@@ -160,6 +171,7 @@ private:
 		CommandNode *newNode = reinterpret_cast<CommandNode *>(m_allocator.Allocate(sizeof(CommandNode) + sizeof(U)));
 		newNode->NextNode = nullptr;
 		newNode->ExecuteFunction = &U::Execute;
+		newNode->DisposeFunction = &U::Dispose;
 
 		return newNode;
 	}

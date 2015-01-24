@@ -107,11 +107,23 @@ void Draw::Execute(ID3D11Device *device, ID3D11DeviceContext *context, BlendStat
 	context->Draw(command->m_vertexCount, command->m_vertexStart);
 }
 
+void Draw::Dispose(const void *data) {
+	const Draw *command = reinterpret_cast<const Draw *>(data);
+
+	command->~Draw();
+}
+
 void DrawIndexed::Execute(ID3D11Device *device, ID3D11DeviceContext *context, BlendStateManager *blendStateManager, RasterizerStateManager *rasterizerStateManager, DepthStencilStateManager *depthStencilStateManager, GraphicsState *currentGraphicsState, const void *data) {
 	const DrawIndexed *command = reinterpret_cast<const DrawIndexed *>(data);
 
 	command->CheckAndSubmitChangedState(device, context, blendStateManager, rasterizerStateManager, depthStencilStateManager, currentGraphicsState);
 	context->DrawIndexed(command->m_indexCount, command->m_indexStart, command->m_vertexStart);
+}
+
+void DrawIndexed::Dispose(const void *data) {
+	const DrawIndexed *command = reinterpret_cast<const DrawIndexed *>(data);
+
+	command->~DrawIndexed();
 }
 
 void DrawIndexedInstanced::Execute(ID3D11Device *device, ID3D11DeviceContext *context, BlendStateManager *blendStateManager, RasterizerStateManager *rasterizerStateManager, DepthStencilStateManager *depthStencilStateManager, GraphicsState *currentGraphicsState, const void *data) {
@@ -121,11 +133,20 @@ void DrawIndexedInstanced::Execute(ID3D11Device *device, ID3D11DeviceContext *co
 	context->DrawIndexedInstanced(command->m_indexCountPerInstance, command->m_instanceCount, command->m_indexStart, command->m_vertexStart, command->m_instanceStart);
 }
 
+void DrawIndexedInstanced::Dispose(const void *data) {
+	const DrawIndexedInstanced *command = reinterpret_cast<const DrawIndexedInstanced *>(data);
+
+	command->~DrawIndexedInstanced();
+}
 
 void BindConstantBufferToVS::Execute(ID3D11Device *device, ID3D11DeviceContext *context, BlendStateManager *blendStateManager, RasterizerStateManager *rasterizerStateManager, DepthStencilStateManager *depthStencilStateManager, GraphicsState *currentGraphicsState, const void *data) {
 	const BindConstantBufferToVS *command = reinterpret_cast<const BindConstantBufferToVS *>(data);
 	
 	context->VSSetConstantBuffers(command->m_slot, 1u, &command->m_constantBuffer);
+}
+
+void BindConstantBufferToVS::Dispose(const void *data) {
+	// No Op since class is a POS
 }
 
 void BindConstantBufferToPS::Execute(ID3D11Device *device, ID3D11DeviceContext *context, BlendStateManager *blendStateManager, RasterizerStateManager *rasterizerStateManager, DepthStencilStateManager *depthStencilStateManager, GraphicsState *currentGraphicsState, const void *data) {
@@ -134,6 +155,8 @@ void BindConstantBufferToPS::Execute(ID3D11Device *device, ID3D11DeviceContext *
 	context->PSSetConstantBuffers(command->m_slot, 1u, &command->m_constantBuffer);
 }
 
+void BindConstantBufferToPS::Dispose(const void *data) {
+	// No Op since class is a POS
 }
 
 } // End of namespace Commands

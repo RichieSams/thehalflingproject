@@ -55,10 +55,10 @@ uint64 GBufferSortKeyGenerator::GenerateKey(Graphics::MaterialShader *materialSh
 		}
 	}
 
-	return (uint64)(materialShaderKey << 52) |
-	       (uint64)(materialKey << 40) |
-	       (uint64)(vertexBufferKey << 28) |
-	       (uint64)(indexBufferKey << 16);
+	return ((uint64)materialShaderKey << 52) |
+	       ((uint64)materialKey << 40) |
+	       ((uint64)vertexBufferKey << 28) |
+	       ((uint64)indexBufferKey << 16);
 }
 
 } // End of namespace PBRDemo

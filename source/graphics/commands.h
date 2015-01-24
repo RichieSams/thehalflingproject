@@ -46,7 +46,6 @@ public:
 			  m_numVertexBuffers(0u),
 			  m_indexBuffer(nullptr),
 			  m_indexBufferFormat(DXGI_FORMAT_R32_UINT),
-			  m_inputLayout(nullptr),
 			  m_blendState(BlendState::BLEND_DISABLED),
 			  m_sampleMask(0xFFFFFFFF),
 			  m_rasterizerState(RasterizerState::CULL_BACKFACES),
@@ -72,8 +71,6 @@ protected:
 	uint m_numVertexBuffers;
 	ID3D11Buffer *m_indexBuffer;
 	DXGI_FORMAT m_indexBufferFormat;
-
-	ID3D11InputLayout *m_inputLayout;
 
 	std::map<uint, ID3D11ShaderResourceView *> m_textureSRVs;
 	std::map<uint, ID3D11SamplerState *> m_textureSamplers;
@@ -119,8 +116,6 @@ public:
 		m_indexBuffer = indexBuffer;
 		m_indexBufferFormat = format;
 	}
-
-	inline void SetInputLayout(ID3D11InputLayout *inputLayout) { m_inputLayout = inputLayout; }
 
 	inline void SetTextureSRV(ID3D11ShaderResourceView *srv, uint slot) { m_textureSRVs[slot] = srv; }
 	inline void SetTextureSampler(ID3D11SamplerState *sampler, uint slot) { m_textureSamplers[slot] = sampler; }
@@ -217,7 +212,6 @@ public:
 	inline void SetIndexCount(uint indexCount) { m_indexCount = indexCount; }
 	inline void SetIndexStart(uint indexStart) { m_indexStart = indexStart; }
 	inline void SetVertexStart(uint vertexStart) { m_vertexStart = vertexStart; }
-	inline void SetInputLayout(ID3D11InputLayout *inputLayout) { m_inputLayout = inputLayout; }
 
 	static void Execute(ID3D11Device *device, ID3D11DeviceContext *context,
 	                    BlendStateManager *blendStateManager, RasterizerStateManager *rasterizerStateManager, DepthStencilStateManager *depthStencilStateManager,

@@ -24,12 +24,12 @@ void Model::CreateVertexBuffer(ID3D11Device *device, void *vertices, size_t vert
 }
 
 void Model::CreateVertexBuffer(ID3D11Device *device, void *vertices, uint vertexCount, D3D11_BUFFER_DESC vertexBufferDesc, DisposeAfterUse disposeAfterUse) {
-	m_vertexStride = vertexBufferDesc.ByteWidth / vertexCount;
+	VertexStride = vertexBufferDesc.ByteWidth / vertexCount;
 	
 	D3D11_SUBRESOURCE_DATA vInitData;
 	vInitData.pSysMem = vertices;
 
-	HR(device->CreateBuffer(&vertexBufferDesc, &vInitData, &m_vertexBuffer));
+	HR(device->CreateBuffer(&vertexBufferDesc, &vInitData, &VertexBuffer));
 
 	if (disposeAfterUse == DisposeAfterUse::YES) {
 		delete[] vertices;
@@ -52,7 +52,7 @@ void Model::CreateIndexBuffer(ID3D11Device *device, uint *indices, uint indexCou
 	D3D11_SUBRESOURCE_DATA iInitData;
 	iInitData.pSysMem = indices;
 	
-	HR(device->CreateBuffer(&indexBufferDesc, &iInitData, &m_indexBuffer));
+	HR(device->CreateBuffer(&indexBufferDesc, &iInitData, &IndexBuffer));
 
 	if (disposeAfterUse == DisposeAfterUse::YES) {
 		delete[] indices;
@@ -60,85 +60,29 @@ void Model::CreateIndexBuffer(ID3D11Device *device, uint *indices, uint indexCou
 }
 
 void Model::CreateSubsets(ModelSubset *subsetArray, uint subsetCount, DisposeAfterUse disposeAfterUse) {
-	m_subsets = subsetArray;
-	m_subsetCount = subsetCount;
+	Subsets = subsetArray;
+	SubsetCount = subsetCount;
 	m_disposeSubsetArray = disposeAfterUse;
 
-	DirectX::XMVECTOR AABB_min = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
-	DirectX::XMVECTOR AABB_max = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+	DirectX::XMVECTOR tempAABB_min = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+	DirectX::XMVECTOR tempAABB_max = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
 
 	for (uint i = 0; i < subsetCount; ++i) {
-		AABB_min = DirectX::XMVectorMin(AABB_min, DirectX::XMLoadFloat3(&subsetArray[i].AABB_min));
-		AABB_max = DirectX::XMVectorMax(AABB_max, DirectX::XMLoadFloat3(&subsetArray[i].AABB_max));
+		tempAABB_min = DirectX::XMVectorMin(tempAABB_min, DirectX::XMLoadFloat3(&subsetArray[i].AABB_min));
+		tempAABB_max = DirectX::XMVectorMax(tempAABB_max, DirectX::XMLoadFloat3(&subsetArray[i].AABB_max));
 	}
 
-	DirectX::XMStoreFloat3(&m_AABB_min, AABB_min);
-	DirectX::XMStoreFloat3(&m_AABB_max, AABB_max);
+	DirectX::XMStoreFloat3(&AABB_min, tempAABB_min);
+	DirectX::XMStoreFloat3(&AABB_max, tempAABB_max);
 }
-
-void DrawIndexed_Helper(ID3D11DeviceContext *deviceContext, const ModelSubset &subset) {
-	subset.Material->Shader->BindToPipeline(deviceContext);
-	
-	size_t numTextures = subset.Material->TextureSRVs.size();
-	if (numTextures > 0) {
-		deviceContext->PSSetShaderResources(0, static_cast<uint>(numTextures), &subset.Material->TextureSRVs[0]);
-		deviceContext->PSSetSamplers(0, static_cast<uint>(numTextures), &subset.Material->TextureSamplers[0]);
-	}
-
-	deviceContext->DrawIndexed(subset.IndexCount, subset.IndexStart, subset.VertexStart);
-}
-
-void DrawIndexedInstanced_Helper(ID3D11DeviceContext *deviceContext, uint indexCountPerInstance, uint instanceCount, const ModelSubset &subset) {
-	subset.Material->Shader->BindToPipeline(deviceContext);
-
-	size_t numTextures = subset.Material->TextureSRVs.size();
-	if (numTextures > 0) {
-		deviceContext->PSSetShaderResources(0, static_cast<uint>(numTextures), &subset.Material->TextureSRVs[0]);
-		deviceContext->PSSetSamplers(0, static_cast<uint>(numTextures), &subset.Material->TextureSamplers[0]);
-	}
-
-	deviceContext->DrawIndexedInstanced(indexCountPerInstance, instanceCount, subset.IndexStart, subset.VertexStart, 0);
-}
-
-void Model::DrawSubset(ID3D11DeviceContext *deviceContext, int subsetId) {
-	assert(subsetId >= -1 && subsetId < (int)m_subsetCount);
-
-	uint offset = 0;
-
-	deviceContext->IASetVertexBuffers(0, 1, &m_vertexBuffer, &m_vertexStride, &offset);
-	deviceContext->IASetIndexBuffer(m_indexBuffer, DXGI_FORMAT_R32_UINT, 0);
-
-	if (subsetId == -1) {
-		for (uint i = 0; i < m_subsetCount; ++i) {
-			DrawIndexed_Helper(deviceContext, m_subsets[i]);
-		}
-	} else {
-		DrawIndexed_Helper(deviceContext, m_subsets[subsetId]);
-	}
-}
-
-void Model::DrawInstancedSubset(ID3D11DeviceContext *deviceContext, uint instanceCount, uint indexCountPerInstance, int subsetId) {
-	uint offset = 0;
-	deviceContext->IASetVertexBuffers(0, 1, &m_vertexBuffer, &m_vertexStride, &offset);
-	deviceContext->IASetIndexBuffer(m_indexBuffer, DXGI_FORMAT_R32_UINT, 0);
-
-	if (subsetId == -1) {
-		for (uint i = 0; i < m_subsetCount; ++i) {
-			DrawIndexedInstanced_Helper(deviceContext, indexCountPerInstance == 0 ? m_subsets[i].IndexCount : indexCountPerInstance, instanceCount, m_subsets[i]);
-		}
-	} else {
-		DrawIndexedInstanced_Helper(deviceContext, indexCountPerInstance == 0 ? m_subsets[subsetId].IndexCount : indexCountPerInstance, instanceCount, m_subsets[subsetId]);
-	}
-}
-
 
 void InstancedModel::CreateInstanceBuffer(ID3D11Device *device, size_t instanceStride, uint maxInstanceCount, void *instanceData, DisposeAfterUse disposeAfterUse) {
-	m_instanceStride = static_cast<uint>(instanceStride);
-	m_maxInstanceCount = maxInstanceCount;
+	InstanceStride = static_cast<uint>(instanceStride);
+	MaxInstanceCount = maxInstanceCount;
 
 	D3D11_BUFFER_DESC instbd;
 	instbd.Usage = D3D11_USAGE_DYNAMIC;
-	instbd.ByteWidth = m_instanceStride * maxInstanceCount;
+	instbd.ByteWidth = InstanceStride * maxInstanceCount;
 	instbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	instbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE; //needed for Map/Unmap
 	instbd.MiscFlags = 0;
@@ -151,7 +95,7 @@ void InstancedModel::CreateInstanceBuffer(ID3D11Device *device, D3D11_BUFFER_DES
 	D3D11_SUBRESOURCE_DATA iInitData;
 	iInitData.pSysMem = instanceData;
 
-	HR(device->CreateBuffer(&instanceBufferDesc, instanceData ? &iInitData : nullptr, &m_instanceBuffer));
+	HR(device->CreateBuffer(&instanceBufferDesc, instanceData ? &iInitData : nullptr, &InstanceBuffer));
 
 	if (disposeAfterUse == DisposeAfterUse::YES) {
 		delete[] instanceData;
@@ -160,33 +104,14 @@ void InstancedModel::CreateInstanceBuffer(ID3D11Device *device, D3D11_BUFFER_DES
 
 void *InstancedModel::MapInstanceBuffer(ID3D11DeviceContext *deviceContext, uint *out_maxNumInstances) {
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
-	deviceContext->Map(m_instanceBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	deviceContext->Map(InstanceBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 
-	*out_maxNumInstances = m_maxInstanceCount;
+	*out_maxNumInstances = MaxInstanceCount;
 	return mappedResource.pData;
 }
 
 void InstancedModel::UnMapInstanceBuffer(ID3D11DeviceContext *deviceContext) {
-	deviceContext->Unmap(m_instanceBuffer, 0);
-}
-
-void InstancedModel::DrawInstancedSubset(ID3D11DeviceContext *deviceContext, uint instanceCount, uint indexCountPerInstance, int subsetId) {
-	assert(m_instanceBuffer);
-	assert(instanceCount <= m_maxInstanceCount);
-
-	ID3D11Buffer *vbs[] = {m_vertexBuffer, m_instanceBuffer};
-	uint strides[] = {m_vertexStride, m_instanceStride};
-	uint offsets[] = {0, 0};
-	deviceContext->IASetVertexBuffers(0, 2u, vbs, strides, offsets);
-	deviceContext->IASetIndexBuffer(m_indexBuffer, DXGI_FORMAT_R32_UINT, 0);
-
-	if (subsetId == -1) {
-		for (uint i = 0; i < m_subsetCount; ++i) {
-			DrawIndexedInstanced_Helper(deviceContext, indexCountPerInstance == 0 ? m_subsets[i].IndexCount : indexCountPerInstance, instanceCount, m_subsets[i]);
-		}
-	} else {
-		DrawIndexedInstanced_Helper(deviceContext, indexCountPerInstance == 0 ? m_subsets[subsetId].IndexCount : indexCountPerInstance, instanceCount, m_subsets[subsetId]);
-	}
+	deviceContext->Unmap(InstanceBuffer, 0);
 }
 
 } // End of namespace Scene

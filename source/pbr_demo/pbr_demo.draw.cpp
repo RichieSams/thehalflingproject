@@ -9,6 +9,9 @@
 #include "pbr_demo/shader_constants.h"
 #include "pbr_demo/shader_defines.h"
 
+#include "graphics/command_bucket.h"
+#include "graphics/commands.h"
+
 #include <DirectXColors.h>
 
 #include <fastformat/fastformat.hpp>
@@ -92,25 +95,18 @@ void PBRDemo::RenderMainPass() {
 	}
 	m_immediateContext->ClearDepthStencilView(m_depthStencilBuffer->GetDepthStencil(), D3D11_CLEAR_DEPTH, 0.0f, 0);
 
-	// Set States
-	ID3D11SamplerState *samplerState[6] {m_samplerStateManager.Anisotropic(),  // Diffuse
-	                                     m_samplerStateManager.Anisotropic(),  // Spec color
-	                                     m_samplerStateManager.Linear(),       // Spec power
-	                                     m_samplerStateManager.PointWrap(),    // Alpha
-	                                     m_samplerStateManager.Linear(),       // Displacement
-	                                     m_samplerStateManager.Linear()};      // Normal
-	m_immediateContext->PSSetSamplers(0, 6, samplerState);
+	// Set initial states
+	m_immediateContext->IASetInputLayout(m_defaultInputLayout);
+	m_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	
+	Graphics::GraphicsState currentGraphicsState;
 
 	float blendFactor[4] = {1.0f, 1.0f, 1.0f, 1.0f};
 	m_immediateContext->OMSetBlendState(m_blendStateManager.BlendDisabled(), blendFactor, 0xFFFFFFFF);
 	m_immediateContext->OMSetDepthStencilState(m_depthStencilStateManager.ReverseDepthWriteEnabled(), 0);
-	ID3D11RasterizerState *rasterState = m_wireframe ? m_rasterizerStateManager.Wireframe() : m_rasterizerStateManager.BackFaceCull();
-	m_immediateContext->RSSetState(rasterState);
+	m_immediateContext->RSSetState(m_rasterizerStateManager.BackFaceCull());
 
-	m_immediateContext->IASetInputLayout(m_defaultInputLayout);
-	m_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-	// Fetch the transpose matricies
+	// Fetch the transpose matrices
 	DirectX::XMMATRIX viewMatrix = m_camera.GetView();
 	DirectX::XMMATRIX projectionMatrix = m_camera.GetProj();
 
@@ -155,17 +151,65 @@ void PBRDemo::RenderMainPass() {
 
 		// Set the vertex shader frame constants
 		SetInstancedGBufferVertexShaderFrameConstants(DirectX::XMMatrixTranspose(viewProj));
+		ID3D11Buffer *instancedGBufferVertexShaderObjectConstantBuffer = m_instancedGBufferVertexShader->GetPerObjectConstantBuffer();
 
 		for (uint i = 0; i < m_instancedModels.size(); ++i) {
-			SetInstancedGBufferVertexShaderObjectConstants(offsets[i]);
+			Scene::Model *model = m_instancedModels[i].first;
 
-			m_instancedModels[i].first->DrawInstancedSubset(m_immediateContext, static_cast<uint>(m_instancedModels[i].second->size()));
+			ID3D11Buffer *vertexBuffer = model->VertexBuffer;
+			ID3D11Buffer *indexBuffer = model->IndexBuffer;
+			uint vertexStride = model->VertexStride;
+			Scene::ModelSubset *subsets = model->Subsets;
+			uint subsetCount = model->SubsetCount;
+
+			for (uint j = 0; j < subsetCount; ++j) {
+				const Scene::Material *material = subsets[j].Material;
+				Graphics::MaterialShader *materialShader = material->Shader;
+
+				uint64 sortKey = m_gbufferSortKeyGenerator.GenerateKey(materialShader, material, vertexBuffer, indexBuffer);
+
+				// Create the command to set the vertex shader constant buffer data
+				auto mapDataCommand = m_gbufferBucket.AddCommand<Graphics::Commands::MapDataToConstantBuffer<InstancedGBufferVertexShaderObjectConstants> >(sortKey);
+				mapDataCommand->SetConstantBuffer(instancedGBufferVertexShaderObjectConstantBuffer);
+				InstancedGBufferVertexShaderObjectConstants data = {offsets[i]};
+				mapDataCommand->SetData(data);
+
+				// Create the command to bind the vertex shader constant buffer to the pipeline
+				auto bindBufferCommand = m_gbufferBucket.AppendCommand<Graphics::Commands::BindConstantBufferToVS>(mapDataCommand);
+				bindBufferCommand->SetConstantBuffer(instancedGBufferVertexShaderObjectConstantBuffer, 1u);
+
+				// Create the draw command
+				auto drawIndexedInstancedCommand = m_gbufferBucket.AppendCommand<Graphics::Commands::DrawIndexedInstanced>(bindBufferCommand);
+				drawIndexedInstancedCommand->SetMaterialShader(materialShader);
+				drawIndexedInstancedCommand->SetVertexBuffer(vertexBuffer, vertexStride);
+				drawIndexedInstancedCommand->SetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT);
+				for (uint k = 0 ; k < material->TextureSRVs.size(); ++k) {
+					drawIndexedInstancedCommand->SetTextureSRV(material->TextureSRVs[k], k);
+				}
+				for (uint k = 0; k < material->TextureSamplers.size(); ++k) {
+					drawIndexedInstancedCommand->SetTextureSampler(material->TextureSamplers[k], k);
+				}
+				drawIndexedInstancedCommand->SetRasterizerState(m_wireframe ? Graphics::RasterizerState::WIREFRAME : Graphics::RasterizerState::CULL_BACKFACES);
+				drawIndexedInstancedCommand->SetIndexCountPerInstance(subsets[j].IndexCount);
+				drawIndexedInstancedCommand->SetInstanceCount(static_cast<uint>(m_instancedModels[i].second->size()));
+				drawIndexedInstancedCommand->SetInstanceStart(0u);
+				drawIndexedInstancedCommand->SetIndexCount(subsets[j].IndexCount);
+				drawIndexedInstancedCommand->SetIndexStart(subsets[j].IndexStart);
+				drawIndexedInstancedCommand->SetVertexStart(subsets[j].VertexStart);
+			}
 		}
+
+		// Flush the commands to the GPU
+		m_gbufferBucket.Submit(m_device, m_immediateContext, &m_blendStateManager, &m_rasterizerStateManager, &m_depthStencilStateManager, &currentGraphicsState);
+
+		// Clear the bucket for the next use
+		m_gbufferBucket.Clear();
 	}
 
 	// Draw non-instanced models
 	if (m_models.size() > 0) {
 		m_gbufferVertexShader->BindToPipeline(m_immediateContext);
+		ID3D11Buffer *gbufferVertexShaderObjectConstantBuffer = m_gbufferVertexShader->GetPerObjectConstantBuffer();
 
 		for (auto iter = m_models.begin(); iter != m_models.end(); ++iter) {
 			DirectX::XMMATRIX combinedWorld = iter->second * m_globalWorldTransform;
@@ -173,12 +217,53 @@ void PBRDemo::RenderMainPass() {
 			
 			DirectX::XMMATRIX worldViewProjection = DirectX::XMMatrixTranspose(combinedWorld * viewProj);
 
-			// GBuffer pass and Forward pass share the same Vertex cbPerFrame signature
-			SetGBufferVertexShaderObjectConstants(worldMatrix, worldViewProjection);
+			Scene::Model *model = iter->first;
 
-			// Draw the models
-			iter->first->DrawSubset(m_immediateContext);
+			ID3D11Buffer *vertexBuffer = model->VertexBuffer;
+			ID3D11Buffer *indexBuffer = model->IndexBuffer;
+			uint vertexStride = model->VertexStride;
+			Scene::ModelSubset *subsets = model->Subsets;
+			uint subsetCount = model->SubsetCount;
+
+			for (uint j = 0; j < subsetCount; ++j) {
+				const Scene::Material *material = subsets[j].Material;
+				Graphics::MaterialShader *materialShader = material->Shader;
+
+				uint64 sortKey = m_gbufferSortKeyGenerator.GenerateKey(materialShader, material, vertexBuffer, indexBuffer);
+
+				// Create the command to set the vertex shader constant buffer data
+				auto mapDataCommand = m_gbufferBucket.AddCommand<Graphics::Commands::MapDataToConstantBuffer<GBufferVertexShaderObjectConstants> >(sortKey);
+				mapDataCommand->SetConstantBuffer(gbufferVertexShaderObjectConstantBuffer);
+				GBufferVertexShaderObjectConstants data = {worldViewProjection, worldMatrix};
+				mapDataCommand->SetData(data);
+
+				// Create the command to bind the vertex shader constant buffer to the pipeline
+				auto bindBufferCommand = m_gbufferBucket.AppendCommand<Graphics::Commands::BindConstantBufferToVS>(mapDataCommand);
+				bindBufferCommand->SetConstantBuffer(gbufferVertexShaderObjectConstantBuffer, 1u);
+
+				// Create the draw command
+				auto drawIndexedCommand = m_gbufferBucket.AppendCommand<Graphics::Commands::DrawIndexed>(bindBufferCommand);
+				drawIndexedCommand->SetMaterialShader(materialShader);
+				drawIndexedCommand->SetVertexBuffer(vertexBuffer, vertexStride);
+				drawIndexedCommand->SetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT);
+				for (uint k = 0; k < material->TextureSRVs.size(); ++k) {
+					drawIndexedCommand->SetTextureSRV(material->TextureSRVs[k], k);
+				}
+				for (uint k = 0; k < material->TextureSamplers.size(); ++k) {
+					drawIndexedCommand->SetTextureSampler(material->TextureSamplers[k], k);
+				}
+				drawIndexedCommand->SetRasterizerState(m_wireframe ? Graphics::RasterizerState::WIREFRAME : Graphics::RasterizerState::CULL_BACKFACES);
+				drawIndexedCommand->SetIndexCount(subsets[j].IndexCount);
+				drawIndexedCommand->SetIndexStart(subsets[j].IndexStart);
+				drawIndexedCommand->SetVertexStart(subsets[j].VertexStart);
+			}
 		}
+
+		// Flush the commands to the GPU
+		m_gbufferBucket.Submit(m_device, m_immediateContext, &m_blendStateManager, &m_rasterizerStateManager, &m_depthStencilStateManager, &currentGraphicsState);
+
+		// Clear the bucket for the next use
+		m_gbufferBucket.Clear();
 	}
 
 
@@ -238,26 +323,19 @@ void PBRDemo::RenderMainPass() {
 	m_immediateContext->CSSetUnorderedAccessViews(0, 1, &nullUAV, nullptr);
 }
 
-void PBRDemo::SetGBufferVertexShaderObjectConstants(DirectX::XMMATRIX &worldMatrix, DirectX::XMMATRIX &worldViewProjMatrix) {
-	GBufferVertexShaderObjectConstants vertexShaderObjectConstants;
-	vertexShaderObjectConstants.World = worldMatrix;
-	vertexShaderObjectConstants.WorldViewProj = worldViewProjMatrix;
-
-	m_gbufferVertexShader->SetPerObjectConstants(m_immediateContext, &vertexShaderObjectConstants, 1u);
-}
-
 void PBRDemo::SetInstancedGBufferVertexShaderFrameConstants(DirectX::XMMATRIX &viewProjMatrix) {
 	InstancedGBufferVertexShaderFrameConstants vertexShaderFrameConstants;
 	vertexShaderFrameConstants.ViewProj = viewProjMatrix;
 
-	m_instancedGBufferVertexShader->SetPerFrameConstants(m_immediateContext, &vertexShaderFrameConstants, 0u);
-}
+	// Map the data
+	D3D11_MAPPED_SUBRESOURCE mappedResource;
 
-void PBRDemo::SetInstancedGBufferVertexShaderObjectConstants(uint startIndex) {
-	InstancedGBufferVertexShaderObjectConstants vertexShaderObjectConstants;
-	vertexShaderObjectConstants.StartVector = startIndex;
+	ID3D11Buffer *constantBuffer = m_instancedGBufferVertexShader->GetPerFrameConstantBuffer();
 
-	m_instancedGBufferVertexShader->SetPerObjectConstants(m_immediateContext, &vertexShaderObjectConstants, 1u);
+	// Lock the constant buffer so it can be written to.
+	HR(m_immediateContext->Map(constantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
+	memcpy(mappedResource.pData, &vertexShaderFrameConstants, sizeof(InstancedGBufferVertexShaderFrameConstants));
+	m_immediateContext->Unmap(constantBuffer, 0);
 }
 
 void PBRDemo::SetTiledCullFinalGatherShaderConstants(DirectX::XMMATRIX &worldViewMatrix, DirectX::XMMATRIX &projMatrix, DirectX::XMMATRIX &invViewProjMatrix) {

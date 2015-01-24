@@ -9,9 +9,11 @@
 #include "engine/halfling_engine.h"
 
 #include "pbr_demo/shader_constants.h"
+#include "pbr_demo/command_sort_key_generators.h"
 
 #include "common/vector.h"
 #include "common/allocator_16_byte_aligned.h"
+#include "common/linear_allocator.h"
 
 #include "scene/camera.h"
 #include "scene/lights.h"
@@ -29,6 +31,7 @@
 #include "graphics/sprite_renderer.h"
 #include "graphics/sprite_font.h"
 #include "graphics/shader.h"
+#include "graphics/command_bucket.h"
 
 #include <vector>
 #include <AntTweakBar.h>
@@ -62,6 +65,10 @@ private:
 	Engine::ModelManager m_modelManager;
 	Engine::MaterialShaderManager m_materialShaderManager;
 	Engine::MaterialCache m_materialCache;
+	
+	GBufferSortKeyGenerator m_gbufferSortKeyGenerator;
+	Graphics::CommandBucket<uint64, 2048> m_gbufferBucket;
+
 	Engine::Console m_console;
 	bool m_showConsole;
 

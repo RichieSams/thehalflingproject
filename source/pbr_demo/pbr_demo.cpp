@@ -25,6 +25,7 @@ PBRDemo::PBRDemo(HINSTANCE hinstance)
 	  m_farClip(5000.0f),
 	  m_cameraPanFactor(1.0f),
 	  m_cameraScrollFactor(1.0f),
+	  m_gbufferBucket(2048ull),
 	  m_globalWorldTransform(DirectX::XMMatrixIdentity()),
 	  m_camera(0.0f, 0.45f * DirectX::XM_PI, 100.0f),
 	  m_showConsole(false),

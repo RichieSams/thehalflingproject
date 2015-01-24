@@ -43,61 +43,46 @@ struct ModelSubset {
 class Model {
 public:
 	Model()
-		: m_vertexBuffer(nullptr),
-		  m_indexBuffer(nullptr),
-		  m_vertexStride(0u),
-		  m_subsets(nullptr),
-		  m_subsetCount(0u),
-		  m_AABB_min(0.0f, 0.0f, 0.0f),
-		  m_AABB_max(0.0f, 0.0f, 0.0f),
+		: VertexBuffer(nullptr),
+		  IndexBuffer(nullptr),
+		  VertexStride(0u),
+		  Subsets(nullptr),
+		  SubsetCount(0u),
+		  AABB_min(0.0f, 0.0f, 0.0f),
+		  AABB_max(0.0f, 0.0f, 0.0f),
 		  m_disposeSubsetArray(DisposeAfterUse::YES) {
 	}
 
 	virtual ~Model() {
-		ReleaseCOM(m_vertexBuffer);
-		ReleaseCOM(m_indexBuffer);
+		ReleaseCOM(VertexBuffer);
+		ReleaseCOM(IndexBuffer);
 		if (m_disposeSubsetArray == DisposeAfterUse::YES) {
-			delete[] m_subsets;
+			delete[] Subsets;
 		}
 	}
 
-protected:
-	ID3D11Buffer *m_vertexBuffer;
-	ID3D11Buffer *m_indexBuffer;
+public:
+	ID3D11Buffer *VertexBuffer;
+	ID3D11Buffer *IndexBuffer;
 
-	uint m_vertexStride;
+	uint VertexStride;
 
-	ModelSubset *m_subsets;
-	uint m_subsetCount;
+	ModelSubset *Subsets;
+	uint SubsetCount;
 
-	DirectX::XMFLOAT3 m_AABB_min;
-	DirectX::XMFLOAT3 m_AABB_max;
+	DirectX::XMFLOAT3 AABB_min;
+	DirectX::XMFLOAT3 AABB_max;
 
+private:
 	DisposeAfterUse m_disposeSubsetArray;
 
 public:
-	/* Returns the number of subsets the model has */
-	inline uint GetSubsetCount() const { return m_subsetCount; }
-	/**
-	 * Returns the minimum X, Y, Z components of the axis-aligned bounding box
-	 * surrounding the whole model
-     */
-	inline DirectX::XMFLOAT3 GetAABBMin() { return m_AABB_min; }
+	inline DirectX::XMVECTOR GetAABBMin_XM() { return DirectX::XMLoadFloat3(&AABB_min); }
 	/**
 	 * Returns the maximum X, Y, Z components of the axis-aligned bounding box
 	 * surrounding the whole model
      */
-	inline DirectX::XMFLOAT3 GetAABBMax() { return m_AABB_max; }
-	/**
-	 * Returns the minimum X, Y, Z components of the axis-aligned bounding box
-	 * surrounding the whole model
-     */
-	inline DirectX::XMVECTOR GetAABBMin_XM() { return DirectX::XMLoadFloat3(&m_AABB_min); }
-	/**
-	 * Returns the maximum X, Y, Z components of the axis-aligned bounding box
-	 * surrounding the whole model
-     */
-	inline DirectX::XMVECTOR GetAABBMax_XM() { return DirectX::XMLoadFloat3(&m_AABB_max); }
+	inline DirectX::XMVECTOR GetAABBMax_XM() { return DirectX::XMLoadFloat3(&AABB_max); }
 
 	/**
 	 * Creates the vertex buffer for the model. All subsets share the same vertex buffer.
@@ -160,31 +145,6 @@ public:
 	 * @param disposeAfterUse    If YES, the function will call delete[] on 'indices' in the Model destructor
 	 */
 	void CreateSubsets(ModelSubset *subsetArray, uint subsetCount, DisposeAfterUse disposeAfterUse = DisposeAfterUse::YES);
-
-	/**
-	 * Binds the model's vertex and index buffers, then binds the texture SRVS, before finally drawing the geometry
-	 *
-	 * NOTE: CreateVertexBuffer(), CreateIndexBuffer(), and CreateSubsets() *MUST ALL* be called before
-	 *       any DrawSubset() calls
-	 *
-	 * @param deviceContext    A DirectX device context
-	 * @param subsetId         The subset to draw. If the it is -1, all the subsets will be drawn.
-	 */
-	void DrawSubset(ID3D11DeviceContext *deviceContext, int subsetId = -1);
-	/**
-	 * Identical to DrawSubsets, except it uses ID3D11DeviceContext::DrawInstancedIndexed() instead of 
-	 * ID3D11DeviceContext::DrawIndexed(). This function does not bind an extra buffer to the vertex shader
-	 * (an instance buffer). If you wish to use an instance buffer, use the InstancedModel class instead
-	 *
-	 * NOTE: CreateVertexBuffer(), CreateIndexBuffer(), and CreateSubsets() *MUST ALL* be called before
-	 *       any DrawInstancedSubset() calls
-	 *
-	 * @param deviceContext            A DirectX device context
-	 * @param instanceCount            The number of instances to draw
-	 * @param indexCountPerInstance    The number of indices per instance. If 0, the function will use the subset index count
-	 * @param subsetId                 The subset to draw. If it is -1, all the subsets will be drawn.
-	 */
-	virtual void DrawInstancedSubset(ID3D11DeviceContext *deviceContext, uint instanceCount, uint indexCountPerInstance = 0, int subsetId = -1);
 };
 
 
@@ -199,18 +159,18 @@ class InstancedModel : public Model {
 public:
 	InstancedModel()
 		: Model(),
-		m_instanceBuffer(nullptr),
-		m_instanceStride(0u),
-		m_maxInstanceCount(0u) {
+		InstanceBuffer(nullptr),
+		InstanceStride(0u),
+		MaxInstanceCount(0u) {
 	}
 	~InstancedModel() {
-		ReleaseCOM(m_instanceBuffer);
+		ReleaseCOM(InstanceBuffer);
 	}
 
-private:
-	ID3D11Buffer *m_instanceBuffer;
-	uint m_instanceStride;
-	uint m_maxInstanceCount;
+public:
+	ID3D11Buffer *InstanceBuffer;
+	uint InstanceStride;
+	uint MaxInstanceCount;
 
 public:
 	/**
@@ -247,21 +207,6 @@ public:
 	 * @param deviceContext    A DirectX device context
 	 */
 	void UnMapInstanceBuffer(ID3D11DeviceContext *deviceContext);
-
-	/**
-	 * Identical to DrawSubsets, except it uses ID3D11DeviceContext::DrawInstancedIndexed() instead of 
-	 * ID3D11DeviceContext::DrawIndexed(). This function will bind the internal instance buffer to the
-	 * vertex shader.
-	 *
-	 * NOTE: CreateVertexBuffer(), CreateIndexBuffer(), CreateSubsets() and CreateInstanceBuffer()
-	 *       *MUST ALL* be called before any DrawInstancedSubset() calls
-	 *
-	 * @param deviceContext            A DirectX device context
-	 * @param instanceCount            The number of instances to draw
-	 * @param indexCountPerInstance    The number of indices per instance. If 0, the function will use the subset index count
-	 * @param subsetId                 The subset to draw. If it is -1, all the subsets will be drawn.
-	 */
-	void DrawInstancedSubset(ID3D11DeviceContext *deviceContext, uint instanceCount, uint indexCountPerInstance = 0, int subsetId = -1);
 };
 
 } // End of namespace Scene

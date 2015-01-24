@@ -59,10 +59,10 @@ protected:
 	ID3D11Buffer *m_perObjectConstantBuffer;
 
 public:
+	inline ID3D11Buffer *GetPerFrameConstantBuffer() { return m_perFrameConstantBuffer; }
+	inline ID3D11Buffer *GetPerObjectConstantBuffer() { return m_perObjectConstantBuffer; }
 	virtual inline void BindToPipeline(ID3D11DeviceContext *context) = 0;
-	virtual void SetPerFrameConstants(ID3D11DeviceContext *context, PerFrameType *perFrameData, uint slotNumber) = 0;
-
-	virtual void SetPerObjectConstants(ID3D11DeviceContext *context, PerObjectType *perObjectData, uint slotNumber) = 0;
+	
 };
 
 template <typename PerFrameType = DefaultShaderConstantType, typename PerObjectType = DefaultShaderConstantType>
@@ -75,20 +75,6 @@ public:
 
 	inline virtual void BindToPipeline(ID3D11DeviceContext *context) {
 		context->VSSetShader(m_d3dShader, nullptr, 0);
-	}
-
-	void SetPerFrameConstants(ID3D11DeviceContext *context, PerFrameType *perFrameData, uint slotNumber) {
-		SetConstants(context, m_perFrameConstantBuffer, perFrameData, sizeof(PerFrameType), slotNumber);
-
-		// Bind it to the shader
-		context->VSSetConstantBuffers(slotNumber, 1u, &m_perFrameConstantBuffer);
-	}
-
-	void SetPerObjectConstants(ID3D11DeviceContext *context, PerObjectType *perObjectData, uint slotNumber) {
-		SetConstants(context, m_perObjectConstantBuffer, perObjectData, sizeof(PerObjectType), slotNumber);
-
-		// Bind it to the shader
-		context->VSSetConstantBuffers(slotNumber, 1u, &m_perObjectConstantBuffer);
 	}
 };
 

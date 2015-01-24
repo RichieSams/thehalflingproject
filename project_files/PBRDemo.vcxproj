@@ -224,6 +224,7 @@ XCOPY "$(OutDir)..\Halfling\sprite_sampled_pixel_shader.cso" "$(OutDir)" /D /K /
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\source\pbr_demo\command_sort_key_generators.cpp" />
     <ClCompile Include="..\source\pbr_demo\main.cpp" />
     <ClCompile Include="..\source\pbr_demo\pbr_demo.cpp" />
     <ClCompile Include="..\source\pbr_demo\pbr_demo.draw.cpp" />
@@ -231,6 +232,7 @@ XCOPY "$(OutDir)..\Halfling\sprite_sampled_pixel_shader.cso" "$(OutDir)" /D /K /
     <ClCompile Include="..\source\pbr_demo\pbr_demo.update.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\source\pbr_demo\command_sort_key_generators.h" />
     <ClInclude Include="..\source\pbr_demo\pbr_demo.h" />
     <ClInclude Include="..\source\pbr_demo\shader_constants.h" />
     <ClInclude Include="..\source\pbr_demo\shader_defines.h" />

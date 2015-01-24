@@ -16,6 +16,9 @@
     <ClCompile Include="..\source\pbr_demo\main.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="..\source\pbr_demo\command_sort_key_generators.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\source\pbr_demo\pbr_demo.h">
@@ -26,6 +29,9 @@
     </ClInclude>
     <ClInclude Include="..\source\pbr_demo\shader_defines.h">
       <Filter>Shader Logic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\pbr_demo\command_sort_key_generators.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -63,6 +69,9 @@
     </Filter>
     <Filter Include="Materials">
       <UniqueIdentifier>{96beb857-5ef2-4a3a-9262-893e42b47cfc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics">
+      <UniqueIdentifier>{bd02477c-d771-482a-9b42-5957f58caca2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -125,7 +125,7 @@ public:
 	 * @param device     The device to use for executing the commands
 	 * @param context    the context to use for executing the commands
 	 */
-	void Submit(ID3D11Device *device, ID3D11DeviceContext *context) {
+	void Submit(ID3D11Device *device, ID3D11DeviceContext *context, BlendStateManager *blendStateManager, RasterizerStateManager *rasterizerStateManager, DepthStencilStateManager *depthStencilStateManager, GraphicsState *currentGraphicsState) {
 		// Sort the commands
 		std::sort(std::begin(m_commands), std::end(m_commands), CommandSortFunction);
 
@@ -134,7 +134,7 @@ public:
 			CommandNode *node = m_commands[i].FirstNode;
 
 			while (node->NextNode != nullptr) {
-				node->ExecuteFunction(GetCommandData(node));
+				node->ExecuteFunction(device, context, blendStateManager, rasterizerStateManager, depthStencilStateManager, currentGraphicsState, GetCommandData(node));
 				node = node->NextNode;
 			}
 		}

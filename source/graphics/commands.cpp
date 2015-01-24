@@ -121,19 +121,9 @@ void DrawIndexedInstanced::Execute(ID3D11Device *device, ID3D11DeviceContext *co
 	context->DrawIndexedInstanced(command->m_indexCountPerInstance, command->m_instanceCount, command->m_indexStart, command->m_vertexStart, command->m_instanceStart);
 }
 
-void MapDataToConstantBuffer::Execute(ID3D11Device *device, ID3D11DeviceContext *context, BlendStateManager *blendStateManager, RasterizerStateManager *rasterizerStateManager, DepthStencilStateManager *depthStencilStateManager, GraphicsState *currentGraphicsState, const void *data) {
-	const MapDataToConstantBuffer *command = reinterpret_cast<const MapDataToConstantBuffer *>(data);
 
-	// Make sure the buffer even exists
-	assert(command->m_constantBuffer != nullptr);
 
-	// Map the data
-	D3D11_MAPPED_SUBRESOURCE mappedResource;
 
-	// Lock the constant buffer so it can be written to.
-	HR(context->Map(command->m_constantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
-	memcpy(mappedResource.pData, command->m_data, command->m_dataSize);
-	context->Unmap(command->m_constantBuffer, 0);
 }
 
 } // End of namespace Commands

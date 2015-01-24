@@ -225,24 +225,41 @@ public:
 	                    const void *data);
 };
 
-class MapDataToConstantBuffer : public CommandBase<MapDataToConstantBuffer> {
+template <typename T>
+class MapDataToConstantBuffer : public CommandBase<MapDataToConstantBuffer<T>> {
 public:
 	MapDataToConstantBuffer()
-		: m_constantBuffer(nullptr),
-		  m_data(nullptr),
-		  m_dataSize(0ull) {
+		: m_constantBuffer(nullptr) {
 	}
 
 private:
 	ID3D11Buffer *m_constantBuffer;
-	void *m_data;
-	size_t m_dataSize;
+	T m_constantBufferData;
 
 public:
+	inline void SetConstantBuffer(ID3D11Buffer *buffer) { m_constantBuffer = buffer; }
+	inline void SetData(T &data) { m_constantBufferData = data; }
+
 	static void Execute(ID3D11Device *device, ID3D11DeviceContext *context,
 	                    BlendStateManager *blendStateManager, RasterizerStateManager *rasterizerStateManager, DepthStencilStateManager *depthStencilStateManager,
 	                    GraphicsState *currentGraphicsState,
 	                    const void *data);
+template <typename T>
+void Graphics::Commands::MapDataToConstantBuffer<T>::Execute(ID3D11Device *device, ID3D11DeviceContext *context, BlendStateManager *blendStateManager, RasterizerStateManager *rasterizerStateManager, DepthStencilStateManager *depthStencilStateManager, GraphicsState *currentGraphicsState, const void *data) {
+	const MapDataToConstantBuffer *command = reinterpret_cast<const MapDataToConstantBuffer *>(data);
+
+	// Make sure the buffer even exists
+	assert(command->m_constantBuffer != nullptr);
+
+	// Map the data
+	D3D11_MAPPED_SUBRESOURCE mappedResource;
+
+	// Lock the constant buffer so it can be written to.
+	HR(context->Map(command->m_constantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
+	memcpy(mappedResource.pData, &command->m_constantBufferData, sizeof(command->m_constantBufferData));
+	context->Unmap(command->m_constantBuffer, 0);
+}
+
 };
 
 } // End of namespace Commands

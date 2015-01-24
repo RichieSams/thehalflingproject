@@ -93,7 +93,8 @@ public:
 		// Store key and pointer to the node
 		// TODO: Atomic this:
 		uint currentPos = m_nextFreeCommand++;
-		m_commands[currentPos] = CommandPacket(key, node);
+		m_commands[currentPos].Key = key;
+		m_commands[currentPos].FirstNode = node;
 
 		return reinterpret_cast<U *>(GetCommandData(node));
 	}

@@ -139,6 +139,14 @@ public:
 			} while (node != nullptr);
 		}
 	}
+
+	/**
+	 * Clears the bucket of all commands        
+	 */
+	void Clear() {
+		m_allocator.Reset();
+		m_nextFreeCommand = 0u;
+	}
     
 private:
     /**

@@ -49,7 +49,7 @@ void DrawCommandBase::CheckAndSubmitChangedState(ID3D11Device *device, ID3D11Dev
 	}
 
 	// TODO: Do an element by element search and replace. Preferably optimizing to as few calls as possible (by grouping textures into an array)
-	if (m_textureSRVs.begin()->second != currentGraphicsState->TextureSRVs.begin()->second) {
+	if (m_textureSRVs.size() != 0 && (currentGraphicsState->TextureSRVs.size() == 0 || m_textureSRVs.begin()->second != currentGraphicsState->TextureSRVs.begin()->second)) {
 		for (auto iter = m_textureSRVs.begin(); iter != m_textureSRVs.end(); ++iter) {
 			context->PSSetShaderResources(iter->first, 1u, &iter->second);
 		}
@@ -59,7 +59,7 @@ void DrawCommandBase::CheckAndSubmitChangedState(ID3D11Device *device, ID3D11Dev
 	}
 
 	// TODO: Do an element by element search and replace. Preferably optimizing to as few calls as possible (by grouping samplers into an array)
-	if (m_textureSamplers.begin()->second != currentGraphicsState->TextureSamplers.begin()->second) {
+	if (m_textureSamplers.size() != 0 && (currentGraphicsState->TextureSamplers.size() == 0 || m_textureSamplers.begin()->second != currentGraphicsState->TextureSamplers.begin()->second)) {
 		for (auto iter = m_textureSamplers.begin(); iter != m_textureSamplers.end(); ++iter) {
 			context->PSSetSamplers(iter->first, 1u, &iter->second);
 		}

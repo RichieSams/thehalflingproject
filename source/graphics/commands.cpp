@@ -122,7 +122,17 @@ void DrawIndexedInstanced::Execute(ID3D11Device *device, ID3D11DeviceContext *co
 }
 
 
+void BindConstantBufferToVS::Execute(ID3D11Device *device, ID3D11DeviceContext *context, BlendStateManager *blendStateManager, RasterizerStateManager *rasterizerStateManager, DepthStencilStateManager *depthStencilStateManager, GraphicsState *currentGraphicsState, const void *data) {
+	const BindConstantBufferToVS *command = reinterpret_cast<const BindConstantBufferToVS *>(data);
+	
+	context->VSSetConstantBuffers(command->m_slot, 1u, &command->m_constantBuffer);
+}
 
+void BindConstantBufferToPS::Execute(ID3D11Device *device, ID3D11DeviceContext *context, BlendStateManager *blendStateManager, RasterizerStateManager *rasterizerStateManager, DepthStencilStateManager *depthStencilStateManager, GraphicsState *currentGraphicsState, const void *data) {
+	const BindConstantBufferToPS *command = reinterpret_cast<const BindConstantBufferToPS *>(data);
+
+	context->PSSetConstantBuffers(command->m_slot, 1u, &command->m_constantBuffer);
+}
 
 }
 

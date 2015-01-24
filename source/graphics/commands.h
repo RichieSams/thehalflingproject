@@ -244,6 +244,8 @@ public:
 	                    BlendStateManager *blendStateManager, RasterizerStateManager *rasterizerStateManager, DepthStencilStateManager *depthStencilStateManager,
 	                    GraphicsState *currentGraphicsState,
 	                    const void *data);
+};
+
 template <typename T>
 void Graphics::Commands::MapDataToConstantBuffer<T>::Execute(ID3D11Device *device, ID3D11DeviceContext *context, BlendStateManager *blendStateManager, RasterizerStateManager *rasterizerStateManager, DepthStencilStateManager *depthStencilStateManager, GraphicsState *currentGraphicsState, const void *data) {
 	const MapDataToConstantBuffer *command = reinterpret_cast<const MapDataToConstantBuffer *>(data);
@@ -259,6 +261,46 @@ void Graphics::Commands::MapDataToConstantBuffer<T>::Execute(ID3D11Device *devic
 	memcpy(mappedResource.pData, &command->m_constantBufferData, sizeof(command->m_constantBufferData));
 	context->Unmap(command->m_constantBuffer, 0);
 }
+
+
+class BindConstantBufferToVS : public CommandBase<BindConstantBufferToVS> {
+public:
+	BindConstantBufferToVS()
+		: m_constantBuffer(nullptr) {
+	}
+
+private:
+	ID3D11Buffer *m_constantBuffer;
+	uint m_slot;
+
+public:
+	inline void SetConstantBuffer(ID3D11Buffer *buffer, uint slot) { m_constantBuffer = buffer; m_slot = slot; }
+
+	static void Execute(ID3D11Device *device, ID3D11DeviceContext *context,
+	                    BlendStateManager *blendStateManager, RasterizerStateManager *rasterizerStateManager, DepthStencilStateManager *depthStencilStateManager,
+	                    GraphicsState *currentGraphicsState,
+	                    const void *data);
+
+};
+
+
+class BindConstantBufferToPS : public CommandBase<BindConstantBufferToPS> {
+public:
+	BindConstantBufferToPS()
+		: m_constantBuffer(nullptr) {
+	}
+
+private:
+	ID3D11Buffer *m_constantBuffer;
+	uint m_slot;
+
+public:
+	inline void SetConstantBuffer(ID3D11Buffer *buffer, uint slot) { m_constantBuffer = buffer; m_slot = slot; }
+
+	static void Execute(ID3D11Device *device, ID3D11DeviceContext *context,
+	                    BlendStateManager *blendStateManager, RasterizerStateManager *rasterizerStateManager, DepthStencilStateManager *depthStencilStateManager,
+	                    GraphicsState *currentGraphicsState,
+	                    const void *data);
 
 };
 

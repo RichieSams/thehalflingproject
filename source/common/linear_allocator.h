@@ -29,16 +29,21 @@ private:
 
     size_t m_pageSize;
     
+	uint m_numPages;
+
     Page *m_firstPage;
     Page *m_currentPage;
     
-    byte *m_start;
     byte *m_end;
     byte *m_current;
     
 public:
     void *Allocate(size_t size);
-    inline void Reset() { m_current = m_start; }
+    inline void Reset() {  
+		m_currentPage = m_firstPage; 
+		m_current = reinterpret_cast<byte *>(m_currentPage->Data);
+		m_end = m_current + m_pageSize;
+	}
 };
 
 } // End of namespace Common

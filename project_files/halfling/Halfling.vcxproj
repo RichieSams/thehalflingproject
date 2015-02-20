@@ -19,94 +19,94 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\source\common\file_io_util.cpp" />
-    <ClCompile Include="..\source\common\linear_allocator.cpp" />
-    <ClCompile Include="..\source\common\math.cpp" />
-    <ClCompile Include="..\source\common\string_util.cpp" />
-    <ClCompile Include="..\source\engine\clock.cpp" />
-    <ClCompile Include="..\source\engine\console.cpp" />
-    <ClCompile Include="..\source\engine\halfling_engine.cpp" />
-    <ClCompile Include="..\source\engine\material_cache.cpp" />
-    <ClCompile Include="..\source\engine\material_shader_manager.cpp" />
-    <ClCompile Include="..\source\engine\model_manager.cpp" />
-    <ClCompile Include="..\source\engine\profiler.cpp" />
-    <ClCompile Include="..\source\engine\texture_manager.cpp" />
-    <ClCompile Include="..\source\engine\timer.cpp" />
-    <ClCompile Include="..\source\graphics\commands.cpp" />
-    <ClCompile Include="..\source\graphics\d3d_util.cpp" />
-    <ClCompile Include="..\source\graphics\device_states.cpp" />
-    <ClCompile Include="..\source\graphics\dxerr.cpp" />
-    <ClCompile Include="..\source\graphics\shader.cpp" />
-    <ClCompile Include="..\source\graphics\sprite_font.cpp" />
-    <ClCompile Include="..\source\graphics\sprite_renderer.cpp" />
-    <ClCompile Include="..\source\graphics\texture2d.cpp" />
-    <ClCompile Include="..\source\libs\DirectXTex\DDSTextureLoader.cpp" />
-    <ClCompile Include="..\source\libs\inih\ini.c" />
-    <ClCompile Include="..\source\libs\inih\INIReader.cpp" />
-    <ClCompile Include="..\source\scene\camera.cpp" />
-    <ClCompile Include="..\source\scene\geometry_generator.cpp" />
-    <ClCompile Include="..\source\scene\halfling_model_file.cpp" />
-    <ClCompile Include="..\source\scene\lights.cpp" />
-    <ClCompile Include="..\source\scene\light_animator.cpp" />
-    <ClCompile Include="..\source\scene\model.cpp" />
-    <ClCompile Include="..\source\scene\model_loading.cpp" />
+    <ClCompile Include="..\..\source\common\file_io_util.cpp" />
+    <ClCompile Include="..\..\source\common\linear_allocator.cpp" />
+    <ClCompile Include="..\..\source\common\math.cpp" />
+    <ClCompile Include="..\..\source\common\string_util.cpp" />
+    <ClCompile Include="..\..\source\engine\clock.cpp" />
+    <ClCompile Include="..\..\source\engine\console.cpp" />
+    <ClCompile Include="..\..\source\engine\halfling_engine.cpp" />
+    <ClCompile Include="..\..\source\engine\material_cache.cpp" />
+    <ClCompile Include="..\..\source\engine\material_shader_manager.cpp" />
+    <ClCompile Include="..\..\source\engine\model_manager.cpp" />
+    <ClCompile Include="..\..\source\engine\profiler.cpp" />
+    <ClCompile Include="..\..\source\engine\texture_manager.cpp" />
+    <ClCompile Include="..\..\source\engine\timer.cpp" />
+    <ClCompile Include="..\..\source\graphics\commands.cpp" />
+    <ClCompile Include="..\..\source\graphics\d3d_util.cpp" />
+    <ClCompile Include="..\..\source\graphics\device_states.cpp" />
+    <ClCompile Include="..\..\source\graphics\dxerr.cpp" />
+    <ClCompile Include="..\..\source\graphics\shader.cpp" />
+    <ClCompile Include="..\..\source\graphics\sprite_font.cpp" />
+    <ClCompile Include="..\..\source\graphics\sprite_renderer.cpp" />
+    <ClCompile Include="..\..\source\graphics\texture2d.cpp" />
+    <ClCompile Include="..\..\libs\inih\ini.c" />
+    <ClCompile Include="..\..\libs\inih\INIReader.cpp" />
+    <ClCompile Include="..\..\source\scene\camera.cpp" />
+    <ClCompile Include="..\..\source\scene\geometry_generator.cpp" />
+    <ClCompile Include="..\..\source\scene\halfling_model_file.cpp" />
+    <ClCompile Include="..\..\source\scene\lights.cpp" />
+    <ClCompile Include="..\..\source\scene\light_animator.cpp" />
+    <ClCompile Include="..\..\source\scene\model.cpp" />
+    <ClCompile Include="..\..\source\scene\model_loading.cpp" />
+    <ClCompile Include="..\..\libs\DirectXTK\DDSTextureLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\source\common\allocator_16_byte_aligned.h" />
-    <ClInclude Include="..\source\common\endian.h" />
-    <ClInclude Include="..\source\common\file_io_util.h" />
-    <ClInclude Include="..\source\common\halfling_sys.h" />
-    <ClInclude Include="..\source\common\hash.h" />
-    <ClInclude Include="..\source\common\linear_allocator.h" />
-    <ClInclude Include="..\source\common\math.h" />
-    <ClInclude Include="..\source\common\memory_stream.h" />
-    <ClInclude Include="..\source\common\rect.h" />
-    <ClInclude Include="..\source\common\std_vector_compare.h" />
-    <ClInclude Include="..\source\common\string_util.h" />
-    <ClInclude Include="..\source\common\typedefs.h" />
-    <ClInclude Include="..\source\common\vector.h" />
-    <ClInclude Include="..\source\engine\clock.h" />
-    <ClInclude Include="..\source\engine\console.h" />
-    <ClInclude Include="..\source\engine\console_progress_bar.h" />
-    <ClInclude Include="..\source\engine\halfling_engine.h" />
-    <ClInclude Include="..\source\engine\material_cache.h" />
-    <ClInclude Include="..\source\engine\material_shader_manager.h" />
-    <ClInclude Include="..\source\engine\model_manager.h" />
-    <ClInclude Include="..\source\engine\profiler.h" />
-    <ClInclude Include="..\source\engine\texture_manager.h" />
-    <ClInclude Include="..\source\engine\timer.h" />
-    <ClInclude Include="..\source\graphics\commands.h" />
-    <ClInclude Include="..\source\graphics\command_bucket.h" />
-    <ClInclude Include="..\source\graphics\d3d_util.h" />
-    <ClInclude Include="..\source\graphics\device_states.h" />
-    <ClInclude Include="..\source\graphics\dxerr.h" />
-    <ClInclude Include="..\source\graphics\graphics_state.h" />
-    <ClInclude Include="..\source\graphics\shader.h" />
-    <ClInclude Include="..\source\graphics\sprite_font.h" />
-    <ClInclude Include="..\source\graphics\sprite_renderer.h" />
-    <ClInclude Include="..\source\graphics\structured_buffer.h" />
-    <ClInclude Include="..\source\graphics\texture2d.h" />
-    <ClInclude Include="..\source\libs\DirectXTex\DDSTextureLoader.h" />
-    <ClInclude Include="..\source\libs\inih\ini.h" />
-    <ClInclude Include="..\source\libs\inih\INIReader.h" />
-    <ClInclude Include="..\source\scene\camera.h" />
-    <ClInclude Include="..\source\scene\geometry_generator.h" />
-    <ClInclude Include="..\source\scene\halfling_model_file.h" />
-    <ClInclude Include="..\source\scene\lights.h" />
-    <ClInclude Include="..\source\scene\light_animator.h" />
-    <ClInclude Include="..\source\scene\materials.h" />
-    <ClInclude Include="..\source\scene\model.h" />
-    <ClInclude Include="..\source\scene\model_loading.h" />
+    <ClInclude Include="..\..\source\common\allocator_16_byte_aligned.h" />
+    <ClInclude Include="..\..\source\common\endian.h" />
+    <ClInclude Include="..\..\source\common\file_io_util.h" />
+    <ClInclude Include="..\..\source\common\halfling_sys.h" />
+    <ClInclude Include="..\..\source\common\hash.h" />
+    <ClInclude Include="..\..\source\common\linear_allocator.h" />
+    <ClInclude Include="..\..\source\common\math.h" />
+    <ClInclude Include="..\..\source\common\memory_stream.h" />
+    <ClInclude Include="..\..\source\common\rect.h" />
+    <ClInclude Include="..\..\source\common\std_vector_compare.h" />
+    <ClInclude Include="..\..\source\common\string_util.h" />
+    <ClInclude Include="..\..\source\common\typedefs.h" />
+    <ClInclude Include="..\..\source\common\vector.h" />
+    <ClInclude Include="..\..\source\engine\clock.h" />
+    <ClInclude Include="..\..\source\engine\console.h" />
+    <ClInclude Include="..\..\source\engine\console_progress_bar.h" />
+    <ClInclude Include="..\..\source\engine\halfling_engine.h" />
+    <ClInclude Include="..\..\source\engine\material_cache.h" />
+    <ClInclude Include="..\..\source\engine\material_shader_manager.h" />
+    <ClInclude Include="..\..\source\engine\model_manager.h" />
+    <ClInclude Include="..\..\source\engine\profiler.h" />
+    <ClInclude Include="..\..\source\engine\texture_manager.h" />
+    <ClInclude Include="..\..\source\engine\timer.h" />
+    <ClInclude Include="..\..\source\graphics\commands.h" />
+    <ClInclude Include="..\..\source\graphics\command_bucket.h" />
+    <ClInclude Include="..\..\source\graphics\d3d_util.h" />
+    <ClInclude Include="..\..\source\graphics\device_states.h" />
+    <ClInclude Include="..\..\source\graphics\dxerr.h" />
+    <ClInclude Include="..\..\source\graphics\graphics_state.h" />
+    <ClInclude Include="..\..\source\graphics\shader.h" />
+    <ClInclude Include="..\..\source\graphics\sprite_font.h" />
+    <ClInclude Include="..\..\source\graphics\sprite_renderer.h" />
+    <ClInclude Include="..\..\source\graphics\structured_buffer.h" />
+    <ClInclude Include="..\..\source\graphics\texture2d.h" />
+    <ClInclude Include="..\..\libs\inih\ini.h" />
+    <ClInclude Include="..\..\libs\inih\INIReader.h" />
+    <ClInclude Include="..\..\source\scene\camera.h" />
+    <ClInclude Include="..\..\source\scene\geometry_generator.h" />
+    <ClInclude Include="..\..\source\scene\halfling_model_file.h" />
+    <ClInclude Include="..\..\source\scene\lights.h" />
+    <ClInclude Include="..\..\source\scene\light_animator.h" />
+    <ClInclude Include="..\..\source\scene\materials.h" />
+    <ClInclude Include="..\..\source\scene\model.h" />
+    <ClInclude Include="..\..\source\scene\model_loading.h" />
+    <ClInclude Include="..\..\libs\DirectXTK\DDSTextureLoader.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\source\graphics\shaders\hlsl_util.hlsli" />
-    <None Include="..\source\graphics\shaders\lights.hlsli" />
-    <None Include="..\source\graphics\shaders\light_functions.hlsli" />
-    <None Include="..\source\graphics\shaders\materials.hlsli" />
-    <None Include="..\source\graphics\shaders\sprite_header.hlsli" />
+    <None Include="..\..\source\graphics\shaders\hlsl_util.hlsli" />
+    <None Include="..\..\source\graphics\shaders\lights.hlsli" />
+    <None Include="..\..\source\graphics\shaders\light_functions.hlsli" />
+    <None Include="..\..\source\graphics\shaders\materials.hlsli" />
+    <None Include="..\..\source\graphics\shaders\sprite_header.hlsli" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\source\graphics\shaders\sprite_instanced_vertex_shader.hlsl">
+    <FxCompile Include="..\..\source\graphics\shaders\sprite_instanced_vertex_shader.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">SpriteInstancedVS</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">SpriteInstancedVS</EntryPointName>
@@ -116,7 +116,7 @@
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">SpriteInstancedVS</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
-    <FxCompile Include="..\source\graphics\shaders\sprite_pixel_shader.hlsl">
+    <FxCompile Include="..\..\source\graphics\shaders\sprite_pixel_shader.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">SpritePS</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">SpritePS</EntryPointName>
@@ -126,7 +126,7 @@
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">SpritePS</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="..\source\graphics\shaders\sprite_sampled_pixel_shader.hlsl">
+    <FxCompile Include="..\..\source\graphics\shaders\sprite_sampled_pixel_shader.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">SpriteSampledPS</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">SpriteSampledPS</EntryPointName>
@@ -136,7 +136,7 @@
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">SpriteSampledPS</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="..\source\graphics\shaders\sprite_vertex_shader.hlsl">
+    <FxCompile Include="..\..\source\graphics\shaders\sprite_vertex_shader.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">SpriteVS</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">SpriteVS</EntryPointName>
@@ -185,45 +185,35 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\build\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
-    <IntDir>..\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>../source/;../source/libs/AntTweakBar/include;../source/libs/DirectXTex;../source/libs/stlsoft/include;../source/libs/fastformat/include;$(IncludePath)</IncludePath>
-    <LibraryPath>../source/libs/AntTweakBar/lib;../source/libs/fastformat/lib/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
+    <OutDir>..\..\build\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>..\..\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IncludePath>..\..\source/;..\..\libs/AntTweakBar/include;..\..\libs/DirectXTK;..\..\libs/stlsoft/include;..\..\libs/fastformat/include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\..\libs/AntTweakBar/lib;..\..\libs/fastformat/lib/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
     <TargetName>$(ProjectName)d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>../source/;../source/libs/AntTweakBar/include;../source/libs/DirectXTex;../source/libs/stlsoft/include;../source/libs/fastformat/include;$(IncludePath)</IncludePath>
-    <LibraryPath>../source/libs/AntTweakBar/lib;../source/libs/fastformat/lib/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
+    <IncludePath>..\..\source/;..\..\libs/AntTweakBar/include;..\..\libs/DirectXTK;..\..\libs/stlsoft/include;..\..\libs/fastformat/include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\..\libs/AntTweakBar/lib;..\..\libs/fastformat/lib/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
     <LinkIncremental>true</LinkIncremental>
     <TargetName>$(ProjectName)d</TargetName>
-    <OutDir>..\build\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
-    <IntDir>..\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir>..\..\build\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>..\..\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\build\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
-    <IntDir>..\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>../source/;../source/libs/AntTweakBar/include;../source/libs/DirectXTex;../source/libs/stlsoft/include;../source/libs/fastformat/include;$(IncludePath)</IncludePath>
-    <LibraryPath>../source/libs/AntTweakBar/lib;../source/libs/fastformat/lib/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
+    <OutDir>..\..\build\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>..\..\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IncludePath>..\..\source/;..\..\libs/AntTweakBar/include;..\..\libs/DirectXTK;..\..\libs/stlsoft/include;..\..\libs/fastformat/include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\..\libs/AntTweakBar/lib;..\..\libs/fastformat/lib/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>../source/;../source/libs/AntTweakBar/include;../source/libs/DirectXTex;../source/libs/stlsoft/include;../source/libs/fastformat/include;$(IncludePath)</IncludePath>
-    <LibraryPath>../source/libs/AntTweakBar/lib;../source/libs/fastformat/lib/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
+    <IncludePath>..\..\source/;..\..\libs/AntTweakBar/include;..\..\libs/DirectXTK;..\..\libs/stlsoft/include;..\..\libs/fastformat/include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\..\libs/AntTweakBar/lib;..\..\libs/fastformat/lib/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\build\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
-    <IntDir>..\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir>..\..\build\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>..\..\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -242,7 +232,7 @@
       <AdditionalDependencies>AntTweakBar.lib;fastformatd.lib</AdditionalDependencies>
     </Lib>
     <FxCompile>
-      <AdditionalIncludeDirectories>../source/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\source/</AdditionalIncludeDirectories>
       <ShaderModel>5.0</ShaderModel>
     </FxCompile>
   </ItemDefinitionGroup>
@@ -263,7 +253,7 @@
       <AdditionalDependencies>AntTweakBar.lib;fastformatd.lib</AdditionalDependencies>
     </Lib>
     <FxCompile>
-      <AdditionalIncludeDirectories>../source/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\source/</AdditionalIncludeDirectories>
       <ShaderModel>5.0</ShaderModel>
     </FxCompile>
   </ItemDefinitionGroup>
@@ -284,7 +274,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <FxCompile>
-      <AdditionalIncludeDirectories>../source/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\source/</AdditionalIncludeDirectories>
       <ShaderModel>5.0</ShaderModel>
     </FxCompile>
     <Lib>
@@ -308,7 +298,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <FxCompile>
-      <AdditionalIncludeDirectories>../source/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\source/</AdditionalIncludeDirectories>
       <ShaderModel>5.0</ShaderModel>
     </FxCompile>
     <Lib>

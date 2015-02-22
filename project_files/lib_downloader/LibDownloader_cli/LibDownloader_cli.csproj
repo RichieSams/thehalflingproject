@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0FDD6081-B3AB-4D94-BE9E-4C25E83EEE78}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <ProjectGuid>{515532DB-96E0-4AAB-BB21-CDD7EE991B53}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LibDownloader</RootNamespace>
-    <AssemblyName>download_required_libs</AssemblyName>
+    <RootNamespace>LibDownloader_cli</RootNamespace>
+    <AssemblyName>download_required_libs_cli</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -17,8 +17,8 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\build\AnyCPU\Debug\LibDownloader\</OutputPath>
-    <IntermediateOutputPath>..\..\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntermediateOutputPath>
+    <OutputPath>..\..\..\build\AnyCPU\Debug\LibDownloader_cli\</OutputPath>
+    <IntermediateOutputPath>..\..\..\obj\AnyCPU\Debug\LibDownloader\</IntermediateOutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -27,22 +27,18 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\build\AnyCPU\Release\LibDownloader\</OutputPath>
-    <IntermediateOutputPath>..\..\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntermediateOutputPath>
+    <OutputPath>..\..\..\build\AnyCPU\Release\LibDownloader_cli\</OutputPath>
+    <IntermediateOutputPath>..\..\..\obj\AnyCPU\Release\LibDownloader\</IntermediateOutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Accessibility" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -50,22 +46,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\source\lib_downloader\Downloader.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="..\..\source\lib_downloader\Downloader.Designer.cs">
-      <DependentUpon>Downloader.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Program.cs" />
+    <Compile Include="..\..\..\source\lib_downloader\Program_cli.cs" />
+    <Compile Include="FileDownloader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="..\..\source\lib_downloader\Downloader.resx">
-      <DependentUpon>..\..\source\lib_downloader\Downloader.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

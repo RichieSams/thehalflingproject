@@ -7,6 +7,7 @@ lib/
 bin/
 
 # Project files
+.vs/
 *.sdf
 *.opensdf
 *.suo

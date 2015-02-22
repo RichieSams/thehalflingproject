@@ -189,13 +189,13 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>..\..\build\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
     <IntDir>..\..\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>..\..\source/;..\..\libs/AntTweakBar/include;..\..\libs/DirectXTK;..\..\libs/stlsoft/include;..\..\libs/fastformat/include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\..\libs/AntTweakBar/lib;..\..\libs/fastformat/lib/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
+    <IncludePath>..\..\source/;..\..\libs/DirectXTK;..\..\libs/stlsoft/include;..\..\libs/fastformat/include;$(IncludePath)</IncludePath>
+    <LibraryPath>../../libs/fastformat/lib/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
     <TargetName>$(ProjectName)d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>..\..\source/;..\..\libs/AntTweakBar/include;..\..\libs/DirectXTK;..\..\libs/stlsoft/include;..\..\libs/fastformat/include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\..\libs/AntTweakBar/lib;..\..\libs/fastformat/lib/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
+    <IncludePath>..\..\source/;..\..\libs/DirectXTK;..\..\libs/stlsoft/include;..\..\libs/fastformat/include;$(IncludePath)</IncludePath>
+    <LibraryPath>../../libs/fastformat/lib/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
     <LinkIncremental>true</LinkIncremental>
     <TargetName>$(ProjectName)d</TargetName>
     <OutDir>..\..\build\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
@@ -205,12 +205,12 @@
     <LinkIncremental>false</LinkIncremental>
     <OutDir>..\..\build\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
     <IntDir>..\..\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>..\..\source/;..\..\libs/AntTweakBar/include;..\..\libs/DirectXTK;..\..\libs/stlsoft/include;..\..\libs/fastformat/include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\..\libs/AntTweakBar/lib;..\..\libs/fastformat/lib/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
+    <IncludePath>..\..\source/;..\..\libs/DirectXTK;..\..\libs/stlsoft/include;..\..\libs/fastformat/include;$(IncludePath)</IncludePath>
+    <LibraryPath>../../libs/fastformat/lib/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>..\..\source/;..\..\libs/AntTweakBar/include;..\..\libs/DirectXTK;..\..\libs/stlsoft/include;..\..\libs/fastformat/include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\..\libs/AntTweakBar/lib;..\..\libs/fastformat/lib/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
+    <IncludePath>..\..\source/;..\..\libs/DirectXTK;..\..\libs/stlsoft/include;..\..\libs/fastformat/include;$(IncludePath)</IncludePath>
+    <LibraryPath>../../libs/fastformat/lib/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
     <LinkIncremental>false</LinkIncremental>
     <OutDir>..\..\build\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
     <IntDir>..\..\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
@@ -229,7 +229,7 @@
       <OutputFile>$(OutDir)$(TargetName)d$(TargetExt)</OutputFile>
     </Link>
     <Lib>
-      <AdditionalDependencies>AntTweakBar.lib;fastformatd.lib</AdditionalDependencies>
+      <AdditionalDependencies>fastformatd.lib</AdditionalDependencies>
     </Lib>
     <FxCompile>
       <AdditionalIncludeDirectories>..\..\source/</AdditionalIncludeDirectories>
@@ -250,7 +250,7 @@
       <OutputFile>$(OutDir)$(TargetName)d$(TargetExt)</OutputFile>
     </Link>
     <Lib>
-      <AdditionalDependencies>AntTweakBar.lib;fastformatd.lib</AdditionalDependencies>
+      <AdditionalDependencies>fastformatd.lib</AdditionalDependencies>
     </Lib>
     <FxCompile>
       <AdditionalIncludeDirectories>..\..\source/</AdditionalIncludeDirectories>
@@ -278,7 +278,7 @@
       <ShaderModel>5.0</ShaderModel>
     </FxCompile>
     <Lib>
-      <AdditionalDependencies>AntTweakBar.lib;fastformat.lib</AdditionalDependencies>
+      <AdditionalDependencies>fastformat.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -302,7 +302,7 @@
       <ShaderModel>5.0</ShaderModel>
     </FxCompile>
     <Lib>
-      <AdditionalDependencies>AntTweakBar.lib;fastformat.lib</AdditionalDependencies>
+      <AdditionalDependencies>fastformat.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

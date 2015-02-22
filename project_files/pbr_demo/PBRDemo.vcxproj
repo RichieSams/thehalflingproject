@@ -71,11 +71,11 @@
     <OutDir>..\..\build\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
     <IntDir>..\..\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <IncludePath>../../source;../../libs/AntTweakBar/include;../../libs/json-cpp/include;../../libs/stlsoft/include;../../libs/fastformat/include;$(IncludePath)</IncludePath>
-    <LibraryPath>../../libs/AntTweakBar/lib;../../libs/json-cpp/lib/$(Platform)/$(Configuration);../../libs/fastformat/lib/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
+    <LibraryPath>../../libs/AntTweakBar/lib/$(Platform);../../libs/json-cpp/lib/$(Platform)/$(Configuration);../../libs/fastformat/lib/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>../../source;../../libs/AntTweakBar/include;../../libs/json-cpp/include;../../libs/stlsoft/include;../../libs/fastformat/include;$(IncludePath)</IncludePath>
-    <LibraryPath>../../libs/AntTweakBar/lib;../../libs/json-cpp/lib/$(Platform)/$(Configuration);../../libs/fastformat/lib/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
+    <LibraryPath>../../libs/AntTweakBar/lib/$(Platform);../../libs/json-cpp/lib/$(Platform)/$(Configuration);../../libs/fastformat/lib/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
     <LinkIncremental>true</LinkIncremental>
     <OutDir>..\..\build\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
     <IntDir>..\..\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
@@ -85,11 +85,11 @@
     <OutDir>..\..\build\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
     <IntDir>..\..\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <IncludePath>../../source;../../libs/AntTweakBar/include;../../libs/json-cpp/include;../../libs/stlsoft/include;../../libs/fastformat/include;$(IncludePath)</IncludePath>
-    <LibraryPath>../../libs/AntTweakBar/lib;../../libs/json-cpp/lib/$(Platform)/$(Configuration);../../libs/fastformat/lib/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
+    <LibraryPath>../../libs/AntTweakBar/lib/$(Platform);../../libs/json-cpp/lib/$(Platform)/$(Configuration);../../libs/fastformat/lib/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>../../source;../../libs/AntTweakBar/include;../../libs/json-cpp/include;../../libs/stlsoft/include;../../libs/fastformat/include;$(IncludePath)</IncludePath>
-    <LibraryPath>../../libs/AntTweakBar/lib;../../libs/json-cpp/lib/$(Platform)/$(Configuration);../../libs/fastformat/lib/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
+    <LibraryPath>../../libs/AntTweakBar/lib/$(Platform);../../libs/json-cpp/lib/$(Platform)/$(Configuration);../../libs/fastformat/lib/$(Platform)/$(Configuration);$(LibraryPath)</LibraryPath>
     <LinkIncremental>false</LinkIncremental>
     <OutDir>..\..\build\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
     <IntDir>..\..\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
@@ -112,7 +112,7 @@
       <ShaderModel>5.0</ShaderModel>
     </FxCompile>
     <PostBuildEvent>
-      <Command>XCOPY "$(ProjectDir)..\..\libs\AntTweakBar\lib\AntTweakBar.dll" "$(OutDir)" /D /K /Y
+      <Command>XCOPY "$(ProjectDir)..\..\libs\AntTweakBar\bin\$(Platform)\AntTweakBar.dll" "$(OutDir)" /D /K /Y
 XCOPY "$(ProjectDir)..\..\source\pbr_demo\resources\*" "$(OutDir)" /D /K /Y /E
 XCOPY "$(OutDir)..\Halfling\sprite_vertex_shader.cso" "$(OutDir)" /D /K /Y
 XCOPY "$(OutDir)..\Halfling\sprite_instanced_vertex_shader.cso" "$(OutDir)" /D /K /Y
@@ -141,7 +141,7 @@ XCOPY "$(OutDir)..\Halfling\sprite_sampled_pixel_shader.cso" "$(OutDir)" /D /K /
       <ShaderModel>5.0</ShaderModel>
     </FxCompile>
     <PostBuildEvent>
-      <Command>XCOPY "$(ProjectDir)..\..\libs\AntTweakBar\lib\AntTweakBar64.dll" "$(OutDir)" /D /K /Y
+      <Command>XCOPY "$(ProjectDir)..\..\libs\AntTweakBar\bin\$(Platform)\AntTweakBar.dll" "$(OutDir)" /D /K /Y
 XCOPY "$(ProjectDir)..\..\source\pbr_demo\resources\*" "$(OutDir)" /D /K /Y /E
 XCOPY "$(OutDir)..\Halfling\sprite_vertex_shader.cso" "$(OutDir)" /D /K /Y
 XCOPY "$(OutDir)..\Halfling\sprite_instanced_vertex_shader.cso" "$(OutDir)" /D /K /Y
@@ -174,7 +174,7 @@ XCOPY "$(OutDir)..\Halfling\sprite_sampled_pixel_shader.cso" "$(OutDir)" /D /K /
       <ShaderModel>5.0</ShaderModel>
     </FxCompile>
     <PostBuildEvent>
-      <Command>XCOPY "$(ProjectDir)..\..\libs\AntTweakBar\lib\AntTweakBar.dll" "$(OutDir)" /D /K /Y
+      <Command>XCOPY "$(ProjectDir)..\..\libs\AntTweakBar\bin\$(Platform)\AntTweakBar.dll" "$(OutDir)" /D /K /Y
 XCOPY "$(ProjectDir)..\..\source\pbr_demo\resources\*" "$(OutDir)" /D /K /Y /E
 XCOPY "$(OutDir)..\Halfling\sprite_vertex_shader.cso" "$(OutDir)" /D /K /Y
 XCOPY "$(OutDir)..\Halfling\sprite_instanced_vertex_shader.cso" "$(OutDir)" /D /K /Y
@@ -207,7 +207,7 @@ XCOPY "$(OutDir)..\Halfling\sprite_sampled_pixel_shader.cso" "$(OutDir)" /D /K /
       <ShaderModel>5.0</ShaderModel>
     </FxCompile>
     <PostBuildEvent>
-      <Command>XCOPY "$(ProjectDir)..\..\libs\AntTweakBar\lib\AntTweakBar64.dll" "$(OutDir)" /D /K /Y
+      <Command>XCOPY "$(ProjectDir)..\..\libs\AntTweakBar\bin\$(Platform)\AntTweakBar.dll" "$(OutDir)" /D /K /Y
 XCOPY "$(ProjectDir)..\..\source\pbr_demo\resources\*" "$(OutDir)" /D /K /Y /E
 XCOPY "$(OutDir)..\Halfling\sprite_vertex_shader.cso" "$(OutDir)" /D /K /Y
 XCOPY "$(OutDir)..\Halfling\sprite_instanced_vertex_shader.cso" "$(OutDir)" /D /K /Y

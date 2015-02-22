@@ -1,6 +1,6 @@
-https://files.adrianastley.com/thehalflingproject/required_libs/anttweakbar.zip      => libs/anttweakbar.7z
-https://files.adrianastley.com/thehalflingproject/required_libs/assimp.zip           => libs/assimp.7z
-https://files.adrianastley.com/thehalflingproject/required_libs/devil.zip            => libs/devil.7z
-https://files.adrianastley.com/thehalflingproject/required_libs/fastformat.zip       => libs/fastformat.7z
-https://files.adrianastley.com/thehalflingproject/required_libs/json-cpp.zip         => libs/json-cpp.7z
-https://files.adrianastley.com/thehalflingproject/required_libs/renderdoc.zip        => libs/renderdoc.7z
+https://files.adrianastley.com/thehalflingproject/required_libs/anttweakbar.zip      => anttweakbar.zip
+https://files.adrianastley.com/thehalflingproject/required_libs/assimp.zip           => assimp.zip
+https://files.adrianastley.com/thehalflingproject/required_libs/devil.zip            => devil.zip
+https://files.adrianastley.com/thehalflingproject/required_libs/fastformat.zip       => fastformat.zip
+https://files.adrianastley.com/thehalflingproject/required_libs/json-cpp.zip         => json-cpp.zip
+https://files.adrianastley.com/thehalflingproject/required_libs/renderdoc.zip        => renderdoc.zip
